@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #ffffff;
+  --color-foreground: #171717;
+  --font-family-sans: var(--font-geist-sans);
+  --font-family-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-background: #0a0a0a;
+    --color-foreground: #ededed;
+  }
+}
+
+/* Reset any problematic styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Ensure input text is always visible */
+input, textarea, select {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Specific text color fixes for light mode */
+html:not([data-theme="dark"]) {
+  .text-gray-900 {
+    color: #111827 !important;
+  }
+
+  .text-gray-800 {
+    color: #1f2937 !important;
+  }
+
+  .text-gray-700 {
+    color: #374151 !important;
+  }
+
+  .text-gray-600 {
+    color: #4b5563 !important;
+  }
+
+  .text-gray-500 {
+    color: #6b7280 !important;
+  }
+
+  .text-white {
+    color: #ffffff !important;
+  }
+
+  .text-green-600 {
+    color: #059669 !important;
+  }
+
+  .text-blue-600 {
+    color: #2563eb !important;
+  }
+
+  .text-yellow-600 {
+    color: #d97706 !important;
+  }
+
+  .text-purple-600 {
+    color: #9333ea !important;
+  }
+
+  .text-red-600 {
+    color: #dc2626 !important;
+  }
+}
+
+/* Dark mode text colors */
+@media (prefers-color-scheme: dark) {
+  .text-gray-900 {
+    color: #f9fafb !important;
+  }
+
+  .text-gray-800 {
+    color: #f3f4f6 !important;
+  }
+
+  .text-gray-700 {
+    color: #e5e7eb !important;
+  }
+
+  .text-gray-600 {
+    color: #d1d5db !important;
+  }
+
+  .text-gray-500 {
+    color: #9ca3af !important;
+  }
+
+  body {
+    color: #ededed !important;
+  }
+}

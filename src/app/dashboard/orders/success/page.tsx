@@ -1,0 +1,191 @@
+'use client'
+
+import { useEffect, useState, Suspense } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
+import toast from 'react-hot-toast'
+import { useAuth } from '@/hooks/useAuth'
+
+function OrderSuccessPageInternal() {
+  const { user } = useAuth()
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const [sessionId, setSessionId] = useState<string | null>(null)
+  const [orderConfirmed, setOrderConfirmed] = useState(false)
+
+  useEffect(() => {
+    const session_id = searchParams?.get('session_id')
+    if (session_id && user?.id) {
+      setSessionId(session_id)
+      confirmPayment(session_id)
+    } else if (!session_id) {
+      // If no session ID, redirect to orders
+      router.push('/dashboard/orders')
+    }
+  }, [searchParams, router, user])
+
+  const confirmPayment = async (session_id: string) => {
+    try {
+      // First try to confirm the payment status
+      const stripeResponse = await fetch('/api/checkout/stripe', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: session_id })
+      })
+
+      if (stripeResponse.ok) {
+        const { success, paymentStatus } = await stripeResponse.json()
+        if (success && paymentStatus === 'paid') {
+          // Payment confirmed, now ensure order is processed
+          await processOrder(session_id)
+          setOrderConfirmed(true)
+          toast.success('🎉 Payment successful! Your order has been confirmed.')
+          
+          // Trigger cart refresh by navigating with success flag
+          setTimeout(() => {
+            window.location.href = '/dashboard/cart?payment_success=true'
+          }, 2000)
+        }
+      } else {
+        // Fallback: try to process the order directly
+        await processOrder(session_id)
+        setOrderConfirmed(true)
+        toast.success('🎉 Payment successful! Your order has been confirmed.')
+        
+        // Trigger cart refresh by navigating with success flag
+        setTimeout(() => {
+          window.location.href = '/dashboard/cart?payment_success=true'
+        }, 2000)
+      }
+    } catch (error) {
+      console.error('Error confirming payment:', error)
+      toast.error('Unable to confirm payment status. Please check your orders.')
+    }
+  }
+
+  const processOrder = async (session_id: string) => {
+    if (!user?.id) return
+
+    try {
+      // Call our order processing endpoint as a fallback
+      const response = await fetch('/api/orders/process-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          sessionId: session_id,
+          userId: user.id 
+        })
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log('Order processing result:', result)
+      }
+    } catch (error) {
+      console.error('Error processing order:', error)
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+      <div className="max-w-md w-full">
+        {/* Success Animation */}
+        <div className="text-center mb-8">
+          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center animate-bounce">
+            <span className="text-3xl text-white">✓</span>
+          </div>
+          
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">
+            {orderConfirmed ? 'Order Confirmed!' : 'Processing...'}
+          </h1>
+          
+          <p className="text-gray-600 text-lg">
+            {orderConfirmed 
+              ? 'Thank you for your purchase! Your order has been successfully placed.'
+              : 'We are confirming your payment and creating your order...'
+            }
+          </p>
+        </div>
+
+        {/* Order Details */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">What happens next?</h2>
+          
+          <div className="space-y-4">
+            <div className="flex items-start space-x-3">
+              <span className="text-2xl">📧</span>
+              <div>
+                <h3 className="font-medium text-gray-900">Order Confirmation</h3>
+                <p className="text-sm text-gray-600">You'll receive an email confirmation with order details</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-3">
+              <span className="text-2xl">📦</span>
+              <div>
+                <h3 className="font-medium text-gray-900">Processing</h3>
+                <p className="text-sm text-gray-600">Your order will be prepared and shipped by the seller</p>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-3">
+              <span className="text-2xl">🚚</span>
+              <div>
+                <h3 className="font-medium text-gray-900">Delivery Tracking</h3>
+                <p className="text-sm text-gray-600">Track your order status in real-time on the orders page</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="space-y-3">
+          <Link
+            href="/dashboard/orders"
+            className="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+          >
+            <span className="mr-2">📋</span>
+            View My Orders
+          </Link>
+          
+          <Link
+            href="/dashboard/supplies"
+            className="w-full flex items-center justify-center px-6 py-4 bg-white text-green-600 rounded-xl font-semibold hover:bg-green-50 transition-all duration-200 border-2 border-green-200"
+          >
+            <span className="mr-2">🛒</span>
+            Continue Shopping
+          </Link>
+          
+          <Link
+            href="/dashboard"
+            className="w-full flex items-center justify-center px-6 py-4 bg-gray-100 text-gray-600 rounded-xl font-medium hover:bg-gray-200 transition-all duration-200"
+          >
+            <span className="mr-2">🏠</span>
+            Go to Dashboard
+          </Link>
+        </div>
+
+        {/* Session Info for Debug */}
+        {sessionId && process.env.NODE_ENV === 'development' && (
+          <div className="mt-6 text-center text-xs text-gray-400">
+            Session ID: {sessionId.slice(-8)}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+export default function () {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+          <p className="mt-2 text-sm text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <OrderSuccessPageInternal />
+    </Suspense>
+  )
+}

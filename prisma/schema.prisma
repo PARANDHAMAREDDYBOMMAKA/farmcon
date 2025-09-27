@@ -1,0 +1,331 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id               String         @id @db.Uuid
+  email            String         @unique
+  phone            String?
+  fullName         String?        @map("full_name")
+  role             UserRole       @default(consumer)
+  avatarUrl        String?        @map("avatar_url")
+  address          String?
+  city             String?
+  state            String?
+  pincode          String?
+  businessName     String?        @map("business_name")
+  gstNumber        String?        @map("gst_number")
+  isVerified       Boolean        @default(false) @map("is_verified")
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  cartItems        CartItem[]
+  cropListings     CropListing[]  @relation("FarmerListings")
+  farmerCrops      Crop[]         @relation("FarmerCrops")
+  ownedEquipment   Equipment[]    @relation("EquipmentOwner")
+  farmerProfile    FarmerProfile?
+  notifications    Notification[]
+  customerOrders   Order[]        @relation("CustomerOrders")
+  sellerOrders     Order[]        @relation("SellerOrders")
+  suppliedProducts Product[]      @relation("SupplierProducts")
+  reviewsReceived  Review[]       @relation("ReviewsReceived")
+  reviewsGiven     Review[]       @relation("ReviewsGiven")
+
+  @@map("profiles")
+}
+
+model FarmerProfile {
+  id                String   @id @db.Uuid
+  farmName          String?  @map("farm_name")
+  farmLocation      String?  @map("farm_location")
+  farmSize          Decimal? @map("farm_size") @db.Decimal(10, 2)
+  farmingExperience Int?     @map("farming_experience")
+  farmingType       String[] @map("farming_type")
+  bankAccount       String?  @map("bank_account")
+  ifscCode          String?  @map("ifsc_code")
+  panNumber         String?  @map("pan_number")
+  aadharNumber      String?  @map("aadhar_number")
+  soilType          String?  @map("soil_type")
+  waterSource       String[] @map("water_source")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  profile           Profile  @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@map("farmer_profiles")
+}
+
+model OtpVerification {
+  id         String   @id @default(uuid()) @db.Uuid
+  phone      String
+  otpCode    String   @map("otp_code")
+  isVerified Boolean  @default(false) @map("is_verified")
+  expiresAt  DateTime @map("expires_at")
+  attempts   Int      @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("otp_verifications")
+}
+
+model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @unique
+  description String?
+  imageUrl    String?    @map("image_url")
+  parentId    String?    @map("parent_id") @db.Uuid
+  isActive    Boolean    @default(true) @map("is_active")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryHierarchy")
+  products    Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id             String      @id @default(uuid()) @db.Uuid
+  supplierId     String      @map("supplier_id") @db.Uuid
+  categoryId     String      @map("category_id") @db.Uuid
+  name           String
+  description    String?
+  images         String[]
+  price          Decimal     @db.Decimal(10, 2)
+  stockQuantity  Int         @default(0) @map("stock_quantity")
+  unit           String
+  brand          String?
+  specifications Json?
+  isActive       Boolean     @default(true) @map("is_active")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+  category       Category    @relation(fields: [categoryId], references: [id])
+  supplier       Profile     @relation("SupplierProducts", fields: [supplierId], references: [id], onDelete: Cascade)
+  reviews        Review[]
+
+  @@map("products")
+}
+
+model Crop {
+  id                  String        @id @default(uuid()) @db.Uuid
+  farmerId            String        @map("farmer_id") @db.Uuid
+  name                String
+  variety             String?
+  plantedDate         DateTime?     @map("planted_date") @db.Date
+  expectedHarvestDate DateTime?     @map("expected_harvest_date") @db.Date
+  actualHarvestDate   DateTime?     @map("actual_harvest_date") @db.Date
+  area                Decimal?      @db.Decimal(10, 2)
+  status              CropStatus    @default(planted)
+  estimatedYield      Decimal?      @map("estimated_yield") @db.Decimal(10, 2)
+  actualYield         Decimal?      @map("actual_yield") @db.Decimal(10, 2)
+  pricePerUnit        Decimal?      @map("price_per_unit") @db.Decimal(10, 2)
+  unit                String        @default("kg")
+  images              String[]
+  description         String?
+  organicCertified    Boolean       @default(false) @map("organic_certified")
+  createdAt           DateTime      @default(now()) @map("created_at")
+  updatedAt           DateTime      @updatedAt @map("updated_at")
+  listings            CropListing[]
+  farmer              Profile       @relation("FarmerCrops", fields: [farmerId], references: [id], onDelete: Cascade)
+
+  @@map("crops")
+}
+
+model CropListing {
+  id                String      @id @default(uuid()) @db.Uuid
+  cropId            String      @map("crop_id") @db.Uuid
+  farmerId          String      @map("farmer_id") @db.Uuid
+  quantityAvailable Decimal     @map("quantity_available") @db.Decimal(10, 2)
+  pricePerUnit      Decimal     @map("price_per_unit") @db.Decimal(10, 2)
+  unit              String
+  harvestDate       DateTime?   @map("harvest_date") @db.Date
+  expiryDate        DateTime?   @map("expiry_date") @db.Date
+  deliveryAvailable Boolean     @default(false) @map("delivery_available")
+  pickupLocation    String?     @map("pickup_location")
+  images            String[]
+  description       String?
+  isActive          Boolean     @default(true) @map("is_active")
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @updatedAt @map("updated_at")
+  cartItems         CartItem[]
+  crop              Crop        @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  farmer            Profile     @relation("FarmerListings", fields: [farmerId], references: [id], onDelete: Cascade)
+  orderItems        OrderItem[]
+
+  @@map("crop_listings")
+}
+
+model Equipment {
+  id               String          @id @default(uuid()) @db.Uuid
+  ownerId          String          @map("owner_id") @db.Uuid
+  name             String
+  category         String
+  brand            String?
+  model            String?
+  yearManufactured Int?            @map("year_manufactured")
+  description      String?
+  images           String[]
+  hourlyRate       Decimal?        @map("hourly_rate") @db.Decimal(10, 2)
+  dailyRate        Decimal?        @map("daily_rate") @db.Decimal(10, 2)
+  status           EquipmentStatus @default(available)
+  location         String?
+  specifications   Json?
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  owner            Profile         @relation("EquipmentOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  orderItems       OrderItem[]
+
+  @@map("equipment")
+}
+
+model Order {
+  id                    String      @id @default(uuid()) @db.Uuid
+  customerId            String      @map("customer_id") @db.Uuid
+  sellerId              String      @map("seller_id") @db.Uuid
+  orderType             String      @map("order_type")
+  totalAmount           Decimal     @map("total_amount") @db.Decimal(10, 2)
+  shippingAddress       Json?       @map("shipping_address")
+  billingAddress        Json?       @map("billing_address")
+  status                OrderStatus @default(pending)
+  paymentMethod         String?     @map("payment_method")
+  paymentStatus         String      @default("pending") @map("payment_status")
+  stripePaymentIntentId String?     @map("stripe_payment_intent_id")
+  notes                 String?
+  createdAt             DateTime    @default(now()) @map("created_at")
+  updatedAt             DateTime    @updatedAt @map("updated_at")
+  items                 OrderItem[]
+  customer              Profile     @relation("CustomerOrders", fields: [customerId], references: [id], onDelete: Cascade)
+  seller                Profile     @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
+  reviews               Review[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id              String       @id @default(uuid()) @db.Uuid
+  orderId         String       @map("order_id") @db.Uuid
+  productId       String?      @map("product_id") @db.Uuid
+  cropListingId   String?      @map("crop_listing_id") @db.Uuid
+  equipmentId     String?      @map("equipment_id") @db.Uuid
+  quantity        Decimal      @db.Decimal(10, 2)
+  unitPrice       Decimal      @map("unit_price") @db.Decimal(10, 2)
+  totalPrice      Decimal      @map("total_price") @db.Decimal(10, 2)
+  rentalStartDate DateTime?    @map("rental_start_date") @db.Date
+  rentalEndDate   DateTime?    @map("rental_end_date") @db.Date
+  createdAt       DateTime     @default(now()) @map("created_at")
+  cropListing     CropListing? @relation(fields: [cropListingId], references: [id])
+  equipment       Equipment?   @relation(fields: [equipmentId], references: [id])
+  order           Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product         Product?     @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Review {
+  id         String   @id @default(uuid()) @db.Uuid
+  reviewerId String   @map("reviewer_id") @db.Uuid
+  revieweeId String   @map("reviewee_id") @db.Uuid
+  orderId    String   @map("order_id") @db.Uuid
+  productId  String?  @map("product_id") @db.Uuid
+  rating     Int
+  comment    String?
+  images     String[]
+  createdAt  DateTime @default(now()) @map("created_at")
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product? @relation(fields: [productId], references: [id])
+  reviewee   Profile  @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
+  reviewer   Profile  @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  @@map("reviews")
+}
+
+model MarketPrice {
+  id         String   @id @default(uuid()) @db.Uuid
+  cropName   String   @map("crop_name")
+  marketName String   @map("market_name")
+  price      Decimal  @db.Decimal(10, 2)
+  unit       String
+  date       DateTime @db.Date
+  source     String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@map("market_prices")
+}
+
+model WeatherData {
+  id               String   @id @default(uuid()) @db.Uuid
+  location         String
+  date             DateTime @db.Date
+  temperatureMin   Decimal? @map("temperature_min") @db.Decimal(5, 2)
+  temperatureMax   Decimal? @map("temperature_max") @db.Decimal(5, 2)
+  humidity         Decimal? @db.Decimal(5, 2)
+  rainfall         Decimal? @db.Decimal(8, 2)
+  windSpeed        Decimal? @map("wind_speed") @db.Decimal(5, 2)
+  weatherCondition String?  @map("weather_condition")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@map("weather_data")
+}
+
+model Notification {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  title     String
+  message   String
+  type      String
+  isRead    Boolean  @default(false) @map("is_read")
+  actionUrl String?  @map("action_url")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      Profile  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model CartItem {
+  id            String       @id @default(uuid()) @db.Uuid
+  userId        String       @map("user_id") @db.Uuid
+  productId     String?      @map("product_id") @db.Uuid
+  cropListingId String?      @map("crop_listing_id") @db.Uuid
+  quantity      Decimal      @db.Decimal(10, 2)
+  createdAt     DateTime     @default(now()) @map("created_at")
+  updatedAt     DateTime     @updatedAt @map("updated_at")
+  cropListing   CropListing? @relation(fields: [cropListingId], references: [id])
+  product       Product?     @relation(fields: [productId], references: [id])
+  user          Profile      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("cart_items")
+}
+
+enum UserRole {
+  farmer
+  consumer
+  supplier
+  admin
+}
+
+enum OrderStatus {
+  pending
+  confirmed
+  processing
+  shipped
+  delivered
+  cancelled
+}
+
+enum CropStatus {
+  planted
+  growing
+  ready_to_harvest
+  harvested
+  sold
+}
+
+enum EquipmentStatus {
+  available
+  rented
+  maintenance
+  unavailable
+}
