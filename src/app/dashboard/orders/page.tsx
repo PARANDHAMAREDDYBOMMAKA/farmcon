@@ -85,66 +85,88 @@ function OrdersPageInternal() {
   }, [user, authLoading, searchParams])
 
   useEffect(() => {
-    // Set up real-time subscription for orders
+    // Set up real-time subscription for orders based on user role
     if (user?.id) {
-      const subscription = supabase
-        .channel('orders-changes')
-        .on(
+      const subscription = supabase.channel('orders-changes')
+
+      // Subscribe to relevant order changes based on user role
+      if (user.role === 'consumer') {
+        // Consumers subscribe to their purchase orders
+        subscription.on(
           'postgres_changes',
           {
-            event: 'INSERT',
+            event: '*',
             schema: 'public',
             table: 'orders',
             filter: `customer_id=eq.${user.id}`
           },
           (payload) => {
-            console.log('New order created:', payload)
-            // Reload orders when new ones are created
+            console.log('Order update for customer:', payload)
             loadOrders()
-            toast.success('New order received!')
+            if (payload.eventType === 'INSERT') {
+              toast.success('Order confirmed!')
+            } else if (payload.eventType === 'UPDATE') {
+              toast.success('Order status updated!')
+            }
           }
         )
-        .on(
+      } else if (user.role === 'farmer' || user.role === 'supplier') {
+        // Farmers and suppliers subscribe to their sales orders
+        subscription.on(
           'postgres_changes',
           {
-            event: 'INSERT',
+            event: '*',
             schema: 'public',
             table: 'orders',
             filter: `seller_id=eq.${user.id}`
           },
           (payload) => {
-            console.log('New sale order:', payload)
-            // Reload orders when new sales come in
+            console.log('Order update for seller:', payload)
             loadOrders()
-            toast.success('New order received from customer!')
+            if (payload.eventType === 'INSERT') {
+              toast.success('New order received from customer!')
+            } else if (payload.eventType === 'UPDATE') {
+              toast.success('Order updated!')
+            }
           }
         )
-        .subscribe()
+      }
+
+      subscription.subscribe()
 
       return () => {
         subscription.unsubscribe()
       }
     }
-  }, [user?.id])
+  }, [user?.id, user?.role])
 
   const loadOrders = async () => {
     try {
       if (!user) return
 
-      // Load orders using API - get both customer and seller orders
-      const customerOrders = await ordersAPI.getOrders(user.id, 'customer')
-      const sellerOrders = await ordersAPI.getOrders(user.id, 'seller')
-      
-      // Combine orders and mark which type they are
-      const allOrders = [
-        ...customerOrders.map((order: any) => ({ ...order, _viewType: 'customer' })),
-        ...sellerOrders.map((order: any) => ({ ...order, _viewType: 'seller' }))
-      ]
-      
+      let orders: any[] = []
+
+      // Load orders based on user role
+      if (user.role === 'consumer') {
+        // Consumers only see their purchase orders
+        orders = await ordersAPI.getOrders(user.id, 'customer')
+      } else if (user.role === 'farmer' || user.role === 'supplier') {
+        // Farmers and suppliers only see their sales orders
+        orders = await ordersAPI.getOrders(user.id, 'seller')
+      } else {
+        // Admin or other roles can see both
+        const customerOrders = await ordersAPI.getOrders(user.id, 'customer')
+        const sellerOrders = await ordersAPI.getOrders(user.id, 'seller')
+        orders = [
+          ...customerOrders.map((order: any) => ({ ...order, _viewType: 'customer' })),
+          ...sellerOrders.map((order: any) => ({ ...order, _viewType: 'seller' }))
+        ]
+      }
+
       // Sort by created date
-      allOrders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-      
-      setOrders(allOrders)
+      orders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+      setOrders(orders)
     } catch (error) {
       console.error('Error loading orders:', error)
     } finally {
@@ -221,12 +243,14 @@ function OrdersPageInternal() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {user?.role === 'farmer' || user?.role === 'supplier' ? 'Sales Orders' : 'My Orders'}
+              {user?.role === 'consumer' ? 'My Orders' :
+               user?.role === 'farmer' ? 'Crop Sales Orders' :
+               user?.role === 'supplier' ? 'Product Sales Orders' : 'All Orders'}
             </h1>
             <p className="text-gray-600">
-              {user?.role === 'farmer' || user?.role === 'supplier' 
-                ? 'Manage orders for your products' 
-                : 'Track your purchases and deliveries'
+              {user?.role === 'consumer' ? 'Track your purchases and deliveries' :
+               user?.role === 'farmer' ? 'Manage orders for your crops and equipment' :
+               user?.role === 'supplier' ? 'Manage orders for your products' : 'Manage all order activities'
               }
             </p>
           </div>
@@ -272,19 +296,39 @@ function OrdersPageInternal() {
           <span className="text-6xl">📦</span>
           <h3 className="mt-4 text-lg font-medium text-gray-900">No orders found</h3>
           <p className="mt-2 text-gray-500">
-            {filter === 'all' 
-              ? user?.role === 'farmer' || user?.role === 'supplier'
-                ? 'No sales orders yet.'
-                : 'You haven\'t placed any orders yet.'
+            {filter === 'all'
+              ? user?.role === 'consumer'
+                ? 'You haven\'t placed any orders yet.'
+                : user?.role === 'farmer'
+                ? 'No crop sales orders yet. List your crops to start selling!'
+                : user?.role === 'supplier'
+                ? 'No product sales orders yet. Add products to start selling!'
+                : 'No orders found.'
               : `No ${filter} orders found.`
             }
           </p>
-          {user?.role !== 'farmer' && user?.role !== 'supplier' && (
+          {user?.role === 'consumer' && (
             <Link
               href="/dashboard/supplies"
               className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
             >
               Start Shopping
+            </Link>
+          )}
+          {user?.role === 'farmer' && (
+            <Link
+              href="/dashboard/crops/add"
+              className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+            >
+              List Your Crops
+            </Link>
+          )}
+          {user?.role === 'supplier' && (
+            <Link
+              href="/dashboard/products/add"
+              className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+            >
+              Add Products
             </Link>
           )}
         </div>
@@ -321,9 +365,9 @@ function OrdersPageInternal() {
               <div className="px-6 py-4">
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-sm text-gray-600">
-                    {user?.role === 'farmer' || user?.role === 'supplier' 
-                      ? `Customer: ${order.customer.full_name}`
-                      : `Seller: ${order.seller.full_name} (${order.seller.city}, ${order.seller.state})`
+                    {user?.role === 'consumer'
+                      ? `Seller: ${order.seller.full_name} (${order.seller.city}, ${order.seller.state})`
+                      : `Customer: ${order.customer.full_name}`
                     }
                   </p>
                   <p className="text-sm text-gray-500">
@@ -362,8 +406,8 @@ function OrdersPageInternal() {
                   ))}
                 </div>
 
-                {/* Action buttons for sellers */}
-                {(user?.role === 'farmer' || user?.role === 'supplier') && order.status === 'pending' && (
+                {/* Action buttons for sellers (farmers and suppliers) */}
+                {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'pending' && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="flex space-x-3">
                       <button
@@ -382,7 +426,7 @@ function OrdersPageInternal() {
                   </div>
                 )}
 
-                {(user?.role === 'farmer' || user?.role === 'supplier') && order.status === 'confirmed' && (
+                {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'confirmed' && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'processing')}
@@ -393,7 +437,7 @@ function OrdersPageInternal() {
                   </div>
                 )}
 
-                {(user?.role === 'farmer' || user?.role === 'supplier') && order.status === 'processing' && (
+                {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'processing' && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'shipped')}
@@ -404,7 +448,7 @@ function OrdersPageInternal() {
                   </div>
                 )}
 
-                {(user?.role === 'farmer' || user?.role === 'supplier') && order.status === 'shipped' && (
+                {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'shipped' && (
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'delivered')}

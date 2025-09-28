@@ -1,6 +1,63 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+// Delivery notification helper
+async function sendDeliveryNotifications(order: any, newStatus: string) {
+  try {
+    const statusMessages = {
+      confirmed: {
+        customer: `Your order #${order.id.slice(-8)} has been confirmed by ${order.seller?.fullName}`,
+        seller: `Order #${order.id.slice(-8)} has been confirmed`
+      },
+      processing: {
+        customer: `Your order #${order.id.slice(-8)} is being processed`,
+        seller: `Order #${order.id.slice(-8)} is now being processed`
+      },
+      shipped: {
+        customer: `Your order #${order.id.slice(-8)} has been shipped by ${order.seller?.fullName}`,
+        seller: `Order #${order.id.slice(-8)} has been marked as shipped`
+      },
+      delivered: {
+        customer: `Your order #${order.id.slice(-8)} has been delivered. Thank you for your purchase!`,
+        seller: `Order #${order.id.slice(-8)} has been delivered successfully`
+      },
+      cancelled: {
+        customer: `Your order #${order.id.slice(-8)} has been cancelled`,
+        seller: `Order #${order.id.slice(-8)} has been cancelled`
+      }
+    }
+
+    const messages = statusMessages[newStatus as keyof typeof statusMessages]
+    if (!messages) return
+
+    // Create notification for customer
+    await prisma.notification.create({
+      data: {
+        userId: order.customerId,
+        title: `Order ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`,
+        message: messages.customer,
+        type: 'delivery',
+        actionUrl: `/dashboard/orders/${order.id}/track`
+      }
+    })
+
+    // Create notification for seller
+    await prisma.notification.create({
+      data: {
+        userId: order.sellerId,
+        title: `Order ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)}`,
+        message: messages.seller,
+        type: 'order',
+        actionUrl: `/dashboard/orders`
+      }
+    })
+
+    console.log(`Delivery notifications sent for order ${order.id}, status: ${newStatus}`)
+  } catch (error) {
+    console.error('Error sending delivery notifications:', error)
+  }
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -213,6 +270,11 @@ export async function PUT(
         }
       }
     })
+
+    // Send delivery status notifications
+    if (status) {
+      await sendDeliveryNotifications(order, status)
+    }
 
     // Transform to match frontend expectations
     const transformedOrder = {
