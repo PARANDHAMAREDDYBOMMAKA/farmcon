@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { dbOperations } from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 // GET /api/products - Get products
 export async function GET(request: NextRequest) {
@@ -8,10 +8,50 @@ export async function GET(request: NextRequest) {
     const supplierId = searchParams.get('supplierId')
     const category = searchParams.get('category')
 
-    // For now, return empty array until we implement full Prisma queries
-    const products: any[] = []
-    
-    return NextResponse.json({ products })
+    const whereClause: any = {}
+
+    if (supplierId) {
+      whereClause.supplierId = supplierId
+    }
+
+    if (category) {
+      whereClause.category = {
+        name: category
+      }
+    }
+
+    const products = await prisma.product.findMany({
+      where: whereClause,
+      include: {
+        supplier: {
+          select: {
+            id: true,
+            fullName: true,
+            businessName: true
+          }
+        },
+        category: true,
+        reviews: {
+          select: {
+            rating: true
+          }
+        }
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    })
+
+    // Calculate average ratings
+    const productsWithRatings = products.map(product => ({
+      ...product,
+      averageRating: product.reviews.length > 0
+        ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
+        : 0,
+      reviewCount: product.reviews.length
+    }))
+
+    return NextResponse.json({ products: productsWithRatings })
   } catch (error) {
     console.error('Products fetch error:', error)
     return NextResponse.json(
@@ -25,10 +65,55 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    
-    // For now, return success until we implement full Prisma operations
-    const product = { ...body, id: 'mock-id', createdAt: new Date() }
-    
+    const {
+      name,
+      description,
+      price,
+      stockQuantity,
+      unit,
+      brand,
+      images,
+      categoryId,
+      supplierId,
+      isActive = true
+    } = body
+
+    // Validate required fields
+    if (!name || !price || !stockQuantity || !unit || !categoryId || !supplierId) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    // Filter out null/undefined images
+    const validImages = Array.isArray(images) ? images.filter(img => img !== null && img !== undefined && img !== '') : []
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        description,
+        price: parseFloat(price),
+        stockQuantity: parseInt(stockQuantity),
+        unit,
+        brand,
+        images: validImages,
+        categoryId,
+        supplierId,
+        isActive
+      },
+      include: {
+        supplier: {
+          select: {
+            id: true,
+            fullName: true,
+            businessName: true
+          }
+        },
+        category: true
+      }
+    })
+
     return NextResponse.json({ product })
   } catch (error) {
     console.error('Product creation error:', error)

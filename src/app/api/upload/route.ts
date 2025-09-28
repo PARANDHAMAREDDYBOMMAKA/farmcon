@@ -18,9 +18,10 @@ export async function POST(request: NextRequest) {
     const folder = formData.get('folder') as string || 'farmcon/crops'
     const imageUrl = await uploadToCloudinary(buffer, folder)
 
-    return NextResponse.json({ 
-      success: true, 
-      url: imageUrl 
+    return NextResponse.json({
+      success: true,
+      secure_url: imageUrl,
+      url: imageUrl
     })
     
   } catch (error) {

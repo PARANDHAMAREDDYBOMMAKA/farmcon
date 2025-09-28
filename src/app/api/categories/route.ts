@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
       whereClause.isActive = isActive !== 'false'
     }
 
-    const categories = await prisma.category.findMany({
+    let categories = await prisma.category.findMany({
       where: whereClause,
       include: {
         parent: true,
@@ -33,6 +33,81 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { name: 'asc' }
     })
+
+    // If no categories exist, create default ones
+    if (categories.length === 0) {
+      const defaultCategories = [
+        {
+          name: 'Seeds',
+          description: 'Seeds for various crops including vegetables, fruits, and grains',
+          imageUrl: '🌱'
+        },
+        {
+          name: 'Fertilizers',
+          description: 'Chemical and organic fertilizers to boost crop growth',
+          imageUrl: '🧪'
+        },
+        {
+          name: 'Pesticides',
+          description: 'Pest control solutions and insecticides',
+          imageUrl: '🛡️'
+        },
+        {
+          name: 'Tools',
+          description: 'Hand tools and farming implements',
+          imageUrl: '🔧'
+        },
+        {
+          name: 'Irrigation',
+          description: 'Irrigation systems, pipes, and water management equipment',
+          imageUrl: '💧'
+        },
+        {
+          name: 'Storage',
+          description: 'Storage containers, bags, and preservation solutions',
+          imageUrl: '📦'
+        },
+        {
+          name: 'Organic Products',
+          description: 'Certified organic farming products and solutions',
+          imageUrl: '🌿'
+        },
+        {
+          name: 'Machinery',
+          description: 'Heavy farming machinery and equipment',
+          imageUrl: '🚜'
+        },
+        {
+          name: 'Animal Feed',
+          description: 'Feed and nutrition for livestock and poultry',
+          imageUrl: '🐄'
+        },
+        {
+          name: 'Greenhouse Equipment',
+          description: 'Equipment for controlled environment agriculture',
+          imageUrl: '🏠'
+        }
+      ]
+
+      await prisma.category.createMany({
+        data: defaultCategories
+      })
+
+      // Fetch the newly created categories
+      categories = await prisma.category.findMany({
+        where: whereClause,
+        include: {
+          parent: true,
+          ...(includeChildren && { children: true }),
+          _count: {
+            select: {
+              products: true
+            }
+          }
+        },
+        orderBy: { name: 'asc' }
+      })
+    }
 
     return NextResponse.json({ categories })
   } catch (error) {

@@ -1,4 +1,5 @@
 import { supabase } from './supabase'
+
 import type { User, FarmerProfile } from '@/types'
 
 // Database error types for better error handling
@@ -22,14 +23,14 @@ async function withRetry<T>(
   maxRetries: number = 3,
   delayMs: number = 1000
 ): Promise<T> {
-  let lastError: Error
+  let lastError: Error | null = null
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       return await operation()
     } catch (error) {
       lastError = error as Error
-      
+
       // Don't retry on authentication or validation errors
       if (error && typeof error === 'object' && 'code' in error) {
         const code = (error as any).code
@@ -39,14 +40,14 @@ async function withRetry<T>(
       }
 
       if (attempt === maxRetries) break
-      
+
       // Exponential backoff
       await new Promise(resolve => setTimeout(resolve, delayMs * attempt))
     }
   }
 
   throw new DatabaseError(
-    `Operation failed after ${maxRetries} attempts: ${lastError.message}`,
+    `Operation failed after ${maxRetries} attempts: ${lastError?.message || 'Unknown error'}`,
     'RETRY_EXHAUSTED',
     lastError
   )
@@ -62,8 +63,8 @@ function validateProfileData(data: Partial<User>): void {
     throw new ValidationError('Invalid phone number format', 'phone')
   }
   
-  if (data.gst_number && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(data.gst_number)) {
-    throw new ValidationError('Invalid GST number format', 'gst_number')
+  if (data.gstNumber && !/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/.test(data.gstNumber)) {
+    throw new ValidationError('Invalid GST number format', 'gstNumber')
   }
   
   if (data.pincode && !/^[1-9][0-9]{5}$/.test(data.pincode)) {
@@ -211,7 +212,7 @@ export const farmerOperations = {
 // Database health check
 export async function checkDatabaseHealth(): Promise<boolean> {
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('profiles')
       .select('id')
       .limit(1)
