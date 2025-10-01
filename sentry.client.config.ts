@@ -19,7 +19,17 @@ Sentry.init({
       maskAllText: true,
       blockAllMedia: true,
     }),
-  ],
+  ].filter((integration) => {
+    // Prevent duplicate session replay instances
+    if (integration.name === 'Replay') {
+      const hasReplay = Sentry.getClient()?.getIntegrationByName?.('Replay')
+      if (hasReplay) {
+        console.warn('Sentry Replay already initialized, skipping duplicate')
+        return false
+      }
+    }
+    return true
+  }),
 
   // Enable logs to be sent to Sentry
   enableLogs: true,

@@ -59,10 +59,11 @@ export default function SignUp() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     setLoading(true)
     setError('')
 
-    console.log('Starting signup process...')
+    console.log('Starting signup process...', { email: formData.email, role: formData.role })
 
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match')
@@ -218,7 +219,7 @@ export default function SignUp() {
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit} action="javascript:void(0)">
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
                 {error}

@@ -43,10 +43,11 @@ function SignInForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    e.stopPropagation()
     setLoading(true)
     setError('')
 
-    console.log('Starting sign in process...')
+    console.log('Starting sign in process...', { email: formData.email })
 
     try {
       // First verify credentials
@@ -171,7 +172,7 @@ function SignInForm() {
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit} action="javascript:void(0)">
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
                   {error}
