@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
-export const dynamic = 'force-dynamic'
 
 function SignInForm() {
   const [formData, setFormData] = useState({
@@ -172,7 +171,7 @@ function SignInForm() {
             </p>
           </div>
 
-          <form className="mt-8 space-y-6" onSubmit={handleSubmit} action="javascript:void(0)">
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
                   {error}

@@ -1,11 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import dynamic from 'next/dynamic'
+import { useState } from 'react'
+import ChatBot from 'react-simple-chatbot'
 import { ThemeProvider } from 'styled-components'
-
-// Dynamically import ChatBot to avoid SSR issues
-const ChatBot = dynamic(() => import('react-simple-chatbot'), { ssr: false })
 
 const theme = {
   background: 'linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%)',
@@ -225,15 +222,6 @@ const chatbotSteps = [
 
 export default function FarmConChatbot() {
   const [opened, setOpened] = useState(false)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return null
-  }
 
   return (
     <>

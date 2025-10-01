@@ -4,8 +4,6 @@ import "./globals.css";
 import FarmConChatbot from "@/components/chatbot/FarmConChatbot";
 import PostHogProvider from "@/components/providers/PostHogProvider";
 
-export const dynamic = 'force-dynamic'
-export const dynamicParams = true
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

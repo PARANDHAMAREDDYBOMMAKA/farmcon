@@ -1,8 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-
-export const dynamic = 'force-dynamic'
 import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'

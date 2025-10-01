@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-
-export const dynamic = 'force-dynamic'
+import { stripe } from '@/lib/stripe'
 
 // POST /api/orders/process-payment - Manually process a successful payment
 export async function POST(request: NextRequest) {
-  const { stripe } = await import('@/lib/stripe')
   try {
     const body = await request.json()
     const { sessionId, userId } = body
@@ -117,15 +115,15 @@ export async function POST(request: NextRequest) {
             paymentStatus: 'paid',
             paymentMethod: 'stripe',
             stripePaymentIntentId: session.payment_intent as string,
-            shippingAddress: session.shipping_details ? {
-              name: session.shipping_details.name,
-              address: session.shipping_details.address
-            } : null,
-            billingAddress: session.customer_details ? {
+            shippingAddress: (session as any).shipping_details ? JSON.parse(JSON.stringify({
+              name: (session as any).shipping_details.name,
+              address: (session as any).shipping_details.address
+            })) : undefined,
+            billingAddress: session.customer_details ? JSON.parse(JSON.stringify({
               name: session.customer_details.name,
               email: session.customer_details.email,
               address: session.customer_details.address
-            } : null
+            })) : undefined
           }
         })
 
