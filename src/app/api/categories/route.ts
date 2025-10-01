@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
+import { cache, CacheKeys } from '@/lib/redis'
 
 // GET /api/categories - Get all categories
 export async function GET(request: NextRequest) {
@@ -9,6 +10,16 @@ export async function GET(request: NextRequest) {
     const parentId = searchParams.get('parentId')
     const includeChildren = searchParams.get('includeChildren') === 'true'
     const isActive = searchParams.get('isActive')
+
+    // Try to get from cache first (only for simple queries)
+    if (!parentId && !isActive) {
+      const cacheKey = CacheKeys.categories()
+      const cached = await cache.get(cacheKey)
+
+      if (cached) {
+        return NextResponse.json({ categories: cached })
+      }
+    }
 
     const whereClause: Prisma.CategoryWhereInput = {}
 
@@ -109,6 +120,12 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    // Cache for 10 minutes (only for simple queries)
+    if (!parentId && !isActive) {
+      const cacheKey = CacheKeys.categories()
+      await cache.set(cacheKey, categories, 600)
+    }
+
     return NextResponse.json({ categories })
   } catch (error) {
     console.error('Categories fetch error:', error)
@@ -144,6 +161,9 @@ export async function POST(request: NextRequest) {
         children: true
       }
     })
+
+    // Invalidate categories cache
+    await cache.del(CacheKeys.categories())
 
     return NextResponse.json({ category })
   } catch (error) {
@@ -186,6 +206,9 @@ export async function PUT(request: NextRequest) {
       }
     })
 
+    // Invalidate categories cache
+    await cache.del(CacheKeys.categories())
+
     return NextResponse.json({ category })
   } catch (error) {
     console.error('Category update error:', error)
@@ -224,6 +247,9 @@ export async function DELETE(request: NextRequest) {
     await prisma.category.delete({
       where: { id }
     })
+
+    // Invalidate categories cache
+    await cache.del(CacheKeys.categories())
 
     return NextResponse.json({ message: 'Category deleted successfully' })
   } catch (error) {

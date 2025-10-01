@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { cache, CacheKeys } from '@/lib/redis'
 
 // GET /api/orders - Get orders for a user
 export async function GET(request: NextRequest) {
@@ -13,6 +14,14 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('Fetching orders for userId:', userId, 'type:', type)
+
+    // Try to get from cache first
+    const cacheKey = CacheKeys.orders(userId, type)
+    const cached = await cache.get(cacheKey)
+
+    if (cached) {
+      return NextResponse.json({ orders: cached })
+    }
 
     try {
       const whereClause = type === 'customer'
@@ -132,6 +141,9 @@ export async function GET(request: NextRequest) {
           } : undefined
         })) || []
       }))
+
+      // Cache for 2 minutes
+      await cache.set(cacheKey, transformedOrders || [], 120)
 
       console.log('Found orders:', transformedOrders?.length || 0)
       return NextResponse.json({ orders: transformedOrders || [] })
@@ -291,6 +303,10 @@ export async function POST(request: NextRequest) {
         } : undefined
       })) || []
     } : null
+
+    // Invalidate order caches for both customer and seller
+    await cache.del(CacheKeys.orders(customerId, 'customer'))
+    await cache.del(CacheKeys.orders(sellerId, 'seller'))
 
     return NextResponse.json({ order: transformedOrder })
   } catch (error) {

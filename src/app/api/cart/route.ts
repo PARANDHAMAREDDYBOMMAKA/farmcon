@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { supabase } from '@/lib/supabase'
 import { Prisma } from '@prisma/client'
+import { cache, CacheKeys } from '@/lib/redis'
 
 // GET /api/cart - Get cart items for a user
 export async function GET(request: NextRequest) {
@@ -11,6 +12,14 @@ export async function GET(request: NextRequest) {
 
     if (!userId) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
+    }
+
+    // Try to get from cache first
+    const cacheKey = CacheKeys.cart(userId)
+    const cached = await cache.get(cacheKey)
+
+    if (cached) {
+      return NextResponse.json({ cartItems: cached })
     }
 
     const cartItems = await prisma.cartItem.findMany({
@@ -31,6 +40,9 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { createdAt: 'desc' }
     })
+
+    // Cache for 1 minute
+    await cache.set(cacheKey, cartItems, 60)
 
     return NextResponse.json({ cartItems })
   } catch (error) {
@@ -66,10 +78,15 @@ export async function POST(request: NextRequest) {
     let cartItem
 
     if (existingItem) {
-      // Update existing item quantity
+      // Update existing item quantity - convert to number and add properly
+      const currentQty = typeof existingItem.quantity === 'number'
+        ? existingItem.quantity
+        : parseFloat(existingItem.quantity.toString())
+      const newQty = currentQty + parseFloat(quantity.toString())
+
       cartItem = await prisma.cartItem.update({
         where: { id: existingItem.id },
-        data: { quantity: existingItem.quantity.add(new Prisma.Decimal(quantity)) },
+        data: { quantity: newQty },
         include: {
           product: {
             include: {
@@ -111,6 +128,9 @@ export async function POST(request: NextRequest) {
       })
     }
 
+    // Invalidate cart cache
+    await cache.del(CacheKeys.cart(userId))
+
     return NextResponse.json({ cartItem })
   } catch (error) {
     console.error('Cart add error:', error)
@@ -134,6 +154,18 @@ export async function PUT(request: NextRequest) {
       )
     }
 
+    // Get the cart item first to get userId for cache invalidation
+    const existingItem = await prisma.cartItem.findUnique({
+      where: { id: cartItemId }
+    })
+
+    if (!existingItem) {
+      return NextResponse.json(
+        { error: 'Cart item not found' },
+        { status: 404 }
+      )
+    }
+
     const cartItem = await prisma.cartItem.update({
       where: { id: cartItemId },
       data: { quantity: parseFloat(quantity.toString()) },
@@ -152,6 +184,9 @@ export async function PUT(request: NextRequest) {
         }
       }
     })
+
+    // Invalidate cart cache
+    await cache.del(CacheKeys.cart(existingItem.userId))
 
     return NextResponse.json({ cartItem })
   } catch (error) {
@@ -176,6 +211,8 @@ export async function DELETE(request: NextRequest) {
       await prisma.cartItem.deleteMany({
         where: { userId }
       })
+      // Invalidate cart cache
+      await cache.del(CacheKeys.cart(userId))
       return NextResponse.json({ message: 'Cart cleared successfully' })
     }
 
@@ -186,9 +223,19 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
+    // Get the cart item first to get userId for cache invalidation
+    const existingItem = await prisma.cartItem.findUnique({
+      where: { id: cartItemId }
+    })
+
     await prisma.cartItem.delete({
       where: { id: cartItemId }
     })
+
+    // Invalidate cart cache
+    if (existingItem) {
+      await cache.del(CacheKeys.cart(existingItem.userId))
+    }
 
     return NextResponse.json({ message: 'Cart item removed successfully' })
   } catch (error) {

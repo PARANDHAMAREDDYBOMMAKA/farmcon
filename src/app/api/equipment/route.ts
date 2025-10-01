@@ -1,12 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { cache, CacheKeys } from '@/lib/redis'
 
 // GET /api/equipment - Get equipment
 export async function GET(request: NextRequest) {
   try {
-    
+
     const { searchParams } = new URL(request.url)
     const ownerId = searchParams.get('ownerId')
+
+    // Try to get from cache first
+    const cacheKey = CacheKeys.equipmentList(ownerId || undefined)
+    const cached = await cache.get(cacheKey)
+
+    if (cached) {
+      return NextResponse.json({ equipment: cached })
+    }
 
     const whereClause = ownerId ? { ownerId } : {}
 
@@ -25,6 +34,9 @@ export async function GET(request: NextRequest) {
       },
       orderBy: { createdAt: 'desc' }
     })
+
+    // Cache for 5 minutes
+    await cache.set(cacheKey, equipment, 300)
 
     return NextResponse.json({ equipment })
   } catch (error) {
@@ -95,6 +107,9 @@ export async function POST(request: NextRequest) {
         }
       }
     })
+
+    // Invalidate equipment caches
+    await cache.invalidatePattern('farmcon:equipment:*')
 
     return NextResponse.json({ equipment })
   } catch (error) {

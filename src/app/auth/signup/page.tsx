@@ -527,6 +527,27 @@ export default function SignUp() {
               {loading ? 'Creating Account...' : 'Create Account'}
             </button>
 
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">Or</span>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <Link
+                  href="/auth/email-otp"
+                  className="w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-500 hover:bg-gray-50"
+                >
+                  <span className="mr-2">✉️</span>
+                  Sign up with Email OTP
+                </Link>
+              </div>
+            </div>
+
             <p className="text-xs text-gray-500 text-center">
               By creating an account, you agree to our Terms of Service and Privacy Policy.
             </p>

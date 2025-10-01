@@ -90,6 +90,16 @@ export const CacheKeys = {
   farmerProfile: (id: string) => Cache.key('farmer', id),
   dashboardStats: (userId: string, role: string) => Cache.key('stats', `${userId}:${role}`),
   marketPrices: (location?: string) => location ? Cache.key('prices', location) : 'farmcon:prices:all',
+  products: (supplierId?: string, category?: string) => Cache.key('products', `${supplierId || 'all'}:${category || 'all'}`),
+  product: (id: string) => Cache.key('product', id),
+  productsList: (supplierId: string) => Cache.listKey('products', supplierId),
+  orders: (userId: string, type: string) => Cache.key('orders', `${userId}:${type}`),
+  order: (id: string) => Cache.key('order', id),
+  cart: (userId: string) => Cache.key('cart', userId),
+  equipment: (id: string) => Cache.key('equipment', id),
+  equipmentList: (ownerId?: string) => Cache.key('equipment', `list:${ownerId || 'all'}`),
+  categories: () => 'farmcon:categories:all',
+  suppliers: () => 'farmcon:suppliers:all',
 } as const
 
 export default redis

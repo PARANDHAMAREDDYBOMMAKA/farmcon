@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { cache, CacheKeys } from '@/lib/redis'
 
 // GET /api/products - Get products
 export async function GET(request: NextRequest) {
@@ -7,6 +8,14 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const supplierId = searchParams.get('supplierId')
     const category = searchParams.get('category')
+
+    // Try to get from cache first
+    const cacheKey = CacheKeys.products(supplierId || undefined, category || undefined)
+    const cached = await cache.get(cacheKey)
+
+    if (cached) {
+      return NextResponse.json({ products: cached })
+    }
 
     const whereClause: any = {}
 
@@ -50,6 +59,9 @@ export async function GET(request: NextRequest) {
         : 0,
       reviewCount: product.reviews.length
     }))
+
+    // Cache for 5 minutes
+    await cache.set(cacheKey, productsWithRatings, 300)
 
     return NextResponse.json({ products: productsWithRatings })
   } catch (error) {
@@ -113,6 +125,10 @@ export async function POST(request: NextRequest) {
         category: true
       }
     })
+
+    // Invalidate product caches
+    await cache.invalidatePattern('farmcon:products:*')
+    await cache.del(CacheKeys.productsList(supplierId))
 
     return NextResponse.json({ product })
   } catch (error) {
