@@ -64,14 +64,17 @@ Add these secrets:
 | `UPSTASH_REDIS_REST_TOKEN` | Redis token | `.env` file |
 
 **Optional but recommended:**
-| Secret Name | Value |
-|------------|-------|
-| `STRIPE_SECRET_KEY` | Stripe secret key |
-| `EMAIL_PASSWORD` | Email password |
-| `CLOUDINARY_API_SECRET` | Cloudinary secret |
-| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog key |
-| `MEILISEARCH_API_KEY` | MeiliSearch key |
-| `RECAPTCHA_SECRET_KEY` | reCAPTCHA secret |
+| Secret Name | Value | Note |
+|------------|-------|------|
+| `STRIPE_SECRET_KEY` | Stripe secret key | For payments |
+| `EMAIL_PASSWORD` | Email password | For OTP emails |
+| `CLOUDINARY_API_SECRET` | Cloudinary secret | For image uploads |
+| `NEXT_PUBLIC_POSTHOG_KEY` | PostHog key | For analytics |
+| `MEILISEARCH_HOST` | MeiliSearch host URL | For advanced search (optional) |
+| `MEILISEARCH_API_KEY` | MeiliSearch key | For advanced search (optional) |
+| `RECAPTCHA_SECRET_KEY` | reCAPTCHA secret | For bot protection |
+
+**Note:** If you don't add MeiliSearch secrets, the search feature will be disabled but the app will still build and run successfully.
 
 ---
 

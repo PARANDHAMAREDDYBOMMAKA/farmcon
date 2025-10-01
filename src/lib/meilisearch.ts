@@ -1,9 +1,21 @@
 import { MeiliSearch } from 'meilisearch'
 
-const client = new MeiliSearch({
-  host: process.env.MEILISEARCH_HOST || 'http://localhost:7700',
-  apiKey: process.env.MEILISEARCH_API_KEY || '',
-})
+// Only initialize MeiliSearch if credentials are provided
+let client: MeiliSearch | null = null
+
+function getClient(): MeiliSearch {
+  if (!client) {
+    const host = process.env.MEILISEARCH_HOST
+    const apiKey = process.env.MEILISEARCH_API_KEY
+
+    if (!host || !apiKey) {
+      throw new Error('MeiliSearch is not configured. Set MEILISEARCH_HOST and MEILISEARCH_API_KEY environment variables.')
+    }
+
+    client = new MeiliSearch({ host, apiKey })
+  }
+  return client
+}
 
 // Index names
 export const INDEXES = {
@@ -17,8 +29,10 @@ export const INDEXES = {
 // Initialize indexes with settings
 export async function initializeIndexes() {
   try {
+    const meilisearch = getClient()
+
     // Products index
-    const productsIndex = client.index(INDEXES.products)
+    const productsIndex = meilisearch.index(INDEXES.products)
     await productsIndex.updateSettings({
       searchableAttributes: ['name', 'description', 'brand', 'category'],
       filterableAttributes: ['categoryId', 'supplierId', 'price', 'isActive'],
@@ -35,7 +49,7 @@ export async function initializeIndexes() {
     })
 
     // Crops index
-    const cropsIndex = client.index(INDEXES.crops)
+    const cropsIndex = meilisearch.index(INDEXES.crops)
     await cropsIndex.updateSettings({
       searchableAttributes: ['name', 'variety', 'description'],
       filterableAttributes: ['farmerId', 'status', 'season'],
@@ -43,7 +57,7 @@ export async function initializeIndexes() {
     })
 
     // Equipment index
-    const equipmentIndex = client.index(INDEXES.equipment)
+    const equipmentIndex = meilisearch.index(INDEXES.equipment)
     await equipmentIndex.updateSettings({
       searchableAttributes: ['name', 'description', 'brand', 'model', 'category'],
       filterableAttributes: ['category', 'ownerId', 'status', 'hourlyRate', 'dailyRate'],
@@ -51,14 +65,14 @@ export async function initializeIndexes() {
     })
 
     // Suppliers index
-    const suppliersIndex = client.index(INDEXES.suppliers)
+    const suppliersIndex = meilisearch.index(INDEXES.suppliers)
     await suppliersIndex.updateSettings({
       searchableAttributes: ['fullName', 'businessName', 'city', 'state', 'email'],
       filterableAttributes: ['city', 'state', 'role'],
     })
 
     // Farmers index
-    const farmersIndex = client.index(INDEXES.farmers)
+    const farmersIndex = meilisearch.index(INDEXES.farmers)
     await farmersIndex.updateSettings({
       searchableAttributes: ['fullName', 'city', 'state', 'email'],
       filterableAttributes: ['city', 'state', 'role'],
@@ -73,7 +87,8 @@ export async function initializeIndexes() {
 // Add documents to index
 export async function addDocuments(indexName: string, documents: any[]) {
   try {
-    const index = client.index(indexName)
+    const meilisearch = getClient()
+    const index = meilisearch.index(indexName)
     const response = await index.addDocuments(documents)
     return response
   } catch (error) {
@@ -85,7 +100,8 @@ export async function addDocuments(indexName: string, documents: any[]) {
 // Update documents in index
 export async function updateDocuments(indexName: string, documents: any[]) {
   try {
-    const index = client.index(indexName)
+    const meilisearch = getClient()
+    const index = meilisearch.index(indexName)
     const response = await index.updateDocuments(documents)
     return response
   } catch (error) {
@@ -97,7 +113,8 @@ export async function updateDocuments(indexName: string, documents: any[]) {
 // Delete documents from index
 export async function deleteDocuments(indexName: string, documentIds: string[]) {
   try {
-    const index = client.index(indexName)
+    const meilisearch = getClient()
+    const index = meilisearch.index(indexName)
     const response = await index.deleteDocuments(documentIds)
     return response
   } catch (error) {
@@ -118,7 +135,8 @@ export async function search(
   } = {}
 ) {
   try {
-    const index = client.index(indexName)
+    const meilisearch = getClient()
+    const index = meilisearch.index(indexName)
     const response = await index.search(query, {
       limit: options.limit || 20,
       offset: options.offset || 0,
@@ -132,4 +150,4 @@ export async function search(
   }
 }
 
-export default client
+export default getClient
