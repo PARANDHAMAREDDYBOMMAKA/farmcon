@@ -1,27 +1,26 @@
-// This file configures the initialization of Sentry on the client.
-// Disabled for now to prevent initialization issues with SSR
+import * as Sentry from "@sentry/nextjs";
 
-// import * as Sentry from "@sentry/nextjs";
+Sentry.init({
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
 
-// Client-side Sentry disabled
-// Sentry.init({
-//   dsn: "https://20ab01097fa7e36834cc23c1a149589c@o4508181436497920.ingest.us.sentry.io/4510112343654400",
-//   tracesSampleRate: 1,
-//   replaysOnErrorSampleRate: 1.0,
-//   replaysSessionSampleRate: 0.1,
-//   integrations: [
-//     Sentry.replayIntegration({
-//       maskAllText: true,
-//       blockAllMedia: true,
-//     }),
-//   ],
-//   enableLogs: true,
-//   debug: false,
-//   beforeSend(event, hint) {
-//     if (process.env.NODE_ENV === 'development') {
-//       console.log('Sentry event (dev mode):', event)
-//       return null
-//     }
-//     return event
-//   },
-// });
+  // Performance monitoring
+  tracesSampleRate: 0.1, // Reduced from default to minimize overhead
+
+  // Session replay - disabled to prevent multiple instance errors
+  replaysSessionSampleRate: 0,
+  replaysOnErrorSampleRate: 0,
+
+  // Minimize bundle size
+  integrations: [
+    Sentry.browserTracingIntegration(),
+  ],
+
+  // Environment
+  environment: process.env.NODE_ENV,
+
+  // Ignore common errors
+  ignoreErrors: [
+    'ResizeObserver loop limit exceeded',
+    'Non-Error promise rejection captured',
+  ],
+});
