@@ -12,25 +12,17 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
     }
 
-    console.log('[Profile API] Fetching profile for userId:', userId)
     const profile = await dbOperations.profile.findById(userId)
-
+    
     if (!profile) {
-      console.log('[Profile API] Profile not found for userId:', userId)
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
 
-    console.log('[Profile API] Profile found successfully')
     return NextResponse.json({ profile })
-  } catch (error: any) {
-    console.error('[Profile API] Profile fetch error:', error)
-    console.error('[Profile API] Error details:', {
-      message: error.message,
-      code: error.code,
-      stack: error.stack
-    })
+  } catch (error) {
+    console.error('Profile fetch error:', error)
     return NextResponse.json(
-      { error: 'Failed to fetch profile', details: error.message },
+      { error: 'Failed to fetch profile' },
       { status: 500 }
     )
   }
