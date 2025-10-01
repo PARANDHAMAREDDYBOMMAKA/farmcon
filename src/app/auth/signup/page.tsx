@@ -62,6 +62,8 @@ export default function SignUp() {
     setLoading(true)
     setError('')
 
+    console.log('Starting signup process...')
+
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match')
       setLoading(false)
@@ -75,6 +77,7 @@ export default function SignUp() {
     }
 
     try {
+      console.log('Attempting Supabase signup...')
       const { data, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -91,9 +94,15 @@ export default function SignUp() {
         }
       })
 
+      console.log('Supabase signup result:', { data: !!data, error })
+
       if (error) {
+        console.error('Supabase signup error:', error)
         setError(error.message)
+        setLoading(false)
+        return
       } else if (data.user) {
+        console.log('User created, creating profile...')
         // Create profile in database using API
         try {
           await profileAPI.upsertProfile({

@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
+export const dynamic = 'force-dynamic'
+
 function SignInForm() {
   const [formData, setFormData] = useState({
     email: '',
@@ -44,29 +46,42 @@ function SignInForm() {
     setLoading(true)
     setError('')
 
+    console.log('Starting sign in process...')
+
     try {
       // First verify credentials
+      console.log('Attempting Supabase auth...')
       const { data, error } = await supabase.auth.signInWithPassword({
         email: formData.email,
         password: formData.password
       })
 
+      console.log('Supabase auth result:', { data: !!data, error })
+
       if (error) {
+        console.error('Supabase auth error:', error)
         setError(error.message)
         setLoading(false)
         return
       }
 
       if (data.user) {
-        // Credentials verified, now send OTP with reCAPTCHA
-        if (!executeRecaptcha) {
-          setError('reCAPTCHA not ready. Please try again.')
-          setLoading(false)
-          return
+        console.log('User authenticated, sending OTP...')
+
+        // Try to get reCAPTCHA token, but continue even if it fails
+        let recaptchaToken = 'skip'
+        if (executeRecaptcha) {
+          try {
+            recaptchaToken = await executeRecaptcha('send_otp')
+            console.log('reCAPTCHA token obtained')
+          } catch (recaptchaErr) {
+            console.error('reCAPTCHA error, continuing without it:', recaptchaErr)
+          }
+        } else {
+          console.warn('reCAPTCHA not ready, continuing without it')
         }
 
-        const recaptchaToken = await executeRecaptcha('send_otp')
-
+        console.log('Calling send-otp API...')
         const otpResponse = await fetch('/api/auth/send-otp', {
           method: 'POST',
           headers: {
@@ -78,25 +93,33 @@ function SignInForm() {
           }),
         })
 
+        console.log('OTP API response status:', otpResponse.status)
         const otpData = await otpResponse.json()
+        console.log('OTP API response data:', otpData)
 
         if (!otpResponse.ok) {
+          console.error('OTP API error:', otpData)
           setError(otpData.error || 'Failed to send OTP')
           setLoading(false)
           return
         }
 
+        console.log('OTP sent successfully, signing out and redirecting...')
+
         // Sign out temporarily until OTP is verified
         await supabase.auth.signOut()
 
         // Redirect to OTP verification page
-        router.push(`/auth/verify-otp?email=${encodeURIComponent(formData.email)}&password=${encodeURIComponent(formData.password)}`)
+        const redirectUrl = `/auth/verify-otp?email=${encodeURIComponent(formData.email)}&password=${encodeURIComponent(formData.password)}`
+        console.log('Redirecting to:', redirectUrl)
+        router.push(redirectUrl)
       }
     } catch (err) {
       console.error('Sign in error:', err)
-      setError('An unexpected error occurred')
-    } finally {
+      setError(`An unexpected error occurred: ${err instanceof Error ? err.message : 'Unknown error'}`)
       setLoading(false)
+    } finally {
+      // Don't set loading false here if redirecting
     }
   }
 
