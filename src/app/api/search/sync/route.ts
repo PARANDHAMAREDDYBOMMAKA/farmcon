@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { addDocuments, INDEXES, initializeIndexes } from '@/lib/meilisearch'
+
+export const dynamic = 'force-dynamic'
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if MeiliSearch is configured before importing
+    if (!process.env.MEILISEARCH_HOST || !process.env.MEILISEARCH_API_KEY) {
+      return NextResponse.json(
+        { error: 'Search sync is not available. MeiliSearch is not configured.' },
+        { status: 503 }
+      )
+    }
+
+    // Lazy load MeiliSearch
+    const { addDocuments, INDEXES, initializeIndexes } = await import('@/lib/meilisearch')
+
     const { searchParams } = new URL(request.url)
     const index = searchParams.get('index')
 
@@ -12,11 +24,11 @@ export async function POST(request: NextRequest) {
 
     if (!index || index === 'all') {
       // Sync all indexes
-      await syncProducts()
-      await syncCrops()
-      await syncEquipment()
-      await syncSuppliers()
-      await syncFarmers()
+      await syncProducts(addDocuments, INDEXES)
+      await syncCrops(addDocuments, INDEXES)
+      await syncEquipment(addDocuments, INDEXES)
+      await syncSuppliers(addDocuments, INDEXES)
+      await syncFarmers(addDocuments, INDEXES)
 
       return NextResponse.json({
         message: 'All indexes synced successfully',
@@ -26,19 +38,19 @@ export async function POST(request: NextRequest) {
     // Sync specific index
     switch (index) {
       case INDEXES.products:
-        await syncProducts()
+        await syncProducts(addDocuments, INDEXES)
         break
       case INDEXES.crops:
-        await syncCrops()
+        await syncCrops(addDocuments, INDEXES)
         break
       case INDEXES.equipment:
-        await syncEquipment()
+        await syncEquipment(addDocuments, INDEXES)
         break
       case INDEXES.suppliers:
-        await syncSuppliers()
+        await syncSuppliers(addDocuments, INDEXES)
         break
       case INDEXES.farmers:
-        await syncFarmers()
+        await syncFarmers(addDocuments, INDEXES)
         break
       default:
         return NextResponse.json({ error: 'Invalid index' }, { status: 400 })
@@ -57,7 +69,7 @@ export async function POST(request: NextRequest) {
 }
 
 // Sync products
-async function syncProducts() {
+async function syncProducts(addDocuments: any, INDEXES: any) {
   const products = await prisma.product.findMany({
     include: {
       category: true,
@@ -86,7 +98,7 @@ async function syncProducts() {
 }
 
 // Sync crops
-async function syncCrops() {
+async function syncCrops(addDocuments: any, INDEXES: any) {
   const crops = await prisma.crop.findMany({
     include: {
       farmer: true,
@@ -110,7 +122,7 @@ async function syncCrops() {
 }
 
 // Sync equipment
-async function syncEquipment() {
+async function syncEquipment(addDocuments: any, INDEXES: any) {
   const equipment = await prisma.equipment.findMany({
     include: {
       owner: true,
@@ -137,7 +149,7 @@ async function syncEquipment() {
 }
 
 // Sync suppliers
-async function syncSuppliers() {
+async function syncSuppliers(addDocuments: any, INDEXES: any) {
   const suppliers = await prisma.user.findMany({
     where: { role: 'supplier' },
   })
@@ -157,7 +169,7 @@ async function syncSuppliers() {
 }
 
 // Sync farmers
-async function syncFarmers() {
+async function syncFarmers(addDocuments: any, INDEXES: any) {
   const farmers = await prisma.user.findMany({
     where: { role: 'farmer' },
   })

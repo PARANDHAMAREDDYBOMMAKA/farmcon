@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 
+export const dynamic = 'force-dynamic'
+
 interface AnalyticsData {
   revenue: {
     monthly: number[]

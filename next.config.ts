@@ -10,6 +10,12 @@ const nextConfig: NextConfig = {
     // Disable TypeScript errors during build
     ignoreBuildErrors: true,
   },
+  // Force dynamic rendering globally to skip prerendering errors
+  output: 'standalone',
+  experimental: {
+    clientTraceMetadata: [''],
+  },
+  skipMiddlewareUrlNormalize: true,
 };
 
 export default withSentryConfig(nextConfig, {

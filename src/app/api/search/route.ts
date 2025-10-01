@@ -1,7 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { search, INDEXES } from '@/lib/meilisearch'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
+  // Check if MeiliSearch is configured before importing
+  if (!process.env.MEILISEARCH_HOST || !process.env.MEILISEARCH_API_KEY) {
+    return NextResponse.json(
+      { error: 'Search feature is not available. MeiliSearch is not configured.' },
+      { status: 503 }
+    )
+  }
+
+  // Lazy load MeiliSearch
+  const { search, INDEXES } = await import('@/lib/meilisearch')
   try {
     const { searchParams } = new URL(request.url)
     const query = searchParams.get('q') || ''
