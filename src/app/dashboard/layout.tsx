@@ -13,7 +13,7 @@ const navigation = {
   farmer: [
     { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
     { name: 'My Crops', href: '/dashboard/crops', icon: '🌱' },
-    { name: 'Sell Crops', href: '/dashboard/sell', icon: '💰' },
+    // { name: 'Sell Crops', href: '/dashboard/sell', icon: '💰' },
     { name: 'Buy Supplies', href: '/dashboard/supplies', icon: '🛒' },
     { name: 'Equipment Rental', href: '/dashboard/equipment', icon: '🚜' },
     { name: 'Orders', href: '/dashboard/orders', icon: '📦' },

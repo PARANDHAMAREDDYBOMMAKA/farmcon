@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { deleteMultipleFromCloudinary } from '@/lib/cloudinary'
 
 // GET /api/products/[id] - Get single product
 export async function GET(
@@ -158,6 +159,21 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Get product first to retrieve images
+    const product = await prisma.product.findUnique({
+      where: { id: params.id },
+      select: { images: true }
+    })
+
+    if (!product) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 })
+    }
+
+    // Delete images from Cloudinary if they exist
+    if (product.images && product.images.length > 0) {
+      await deleteMultipleFromCloudinary(product.images)
+    }
+
     await prisma.product.delete({
       where: { id: params.id }
     })

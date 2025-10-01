@@ -91,18 +91,43 @@ function OrderSuccessPageInternal() {
       <div className="max-w-md w-full">
         {/* Success Animation */}
         <div className="text-center mb-8">
-          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center animate-bounce">
-            <span className="text-3xl text-white">✓</span>
-          </div>
-          
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">
-            {orderConfirmed ? 'Order Confirmed!' : 'Processing...'}
+          {orderConfirmed ? (
+            // Confirmed state with scale animation
+            <div className="w-24 h-24 mx-auto mb-6 relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-ping opacity-75"></div>
+              <div className="relative w-24 h-24 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center transform transition-all duration-500 scale-100 hover:scale-110 shadow-2xl">
+                <svg className="w-12 h-12 text-white animate-[checkmark_0.6s_ease-in-out]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+          ) : (
+            // Processing state with pulse animation
+            <div className="w-24 h-24 mx-auto mb-6 relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse opacity-60"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-ping opacity-40"></div>
+              <div className="relative w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                  <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <h1 className={`text-3xl font-bold mb-3 transition-all duration-500 ${
+            orderConfirmed
+              ? 'text-green-600 animate-[slideUp_0.5s_ease-out]'
+              : 'text-blue-600 animate-pulse'
+          }`}>
+            {orderConfirmed ? 'Order Confirmed!' : 'Processing Payment...'}
           </h1>
-          
-          <p className="text-gray-600 text-lg">
-            {orderConfirmed 
+
+          <p className="text-gray-600 text-lg animate-[fadeIn_0.8s_ease-in]">
+            {orderConfirmed
               ? 'Thank you for your purchase! Your order has been successfully placed.'
-              : 'We are confirming your payment and creating your order...'
+              : 'Please wait while we confirm your payment and create your order...'
             }
           </p>
         </div>

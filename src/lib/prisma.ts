@@ -10,6 +10,7 @@ export const prisma =
   globalThis.prisma ||
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+    datasourceUrl: process.env.DIRECT_URL || process.env.DATABASE_URL,
   })
 
 if (process.env.NODE_ENV !== 'production') {
@@ -68,17 +69,23 @@ export const dbOperations = {
 
     async findById(id: string) {
       try {
-        console.log('Prisma findById - searching for id:', id)
+        console.log('[Prisma findById] Searching for id:', id)
         const profile = await prisma.profile.findUnique({
           where: { id },
           include: {
             farmerProfile: true
           }
         })
-        console.log('Prisma findById - result:', profile ? 'Found' : 'Not found')
+        console.log('[Prisma findById] Result:', profile ? `Found profile for ${profile.email}` : 'Not found')
         return profile
       } catch (error: any) {
-        console.error('Prisma findById error:', error)
+        console.error('[Prisma findById] ERROR:', error)
+        console.error('[Prisma findById] Error details:', {
+          message: error.message,
+          code: error.code,
+          meta: error.meta,
+          name: error.name
+        })
         throw new PrismaError(
           `Failed to find profile: ${error.message}`,
           error.code,

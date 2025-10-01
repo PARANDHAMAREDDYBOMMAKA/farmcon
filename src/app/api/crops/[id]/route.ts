@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { cache, CacheKeys } from '@/lib/redis'
+import { deleteMultipleFromCloudinary } from '@/lib/cloudinary'
 
 // GET /api/crops/[id] - Get a single crop
 export async function GET(
@@ -95,14 +96,19 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get crop first to get farmerId for cache invalidation
+    // Get crop first to get farmerId and images for deletion
     const crop = await prisma.crop.findUnique({
       where: { id: params.id },
-      select: { farmerId: true }
+      select: { farmerId: true, images: true }
     })
 
     if (!crop) {
       return NextResponse.json({ error: 'Crop not found' }, { status: 404 })
+    }
+
+    // Delete images from Cloudinary if they exist
+    if (crop.images && crop.images.length > 0) {
+      await deleteMultipleFromCloudinary(crop.images)
     }
 
     await prisma.crop.delete({

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { deleteMultipleFromCloudinary } from '@/lib/cloudinary'
 
 export async function GET(
   request: NextRequest,
@@ -96,6 +97,21 @@ export async function DELETE(
 
     if (!equipmentId) {
       return NextResponse.json({ error: 'Equipment ID is required' }, { status: 400 })
+    }
+
+    // Get equipment first to retrieve images
+    const equipment = await prisma.equipment.findUnique({
+      where: { id: equipmentId },
+      select: { images: true }
+    })
+
+    if (!equipment) {
+      return NextResponse.json({ error: 'Equipment not found' }, { status: 404 })
+    }
+
+    // Delete images from Cloudinary if they exist
+    if (equipment.images && equipment.images.length > 0) {
+      await deleteMultipleFromCloudinary(equipment.images)
     }
 
     await prisma.equipment.delete({
