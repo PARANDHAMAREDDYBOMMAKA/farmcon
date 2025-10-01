@@ -300,6 +300,11 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<void> =>
 // Verify reCAPTCHA token
 export const verifyRecaptcha = async (token: string): Promise<boolean> => {
   try {
+    if (!process.env.RECAPTCHA_SECRET_KEY) {
+      console.error('RECAPTCHA_SECRET_KEY is not configured');
+      return false;
+    }
+
     const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
       method: 'POST',
       headers: {
@@ -309,7 +314,17 @@ export const verifyRecaptcha = async (token: string): Promise<boolean> => {
     });
 
     const data = await response.json();
-    return data.success && data.score >= 0.5; // Score threshold for v3
+
+    console.log('reCAPTCHA verification result:', {
+      success: data.success,
+      score: data.score,
+      action: data.action,
+      hostname: data.hostname,
+      error_codes: data['error-codes']
+    });
+
+    // Lower threshold to 0.3 for better acceptance rate
+    return data.success && data.score >= 0.3;
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
     return false;

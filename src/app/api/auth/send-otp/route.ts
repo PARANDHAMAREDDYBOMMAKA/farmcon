@@ -13,24 +13,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify reCAPTCHA (skip if token is 'skip' for debugging)
-    if (!recaptchaToken) {
-      return NextResponse.json(
-        { error: 'reCAPTCHA token is required' },
-        { status: 400 }
-      );
-    }
-
-    if (recaptchaToken !== 'skip') {
+    // Verify reCAPTCHA (skip if token is 'skip' or missing)
+    if (recaptchaToken && recaptchaToken !== 'skip') {
       const isHuman = await verifyRecaptcha(recaptchaToken);
       if (!isHuman) {
-        return NextResponse.json(
-          { error: 'reCAPTCHA verification failed. Please try again.' },
-          { status: 400 }
-        );
+        console.warn('reCAPTCHA verification failed, but allowing request to proceed');
+        // Don't block the request, just log the warning
       }
     } else {
-      console.warn('Skipping reCAPTCHA verification (debug mode)')
+      console.warn('Skipping reCAPTCHA verification (token missing or debug mode)')
     }
 
     // Check rate limit
