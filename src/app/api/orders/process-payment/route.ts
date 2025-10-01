@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { stripe } from '@/lib/stripe'
 import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 
 // POST /api/orders/process-payment - Manually process a successful payment
 export async function POST(request: NextRequest) {
+  const { stripe } = await import('@/lib/stripe')
   try {
     const body = await request.json()
     const { sessionId, userId } = body
