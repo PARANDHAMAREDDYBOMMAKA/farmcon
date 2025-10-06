@@ -212,7 +212,11 @@ export default function DashboardLayout({
                 <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-900 truncate">{user.fullName}</p>
+                <p className="text-sm font-bold text-gray-900 truncate">
+                  {user.fullName?.split(' ').map(name =>
+                    name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+                  ).join(' ') || 'User'}
+                </p>
                 <p className="text-xs text-gray-500 truncate">{user.email}</p>
                 <div className="flex items-center mt-1">
                   <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
@@ -246,7 +250,11 @@ export default function DashboardLayout({
 
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-600 font-medium">
-                Welcome back, <span className="text-green-600 font-semibold">{user.fullName || 'User'}</span>! 👋
+                Welcome back, <span className="text-green-600 font-semibold">
+                  {user.fullName?.split(' ').map(name =>
+                    name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+                  ).join(' ') || 'User'}
+                </span>! 👋
               </div>
               <NotificationBell />
             </div>

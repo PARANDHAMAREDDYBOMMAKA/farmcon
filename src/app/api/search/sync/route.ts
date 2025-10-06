@@ -112,7 +112,6 @@ async function syncCrops(addDocuments: any, INDEXES: any) {
     description: crop.description || '',
     farmerId: crop.farmerId,
     status: crop.status,
-    season: crop.season || '',
     plantedDate: crop.plantedDate?.toISOString(),
     expectedHarvestDate: crop.expectedHarvestDate?.toISOString(),
   }))
@@ -150,18 +149,18 @@ async function syncEquipment(addDocuments: any, INDEXES: any) {
 
 // Sync suppliers
 async function syncSuppliers(addDocuments: any, INDEXES: any) {
-  const suppliers = await prisma.user.findMany({
+  const suppliers = await prisma.profile.findMany({
     where: { role: 'supplier' },
   })
 
-  const documents = suppliers.map((user) => ({
-    id: user.id,
-    fullName: user.fullName,
-    businessName: user.businessName || '',
-    email: user.email,
-    city: user.city || '',
-    state: user.state || '',
-    role: user.role,
+  const documents = suppliers.map((profile) => ({
+    id: profile.id,
+    fullName: profile.fullName,
+    businessName: profile.businessName || '',
+    email: profile.email,
+    city: profile.city || '',
+    state: profile.state || '',
+    role: profile.role,
   }))
 
   await addDocuments(INDEXES.suppliers, documents)
@@ -170,17 +169,17 @@ async function syncSuppliers(addDocuments: any, INDEXES: any) {
 
 // Sync farmers
 async function syncFarmers(addDocuments: any, INDEXES: any) {
-  const farmers = await prisma.user.findMany({
+  const farmers = await prisma.profile.findMany({
     where: { role: 'farmer' },
   })
 
-  const documents = farmers.map((user) => ({
-    id: user.id,
-    fullName: user.fullName,
-    email: user.email,
-    city: user.city || '',
-    state: user.state || '',
-    role: user.role,
+  const documents = farmers.map((profile) => ({
+    id: profile.id,
+    fullName: profile.fullName,
+    email: profile.email,
+    city: profile.city || '',
+    state: profile.state || '',
+    role: profile.role,
   }))
 
   await addDocuments(INDEXES.farmers, documents)

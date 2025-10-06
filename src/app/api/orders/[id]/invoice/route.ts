@@ -1,68 +1,92 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const orderId = params.id
+    const { id: orderId } = await params
 
     if (!orderId) {
       return NextResponse.json({ error: 'Order ID is required' }, { status: 400 })
     }
 
-    // Get order with full details
-    const { data: order, error } = await supabase
-      .from('orders')
-      .select(`
-        *,
-        seller:profiles!orders_seller_id_fkey (
-          full_name,
-          business_name,
-          email,
-          phone,
-          address,
-          city,
-          state,
-          pincode,
-          gst_number
-        ),
-        customer:profiles!orders_customer_id_fkey (
-          full_name,
-          email,
-          phone,
-          address,
-          city,
-          state,
-          pincode
-        ),
-        items:order_items (
-          *,
-          product:products (
-            name,
-            unit
-          ),
-          crop_listing:crop_listings (
-            unit,
-            crop:crops (
-              name
-            )
-          ),
-          equipment:equipment (
-            name
-          )
-        )
-      `)
-      .eq('id', orderId)
-      .single()
+    // Get order with full details using Prisma
+    const order = await prisma.order.findUnique({
+      where: { id: orderId },
+      include: {
+        seller: {
+          select: {
+            fullName: true,
+            businessName: true,
+            email: true,
+            phone: true,
+            address: true,
+            city: true,
+            state: true,
+            pincode: true,
+            gstNumber: true
+          }
+        },
+        customer: {
+          select: {
+            fullName: true,
+            email: true,
+            phone: true,
+            address: true,
+            city: true,
+            state: true,
+            pincode: true
+          }
+        },
+        items: {
+          include: {
+            product: {
+              select: {
+                name: true,
+                unit: true
+              }
+            },
+            cropListing: {
+              include: {
+                crop: {
+                  select: {
+                    name: true
+                  }
+                }
+              }
+            },
+            equipment: {
+              select: {
+                name: true
+              }
+            }
+          }
+        }
+      }
+    })
 
-    if (error || !order) {
+    if (!order) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
-    // Generate invoice HTML
-    const invoiceHTML = generateInvoiceHTML(order)
+    // Check if PDF is requested
+    const url = new URL(request.url)
+    const format = url.searchParams.get('format')
+
+    if (format === 'pdf') {
+      // Return HTML that will be converted to PDF on client side
+      const invoiceHTML = generateInvoiceHTML(order, true)
+      return new NextResponse(invoiceHTML, {
+        headers: {
+          'Content-Type': 'text/html',
+        }
+      })
+    }
+
+    // Generate invoice HTML for preview
+    const invoiceHTML = generateInvoiceHTML(order, false)
 
     return new NextResponse(invoiceHTML, {
       headers: {
@@ -77,23 +101,23 @@ export async function GET(
   }
 }
 
-function generateInvoiceHTML(order: any) {
-  const invoiceDate = new Date(order.created_at).toLocaleDateString('en-IN')
+function generateInvoiceHTML(order: any, forPDF: boolean = false) {
+  const invoiceDate = new Date(order.createdAt).toLocaleDateString('en-IN')
   const invoiceNumber = `INV-${order.id.slice(-8).toUpperCase()}`
-  
+
   // Calculate totals
   let subtotal = 0
   const itemsHTML = order.items.map((item: any) => {
-    const itemName = item.product?.name || item.crop_listing?.crop?.name || item.equipment?.name || 'Unknown Item'
-    const unit = item.product?.unit || item.crop_listing?.unit || 'unit'
-    const itemTotal = item.total_price
+    const itemName = item.product?.name || item.cropListing?.crop?.name || item.equipment?.name || 'Unknown Item'
+    const unit = item.product?.unit || item.cropListing?.unit || 'unit'
+    const itemTotal = Number(item.totalPrice)
     subtotal += itemTotal
-    
+
     return `
       <tr>
         <td style="padding: 8px; border-bottom: 1px solid #e5e7eb;">${itemName}</td>
-        <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: center;">${item.quantity} ${unit}</td>
-        <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right;">₹${item.unit_price.toFixed(2)}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: center;">${Number(item.quantity)} ${unit}</td>
+        <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right;">₹${Number(item.unitPrice).toFixed(2)}</td>
         <td style="padding: 8px; border-bottom: 1px solid #e5e7eb; text-align: right;">₹${itemTotal.toFixed(2)}</td>
       </tr>
     `
@@ -103,6 +127,23 @@ function generateInvoiceHTML(order: any) {
   const gstRate = 0.18
   const gstAmount = subtotal * gstRate
   const totalAmount = subtotal + gstAmount
+
+  const pdfScript = forPDF ? `
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+    <script>
+      window.onload = function() {
+        const element = document.body;
+        const opt = {
+          margin: 10,
+          filename: 'invoice-${invoiceNumber}.pdf',
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(element).save();
+      };
+    </script>
+  ` : ''
 
   return `
     <!DOCTYPE html>
@@ -198,16 +239,16 @@ function generateInvoiceHTML(order: any) {
                 <p><strong>Order ID:</strong> ${order.id}</p>
             </div>
             <div style="text-align: right;">
-                <p><strong>Payment Status:</strong> <span style="color: ${order.payment_status === 'paid' ? '#10b981' : '#f59e0b'}">${order.payment_status.toUpperCase()}</span></p>
+                <p><strong>Payment Status:</strong> <span style="color: ${order.paymentStatus === 'paid' ? '#10b981' : '#f59e0b'}">${order.paymentStatus.toUpperCase()}</span></p>
                 <p><strong>Order Status:</strong> <span style="color: ${order.status === 'delivered' ? '#10b981' : '#3b82f6'}">${order.status.toUpperCase()}</span></p>
-                <p><strong>Payment Method:</strong> ${order.payment_method?.toUpperCase() || 'Not Specified'}</p>
+                <p><strong>Payment Method:</strong> ${order.paymentMethod?.toUpperCase() || 'Not Specified'}</p>
             </div>
         </div>
 
         <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
             <div class="address-section">
                 <div class="address-title">Bill To:</div>
-                <p><strong>${order.customer.full_name}</strong></p>
+                <p><strong>${order.customer.fullName}</strong></p>
                 <p>${order.customer.email}</p>
                 ${order.customer.phone ? `<p>Phone: ${order.customer.phone}</p>` : ''}
                 ${order.customer.address ? `
@@ -217,14 +258,14 @@ function generateInvoiceHTML(order: any) {
             </div>
             <div class="address-section">
                 <div class="address-title">Sold By:</div>
-                <p><strong>${order.seller.business_name || order.seller.full_name}</strong></p>
+                <p><strong>${order.seller.businessName || order.seller.fullName}</strong></p>
                 <p>${order.seller.email}</p>
                 ${order.seller.phone ? `<p>Phone: ${order.seller.phone}</p>` : ''}
                 ${order.seller.address ? `
                     <p>${order.seller.address}</p>
                     <p>${order.seller.city}${order.seller.state ? `, ${order.seller.state}` : ''} ${order.seller.pincode || ''}</p>
                 ` : ''}
-                ${order.seller.gst_number ? `<p><strong>GST No:</strong> ${order.seller.gst_number}</p>` : ''}
+                ${order.seller.gstNumber ? `<p><strong>GST No:</strong> ${order.seller.gstNumber}</p>` : ''}
             </div>
         </div>
 
@@ -258,11 +299,22 @@ function generateInvoiceHTML(order: any) {
             <p><strong>Thank you for your business!</strong></p>
             <p>This is a computer-generated invoice and requires no signature.</p>
             <p>For any queries, please contact us at support@farmcon.com</p>
+            ${!forPDF ? `
             <br>
-            <button class="no-print" onclick="window.print()" style="background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            <button class="no-print" onclick="window.print()" style="background: #10b981; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
                 Print Invoice
             </button>
+            <button class="no-print" onclick="downloadPDF()" style="background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                Download PDF
+            </button>
+            <script>
+              function downloadPDF() {
+                window.location.href = window.location.pathname + '?format=pdf';
+              }
+            </script>
+            ` : ''}
         </div>
+        ${pdfScript}
     </body>
     </html>
   `

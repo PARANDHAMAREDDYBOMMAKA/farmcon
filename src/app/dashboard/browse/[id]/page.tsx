@@ -12,12 +12,12 @@ interface CropListingWithDetails extends CropListing {
   crop: {
     name: string
     variety?: string
-    organic_certified: boolean
-    planted_date?: string
+    organicCertified: boolean
+    plantedDate?: string
     area?: number
   }
   farmer: {
-    full_name: string
+    fullName: string
     city?: string
     state?: string
     phone?: string
@@ -110,7 +110,7 @@ export default function CropDetailPage() {
     router.push('/dashboard/cart')
   }
 
-  const isDaysFresh = (harvestDate: string) => {
+  const isDaysFresh = (harvestDate: string | Date) => {
     const harvest = new Date(harvestDate)
     const today = new Date()
     const diffTime = Math.abs(today.getTime() - harvest.getTime())
@@ -203,7 +203,7 @@ export default function CropDetailPage() {
         </div>
 
         {/* Crop Info */}
-        <div>
+        <div className='text-black'>
           <div className="flex items-start justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{listing.crop.name}</h1>
@@ -212,12 +212,12 @@ export default function CropDetailPage() {
               )}
             </div>
             <div className="flex flex-col gap-2">
-              {listing.crop.organic_certified && (
+              {listing.crop.organicCertified && (
                 <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
                   🌿 Organic Certified
                 </span>
               )}
-              {listing.harvest_date && isDaysFresh(listing.harvest_date) && (
+              {listing.harvestDate && isDaysFresh(listing.harvestDate) && (
                 <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
                   ✨ Fresh Harvest
                 </span>
@@ -226,34 +226,32 @@ export default function CropDetailPage() {
           </div>
 
           <div className="mt-4">
-            <p className="text-3xl font-bold text-gray-900">₹{listing.price_per_unit}</p>
+            <p className="text-3xl font-bold text-gray-900">₹{Number(listing.pricePerUnit)}</p>
             <p className="text-sm text-gray-500">per {listing.unit}</p>
           </div>
 
           <div className="mt-4 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Available Quantity:</span>
-              <span className="font-medium">{listing.quantity_available} {listing.unit}</span>
-            </div>
+              <span className="text-gray-600">Available Quantity:</span>              <span className="font-medium text-gray-900">{Number(listing.quantityAvailable)} {listing.unit}</span>            </div>
             
-            {listing.harvest_date && (
+            {listing.harvestDate && (
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Harvested:</span>
-                <span className="font-medium">{new Date(listing.harvest_date).toLocaleDateString('en-IN')}</span>
+                <span className="font-medium text-gray-900">{new Date(listing.harvestDate).toLocaleDateString('en-IN')}</span>
               </div>
             )}
             
-            {listing.expiry_date && (
+            {listing.expiryDate && (
               <div className="flex items-center justify-between">
                 <span className="text-gray-600">Best Before:</span>
-                <span className="font-medium">{new Date(listing.expiry_date).toLocaleDateString('en-IN')}</span>
+                <span className="font-medium text-gray-900">{new Date(listing.expiryDate).toLocaleDateString('en-IN')}</span>
               </div>
             )}
 
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Delivery:</span>
-              <span className={`font-medium ${listing.delivery_available ? 'text-green-600' : 'text-gray-500'}`}>
-                {listing.delivery_available ? '✅ Available' : '❌ Pickup Only'}
+              <span className={`font-medium ${listing.deliveryAvailable ? 'text-green-600' : 'text-gray-500'}`}>
+                {listing.deliveryAvailable ? '✅ Available' : '❌ Pickup Only'}
               </span>
             </div>
           </div>
@@ -264,7 +262,7 @@ export default function CropDetailPage() {
             <div className="space-y-2">
               <div>
                 <span className="text-gray-600">Name:</span>
-                <span className="ml-2 font-medium">{listing.farmer.full_name}</span>
+                <span className="ml-2 font-medium">{listing.farmer.fullName}</span>
               </div>
               <div>
                 <span className="text-gray-600">Location:</span>
@@ -273,13 +271,13 @@ export default function CropDetailPage() {
               {listing.crop.area && (
                 <div>
                   <span className="text-gray-600">Farm Area:</span>
-                  <span className="ml-2 font-medium">{listing.crop.area} acres</span>
+                  <span className="ml-2 font-medium">{Number(listing.crop.area)} acres</span>
                 </div>
               )}
-              {listing.crop.planted_date && (
+              {listing.crop.plantedDate && (
                 <div>
                   <span className="text-gray-600">Planted:</span>
-                  <span className="ml-2 font-medium">{new Date(listing.crop.planted_date).toLocaleDateString('en-IN')}</span>
+                  <span className="ml-2 font-medium">{new Date(listing.crop.plantedDate).toLocaleDateString('en-IN')}</span>
                 </div>
               )}
             </div>
@@ -292,10 +290,10 @@ export default function CropDetailPage() {
             </div>
           )}
 
-          {listing.pickup_location && (
+          {listing.pickupLocation && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Pickup Location</h3>
-              <p className="text-gray-600">📍 {listing.pickup_location}</p>
+              <p className="text-gray-600">📍 {listing.pickupLocation}</p>
             </div>
           )}
 
@@ -311,14 +309,14 @@ export default function CropDetailPage() {
                 onChange={(e) => setQuantity(parseInt(e.target.value))}
                 className="rounded-md border border-gray-300 py-1.5 px-3 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
               >
-                {[...Array(Math.min(20, listing.quantity_available))].map((_, i) => (
+                {[...Array(Math.min(20, Math.max(1, Math.floor(Number(listing.quantityAvailable) || 1))))].map((_, i) => (
                   <option key={i + 1} value={i + 1}>
                     {i + 1} {listing.unit}
                   </option>
                 ))}
               </select>
               <span className="text-sm text-gray-500">
-                (Max: {listing.quantity_available} {listing.unit})
+                (Max: {Number(listing.quantityAvailable)} {listing.unit})
               </span>
             </div>
           </div>
