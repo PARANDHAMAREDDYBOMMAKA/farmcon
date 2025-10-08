@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || 'demo-key'
-const OPENWEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5'
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const lat = searchParams.get('lat')
     const lon = searchParams.get('lon')
     const city = searchParams.get('city')
-    const days = parseInt(searchParams.get('days') || '5')
+    const days = Math.min(parseInt(searchParams.get('days') || '7'), 30) // Support up to 30 days
 
     if (!lat && !lon && !city) {
       return NextResponse.json(
@@ -18,38 +15,152 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    let url = `${OPENWEATHER_BASE_URL}/forecast?appid=${OPENWEATHER_API_KEY}&units=metric`
+    let latitude = lat
+    let longitude = lon
+    let locationName = city || 'Unknown Location'
+    let country = ''
 
-    if (lat && lon) {
-      url += `&lat=${lat}&lon=${lon}`
-    } else if (city) {
-      url += `&q=${encodeURIComponent(city)}`
-    }
+    // If city is provided, geocode it
+    if (city && (!lat || !lon)) {
+      try {
+        const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`
+        const geocodeResponse = await fetch(geocodeUrl, {
+          headers: { 'User-Agent': 'FarmCon-Weather-App' }
+        })
+        const geocodeData = await geocodeResponse.json()
 
-    const response = await fetch(url)
-
-    if (!response.ok) {
-      if (response.status === 401) {
+        if (geocodeData && geocodeData.length > 0) {
+          latitude = geocodeData[0].lat
+          longitude = geocodeData[0].lon
+          locationName = geocodeData[0].display_name.split(',')[0]
+          const addressParts = geocodeData[0].display_name.split(',')
+          country = addressParts[addressParts.length - 1].trim()
+        } else {
+          return NextResponse.json(
+            { error: 'Location not found' },
+            { status: 404 }
+          )
+        }
+      } catch (error) {
+        console.error('Geocoding error:', error)
         return NextResponse.json(
-          { error: 'Weather API key not configured or invalid' },
-          { status: 401 }
+          { error: 'Failed to geocode location' },
+          { status: 500 }
         )
       }
-      throw new Error(`Weather API error: ${response.status}`)
+    } else if (lat && lon) {
+      // Reverse geocoding: coordinates to city name
+      try {
+        const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+        const reverseResponse = await fetch(reverseUrl, {
+          headers: { 'User-Agent': 'FarmCon-Weather-App' }
+        })
+        const reverseData = await reverseResponse.json()
+
+        if (reverseData && reverseData.address) {
+          locationName = reverseData.address.city ||
+                        reverseData.address.town ||
+                        reverseData.address.village ||
+                        reverseData.address.county ||
+                        'Unknown Location'
+          country = reverseData.address.country || ''
+        }
+      } catch (error) {
+        console.error('Reverse geocoding error:', error)
+        // Continue with default location name
+      }
+    }
+
+    // Fetch from NASA POWER API - get last N days for historical forecast
+    const today = new Date()
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - days)
+    const endDate = new Date(today)
+    endDate.setDate(today.getDate() - 1)
+
+    const startDateStr = startDate.toISOString().split('T')[0].replace(/-/g, '')
+    const endDateStr = endDate.toISOString().split('T')[0].replace(/-/g, '')
+
+    const nasaUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,PRECTOTCORR&community=AG&longitude=${longitude}&latitude=${latitude}&start=${startDateStr}&end=${endDateStr}&format=JSON`
+
+    const response = await fetch(nasaUrl)
+
+    if (!response.ok) {
+      console.error('NASA API error:', response.status)
+      return NextResponse.json(
+        { error: 'Failed to fetch weather forecast from NASA API' },
+        { status: response.status }
+      )
     }
 
     const data = await response.json()
 
-    // Group forecasts by day and get daily summaries
-    const dailyForecasts = groupForecastsByDay(data.list, days)
+    // Validate response
+    if (!data.properties || !data.properties.parameter) {
+      return NextResponse.json(
+        { error: 'Invalid NASA API response' },
+        { status: 500 }
+      )
+    }
+
+    const parameters = data.properties.parameter
+    const dates = Object.keys(parameters.T2M).sort().reverse()
+
+    // Clean NASA data (-999 values)
+    const cleanValue = (value: number, defaultValue: number = 0) => {
+      if (value === undefined || value === null || value < -900) {
+        return defaultValue
+      }
+      return value
+    }
+
+    // Process daily forecasts
+    const dailyForecasts = dates.slice(0, Math.min(days, dates.length)).map((dateStr) => {
+      const temp = cleanValue(parameters.T2M[dateStr], 25)
+      const tempMax = cleanValue(parameters.T2M_MAX?.[dateStr], temp + 5)
+      const tempMin = cleanValue(parameters.T2M_MIN?.[dateStr], temp - 5)
+      const humidity = cleanValue(parameters.RH2M?.[dateStr], 50)
+      const windSpeed = cleanValue(parameters.WS2M?.[dateStr], 10)
+      const rainfall = cleanValue(parameters.PRECTOTCORR?.[dateStr], 0)
+
+      // Convert NASA date format (YYYYMMDD) to ISO format
+      const year = dateStr.substring(0, 4)
+      const month = dateStr.substring(4, 6)
+      const day = dateStr.substring(6, 8)
+      const formattedDate = `${year}-${month}-${day}`
+
+      const getWeatherDescription = (temp: number, rain: number) => {
+        if (rain > 5) return { main: 'Rain', description: 'rainy', icon: '10d' }
+        if (rain > 0) return { main: 'Rain', description: 'light rain', icon: '09d' }
+        if (temp > 35) return { main: 'Clear', description: 'hot and sunny', icon: '01d' }
+        if (temp > 28) return { main: 'Clear', description: 'sunny', icon: '01d' }
+        if (temp > 22) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
+        return { main: 'Clouds', description: 'cloudy', icon: '03d' }
+      }
+
+      const weather = getWeatherDescription(temp, rainfall)
+
+      return {
+        date: formattedDate,
+        temp,
+        tempMax,
+        tempMin,
+        humidity,
+        windSpeed,
+        rainfall,
+        mainWeather: weather.main,
+        description: weather.description,
+        icon: weather.icon
+      }
+    })
 
     const forecastData = {
       location: {
-        name: data.city.name,
-        country: data.city.country,
+        name: locationName,
+        country: country,
         coordinates: {
-          lat: data.city.coord.lat,
-          lon: data.city.coord.lon
+          lat: parseFloat(latitude!),
+          lon: parseFloat(longitude!)
         }
       },
       forecasts: dailyForecasts.map(day => ({
@@ -57,12 +168,12 @@ export async function GET(request: NextRequest) {
         temperature: {
           min: Math.round(day.tempMin),
           max: Math.round(day.tempMax),
-          avg: Math.round(day.tempAvg)
+          avg: Math.round(day.temp)
         },
         humidity: {
-          min: day.humidityMin,
-          max: day.humidityMax,
-          avg: Math.round(day.humidityAvg)
+          min: Math.round(day.humidity) - 10,
+          max: Math.round(day.humidity) + 10,
+          avg: Math.round(day.humidity)
         },
         weather: {
           main: day.mainWeather,
@@ -70,10 +181,10 @@ export async function GET(request: NextRequest) {
           icon: day.icon
         },
         wind: {
-          speed: day.windSpeed,
-          direction: day.windDirection
+          speed: Math.round(day.windSpeed * 3.6), // m/s to km/h
+          direction: 180 // mock
         },
-        rain: day.rain,
+        rain: day.rainfall,
         farming: {
           irrigationRecommendation: getDailyIrrigationRecommendation(day),
           fieldWorkSuitability: getFieldWorkSuitability(day),
@@ -82,7 +193,7 @@ export async function GET(request: NextRequest) {
       })),
       farmingInsights: generateWeeklyFarmingInsights(dailyForecasts),
       timestamp: new Date().toISOString(),
-      source: 'OpenWeatherMap'
+      source: 'NASA POWER API'
     }
 
     return NextResponse.json({ forecast: forecastData })
@@ -95,73 +206,22 @@ export async function GET(request: NextRequest) {
   }
 }
 
-function groupForecastsByDay(forecasts: any[], maxDays: number) {
-  const dailyData: { [key: string]: any } = {}
-
-  forecasts.slice(0, maxDays * 8).forEach(forecast => {
-    const date = new Date(forecast.dt * 1000).toISOString().split('T')[0]
-
-    if (!dailyData[date]) {
-      dailyData[date] = {
-        date,
-        temps: [],
-        humidities: [],
-        winds: [],
-        weather: [],
-        rain: 0
-      }
-    }
-
-    dailyData[date].temps.push(forecast.main.temp)
-    dailyData[date].humidities.push(forecast.main.humidity)
-    dailyData[date].winds.push({
-      speed: forecast.wind.speed,
-      deg: forecast.wind.deg
-    })
-    dailyData[date].weather.push({
-      main: forecast.weather[0].main,
-      description: forecast.weather[0].description,
-      icon: forecast.weather[0].icon
-    })
-
-    if (forecast.rain) {
-      dailyData[date].rain += forecast.rain['3h'] || 0
-    }
-  })
-
-  return Object.values(dailyData).map((day: any) => ({
-    date: day.date,
-    tempMin: Math.min(...day.temps),
-    tempMax: Math.max(...day.temps),
-    tempAvg: day.temps.reduce((a: number, b: number) => a + b, 0) / day.temps.length,
-    humidityMin: Math.min(...day.humidities),
-    humidityMax: Math.max(...day.humidities),
-    humidityAvg: day.humidities.reduce((a: number, b: number) => a + b, 0) / day.humidities.length,
-    windSpeed: day.winds.reduce((a: number, b: any) => a + b.speed, 0) / day.winds.length,
-    windDirection: day.winds[0]?.deg || 0,
-    mainWeather: day.weather[0]?.main || 'Clear',
-    description: day.weather[0]?.description || 'Clear sky',
-    icon: day.weather[0]?.icon || '01d',
-    rain: day.rain
-  }))
-}
-
 function getDailyIrrigationRecommendation(day: any) {
-  if (day.rain > 10) {
+  if (day.rainfall > 10) {
     return {
       status: 'skip',
       message: 'Heavy rain expected - skip irrigation',
       amount: 0,
       color: 'blue'
     }
-  } else if (day.rain > 2) {
+  } else if (day.rainfall > 2) {
     return {
       status: 'reduce',
       message: 'Light rain expected - reduce irrigation by 50%',
       amount: 50,
       color: 'green'
     }
-  } else if (day.tempMax > 35 && day.humidityAvg < 40) {
+  } else if (day.tempMax > 35 && day.humidity < 40) {
     return {
       status: 'increase',
       message: 'Hot and dry conditions - increase irrigation',
@@ -183,10 +243,10 @@ function getFieldWorkSuitability(day: any) {
   let factors = []
 
   // Rain check
-  if (day.rain === 0) {
+  if (day.rainfall === 0) {
     score += 3
     factors.push('✓ No rain expected')
-  } else if (day.rain < 2) {
+  } else if (day.rainfall < 2) {
     score += 1
     factors.push('⚠ Light rain possible')
   } else {
@@ -239,7 +299,7 @@ function getCropStressLevel(day: any) {
   }
 
   // Water stress
-  if (day.rain === 0 && day.humidityAvg < 30) {
+  if (day.rainfall === 0 && day.humidity < 30) {
     stressScore += 2
     stressFactors.push('Water stress likely')
   }
@@ -268,20 +328,20 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
   const insights = []
 
   // Rain analysis
-  const totalRain = forecasts.reduce((sum, day) => sum + day.rain, 0)
-  const rainyDays = forecasts.filter(day => day.rain > 1).length
+  const totalRain = forecasts.reduce((sum, day) => sum + day.rainfall, 0)
+  const rainyDays = forecasts.filter(day => day.rainfall > 1).length
 
   if (totalRain > 50) {
     insights.push({
       type: 'water-management',
-      message: `Heavy rainfall expected (${Math.round(totalRain)}mm). Ensure proper drainage.`,
+      message: `Heavy rainfall recorded (${Math.round(totalRain)}mm). Ensure proper drainage.`,
       icon: '🌧️',
       priority: 'high'
     })
   } else if (totalRain < 5) {
     insights.push({
       type: 'irrigation',
-      message: 'Dry period ahead. Plan irrigation schedule carefully.',
+      message: 'Dry period recorded. Plan irrigation schedule carefully.',
       icon: '💧',
       priority: 'medium'
     })
@@ -294,7 +354,7 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
   if (hotDays >= 3) {
     insights.push({
       type: 'heat-protection',
-      message: `${hotDays} hot days expected. Protect crops and increase irrigation.`,
+      message: `${hotDays} hot days recorded. Protect crops and increase irrigation.`,
       icon: '🌡️',
       priority: 'high'
     })
@@ -303,7 +363,7 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
   if (coldDays >= 2) {
     insights.push({
       type: 'frost-protection',
-      message: `${coldDays} cold days expected. Prepare frost protection measures.`,
+      message: `${coldDays} cold days recorded. Prepare frost protection measures.`,
       icon: '❄️',
       priority: 'medium'
     })
@@ -311,12 +371,12 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
 
   // Best work days
   const goodWorkDays = forecasts.filter(day =>
-    day.rain < 1 && day.tempMax >= 15 && day.tempMax <= 30 && day.windSpeed < 8
+    day.rainfall < 1 && day.tempMax >= 15 && day.tempMax <= 30 && day.windSpeed < 8
   ).length
 
   insights.push({
     type: 'field-work',
-    message: `${goodWorkDays} optimal days for field operations this week.`,
+    message: `${goodWorkDays} optimal days recorded for field operations.`,
     icon: '🚜',
     priority: 'low'
   })

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { prisma } from '@/lib/prisma'
 
 // GET /api/notifications - Get notifications for a user
 export async function GET(request: NextRequest) {
@@ -11,18 +11,11 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
     }
 
-    const { data: notifications, error } = await supabase
-      .from('notifications')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(10)
-
-    if (error) {
-      console.error('Error fetching notifications:', error)
-      // Return empty array instead of error to allow UI to function
-      return NextResponse.json({ notifications: [] })
-    }
+    const notifications = await prisma.notification.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' },
+      take: 10
+    })
 
     return NextResponse.json({ notifications: notifications || [] })
   } catch (error) {
@@ -44,23 +37,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { data: notification, error } = await supabase
-      .from('notifications')
-      .insert({
-        user_id: userId,
+    const notification = await prisma.notification.create({
+      data: {
+        userId,
         title,
         message,
         type: type || 'info',
-        action_url: actionUrl || null,
-        is_read: false
-      })
-      .select()
-      .single()
-
-    if (error) {
-      console.error('Error creating notification:', error)
-      return NextResponse.json({ error: 'Failed to create notification' }, { status: 500 })
-    }
+        actionUrl: actionUrl || null,
+        isRead: false
+      }
+    })
 
     return NextResponse.json({ notification })
   } catch (error) {
@@ -79,32 +65,30 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
     }
 
-    let query = supabase.from('notifications')
-
     if (markAllAsRead) {
       // Mark all notifications as read for this user
-      const { error } = await query
-        .update({ is_read: true })
-        .eq('user_id', userId)
-        .eq('is_read', false)
-
-      if (error) {
-        console.error('Error marking all notifications as read:', error)
-        return NextResponse.json({ error: 'Failed to update notifications' }, { status: 500 })
-      }
+      await prisma.notification.updateMany({
+        where: {
+          userId,
+          isRead: false
+        },
+        data: {
+          isRead: true
+        }
+      })
 
       return NextResponse.json({ success: true, message: 'All notifications marked as read' })
     } else if (notificationId) {
       // Mark specific notification as read
-      const { error } = await query
-        .update({ is_read: isRead !== undefined ? isRead : true })
-        .eq('id', notificationId)
-        .eq('user_id', userId) // Ensure user can only update their own notifications
-
-      if (error) {
-        console.error('Error updating notification:', error)
-        return NextResponse.json({ error: 'Failed to update notification' }, { status: 500 })
-      }
+      await prisma.notification.update({
+        where: {
+          id: notificationId,
+          userId // Ensure user can only update their own notifications
+        },
+        data: {
+          isRead: isRead !== undefined ? isRead : true
+        }
+      })
 
       return NextResponse.json({ success: true, message: 'Notification updated' })
     }
@@ -113,5 +97,30 @@ export async function PUT(request: NextRequest) {
   } catch (error) {
     console.error('Notification update error:', error)
     return NextResponse.json({ error: 'Failed to update notification' }, { status: 500 })
+  }
+}
+
+// DELETE /api/notifications - Delete a notification
+export async function DELETE(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { userId, notificationId } = body
+
+    if (!userId || !notificationId) {
+      return NextResponse.json({ error: 'User ID and Notification ID are required' }, { status: 400 })
+    }
+
+    // Delete the notification, ensuring user can only delete their own
+    await prisma.notification.delete({
+      where: {
+        id: notificationId,
+        userId
+      }
+    })
+
+    return NextResponse.json({ success: true, message: 'Notification deleted' })
+  } catch (error) {
+    console.error('Notification deletion error:', error)
+    return NextResponse.json({ error: 'Failed to delete notification' }, { status: 500 })
   }
 }

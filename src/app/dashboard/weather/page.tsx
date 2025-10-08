@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import toast from 'react-hot-toast'
+import WeatherChart from '@/components/weather/WeatherChart'
+import CurrentWeatherChart from '@/components/weather/CurrentWeatherChart'
 
 interface WeatherData {
   location: {
@@ -102,6 +104,9 @@ export default function WeatherPage() {
   const [location, setLocation] = useState({ lat: 28.6139, lon: 77.2090 }) // Default: Delhi
   const [city, setCity] = useState('Delhi')
   const [activeTab, setActiveTab] = useState<'current' | 'forecast'>('current')
+  const [currentView, setCurrentView] = useState<'details' | 'charts'>('details')
+  const [forecastView, setForecastView] = useState<'list' | 'charts'>('list')
+  const [forecastDays, setForecastDays] = useState(5)
 
   useEffect(() => {
     // Try to get user's location
@@ -146,9 +151,9 @@ export default function WeatherPage() {
       // Load forecast
       let forecastUrl = '/api/weather/forecast?'
       if (lat && lon) {
-        forecastUrl += `lat=${lat}&lon=${lon}&days=5`
+        forecastUrl += `lat=${lat}&lon=${lon}&days=${forecastDays}`
       } else if (cityName) {
-        forecastUrl += `city=${encodeURIComponent(cityName)}&days=5`
+        forecastUrl += `city=${encodeURIComponent(cityName)}&days=${forecastDays}`
       }
 
       const forecastResponse = await fetch(forecastUrl)
@@ -192,12 +197,13 @@ export default function WeatherPage() {
     }
   }
 
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading weather data...</p>
+          <p className="mt-4 text-black">Loading weather data...</p>
         </div>
       </div>
     )
@@ -209,8 +215,8 @@ export default function WeatherPage() {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Agricultural Weather</h1>
-            <p className="text-gray-600 mt-1">Real-time weather data and farming insights</p>
+            <h1 className="text-2xl font-bold text-black">Agricultural Weather</h1>
+            <p className="text-black mt-1">Real-time weather data and farming insights</p>
           </div>
           <form onSubmit={handleCitySearch} className="mt-4 sm:mt-0 flex space-x-2">
             <input
@@ -239,7 +245,7 @@ export default function WeatherPage() {
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'current'
                   ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-black hover:text-black hover:border-gray-300'
               }`}
             >
               Current Weather
@@ -249,10 +255,10 @@ export default function WeatherPage() {
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'forecast'
                   ? 'border-green-500 text-green-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-black hover:text-black hover:border-gray-300'
               }`}
             >
-              5-Day Forecast
+              {forecastDays}-Day Forecast
             </button>
           </nav>
         </div>
@@ -260,13 +266,56 @@ export default function WeatherPage() {
         {/* Current Weather Tab */}
         {activeTab === 'current' && currentWeather && (
           <div className="p-6 space-y-6">
+            {/* View Toggle */}
+            <div className="flex justify-end mb-4">
+              <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
+                <button
+                  onClick={() => setCurrentView('details')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    currentView === 'details'
+                      ? 'bg-white text-green-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  📊 Details
+                </button>
+                <button
+                  onClick={() => setCurrentView('charts')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    currentView === 'charts'
+                      ? 'bg-white text-green-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  📈 Charts
+                </button>
+              </div>
+            </div>
+
+            {/* Charts View */}
+            {currentView === 'charts' && (
+              <CurrentWeatherChart data={{
+                temperature: currentWeather.current.temperature,
+                feelsLike: currentWeather.current.feelsLike,
+                humidity: currentWeather.current.humidity,
+                pressure: currentWeather.current.pressure,
+                windSpeed: currentWeather.current.windSpeed,
+                visibility: currentWeather.current.visibility,
+                cloudiness: currentWeather.current.cloudiness,
+                uvIndex: (currentWeather.current as any).uvIndex || 5
+              }} />
+            )}
+
+            {/* Details View */}
+            {currentView === 'details' && (
+              <>
             {/* Location and Basic Weather */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-1">
                 <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-semibold">{currentWeather.location.name}</h3>
+                      <h3 className="text-lg font-semibold text-black">{currentWeather.location.name}</h3>
                       <p className="text-blue-100">{currentWeather.location.country}</p>
                       <div className="mt-4">
                         <div className="text-3xl font-bold">{currentWeather.current.temperature}°C</div>
@@ -285,8 +334,8 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl">💧</span>
                       <div>
-                        <p className="text-sm text-gray-600">Humidity</p>
-                        <p className="text-lg font-semibold">{currentWeather.current.humidity}%</p>
+                        <p className="text-sm text-black">Humidity</p>
+                        <p className="text-lg font-semibold text-black">{currentWeather.current.humidity}%</p>
                       </div>
                     </div>
                   </div>
@@ -294,8 +343,8 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl">💨</span>
                       <div>
-                        <p className="text-sm text-gray-600">Wind Speed</p>
-                        <p className="text-lg font-semibold">{currentWeather.current.windSpeed} m/s</p>
+                        <p className="text-sm text-black">Wind Speed</p>
+                        <p className="text-lg font-semibold text-black">{currentWeather.current.windSpeed} m/s</p>
                       </div>
                     </div>
                   </div>
@@ -303,8 +352,8 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl">🌡️</span>
                       <div>
-                        <p className="text-sm text-gray-600">Pressure</p>
-                        <p className="text-lg font-semibold">{currentWeather.current.pressure} hPa</p>
+                        <p className="text-sm text-black">Pressure</p>
+                        <p className="text-lg font-semibold text-black">{currentWeather.current.pressure} hPa</p>
                       </div>
                     </div>
                   </div>
@@ -312,8 +361,8 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-2">
                       <span className="text-2xl">👁️</span>
                       <div>
-                        <p className="text-sm text-gray-600">Visibility</p>
-                        <p className="text-lg font-semibold">{currentWeather.current.visibility} km</p>
+                        <p className="text-sm text-black">Visibility</p>
+                        <p className="text-lg font-semibold text-black">{currentWeather.current.visibility} km</p>
                       </div>
                     </div>
                   </div>
@@ -324,14 +373,14 @@ export default function WeatherPage() {
             {/* Weather Alerts */}
             {currentWeather.alerts && currentWeather.alerts.length > 0 && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Weather Alerts</h3>
+                <h3 className="text-lg font-semibold text-black">Weather Alerts</h3>
                 {currentWeather.alerts.map((alert, index) => (
                   <div key={index} className={`border rounded-lg p-4 ${getSeverityColor(alert.severity)}`}>
                     <div className="flex items-center space-x-3">
                       <span className="text-2xl">{alert.icon}</span>
                       <div>
                         <p className="font-medium">{alert.message}</p>
-                        <p className="text-sm opacity-75">Severity: {alert.severity}</p>
+                        <p className="text-sm">Severity: {alert.severity}</p>
                       </div>
                     </div>
                   </div>
@@ -343,7 +392,7 @@ export default function WeatherPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Irrigation Advice */}
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                <h4 className="font-semibold text-black mb-3 flex items-center">
                   <span className="mr-2">💧</span>
                   Irrigation Advice
                 </h4>
@@ -355,7 +404,7 @@ export default function WeatherPage() {
 
               {/* Planting Conditions */}
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                <h4 className="font-semibold text-black mb-3 flex items-center">
                   <span className="mr-2">🌱</span>
                   Planting Conditions
                 </h4>
@@ -363,7 +412,7 @@ export default function WeatherPage() {
                   <p className="font-medium">{currentWeather.farming.plantingConditions.rating} ({currentWeather.farming.plantingConditions.score})</p>
                   <div className="text-sm mt-2 space-y-1">
                     {currentWeather.farming.plantingConditions.conditions.map((condition, index) => (
-                      <p key={index}>{condition}</p>
+                      <p key={index} className="text-black">{condition}</p>
                     ))}
                   </div>
                 </div>
@@ -371,7 +420,7 @@ export default function WeatherPage() {
 
               {/* Pest Management */}
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                <h4 className="font-semibold text-black mb-3 flex items-center">
                   <span className="mr-2">🐛</span>
                   Pest Risk
                 </h4>
@@ -379,7 +428,7 @@ export default function WeatherPage() {
                   <p className="font-medium">{currentWeather.farming.pestManagement.riskLevel} Risk</p>
                   <div className="text-sm mt-2 space-y-1">
                     {currentWeather.farming.pestManagement.recommendations.map((rec, index) => (
-                      <p key={index}>• {rec}</p>
+                      <p key={index} className="text-black">• {rec}</p>
                     ))}
                   </div>
                 </div>
@@ -387,7 +436,7 @@ export default function WeatherPage() {
 
               {/* Harvesting Conditions */}
               <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                <h4 className="font-semibold text-black mb-3 flex items-center">
                   <span className="mr-2">🌾</span>
                   Harvesting Conditions
                 </h4>
@@ -395,22 +444,68 @@ export default function WeatherPage() {
                   <p className="font-medium">{currentWeather.farming.harvestingConditions.suitability}</p>
                   <div className="text-sm mt-2 space-y-1">
                     {currentWeather.farming.harvestingConditions.advice.map((advice, index) => (
-                      <p key={index}>• {advice}</p>
+                      <p key={index} className="text-black">• {advice}</p>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
+            </>
+            )}
           </div>
         )}
 
         {/* Forecast Tab */}
         {activeTab === 'forecast' && forecast && (
           <div className="p-6 space-y-6">
+            {/* View Toggle and Days Selector */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+              <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
+                <button
+                  onClick={() => setForecastView('list')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    forecastView === 'list'
+                      ? 'bg-white text-green-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  📋 List View
+                </button>
+                <button
+                  onClick={() => setForecastView('charts')}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                    forecastView === 'charts'
+                      ? 'bg-white text-green-600 shadow-sm'
+                      : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                >
+                  📈 Chart View
+                </button>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label className="text-sm font-medium text-gray-700">Days:</label>
+                <select
+                  value={forecastDays}
+                  onChange={(e) => {
+                    const days = parseInt(e.target.value)
+                    setForecastDays(days)
+                    loadWeatherData(location.lat, location.lon)
+                  }}
+                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-green-500 focus:border-green-500"
+                >
+                  <option value={5}>5 Days</option>
+                  <option value={7}>7 Days</option>
+                  <option value={14}>14 Days</option>
+                  <option value={30}>30 Days</option>
+                </select>
+              </div>
+            </div>
+
             {/* Farming Insights */}
             {forecast.farmingInsights && forecast.farmingInsights.length > 0 && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-900">Weekly Farming Insights</h3>
+                <h3 className="text-lg font-semibold text-black">Weekly Farming Insights</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {forecast.farmingInsights.map((insight, index) => (
                     <div key={index} className={`border rounded-lg p-4 ${
@@ -421,8 +516,8 @@ export default function WeatherPage() {
                       <div className="flex items-start space-x-3">
                         <span className="text-2xl">{insight.icon}</span>
                         <div>
-                          <p className="font-medium text-gray-900">{insight.message}</p>
-                          <p className="text-xs text-gray-500 mt-1">Priority: {insight.priority}</p>
+                          <p className="font-medium text-black">{insight.message}</p>
+                          <p className="text-xs text-black mt-1">Priority: {insight.priority}</p>
                         </div>
                       </div>
                     </div>
@@ -431,16 +526,27 @@ export default function WeatherPage() {
               </div>
             )}
 
-            {/* 5-Day Forecast */}
+            {/* Chart View */}
+            {forecastView === 'charts' && forecast.forecasts && forecast.forecasts.length > 0 && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-black mb-4">
+                  Temperature Overview ({forecastDays} days)
+                </h3>
+                <WeatherChart data={forecast.forecasts} />
+              </div>
+            )}
+
+            {/* List View - Forecast Details */}
+            {forecastView === 'list' && (
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">5-Day Forecast</h3>
+              <h3 className="text-lg font-semibold text-black">{forecastDays}-Day Forecast</h3>
               <div className="space-y-4">
                 {forecast.forecasts.map((day, index) => (
                   <div key={index} className="border rounded-lg p-6">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                       {/* Date and Weather */}
                       <div>
-                        <h4 className="font-semibold text-gray-900">
+                        <h4 className="font-semibold text-black">
                           {new Date(day.date).toLocaleDateString('en-IN', {
                             weekday: 'long',
                             month: 'short',
@@ -450,8 +556,8 @@ export default function WeatherPage() {
                         <div className="flex items-center space-x-3 mt-2">
                           <span className="text-2xl">🌤️</span>
                           <div>
-                            <p className="font-medium">{day.temperature.max}°C / {day.temperature.min}°C</p>
-                            <p className="text-sm text-gray-600 capitalize">{day.weather.description}</p>
+                            <p className="font-medium text-black">{day.temperature.max}°C / {day.temperature.min}°C</p>
+                            <p className="text-sm text-black capitalize">{day.weather.description}</p>
                           </div>
                         </div>
                         {day.rain > 0 && (
@@ -461,25 +567,25 @@ export default function WeatherPage() {
 
                       {/* Irrigation */}
                       <div>
-                        <h5 className="font-medium text-gray-700 mb-2">💧 Irrigation</h5>
+                        <h5 className="font-medium text-black mb-2">💧 Irrigation</h5>
                         <div className={`px-3 py-2 rounded-md text-sm ${getAdviceColor(day.farming.irrigationRecommendation.color)}`}>
                           <p className="font-medium capitalize">{day.farming.irrigationRecommendation.status}</p>
-                          <p>{day.farming.irrigationRecommendation.message}</p>
+                          <p className="text-black">{day.farming.irrigationRecommendation.message}</p>
                           {day.farming.irrigationRecommendation.amount !== 100 && (
-                            <p className="mt-1">Amount: {day.farming.irrigationRecommendation.amount}%</p>
+                            <p className="mt-1 text-black">Amount: {day.farming.irrigationRecommendation.amount}%</p>
                           )}
                         </div>
                       </div>
 
                       {/* Field Work */}
                       <div>
-                        <h5 className="font-medium text-gray-700 mb-2">🚜 Field Work</h5>
+                        <h5 className="font-medium text-black mb-2">🚜 Field Work</h5>
                         <div className={`px-3 py-2 rounded-md text-sm ${getAdviceColor(day.farming.fieldWorkSuitability.color)}`}>
                           <p className="font-medium">{day.farming.fieldWorkSuitability.rating}</p>
-                          <p className="text-xs mt-1">Score: {day.farming.fieldWorkSuitability.score}</p>
+                          <p className="text-xs mt-1 text-black">Score: {day.farming.fieldWorkSuitability.score}</p>
                           <div className="mt-1 space-y-1">
                             {day.farming.fieldWorkSuitability.factors.slice(0, 2).map((factor, i) => (
-                              <p key={i} className="text-xs">{factor}</p>
+                              <p key={i} className="text-xs text-black">{factor}</p>
                             ))}
                           </div>
                         </div>
@@ -487,12 +593,12 @@ export default function WeatherPage() {
 
                       {/* Crop Stress */}
                       <div>
-                        <h5 className="font-medium text-gray-700 mb-2">🌿 Crop Stress</h5>
+                        <h5 className="font-medium text-black mb-2">🌿 Crop Stress</h5>
                         <div className={`px-3 py-2 rounded-md text-sm ${getAdviceColor(day.farming.cropStressLevel.color)}`}>
                           <p className="font-medium">{day.farming.cropStressLevel.level} Stress</p>
                           <div className="mt-1 space-y-1">
                             {day.farming.cropStressLevel.factors.slice(0, 2).map((factor, i) => (
-                              <p key={i} className="text-xs">{factor}</p>
+                              <p key={i} className="text-xs text-black">{factor}</p>
                             ))}
                           </div>
                         </div>
@@ -502,6 +608,7 @@ export default function WeatherPage() {
                 ))}
               </div>
             </div>
+            )}
           </div>
         )}
       </div>

@@ -127,9 +127,9 @@ export default function DashboardLayout({
   const userNavigation = navigation[user.role] || navigation.consumer
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-2xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:inset-y-0 lg:left-0 lg:shadow-xl overflow-y-auto flex flex-col`}>
+      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 sm:w-72 bg-white shadow-2xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:shadow-xl overflow-y-auto flex flex-col`}>
         {/* Enhanced Header */}
         <div className="flex-shrink-0 relative h-20 px-6 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 overflow-hidden">
           {/* Background Pattern */}
@@ -182,6 +182,7 @@ export default function DashboardLayout({
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={() => setSidebarOpen(false)}
                 className="group flex items-center px-4 py-3 text-gray-700 hover:text-green-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 rounded-xl transition-all duration-200 hover:shadow-sm hover:scale-[1.02] transform"
               >
                 <div className="flex items-center justify-center w-10 h-10 bg-gray-100 group-hover:bg-green-100 rounded-lg transition-all duration-200 group-hover:scale-110">
@@ -237,10 +238,10 @@ export default function DashboardLayout({
       </div>
 
       {/* Main content */}
-      <div className="flex-1 lg:ml-72">
+      <div className="flex-1 flex flex-col w-full lg:ml-72">
         {/* Top bar */}
-        <div className="shadow-lg border-b border-gray-200 backdrop-blur-sm bg-white/95">
-          <div className="flex items-center justify-between h-16 px-6">
+        <div className="sticky top-0 z-40 shadow-lg border-b border-gray-200 backdrop-blur-sm bg-white/95">
+          <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6">
             <button
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -248,8 +249,8 @@ export default function DashboardLayout({
               <span className="text-xl">☰</span>
             </button>
 
-            <div className="flex items-center space-x-4">
-              <div className="text-sm text-gray-600 font-medium">
+            <div className="flex items-center space-x-2 sm:space-x-4 ml-auto lg:ml-0">
+              <div className="hidden sm:block text-xs sm:text-sm text-gray-600 font-medium">
                 Welcome back, <span className="text-green-600 font-semibold">
                   {user.fullName?.split(' ').map(name =>
                     name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
@@ -262,8 +263,8 @@ export default function DashboardLayout({
         </div>
 
         {/* Page content */}
-        <main className="flex-1 p-6">
-          <div className="max-w-7xl mx-auto">
+        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden">
+          <div className="max-w-7xl mx-auto w-full">
             {children}
           </div>
         </main>

@@ -26,52 +26,165 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Fetch fresh data from OpenWeatherMap API
-    const apiKey = process.env.OPENWEATHER_API_KEY
-    if (!apiKey) {
-      console.warn('OpenWeatherMap API key not configured, returning mock data')
-      return NextResponse.json({ 
+    // Fetch fresh data from NASA POWER API
+    // Note: NASA POWER API is free and doesn't require an API key
+
+    // For NASA API, we need coordinates. Use Nominatim (OpenStreetMap) for geocoding
+    let lat, lon
+
+    try {
+      // Use Nominatim geocoding API (free, no API key required)
+      const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`
+      const geocodeResponse = await fetch(geocodeUrl, {
+        headers: {
+          'User-Agent': 'FarmCon-Weather-App' // Required by Nominatim
+        }
+      })
+
+      if (!geocodeResponse.ok) {
+        throw new Error('Geocoding failed')
+      }
+
+      const geocodeData = await geocodeResponse.json()
+
+      if (!geocodeData || geocodeData.length === 0) {
+        throw new Error('Location not found')
+      }
+
+      lat = parseFloat(geocodeData[0].lat)
+      lon = parseFloat(geocodeData[0].lon)
+    } catch (geocodeError) {
+      console.warn('Geocoding error, using default location (New Delhi):', geocodeError)
+      // Default to New Delhi if geocoding fails
+      lat = 28.6139
+      lon = 77.2090
+    }
+
+    // NASA POWER API works with historical data, not future forecasts
+    // Get data from the last 7 days to show recent weather trends
+    const today = new Date()
+    const startDate = new Date(today)
+    startDate.setDate(today.getDate() - 7) // 7 days ago
+
+    const endDate = new Date(today)
+    endDate.setDate(today.getDate() - 1) // Yesterday (most recent complete data)
+
+    const startDateStr = startDate.toISOString().split('T')[0].replace(/-/g, '')
+    const endDateStr = endDate.toISOString().split('T')[0].replace(/-/g, '')
+
+    // Fetch data from NASA POWER API
+    const nasaUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,PRECTOTCORR&community=AG&longitude=${lon}&latitude=${lat}&start=${startDateStr}&end=${endDateStr}&format=JSON`
+
+    console.log('Fetching NASA weather data:', {
+      location,
+      lat,
+      lon,
+      startDateStr,
+      endDateStr,
+      url: nasaUrl
+    })
+
+    const weatherResponse = await fetch(nasaUrl)
+
+    if (!weatherResponse.ok) {
+      const errorText = await weatherResponse.text()
+      console.error('NASA API request failed:', {
+        status: weatherResponse.status,
+        statusText: weatherResponse.statusText,
+        error: errorText,
+        url: nasaUrl
+      })
+      return NextResponse.json({
+        weather: getMockWeatherData(location),
+        source: 'mock',
+        error: `NASA API error: ${weatherResponse.status}`
+      })
+    }
+
+    const weatherData = await weatherResponse.json()
+
+    console.log('NASA API response received successfully')
+
+    // Validate NASA POWER API response
+    if (!weatherData.properties || !weatherData.properties.parameter) {
+      console.warn('Invalid NASA API response structure')
+      return NextResponse.json({
         weather: getMockWeatherData(location),
         source: 'mock'
       })
     }
 
-    // Get coordinates first
-    const geocodeUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${encodeURIComponent(location)}&limit=1&appid=${apiKey}`
-    const geocodeResponse = await fetch(geocodeUrl)
-    const geocodeData = await geocodeResponse.json()
+    // Process NASA POWER API data
+    const parameters = weatherData.properties.parameter
 
-    if (!geocodeData.length) {
-      throw new Error('Location not found')
+    // Check if we have valid temperature data
+    if (!parameters.T2M || Object.keys(parameters.T2M).length === 0) {
+      console.warn('No temperature data available from NASA API')
+      return NextResponse.json({
+        weather: getMockWeatherData(location),
+        source: 'mock'
+      })
     }
 
-    const { lat, lon } = geocodeData[0]
+    const dates = Object.keys(parameters.T2M).sort().reverse() // Most recent first
 
-    // Get current weather and 5-day forecast
-    const weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
-    const weatherResponse = await fetch(weatherUrl)
-    
-    if (!weatherResponse.ok) {
-      throw new Error('Weather API request failed')
+    // Get most recent data (yesterday or last available day)
+    const recentDate = dates[0]
+
+    // Helper function to validate and clean data (NASA uses -999 for missing data)
+    const cleanValue = (value: number, defaultValue: number = 0) => {
+      if (value === undefined || value === null || value < -900) {
+        return defaultValue
+      }
+      return value
     }
 
-    const weatherData = await weatherResponse.json()
+    const currentTemp = cleanValue(parameters.T2M[recentDate], 25)
+    const currentHumidity = cleanValue(parameters.RH2M?.[recentDate], 50)
+    const currentWindSpeed = cleanValue(parameters.WS2M?.[recentDate], 10) * 3.6 // Convert m/s to km/h
+    const rainfall = cleanValue(parameters.PRECTOTCORR?.[recentDate], 0)
 
-    // Process and store weather data
-    const currentWeather = weatherData.list[0]
+    // If all values are defaults (missing data), use mock data
+    if (currentTemp === 25 && currentHumidity === 50 && currentWindSpeed === 36) {
+      console.warn('Most weather data missing from NASA API, using mock data')
+      return NextResponse.json({
+        weather: getMockWeatherData(location),
+        source: 'mock'
+      })
+    }
+
+    // Determine weather condition based on temperature and rainfall
+    const getCondition = (temp: number, rain: number) => {
+      if (rain > 5) return 'Rainy'
+      if (rain > 0) return 'Light Rain'
+      if (temp > 35) return 'Hot and Sunny'
+      if (temp > 28) return 'Sunny'
+      if (temp > 22) return 'Partly Cloudy'
+      return 'Cloudy'
+    }
+
     const processedData = {
-      location: `${weatherData.city.name}, ${weatherData.city.country}`,
-      temperature: Math.round(currentWeather.main.temp),
-      condition: currentWeather.weather[0].description,
-      humidity: currentWeather.main.humidity,
-      windSpeed: Math.round(currentWeather.wind.speed * 3.6), // Convert m/s to km/h
-      rainfall: currentWeather.rain?.['3h'] || 0,
-      forecast: weatherData.list.slice(0, 24).filter((_, index) => index % 8 === 0).map((item: any) => ({
-        date: new Date(item.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' }),
-        high: Math.round(item.main.temp_max),
-        low: Math.round(item.main.temp_min),
-        condition: item.weather[0].description
-      })).slice(0, 3)
+      location: location,
+      temperature: Math.round(currentTemp),
+      condition: getCondition(currentTemp, rainfall),
+      humidity: Math.round(currentHumidity),
+      windSpeed: Math.round(currentWindSpeed),
+      rainfall: rainfall,
+      forecast: dates.slice(0, 3).map((date, index) => {
+        // Since NASA provides historical data, label accordingly
+        const dayNames = ['Recent', 'Yesterday', '2 Days Ago']
+        const tempMax = cleanValue(parameters.T2M_MAX?.[date], currentTemp + 5)
+        const tempMin = cleanValue(parameters.T2M_MIN?.[date], currentTemp - 5)
+        const temp = cleanValue(parameters.T2M?.[date], currentTemp)
+        const rain = cleanValue(parameters.PRECTOTCORR?.[date], 0)
+
+        return {
+          date: dayNames[index],
+          high: Math.round(tempMax),
+          low: Math.round(tempMin),
+          condition: getCondition(temp, rain)
+        }
+      })
     }
 
     // Store in database
@@ -95,12 +208,17 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Weather API error:', error)
-    
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    })
+
     // Fallback to mock data
     const location = new URL(request.url).searchParams.get('location') || 'New Delhi, India'
-    return NextResponse.json({ 
+    return NextResponse.json({
       weather: getMockWeatherData(location),
-      source: 'mock'
+      source: 'mock',
+      error: error instanceof Error ? error.message : 'Unknown error'
     })
   }
 }
@@ -121,7 +239,7 @@ export async function POST(request: NextRequest) {
         const data = await response.json()
         results.push({ location, success: true, data: data.weather })
       } catch (error) {
-        results.push({ location, success: false, error: error.message })
+        results.push({ location, success: false, error: error instanceof Error ? error.message : 'Unknown error' })
       }
     }
 
