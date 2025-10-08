@@ -52,8 +52,6 @@ function OrdersPageInternal() {
   const [orders, setOrders] = useState<OrderWithDetails[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all')
-  const [viewType, setViewType] = useState<'customer' | 'seller'>('customer')
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -238,51 +236,78 @@ function OrdersPageInternal() {
   }
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {user?.role === 'consumer' ? 'My Orders' :
-               user?.role === 'farmer' ? 'Crop Sales Orders' :
-               user?.role === 'supplier' ? 'Product Sales Orders' : 'All Orders'}
-            </h1>
-            <p className="text-gray-600">
-              {user?.role === 'consumer' ? 'Track your purchases and deliveries' :
-               user?.role === 'farmer' ? 'Manage orders for your crops and equipment' :
-               user?.role === 'supplier' ? 'Manage orders for your products' : 'Manage all order activities'
-              }
-            </p>
+    <div className="space-y-4 sm:space-y-6">
+      {/* Enhanced Header */}
+      <div className="relative bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white overflow-hidden shadow-xl">
+        {/* Background decoration */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white rounded-full translate-y-12 -translate-x-12"></div>
+        </div>
+
+        <div className="relative flex flex-col gap-4">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+              <span className="text-2xl sm:text-3xl">📦</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold leading-tight break-words">
+                {user?.role === 'consumer' ? 'My Orders' :
+                 user?.role === 'farmer' ? 'Crop Sales Orders' :
+                 user?.role === 'supplier' ? 'Product Sales Orders' : 'All Orders'}
+              </h1>
+              <p className="text-white/90 text-xs sm:text-sm md:text-base mt-1 leading-snug">
+                {user?.role === 'consumer' ? 'Track your purchases and deliveries' :
+                 user?.role === 'farmer' ? 'Manage orders for your crops and equipment' :
+                 user?.role === 'supplier' ? 'Manage orders for your products' : 'Manage all order activities'
+                }
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                setLoading(true)
+                loadOrders()
+              }}
+              className="flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
+            >
+              <span className={loading ? 'animate-spin text-lg sm:text-xl' : 'text-lg sm:text-xl'}>🔄</span>
+              <span className="font-semibold text-sm hidden sm:inline">Refresh</span>
+            </button>
           </div>
-          <button
-            onClick={() => {
-              setLoading(true)
-              loadOrders()
-            }}
-            className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-          >
-            <span className={loading ? 'animate-spin' : ''}>🔄</span>
-            <span>Refresh</span>
-          </button>
         </div>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="mb-6">
-        <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8">
+      {/* Filter Tabs - Scrollable on mobile */}
+      <div className="bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-1.5 sm:p-2">
+        <div className="overflow-x-auto scrollbar-hide -mx-1 px-1">
+          <nav className="flex gap-1.5 sm:gap-2">
             {['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'].map((status) => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                className={`flex-shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg sm:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 whitespace-nowrap ${
                   filter === status
-                    ? 'border-green-500 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg'
+                    : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
                 }`}
               >
-                {status.charAt(0).toUpperCase() + status.slice(1)}
-                <span className="ml-2 py-0.5 px-2 rounded-full text-xs bg-gray-100">
+                <span className="hidden sm:inline">
+                  {status.charAt(0).toUpperCase() + status.slice(1)}
+                </span>
+                <span className="sm:hidden">
+                  {status === 'all' ? 'All' :
+                   status === 'pending' ? 'Pend.' :
+                   status === 'confirmed' ? 'Conf.' :
+                   status === 'processing' ? 'Proc.' :
+                   status === 'shipped' ? 'Ship.' :
+                   status === 'delivered' ? 'Deliv.' :
+                   'Canc.'}
+                </span>
+                <span className={`ml-1 sm:ml-2 py-0.5 px-1.5 sm:px-2 rounded-full text-xs font-bold ${
+                  filter === status
+                    ? 'bg-white/20 text-white'
+                    : 'bg-gray-200 text-gray-700'
+                }`}>
                   {status === 'all' ? orders.length : orders.filter(o => o.status === status).length}
                 </span>
               </button>
@@ -292,114 +317,182 @@ function OrdersPageInternal() {
       </div>
 
       {filteredOrders.length === 0 ? (
-        <div className="text-center py-12">
-          <span className="text-6xl">📦</span>
-          <h3 className="mt-4 text-lg font-medium text-gray-900">No orders found</h3>
-          <p className="mt-2 text-gray-500">
-            {filter === 'all'
-              ? user?.role === 'consumer'
-                ? 'You haven\'t placed any orders yet.'
-                : user?.role === 'farmer'
-                ? 'No crop sales orders yet. List your crops to start selling!'
-                : user?.role === 'supplier'
-                ? 'No product sales orders yet. Add products to start selling!'
-                : 'No orders found.'
-              : `No ${filter} orders found.`
-            }
-          </p>
-          {user?.role === 'consumer' && (
-            <Link
-              href="/dashboard/supplies"
-              className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
-            >
-              Start Shopping
-            </Link>
-          )}
-          {user?.role === 'farmer' && (
-            <Link
-              href="/dashboard/crops/add"
-              className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
-            >
-              List Your Crops
-            </Link>
-          )}
-          {user?.role === 'supplier' && (
-            <Link
-              href="/dashboard/products/add"
-              className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
-            >
-              Add Products
-            </Link>
-          )}
+        <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-12 md:p-16 overflow-hidden">
+          {/* Background decoration */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-green-500 rounded-full -translate-y-24 sm:-translate-y-32 translate-x-24 sm:translate-x-32"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 bg-emerald-500 rounded-full translate-y-16 sm:translate-y-24 -translate-x-16 sm:-translate-x-24"></div>
+          </div>
+
+          <div className="relative text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full mb-4 sm:mb-6">
+              <span className="text-4xl sm:text-6xl">📦</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">No orders found</h3>
+            <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-4">
+              {filter === 'all'
+                ? user?.role === 'consumer'
+                  ? 'You haven\'t placed any orders yet. Start shopping to see your orders here!'
+                  : user?.role === 'farmer'
+                  ? 'No crop sales orders yet. List your crops to start selling!'
+                  : user?.role === 'supplier'
+                  ? 'No product sales orders yet. Add products to start selling!'
+                  : 'No orders found.'
+                : `No ${filter} orders found. Try checking other filters.`
+              }
+            </p>
+            {user?.role === 'consumer' && filter === 'all' && (
+              <Link
+                href="/dashboard/supplies"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              >
+                <span className="text-base sm:text-lg">🛒</span>
+                <span>Start Shopping</span>
+              </Link>
+            )}
+            {user?.role === 'farmer' && filter === 'all' && (
+              <Link
+                href="/dashboard/crops/add"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              >
+                <span className="text-base sm:text-lg">🌱</span>
+                <span>List Your Crops</span>
+              </Link>
+            )}
+            {user?.role === 'supplier' && filter === 'all' && (
+              <Link
+                href="/dashboard/products/add"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+              >
+                <span className="text-base sm:text-lg">➕</span>
+                <span>Add Products</span>
+              </Link>
+            )}
+          </div>
         </div>
       ) : (
-        <div className="space-y-6">
-          {filteredOrders.map((order) => (
-            <div key={order.id} className="bg-white rounded-lg shadow">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">
-                      Order #{order.id.slice(-8)}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {new Date(order.created_at).toLocaleDateString('en-IN', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                      })}
-                    </p>
+        <div className="space-y-4 sm:space-y-6">
+          {filteredOrders.map((order) => {
+            // Calculate progress for visual indicator
+            const statusSteps = ['pending', 'confirmed', 'processing', 'shipped', 'delivered']
+            const currentStepIndex = statusSteps.indexOf(order.status)
+            const progress = order.status === 'cancelled' ? 0 : ((currentStepIndex + 1) / statusSteps.length) * 100
+
+            return (
+            <div key={order.id} className="group relative bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl md:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
+              {/* Status Progress Bar */}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gray-100">
+                <div
+                  className={`h-full transition-all duration-500 ${
+                    order.status === 'cancelled' ? 'bg-red-500' :
+                    order.status === 'delivered' ? 'bg-green-500' :
+                    'bg-gradient-to-r from-blue-500 to-cyan-500'
+                  }`}
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+
+              {/* Header */}
+              <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 border-b border-gray-100">
+                <div className="flex flex-col gap-3">
+                  {/* Top Row: Order Info */}
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white shadow-lg">
+                      <span className="text-base sm:text-xl font-bold">#{order.id.slice(-2)}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 truncate">
+                        Order #{order.id.slice(-8)}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-500 flex items-center gap-1 mt-0.5 sm:mt-1">
+                        <span className="text-xs sm:text-sm">📅</span>
+                        <span className="truncate">
+                          {new Date(order.created_at).toLocaleDateString('en-IN', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+
+                  {/* Bottom Row: Status and Price */}
+                  <div className="flex items-center justify-between gap-2 sm:gap-3">
+                    <span className={`inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs font-bold rounded-lg sm:rounded-xl shadow-sm flex-shrink-0 ${getStatusColor(order.status)}`}>
+                      <span className="text-xs sm:text-sm">
+                        {order.status === 'pending' ? '⏳' :
+                         order.status === 'confirmed' ? '✅' :
+                         order.status === 'processing' ? '⚙️' :
+                         order.status === 'shipped' ? '🚚' :
+                         order.status === 'delivered' ? '📦' :
+                         order.status === 'cancelled' ? '❌' : '📋'}
+                      </span>
+                      <span className="hidden sm:inline">{order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span>
+                      <span className="sm:hidden">{order.status.slice(0, 4)}</span>
                     </span>
-                    <div className="text-right">
-                      <p className="text-lg font-semibold text-gray-900">₹{order.total_amount}</p>
-                      <p className="text-sm text-gray-500">{order.items?.length || 0} items</p>
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent whitespace-nowrap">
+                        ₹{order.total_amount.toLocaleString()}
+                      </p>
+                      <p className="text-xs sm:text-sm text-gray-500">{order.items?.length || 0} items</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-6 py-4">
-                <div className="flex items-center justify-between mb-4">
-                  <p className="text-sm text-gray-600">
-                    {user?.role === 'consumer'
-                      ? `Seller: ${order.seller.full_name} (${order.seller.city}, ${order.seller.state})`
-                      : `Customer: ${order.customer.full_name}`
-                    }
+              {/* Content */}
+              <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5">
+                {/* Info Section */}
+                <div className="flex flex-col gap-2 sm:gap-3 mb-4 sm:mb-5 p-2.5 sm:p-3 md:p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl">
+                  <p className="text-xs sm:text-sm font-medium text-gray-700 flex items-start gap-2">
+                    <span className="text-sm sm:text-base flex-shrink-0 mt-0.5">
+                      {user?.role === 'consumer' ? '🏪' : '👤'}
+                    </span>
+                    <span className="break-words min-w-0">
+                      {user?.role === 'consumer'
+                        ? `Seller: ${order.seller.full_name}${order.seller.city ? ` (${order.seller.city}, ${order.seller.state})` : ''}`
+                        : `Customer: ${order.customer.full_name}`
+                      }
+                    </span>
                   </p>
-                  <p className="text-sm text-gray-500">
-                    Payment: {order.payment_status}
-                  </p>
+                  <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1.5 bg-white rounded-lg shadow-sm self-start">
+                    <span className="text-xs sm:text-sm">💳</span>
+                    <span className={`text-xs font-semibold whitespace-nowrap ${
+                      order.payment_status === 'paid' ? 'text-green-600' : 'text-orange-600'
+                    }`}>
+                      {order.payment_status}
+                    </span>
+                  </div>
                 </div>
 
                 {/* Order Items */}
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5">
                   {order.items?.map((item: any) => (
-                    <div key={item.id} className="flex items-center space-x-4">
+                    <div key={item.id} className="group flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-gray-50/50 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 border border-gray-100">
                       <div className="flex-shrink-0">
                         {item.product?.images && item.product.images.length > 0 ? (
                           <img
                             src={item.product.images[0]}
                             alt={item.product.name}
-                            className="h-12 w-12 rounded-lg object-cover"
+                            className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-lg sm:rounded-xl object-cover shadow-md group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="h-12 w-12 bg-gray-200 rounded-lg flex items-center justify-center">
-                            <span className="text-xl">
+                          <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg sm:rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                            <span className="text-xl sm:text-2xl">
                               {item.product ? '📦' : '🌾'}
                             </span>
                           </div>
                         )}
                       </div>
-                      <div className="flex-1">
-                        <h4 className="text-sm font-medium text-gray-900">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-xs sm:text-sm md:text-base font-bold text-gray-900 line-clamp-2">
                           {item.product?.name || item.crop_listing?.crop.name}
                         </h4>
-                        <p className="text-sm text-gray-500">
-                          Quantity: {item.quantity} × ₹{item.unit_price} = ₹{item.total_price}
+                        <p className="text-xs sm:text-sm text-gray-600 mt-0.5 sm:mt-1">
+                          <span className="font-semibold">{item.quantity}</span> ×
+                          <span className="font-semibold"> ₹{item.unit_price.toLocaleString()}</span> =
+                          <span className="font-bold text-green-600"> ₹{item.total_price.toLocaleString()}</span>
                         </p>
                       </div>
                     </div>
@@ -408,66 +501,71 @@ function OrdersPageInternal() {
 
                 {/* Action buttons for sellers (farmers and suppliers) */}
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'pending' && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <div className="flex space-x-3">
+                  <div className="pt-3 sm:pt-4 border-t border-gray-200">
+                    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:gap-3">
                       <button
                         onClick={() => updateOrderStatus(order.id, 'confirmed')}
-                        className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+                        className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                       >
-                        Accept Order
+                        <span className="text-sm sm:text-base">✅</span>
+                        <span>Accept</span>
                       </button>
                       <button
                         onClick={() => updateOrderStatus(order.id, 'cancelled')}
-                        className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+                        className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-red-500 to-pink-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                       >
-                        Decline Order
+                        <span className="text-sm sm:text-base">❌</span>
+                        <span>Decline</span>
                       </button>
                     </div>
                   </div>
                 )}
 
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'confirmed' && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="pt-3 sm:pt-4 border-t border-gray-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'processing')}
-                      className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+                      className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                     >
-                      Start Processing
+                      <span className="text-sm sm:text-base">⚙️</span>
+                      <span>Start Processing</span>
                     </button>
                   </div>
                 )}
 
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'processing' && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="pt-3 sm:pt-4 border-t border-gray-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'shipped')}
-                      className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700"
+                      className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                     >
-                      Mark as Shipped
+                      <span className="text-sm sm:text-base">🚚</span>
+                      <span>Mark as Shipped</span>
                     </button>
                   </div>
                 )}
 
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'shipped' && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
+                  <div className="pt-3 sm:pt-4 border-t border-gray-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'delivered')}
-                      className="px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+                      className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                     >
-                      Mark as Delivered
+                      <span className="text-sm sm:text-base">📦</span>
+                      <span>Mark as Delivered</span>
                     </button>
                   </div>
                 )}
 
                 {/* Action buttons */}
-                <div className="mt-4 pt-4 border-t border-gray-200 flex space-x-3">
+                <div className="pt-3 sm:pt-4 border-t border-gray-200 grid grid-cols-1 sm:flex sm:flex-row gap-2 sm:gap-3">
                   {/* Track Order button for customers */}
                   {user?.id === order.customer_id && order.status !== 'pending' && order.status !== 'cancelled' && (
                     <Link
                       href={`/dashboard/orders/${order.id}/track`}
-                      className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white text-sm rounded-md hover:bg-green-700"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                     >
-                      <span>📍</span>
+                      <span className="text-sm sm:text-base">📍</span>
                       <span>Track Order</span>
                     </Link>
                   )}
@@ -479,16 +577,17 @@ function OrdersPageInternal() {
                         const url = `/api/orders/${order.id}/invoice`
                         window.open(url, '_blank')
                       }}
-                      className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+                      className="flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                     >
-                      <span>📄</span>
+                      <span className="text-sm sm:text-base">📄</span>
                       <span>Download Invoice</span>
                     </button>
                   )}
                 </div>
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
       )}
     </div>

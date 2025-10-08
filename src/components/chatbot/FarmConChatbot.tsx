@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface Message {
@@ -62,7 +62,7 @@ export default function FarmConChatbot() {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
       sendMessage()
@@ -72,7 +72,7 @@ export default function FarmConChatbot() {
   return (
     <>
       {/* Floating Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
         {!opened && (
           <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
             AI
@@ -80,16 +80,16 @@ export default function FarmConChatbot() {
         )}
         <button
           onClick={() => setOpened(!opened)}
-          className="relative bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white rounded-full p-5 shadow-2xl transition-all duration-300 transform hover:scale-110 hover:rotate-12 group"
+          className="relative bg-gradient-to-br from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white rounded-full p-4 sm:p-5 shadow-2xl transition-all duration-300 transform hover:scale-110 hover:rotate-12 group"
           aria-label="Open chat"
         >
           {opened ? (
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
             <>
-              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
               </svg>
               <span className="absolute inset-0 rounded-full bg-green-400 opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-300"></span>
@@ -97,7 +97,7 @@ export default function FarmConChatbot() {
           )}
         </button>
         {!opened && (
-          <div className="absolute bottom-full right-0 mb-2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+          <div className="hidden sm:block absolute bottom-full right-0 mb-2 bg-gray-900 text-white text-sm px-4 py-2 rounded-lg shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
             Need help? Chat with AI! 💬
           </div>
         )}
@@ -105,10 +105,9 @@ export default function FarmConChatbot() {
 
       {/* Chatbot Window */}
       {opened && (
-        <div className="fixed bottom-24 right-6 z-50 animate-in slide-in-from-bottom-5 duration-300">
+        <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 animate-in slide-in-from-bottom-5 duration-300 max-w-[calc(100vw-2rem)] sm:max-w-none">
           <div
-            className="backdrop-blur-xl bg-white/90 rounded-2xl shadow-2xl overflow-hidden border border-green-200/50"
-            style={{ width: '380px', height: '600px' }}
+            className="backdrop-blur-xl bg-white/90 rounded-2xl shadow-2xl overflow-hidden border border-green-200/50 w-[calc(100vw-2rem)] sm:w-[380px] h-[500px] sm:h-[600px]"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4 flex items-center justify-between">
@@ -173,7 +172,7 @@ export default function FarmConChatbot() {
                     type="text"
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                    onKeyPress={handleKeyPress}
+                    onKeyDown={handleKeyDown}
                     placeholder="Ask me anything..."
                     disabled={loading}
                     className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent disabled:opacity-50 text-sm"

@@ -242,14 +242,14 @@ export default function DashboardLayout({
         {/* Top bar */}
         <div className="sticky top-0 z-40 shadow-lg border-b border-gray-200 backdrop-blur-sm bg-white/95">
           <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6">
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <span className="text-xl">☰</span>
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="lg:hidden text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <span className="text-xl">☰</span>
+              </button>
 
-            <div className="flex items-center space-x-2 sm:space-x-4 ml-auto lg:ml-0">
               <div className="hidden sm:block text-xs sm:text-sm text-gray-600 font-medium">
                 Welcome back, <span className="text-green-600 font-semibold">
                   {user.fullName?.split(' ').map(name =>
@@ -257,8 +257,9 @@ export default function DashboardLayout({
                   ).join(' ') || 'User'}
                 </span>! 👋
               </div>
-              <NotificationBell />
             </div>
+
+            <NotificationBell />
           </div>
         </div>
 

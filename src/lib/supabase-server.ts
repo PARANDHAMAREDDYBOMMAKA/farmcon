@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 
@@ -54,4 +55,22 @@ export async function getAuthenticatedSupabaseClient(request: NextRequest) {
   }
 
   return { supabase, user, error: null }
+}
+
+// Admin client with service role key - bypasses RLS policies
+export function createSupabaseAdminClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+
+  if (!supabaseServiceRoleKey) {
+    console.warn('SUPABASE_SERVICE_ROLE_KEY not found, using anon key')
+    return createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+  }
+
+  return createClient(supabaseUrl, supabaseServiceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  })
 }

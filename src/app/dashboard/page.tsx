@@ -143,9 +143,11 @@ export default function Dashboard() {
 
   const getGreeting = () => {
     const hour = new Date().getHours()
+    if (hour < 5) return { text: 'Night', icon: '🌙', gradient: 'from-indigo-900 via-purple-900 to-blue-900' }
     if (hour < 12) return { text: 'Morning', icon: '🌅', gradient: 'from-orange-400 via-pink-400 to-purple-500' }
     if (hour < 17) return { text: 'Afternoon', icon: '☀️', gradient: 'from-yellow-400 via-orange-400 to-red-400' }
-    return { text: 'Evening', icon: '🌇', gradient: 'from-purple-600 via-pink-500 to-orange-400' }
+    if (hour < 21) return { text: 'Evening', icon: '🌇', gradient: 'from-purple-600 via-pink-500 to-orange-400' }
+    return { text: 'Night', icon: '🌙', gradient: 'from-indigo-900 via-purple-900 to-blue-900' }
   }
 
 
@@ -429,89 +431,149 @@ export default function Dashboard() {
 
       {/* Stats Cards with Glassmorphism */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-green-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Total Orders</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalOrders || 0}</p>
-              <p className="text-xs text-green-600 mt-1 truncate">Lifetime orders</p>
+        <div className="group relative bg-gradient-to-br from-green-500/90 via-emerald-500/90 to-teal-500/90 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/20">
+          {/* Animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          {/* Decorative shapes */}
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl">📦</span>
+              </div>
+              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <span className="text-xs text-white">↗</span>
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">📦</span>
+
+            <div>
+              <p className="text-xs font-semibold text-white/80 uppercase tracking-wider mb-2 truncate">Total Orders</p>
+              <p className="font-extrabold text-white mb-2 break-words leading-tight" style={{ fontSize: `clamp(1.25rem, ${Math.max(1.25, 2.5 - String(stats.totalOrders || 0).length * 0.15)}rem, 2.5rem)` }}>{stats.totalOrders || 0}</p>
+              <div className="flex items-center gap-2 text-xs text-white/90">
+                <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full truncate">
+                  <span className="text-[10px] truncate">Lifetime orders</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-yellow-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Cart Items</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.cartItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.cartItems || 0}</p>
-              <p className="text-xs text-yellow-600 mt-1 truncate">Ready to checkout</p>
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
+
+          {/* Decorative background */}
+          <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">🛒</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-yellow-700 font-medium bg-yellow-50 px-2 py-1 rounded-full">
+                <span>Ready</span>
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">🛒</span>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Cart Items</p>
+              <p className="font-extrabold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.cartItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.cartItems || 0}</p>
+              <p className="text-xs text-gray-500 truncate">Ready to checkout</p>
             </div>
           </div>
         </div>
 
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-blue-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Total Spent</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 1.8 - String((stats.totalSpent || 0).toLocaleString()).length * 0.08)}rem, 1.8rem)` }}>₹{(stats.totalSpent || 0).toLocaleString()}</p>
-              <p className="text-xs text-blue-600 mt-1 truncate">This month</p>
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+
+          {/* Decorative pattern */}
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-blue-100 to-cyan-100 rounded-tl-full opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">💰</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
+                <span>↑</span>
+                <span>15%</span>
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">💰</span>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Total Spent</p>
+              <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.totalSpent || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.totalSpent || 0).toLocaleString()}</p>
+              <p className="text-xs text-gray-500 truncate">This month</p>
             </div>
           </div>
         </div>
 
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-orange-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Favorites</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.favoriteItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.favoriteItems || 0}</p>
-              <p className="text-xs text-orange-600 mt-1 truncate">Saved items</p>
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-rose-500"></div>
+
+          {/* Decorative background */}
+          <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">❤️</span>
+              </div>
+              <div className="text-[10px] text-pink-600 font-medium bg-pink-50 px-2 py-1 rounded-full">
+                SAVED
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">❤️</span>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Favorites</p>
+              <p className="font-extrabold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.favoriteItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.favoriteItems || 0}</p>
+              <p className="text-xs text-gray-500 truncate">Saved items</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions with Glassmorphism */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 border border-white/40">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-2xl">⚡</span>
-          <h3 className="text-lg md:text-xl font-semibold text-gray-900">Quick Actions</h3>
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
+            <span className="text-2xl">⚡</span>
+          </div>
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <Link href="/dashboard/browse" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-green-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">🌾</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <Link href="/dashboard/browse" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">🌾</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">Browse Crops</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Browse Crops</span>
           </Link>
-          <Link href="/dashboard/cart" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl hover:from-yellow-100 hover:to-orange-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-yellow-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">🛒</span>
+          <Link href="/dashboard/cart" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">🛒</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">View Cart</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">View Cart</span>
           </Link>
-          <Link href="/dashboard/orders" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-blue-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">📦</span>
+          <Link href="/dashboard/orders" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">📦</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">My Orders</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">My Orders</span>
           </Link>
-          <Link href="/dashboard/supplies" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-purple-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">🧰</span>
+          <Link href="/dashboard/supplies" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">🧰</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">Farm Supplies</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Farm Supplies</span>
           </Link>
         </div>
       </div>
@@ -593,92 +655,149 @@ export default function Dashboard() {
 
       {/* Stats Cards with Glassmorphism */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-green-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Total Products</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalProducts || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalProducts || 0}</p>
-              <p className="text-xs text-green-600 mt-1 truncate">Active catalog</p>
+        <div className="group relative bg-gradient-to-br from-green-500/90 via-emerald-500/90 to-teal-500/90 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/20">
+          {/* Animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          {/* Decorative shapes */}
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl">📦</span>
+              </div>
+              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <span className="text-xs text-white">↗</span>
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">📦</span>
+
+            <div>
+              <p className="text-xs font-semibold text-white/80 uppercase tracking-wider mb-2 truncate">Total Products</p>
+              <p className="font-extrabold text-white mb-2 break-words leading-tight" style={{ fontSize: `clamp(1.25rem, ${Math.max(1.25, 2.5 - String(stats.totalProducts || 0).length * 0.15)}rem, 2.5rem)` }}>{stats.totalProducts || 0}</p>
+              <div className="flex items-center gap-2 text-xs text-white/90">
+                <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full truncate">
+                  <span className="text-[10px] truncate">Active catalog</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-blue-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Monthly Revenue</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 1.8 - String((stats.monthlyRevenue || 0).toLocaleString()).length * 0.08)}rem, 1.8rem)` }}>₹{(stats.monthlyRevenue || 0).toLocaleString()}</p>
-              <p className="text-xs text-green-600 mt-1 flex items-center gap-1 truncate">
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+
+          {/* Decorative background */}
+          <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">💰</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
                 <span>↑</span>
-                <span>+8% last month</span>
-              </p>
+                <span>8%</span>
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">💰</span>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
+              <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.monthlyRevenue || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.monthlyRevenue || 0).toLocaleString()}</p>
+              <p className="text-xs text-gray-500 truncate">vs last month</p>
             </div>
           </div>
         </div>
 
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-yellow-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Pending Orders</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.pendingOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.pendingOrders || 0}</p>
-              <p className="text-xs text-yellow-600 mt-1 truncate">Needs processing</p>
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+
+          {/* Animated pulse indicator */}
+          <div className="absolute top-6 right-6 w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">⏳</span>
+              </div>
+              <div className="text-xs text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-full">
+                Urgent
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-yellow-100 to-yellow-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">⏳</span>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
+              <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.pendingOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.pendingOrders || 0}</p>
+              <p className="text-xs text-gray-500 truncate">Needs processing</p>
             </div>
           </div>
         </div>
 
-        <div className="group bg-white/80 backdrop-blur-xl rounded-2xl shadow-md p-4 md:p-6 border-l-4 border-purple-500 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <p className="text-xs md:text-sm font-medium text-gray-500 uppercase tracking-wide truncate">Low Stock Items</p>
-              <p className="font-bold text-gray-900 mt-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.lowStockItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.lowStockItems || 0}</p>
-              <p className="text-xs text-purple-600 mt-1 truncate">Needs restocking</p>
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+
+          {/* Decorative pattern */}
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-purple-100 to-pink-100 rounded-tl-full opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <div className="text-[10px] text-purple-600 font-medium bg-purple-50 px-2 py-1 rounded-full">
+                ALERT
+              </div>
             </div>
-            <div className="flex-shrink-0 p-2 sm:p-3 md:p-4 bg-gradient-to-br from-purple-100 to-purple-200 rounded-2xl group-hover:scale-110 transition-transform duration-300">
-              <span className="text-xl sm:text-2xl md:text-3xl">⚠️</span>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Low Stock Items</p>
+              <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.lowStockItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.lowStockItems || 0}</p>
+              <p className="text-xs text-gray-500 truncate">Needs restocking</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions with Glassmorphism */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 border border-white/40">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-2xl">⚡</span>
-          <h3 className="text-lg md:text-xl font-semibold text-gray-900">Quick Actions</h3>
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-md">
+            <span className="text-2xl">⚡</span>
+          </div>
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          <Link href="/dashboard/products/add" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-green-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">➕</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <Link href="/dashboard/products/add" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">➕</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">Add Product</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Add Product</span>
           </Link>
-          <Link href="/dashboard/products" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl hover:from-blue-100 hover:to-cyan-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-blue-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">📦</span>
+          <Link href="/dashboard/products" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">📦</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">Manage Products</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Manage Products</span>
           </Link>
-          <Link href="/dashboard/orders" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl hover:from-yellow-100 hover:to-orange-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-yellow-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">📋</span>
+          <Link href="/dashboard/orders" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">📋</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">Process Orders</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Process Orders</span>
           </Link>
-          <Link href="/dashboard/inventory" className="group flex flex-col items-center p-4 md:p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl hover:from-purple-100 hover:to-pink-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 border border-purple-100">
-            <div className="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300 mb-2">
-              <span className="text-2xl">📊</span>
+          <Link href="/dashboard/inventory" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">📊</span>
             </div>
-            <span className="text-xs md:text-sm font-semibold text-gray-700 text-center">View Inventory</span>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">View Inventory</span>
           </Link>
         </div>
       </div>
@@ -785,61 +904,238 @@ export default function Dashboard() {
     )
   }
 
-  const renderAdminDashboard = () => (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage platform users, products, and operations</p>
+  const renderAdminDashboard = () => {
+    const greeting = getGreeting()
+    return (
+    <div className="space-y-4 md:space-y-6">
+      {/* Header */}
+      <div className={`relative bg-gradient-to-r ${greeting.gradient} rounded-2xl p-6 md:p-8 text-white overflow-hidden shadow-xl`}>
+        {/* Animated background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
+          <div className="absolute bottom-0 left-0 w-24 h-24 md:w-48 md:h-48 bg-white rounded-full translate-y-12 -translate-x-12"></div>
+        </div>
+        <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-4xl md:text-5xl animate-bounce">{greeting.icon}</span>
+              <h1 className="text-2xl md:text-4xl font-bold">Good {greeting.text}, {user?.fullName || 'Admin'}!</h1>
+            </div>
+            <p className="text-white/90 text-sm md:text-base">Manage platform users, products, and operations</p>
+          </div>
+          <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
+            <span className="text-2xl">⚙️</span>
+            <span className="text-sm font-medium">Admin Dashboard</span>
+          </div>
+        </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg flex-shrink-0">
-              <span className="text-2xl">👥</span>
+
+      {/* Stats Cards with Glassmorphism */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="group relative bg-gradient-to-br from-green-500/90 via-emerald-500/90 to-teal-500/90 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/20">
+          {/* Animated gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+          {/* Decorative shapes */}
+          <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+          <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl">👥</span>
+              </div>
+              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <span className="text-xs text-white">↗</span>
+              </div>
             </div>
-            <div className="ml-4 flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-600 truncate">Total Users</p>
-              <p className="font-bold text-gray-900 break-all" style={{ fontSize: 'clamp(1.25rem, 2vw + 0.5rem, 1.5rem)' }}>{stats.totalUsers || 0}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg flex-shrink-0">
-              <span className="text-2xl">🚜</span>
-            </div>
-            <div className="ml-4 flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-600 truncate">Farmers</p>
-              <p className="font-bold text-gray-900 break-all" style={{ fontSize: 'clamp(1.25rem, 2vw + 0.5rem, 1.5rem)' }}>{stats.farmers || 0}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-yellow-100 rounded-lg flex-shrink-0">
-              <span className="text-2xl">📦</span>
-            </div>
-            <div className="ml-4 flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-600 truncate">Total Products</p>
-              <p className="font-bold text-gray-900 break-all" style={{ fontSize: 'clamp(1.25rem, 2vw + 0.5rem, 1.5rem)' }}>{stats.totalProducts || 0}</p>
+
+            <div>
+              <p className="text-xs font-semibold text-white/80 uppercase tracking-wider mb-2 truncate">Total Users</p>
+              <p className="font-extrabold text-white mb-2 break-words leading-tight" style={{ fontSize: `clamp(1.25rem, ${Math.max(1.25, 2.5 - String(stats.totalUsers || 0).length * 0.15)}rem, 2.5rem)` }}>{stats.totalUsers || 0}</p>
+              <div className="flex items-center gap-2 text-xs text-white/90">
+                <span className="inline-flex items-center gap-1 bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full truncate">
+                  <span>+12</span>
+                  <span className="text-[10px] truncate">this month</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <div className="flex items-center">
-            <div className="p-2 bg-purple-100 rounded-lg flex-shrink-0">
-              <span className="text-2xl">📋</span>
+
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+
+          {/* Decorative background */}
+          <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">🚜</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
+                <span>↑</span>
+                <span>8%</span>
+              </div>
             </div>
-            <div className="ml-4 flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-600 truncate">Total Orders</p>
-              <p className="font-bold text-gray-900 break-all" style={{ fontSize: 'clamp(1.25rem, 2vw + 0.5rem, 1.5rem)' }}>{stats.totalOrders || 0}</p>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Farmers</p>
+              <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.farmers || 0).length * 0.15)}rem, 2rem)` }}>{stats.farmers || 0}</p>
+              <p className="text-xs text-gray-500 truncate">Active farmers</p>
             </div>
+          </div>
+        </div>
+
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+
+          {/* Decorative pattern */}
+          <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-amber-100 to-orange-100 rounded-tl-full opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">📦</span>
+              </div>
+              <div className="text-[10px] text-amber-600 font-medium bg-amber-50 px-2 py-1 rounded-full">
+                CATALOG
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Total Products</p>
+              <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalProducts || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalProducts || 0}</p>
+              <p className="text-xs text-gray-500 truncate">Platform-wide</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
+          {/* Gradient accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+
+          {/* Animated pulse indicator */}
+          <div className="absolute top-6 right-6 w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
+
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-2xl">📋</span>
+              </div>
+              <div className="text-[10px] text-purple-600 font-medium bg-purple-50 px-2 py-1 rounded-full">
+                ORDERS
+              </div>
+            </div>
+
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Total Orders</p>
+              <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalOrders || 0}</p>
+              <p className="text-xs text-gray-500 truncate">All transactions</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions with Glassmorphism */}
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
+            <span className="text-2xl">⚡</span>
+          </div>
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900">Admin Tools</h3>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <Link href="/dashboard/admin/users" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">👥</span>
+            </div>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Manage Users</span>
+          </Link>
+          <Link href="/dashboard/admin/products" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">📦</span>
+            </div>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Manage Products</span>
+          </Link>
+          <Link href="/dashboard/admin/orders" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">📋</span>
+            </div>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">View Orders</span>
+          </Link>
+          <Link href="/dashboard/admin/analytics" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
+              <span className="text-3xl">📊</span>
+            </div>
+            <span className="relative text-sm md:text-base font-bold text-white text-center">Analytics</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* System Overview */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <span>📈</span>
+            Platform Health
+          </h3>
+          <div className="space-y-3">
+            {[
+              { label: 'System Status', value: 'Operational', status: 'success' },
+              { label: 'Active Sessions', value: '1,247', status: 'success' },
+              { label: 'Server Load', value: '45%', status: 'warning' }
+            ].map((item, index) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <span className="font-medium text-gray-700">{item.label}</span>
+                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                  item.status === 'success' ? 'bg-green-100 text-green-800' :
+                  item.status === 'warning' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-red-100 text-red-800'
+                }`}>
+                  {item.value}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <span>⚠️</span>
+            Recent Alerts
+          </h3>
+          <div className="space-y-3">
+            {[
+              { message: 'New user registration spike', time: '2 hours ago', type: 'info' },
+              { message: 'Low stock alert for 5 items', time: '4 hours ago', type: 'warning' },
+              { message: 'Database backup completed', time: '6 hours ago', type: 'success' }
+            ].map((alert, index) => (
+              <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <div className={`w-2 h-2 rounded-full mt-2 ${
+                  alert.type === 'success' ? 'bg-green-500' :
+                  alert.type === 'warning' ? 'bg-yellow-500' :
+                  'bg-blue-500'
+                }`}></div>
+                <div className="flex-1">
+                  <p className="font-medium text-gray-900 text-sm">{alert.message}</p>
+                  <p className="text-xs text-gray-500 mt-1">{alert.time}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
     </div>
-  )
+    )
+  }
 
   const renderDashboardContent = () => {
     switch (user.role) {

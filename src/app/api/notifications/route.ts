@@ -79,8 +79,8 @@ export async function PUT(request: NextRequest) {
 
       return NextResponse.json({ success: true, message: 'All notifications marked as read' })
     } else if (notificationId) {
-      // Mark specific notification as read
-      await prisma.notification.update({
+      // Mark specific notification as read - use updateMany to allow composite where clause
+      const result = await prisma.notification.updateMany({
         where: {
           id: notificationId,
           userId // Ensure user can only update their own notifications
@@ -89,6 +89,10 @@ export async function PUT(request: NextRequest) {
           isRead: isRead !== undefined ? isRead : true
         }
       })
+
+      if (result.count === 0) {
+        return NextResponse.json({ error: 'Notification not found or unauthorized' }, { status: 404 })
+      }
 
       return NextResponse.json({ success: true, message: 'Notification updated' })
     }
@@ -110,13 +114,17 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'User ID and Notification ID are required' }, { status: 400 })
     }
 
-    // Delete the notification, ensuring user can only delete their own
-    await prisma.notification.delete({
+    // Delete the notification, ensuring user can only delete their own - use deleteMany for composite where
+    const result = await prisma.notification.deleteMany({
       where: {
         id: notificationId,
         userId
       }
     })
+
+    if (result.count === 0) {
+      return NextResponse.json({ error: 'Notification not found or unauthorized' }, { status: 404 })
+    }
 
     return NextResponse.json({ success: true, message: 'Notification deleted' })
   } catch (error) {
