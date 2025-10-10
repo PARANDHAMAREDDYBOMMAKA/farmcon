@@ -19,6 +19,7 @@ const navigation = {
     { name: 'Orders', href: '/dashboard/orders', icon: '📦' },
     { name: 'Weather', href: '/dashboard/weather', icon: '🌤️' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
   ],
   consumer: [
     { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
@@ -27,6 +28,7 @@ const navigation = {
     { name: 'Cart', href: '/dashboard/cart', icon: '🛒' },
     { name: 'Weather', href: '/dashboard/weather', icon: '🌤️' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
   ],
   supplier: [
     { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
@@ -37,6 +39,7 @@ const navigation = {
     { name: 'Weather', href: '/dashboard/weather', icon: '🌤️' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
     { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: '🔍' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
   ],
   admin: [
     { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
@@ -48,6 +51,7 @@ const navigation = {
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
     { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: '🔍' },
     { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
   ]
 }
 

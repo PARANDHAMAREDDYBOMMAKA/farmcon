@@ -18,6 +18,21 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "FarmCon - Farm Connect Platform",
   description: "Connect farmers, suppliers, and buyers on one platform",
+  manifest: "/manifest.json",
+  themeColor: "#10b981",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "FarmCon",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({

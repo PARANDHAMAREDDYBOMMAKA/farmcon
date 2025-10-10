@@ -91,7 +91,9 @@ async function fetchAGMARKNETData(
   limit: number
 ): Promise<MarketPrice[]> {
   try {
-    let url = `${AGMARKNET_URL}?api-key=${process.env.DATA_GOV_API_KEY || 'demo'}&format=json&limit=${limit}`
+    // Free public API key - no registration required
+    const apiKey = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b'
+    let url = `${AGMARKNET_URL}?api-key=${apiKey}&format=json&limit=${limit}`
 
     if (commodity) {
       url += `&filters[commodity]=${encodeURIComponent(commodity)}`
