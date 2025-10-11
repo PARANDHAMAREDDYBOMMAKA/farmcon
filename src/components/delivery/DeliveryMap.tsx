@@ -1,15 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
-import { LatLngExpression, Icon } from 'leaflet'
-
-// Dynamic imports to avoid SSR issues
-const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false })
-const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false })
-const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false })
-const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false })
-const Polyline = dynamic(() => import('react-leaflet').then(mod => mod.Polyline), { ssr: false })
+import Map, { Marker, Popup, Source, Layer } from 'react-map-gl/mapbox'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
 interface DeliveryMapProps {
   order: {
@@ -55,43 +48,12 @@ const DELIVERY_ROUTE: Location[] = [
   }
 ]
 
-// Custom icons for different marker types
-const createIcon = (color: string, symbol: string, size: number = 32) => {
-  if (typeof window === 'undefined') return undefined
-
-  return new Icon({
-    iconUrl: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="${size/2}" cy="${size/2}" r="${size/2 - 2}" fill="${color}" stroke="white" stroke-width="2"/>
-        <text x="${size/2}" y="${size/2 + 4}" text-anchor="middle" fill="white" font-size="${size/3}" font-weight="bold">${symbol}</text>
-      </svg>
-    `)}`,
-    iconSize: [size, size],
-    iconAnchor: [size/2, size],
-    popupAnchor: [0, -size]
-  })
-}
-
 export default function DeliveryMap({ order, className = 'h-96 w-full rounded-lg overflow-hidden shadow-lg' }: DeliveryMapProps) {
-  const [isClient, setIsClient] = useState(false)
   const [currentDriverPosition, setCurrentDriverPosition] = useState<number>(0)
-  const [driverLocation, setDriverLocation] = useState<LatLngExpression | null>(null)
+  const [driverLocation, setDriverLocation] = useState<{longitude: number, latitude: number} | null>(null)
+  const [selectedMarker, setSelectedMarker] = useState<number | null>(null)
 
-  useEffect(() => {
-    setIsClient(true)
-
-    // Import Leaflet CSS
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
-    document.head.appendChild(link)
-
-    return () => {
-      if (document.head.contains(link)) {
-        document.head.removeChild(link)
-      }
-    }
-  }, [])
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
 
   useEffect(() => {
     if (order.status === 'shipped') {
@@ -101,11 +63,10 @@ export default function DeliveryMap({ order, className = 'h-96 w-full rounded-lg
 
   const simulateDriverMovement = () => {
     let position = 0
-    const totalSteps = 100 // Number of animation steps
+    const totalSteps = 100
 
     const moveDriver = () => {
       if (position < totalSteps) {
-        // Calculate position along the route
         const segmentLength = totalSteps / (DELIVERY_ROUTE.length - 1)
         const currentSegment = Math.floor(position / segmentLength)
         const segmentProgress = (position % segmentLength) / segmentLength
@@ -114,10 +75,10 @@ export default function DeliveryMap({ order, className = 'h-96 w-full rounded-lg
           const start = DELIVERY_ROUTE[currentSegment]
           const end = DELIVERY_ROUTE[currentSegment + 1]
 
-          const lat = start.lat + (end.lat - start.lat) * segmentProgress
-          const lng = start.lng + (end.lng - start.lng) * segmentProgress
+          const latitude = start.lat + (end.lat - start.lat) * segmentProgress
+          const longitude = start.lng + (end.lng - start.lng) * segmentProgress
 
-          setDriverLocation([lat, lng])
+          setDriverLocation({ latitude, longitude })
           setCurrentDriverPosition(currentSegment)
         }
 
@@ -125,9 +86,8 @@ export default function DeliveryMap({ order, className = 'h-96 w-full rounded-lg
       }
     }
 
-    // Move driver every 5 seconds
     const interval = setInterval(moveDriver, 5000)
-    moveDriver() // Initial position
+    moveDriver()
 
     return () => clearInterval(interval)
   }
@@ -148,34 +108,77 @@ export default function DeliveryMap({ order, className = 'h-96 w-full rounded-lg
     }
   }
 
-  if (!isClient) {
+  if (!mapboxToken) {
     return (
       <div className={`${className} flex items-center justify-center bg-gray-100`}>
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading delivery map...</p>
-        </div>
+        <p className="text-gray-600">Map configuration required</p>
       </div>
     )
   }
 
-  // Map center - show the entire route
-  const mapCenter: LatLngExpression = [15.5, 78.9] // Centered between Hyderabad and Kalakada
+  // Create GeoJSON for the route line
+  const routeGeoJSON = {
+    type: 'Feature' as const,
+    geometry: {
+      type: 'LineString' as const,
+      coordinates: DELIVERY_ROUTE.map(loc => [loc.lng, loc.lat])
+    },
+    properties: {}
+  }
+
+  // Progress line for shipped orders
+  const progressGeoJSON = order.status === 'shipped' && driverLocation ? {
+    type: 'Feature' as const,
+    geometry: {
+      type: 'LineString' as const,
+      coordinates: [
+        [DELIVERY_ROUTE[0].lng, DELIVERY_ROUTE[0].lat],
+        [driverLocation.longitude, driverLocation.latitude]
+      ]
+    },
+    properties: {}
+  } : null
 
   return (
     <div className={className}>
-      <MapContainer
-        center={mapCenter}
-        zoom={7}
-        style={{ height: '100%', width: '100%' }}
-        className="rounded-lg"
+      <Map
+        initialViewState={{
+          latitude: 15.5,
+          longitude: 78.9,
+          zoom: 7
+        }}
+        mapStyle="mapbox://styles/mapbox/streets-v12"
+        mapboxAccessToken={mapboxToken}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        {/* Route line */}
+        <Source id="route" type="geojson" data={routeGeoJSON}>
+          <Layer
+            id="route-layer"
+            type="line"
+            paint={{
+              'line-color': order.status === 'delivered' ? '#10B981' : '#3B82F6',
+              'line-width': 4,
+              'line-opacity': 0.8
+            }}
+          />
+        </Source>
 
-        {/* Route waypoints */}
+        {/* Progress line for shipped orders */}
+        {progressGeoJSON && (
+          <Source id="progress" type="geojson" data={progressGeoJSON}>
+            <Layer
+              id="progress-layer"
+              type="line"
+              paint={{
+                'line-color': '#10B981',
+                'line-width': 6,
+                'line-opacity': 1
+              }}
+            />
+          </Source>
+        )}
+
+        {/* Route waypoint markers */}
         {DELIVERY_ROUTE.map((location, index) => {
           const isCompleted = order.status === 'delivered' ||
                              (order.status === 'shipped' && currentDriverPosition > index)
@@ -184,26 +187,18 @@ export default function DeliveryMap({ order, className = 'h-96 w-full rounded-lg
           return (
             <Marker
               key={index}
-              position={[location.lat, location.lng]}
-              icon={createIcon(
-                isCompleted ? '#10B981' : isCurrent ? '#3B82F6' : '#9CA3AF',
-                (index + 1).toString()
-              )}
+              latitude={location.lat}
+              longitude={location.lng}
             >
-              <Popup>
-                <div className="p-2 min-w-[200px]">
-                  <h3 className={`font-semibold ${isCompleted ? 'text-green-600' : isCurrent ? 'text-blue-600' : 'text-gray-600'}`}>
-                    {location.name}
-                  </h3>
-                  <p className="text-sm text-gray-600">{location.address}</p>
-                  {index === 0 && <p className="text-xs text-green-600 mt-1">📦 Origin</p>}
-                  {index === DELIVERY_ROUTE.length - 1 && (
-                    <p className="text-xs text-blue-600 mt-1">📍 {parseDeliveryAddress()}</p>
-                  )}
-                  {isCompleted && <p className="text-xs text-green-600 mt-1">✅ Completed</p>}
-                  {isCurrent && <p className="text-xs text-blue-600 mt-1">🚛 Current Location</p>}
-                </div>
-              </Popup>
+              <div
+                className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-white shadow-lg cursor-pointer"
+                style={{
+                  backgroundColor: isCompleted ? '#10B981' : isCurrent ? '#3B82F6' : '#9CA3AF'
+                }}
+                onClick={() => setSelectedMarker(index)}
+              >
+                <span className="text-white text-sm font-bold">{index + 1}</span>
+              </div>
             </Marker>
           )
         })}
@@ -211,49 +206,58 @@ export default function DeliveryMap({ order, className = 'h-96 w-full rounded-lg
         {/* Moving driver marker for shipped orders */}
         {order.status === 'shipped' && driverLocation && (
           <Marker
-            position={driverLocation}
-            icon={createIcon('#EF4444', '🚚', 40)}
+            latitude={driverLocation.latitude}
+            longitude={driverLocation.longitude}
           >
-            <Popup>
-              <div className="p-2">
-                <h3 className="font-semibold text-red-600">Delivery Vehicle</h3>
-                <p className="text-sm text-gray-600">Your order is on the way!</p>
-                <div className="mt-2 space-y-1 text-xs">
-                  <p className="text-green-600">📦 Order #{order.id.slice(-8)}</p>
-                  <p className="text-blue-600">📍 Moving towards delivery location</p>
-                  <p className="text-gray-500">⏱️ Live tracking active</p>
-                </div>
-              </div>
-            </Popup>
+            <div
+              className="text-3xl animate-bounce cursor-pointer"
+              onClick={() => setSelectedMarker(-1)}
+            >
+              🚚
+            </div>
           </Marker>
         )}
 
-        {/* Route line */}
-        <Polyline
-          positions={DELIVERY_ROUTE.map(loc => [loc.lat, loc.lng] as LatLngExpression)}
-          pathOptions={{
-            color: order.status === 'delivered' ? '#10B981' : '#3B82F6',
-            weight: 4,
-            opacity: 0.8,
-            dashArray: order.status === 'shipped' ? '10, 5' : undefined
-          }}
-        />
-
-        {/* Progress line for shipped orders */}
-        {order.status === 'shipped' && driverLocation && (
-          <Polyline
-            positions={[
-              [DELIVERY_ROUTE[0].lat, DELIVERY_ROUTE[0].lng],
-              driverLocation
-            ]}
-            pathOptions={{
-              color: '#10B981',
-              weight: 6,
-              opacity: 1
-            }}
-          />
+        {/* Popups */}
+        {selectedMarker !== null && selectedMarker >= 0 && selectedMarker < DELIVERY_ROUTE.length && (
+          <Popup
+            latitude={DELIVERY_ROUTE[selectedMarker].lat}
+            longitude={DELIVERY_ROUTE[selectedMarker].lng}
+            onClose={() => setSelectedMarker(null)}
+            closeButton={true}
+            closeOnClick={false}
+          >
+            <div className="p-2 min-w-[200px]">
+              <h3 className="font-semibold text-green-600">{DELIVERY_ROUTE[selectedMarker].name}</h3>
+              <p className="text-sm text-gray-600">{DELIVERY_ROUTE[selectedMarker].address}</p>
+              {selectedMarker === 0 && <p className="text-xs text-green-600 mt-1">📦 Origin</p>}
+              {selectedMarker === DELIVERY_ROUTE.length - 1 && (
+                <p className="text-xs text-blue-600 mt-1">📍 {parseDeliveryAddress()}</p>
+              )}
+            </div>
+          </Popup>
         )}
-      </MapContainer>
+
+        {selectedMarker === -1 && driverLocation && (
+          <Popup
+            latitude={driverLocation.latitude}
+            longitude={driverLocation.longitude}
+            onClose={() => setSelectedMarker(null)}
+            closeButton={true}
+            closeOnClick={false}
+          >
+            <div className="p-2">
+              <h3 className="font-semibold text-red-600">Delivery Vehicle</h3>
+              <p className="text-sm text-gray-600">Your order is on the way!</p>
+              <div className="mt-2 space-y-1 text-xs">
+                <p className="text-green-600">📦 Order #{order.id.slice(-8)}</p>
+                <p className="text-blue-600">📍 Moving towards delivery location</p>
+                <p className="text-gray-500">⏱️ Live tracking active</p>
+              </div>
+            </div>
+          </Popup>
+        )}
+      </Map>
     </div>
   )
 }

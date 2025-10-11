@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase'
 import { profileAPI } from '@/lib/api-client'
 import NotificationBell from '@/components/notifications/NotificationBell'
 import ToastProvider from '@/components/providers/ToastProvider'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import type { User } from '@/types'
 
 const navigation = {
@@ -263,7 +264,10 @@ export default function DashboardLayout({
               </div>
             </div>
 
-            <NotificationBell />
+            <div className="flex items-center gap-3">
+              <LanguageSwitcher />
+              <NotificationBell />
+            </div>
           </div>
         </div>
 

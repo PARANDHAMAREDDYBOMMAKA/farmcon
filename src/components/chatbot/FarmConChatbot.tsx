@@ -69,6 +69,18 @@ export default function FarmConChatbot() {
     }
   }
 
+  const openHumanSupport = () => {
+    // Open Tawk.to live chat for human support
+    if (typeof window !== 'undefined' && (window as any).Tawk_API) {
+      const TawkAPI = (window as any).Tawk_API
+      TawkAPI.showWidget() // Show the widget first
+      TawkAPI.maximize() // Then maximize it
+      setOpened(false) // Close AI chatbot
+    } else {
+      alert('Live support is loading. Please try again in a moment.')
+    }
+  }
+
   return (
     <>
       {/* Floating Chat Button */}
@@ -187,9 +199,20 @@ export default function FarmConChatbot() {
                     </svg>
                   </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-2 text-center">
-                  Powered by AI • Context-aware assistance
-                </p>
+                <div className="mt-2 flex items-center justify-between">
+                  <p className="text-xs text-gray-500">
+                    Powered by AI • Context-aware
+                  </p>
+                  <button
+                    onClick={openHumanSupport}
+                    className="text-xs text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Talk to Human
+                  </button>
+                </div>
               </div>
             </div>
           </div>
