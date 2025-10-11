@@ -50,6 +50,65 @@ export default function RootLayout({
         {/* Stripe - Real Integration */}
         <script src="https://js.stripe.com/v3/"></script>
 
+        {/* Google Translate Widget */}
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              function googleTranslateElementInit() {
+                new google.translate.TranslateElement({
+                  pageLanguage: 'en',
+                  includedLanguages: 'en,hi,ta,te,kn,ml,mr,bn,pa,gu,ur,or',
+                  layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                  autoDisplay: false,
+                  multilanguagePage: true
+                }, 'google_translate_element');
+              }
+            `,
+          }}
+        />
+        <script
+          type="text/javascript"
+          src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
+        />
+
+        {/* Hide Google Translate Banner and Branding */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              /* Hide Google Translate banner */
+              .goog-te-banner-frame.skiptranslate,
+              .goog-te-gadget-icon,
+              .goog-te-balloon-frame,
+              div#goog-gt-,
+              .skiptranslate > iframe {
+                display: none !important;
+              }
+
+              /* Fix body top margin when translate banner appears */
+              body {
+                top: 0px !important;
+              }
+
+              /* Hide Google Translate branding */
+              .goog-logo-link,
+              .goog-te-gadget span,
+              .goog-te-combo option:first-child {
+                display: none !important;
+              }
+
+              /* Style the translate dropdown (if visible) */
+              .goog-te-combo {
+                padding: 8px;
+                border: 1px solid #d1d5db;
+                border-radius: 0.5rem;
+                font-size: 0.875rem;
+                outline: none;
+              }
+            `,
+          }}
+        />
+
         {/* Microsoft Clarity - Analytics & Session Recording */}
         {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID && (
           <script
@@ -91,7 +150,7 @@ export default function RootLayout({
                 __html: `
                   // Customize Tawk.to position and styling
                   const checkTawk = setInterval(() => {
-                    if (window.Tawk_API) {
+                    if (window.Tawk_API && window.Tawk_API.hideWidget) {
                       // Position on bottom-right (same place as AI chatbot)
                       window.Tawk_API.customStyle = {
                         visibility: {
@@ -102,23 +161,47 @@ export default function RootLayout({
 
                       window.Tawk_API.onLoad = function() {
                         console.log('✅ Tawk.to Live Support loaded');
-                        window.Tawk_API.setAttributes({ name: 'FarmCon User' });
-                        // Hide widget by default - only show when "Talk to Human" is clicked
-                        window.Tawk_API.hideWidget();
+                        try {
+                          window.Tawk_API.setAttributes({ name: 'FarmCon User' });
+                          // Hide widget by default - only show when "Talk to Human" is clicked
+                          if (typeof window.Tawk_API.hideWidget === 'function') {
+                            window.Tawk_API.hideWidget();
+                          }
+                        } catch (error) {
+                          console.warn('Tawk.to API error:', error);
+                        }
                       };
 
                       // When chat is minimized, hide the widget completely
                       window.Tawk_API.onChatMinimized = function() {
-                        window.Tawk_API.hideWidget();
+                        try {
+                          if (typeof window.Tawk_API.hideWidget === 'function') {
+                            window.Tawk_API.hideWidget();
+                          }
+                        } catch (error) {
+                          console.warn('Tawk.to API error:', error);
+                        }
                       };
 
                       // When chat is ended, hide the widget completely
                       window.Tawk_API.onChatEnded = function() {
-                        window.Tawk_API.hideWidget();
+                        try {
+                          if (typeof window.Tawk_API.hideWidget === 'function') {
+                            window.Tawk_API.hideWidget();
+                          }
+                        } catch (error) {
+                          console.warn('Tawk.to API error:', error);
+                        }
                       };
 
                       // Hide immediately if already loaded
-                      window.Tawk_API.hideWidget();
+                      try {
+                        if (typeof window.Tawk_API.hideWidget === 'function') {
+                          window.Tawk_API.hideWidget();
+                        }
+                      } catch (error) {
+                        console.warn('Tawk.to API error:', error);
+                      }
 
                       clearInterval(checkTawk);
                     }
@@ -130,8 +213,6 @@ export default function RootLayout({
           </>
         )}
 
-        
-
         {/* OneSignal Web Push Notifications */}
         {process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID && (
           <>
@@ -140,44 +221,76 @@ export default function RootLayout({
               dangerouslySetInnerHTML={{
                 __html: `
                   window.OneSignalDeferred = window.OneSignalDeferred || [];
-                  OneSignalDeferred.push(async function(OneSignal) {
-                    await OneSignal.init({
-                      appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
-                      allowLocalhostAsSecureOrigin: true,
-                      notifyButton: {
-                        enable: true,
-                        displayPredicate: function() {
-                          return true;
+                  window.OneSignalDeferred.push(async function(OneSignal) {
+                    try {
+                      await OneSignal.init({
+                        appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
+                        allowLocalhostAsSecureOrigin: true,
+                        safari_web_id: "web.onesignal.auto.xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+                        notifyButton: {
+                          enable: true,
+                          displayPredicate: function() {
+                            return OneSignal.User.PushSubscription.optedIn !== true;
+                          },
+                          size: 'medium',
+                          theme: 'default',
+                          position: 'bottom-left',
+                          offset: {
+                            bottom: '20px',
+                            left: '20px'
+                          },
+                          showCredit: false,
+                          text: {
+                            'tip.state.unsubscribed': 'Subscribe to notifications',
+                            'tip.state.subscribed': "You're subscribed to notifications",
+                            'tip.state.blocked': "You've blocked notifications",
+                            'message.prenotify': 'Click to subscribe to notifications',
+                            'message.action.subscribed': "Thanks! You're subscribed!",
+                            'message.action.resubscribed': "You're subscribed!",
+                            'message.action.unsubscribed': "You won't receive notifications again",
+                            'dialog.main.title': 'Manage Site Notifications',
+                            'dialog.main.button.subscribe': 'SUBSCRIBE',
+                            'dialog.main.button.unsubscribe': 'UNSUBSCRIBE',
+                            'dialog.blocked.title': 'Unblock Notifications',
+                            'dialog.blocked.message': "Follow these instructions to allow notifications:"
+                          }
                         },
-                        size: 'medium',
-                        theme: 'default',
-                        position: 'bottom-left',
-                        offset: {
-                          bottom: '20px',
-                          left: '20px'
+                        welcomeNotification: {
+                          title: "Welcome to FarmCon! 🌾",
+                          message: "Thanks for enabling notifications! Get updates on orders, weather alerts, and market prices.",
+                          url: window.location.origin + "/dashboard"
                         },
-                        showCredit: false,
-                        text: {
-                          'tip.state.unsubscribed': 'Subscribe to notifications',
-                          'tip.state.subscribed': "You're subscribed to notifications",
-                          'tip.state.blocked': "You've blocked notifications",
-                          'message.prenotify': 'Click to subscribe to notifications',
-                          'message.action.subscribed': "Thanks! You're subscribed!",
-                          'message.action.resubscribed': "You're subscribed!",
-                          'message.action.unsubscribed': "You won't receive notifications again",
-                          'dialog.main.title': 'Manage Site Notifications',
-                          'dialog.main.button.subscribe': 'SUBSCRIBE',
-                          'dialog.main.button.unsubscribe': 'UNSUBSCRIBE',
-                          'dialog.blocked.title': 'Unblock Notifications',
-                          'dialog.blocked.message': "Follow these instructions to allow notifications:"
+                        promptOptions: {
+                          slidedown: {
+                            enabled: true,
+                            autoPrompt: true,
+                            timeDelay: 5,
+                            pageViews: 1
+                          }
                         }
-                      },
-                      welcomeNotification: {
-                        title: "FarmCon",
-                        message: "Thanks for enabling notifications! Get updates on orders, weather, and market prices."
-                      }
-                    });
-                    console.log('✅ OneSignal initialized');
+                      });
+
+                      console.log('✅ OneSignal initialized successfully');
+
+                      // Log current subscription status
+                      const isPushSupported = await OneSignal.Notifications.isPushSupported();
+                      const permission = await OneSignal.Notifications.permissionNative;
+                      console.log('Push supported:', isPushSupported);
+                      console.log('Notification permission:', permission);
+
+                      // Listen to subscription changes
+                      OneSignal.User.PushSubscription.addEventListener('change', function(event) {
+                        console.log('Subscription changed:', event);
+                        if (event.current.optedIn) {
+                          console.log('✅ User is subscribed to push notifications');
+                        } else {
+                          console.log('❌ User is not subscribed to push notifications');
+                        }
+                      });
+
+                    } catch (error) {
+                      console.error('❌ OneSignal initialization error:', error);
+                    }
                   });
                 `,
               }}

@@ -107,20 +107,57 @@ export async function GET(request: NextRequest) {
     const dates = Object.keys(parameters.T2M).sort().reverse()
     const recentDate = dates[0]
 
-    // Clean NASA data (-999 values)
+    // Log raw NASA data for debugging
+    console.log('🔍 Raw NASA API data for', locationName, ':', {
+      date: recentDate,
+      T2M: parameters.T2M[recentDate],
+      T2M_MAX: parameters.T2M_MAX?.[recentDate],
+      T2M_MIN: parameters.T2M_MIN?.[recentDate],
+      RH2M: parameters.RH2M?.[recentDate],
+      WS2M: parameters.WS2M?.[recentDate],
+      PRECTOTCORR: parameters.PRECTOTCORR?.[recentDate]
+    })
+
+    // Clean NASA data (-999 values indicate missing data)
     const cleanValue = (value: number, defaultValue: number = 0) => {
       if (value === undefined || value === null || value < -900) {
-        return defaultValue
+        return { value: defaultValue, isDefault: true }
       }
-      return value
+      return { value, isDefault: false }
     }
 
-    const temp = cleanValue(parameters.T2M[recentDate], 25)
-    const tempMax = cleanValue(parameters.T2M_MAX?.[recentDate], temp + 5)
-    const tempMin = cleanValue(parameters.T2M_MIN?.[recentDate], temp - 5)
-    const humidity = cleanValue(parameters.RH2M?.[recentDate], 50)
-    const windSpeed = cleanValue(parameters.WS2M?.[recentDate], 10)
-    const rainfall = cleanValue(parameters.PRECTOTCORR?.[recentDate], 0)
+    const tempResult = cleanValue(parameters.T2M[recentDate], 25)
+    const tempMaxResult = cleanValue(parameters.T2M_MAX?.[recentDate], tempResult.value + 5)
+    const tempMinResult = cleanValue(parameters.T2M_MIN?.[recentDate], tempResult.value - 5)
+    const humidityResult = cleanValue(parameters.RH2M?.[recentDate], 50)
+    const windSpeedResult = cleanValue(parameters.WS2M?.[recentDate], 10)
+    const rainfallResult = cleanValue(parameters.PRECTOTCORR?.[recentDate], 0)
+
+    const temp = tempResult.value
+    const tempMax = tempMaxResult.value
+    const tempMin = tempMinResult.value
+    const humidity = humidityResult.value
+    const windSpeed = windSpeedResult.value
+    const rainfall = rainfallResult.value
+
+    // Check if we're using mostly default values (NASA has no data for this location)
+    const defaultCount = [
+      tempResult.isDefault,
+      tempMaxResult.isDefault,
+      tempMinResult.isDefault,
+      humidityResult.isDefault,
+      windSpeedResult.isDefault
+    ].filter(Boolean).length
+
+    // If more than 3 out of 5 key values are defaults, NASA doesn't have data
+    if (defaultCount >= 3) {
+      console.warn('⚠️ NASA API has insufficient data for', locationName, '- using mock data')
+      return NextResponse.json({
+        weather: generateMockWeather(locationName, country, parseFloat(latitude!), parseFloat(longitude!)),
+        source: 'mock',
+        reason: 'NASA POWER API does not have sufficient data for this location'
+      })
+    }
 
     // Get weather description based on conditions
     const getWeatherDescription = (temp: number, rain: number) => {
@@ -370,4 +407,61 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
   }
 
   return alerts
+}
+
+// Generate mock weather data with realistic random values
+function generateMockWeather(locationName: string, country: string, lat: number, lon: number) {
+  // Generate realistic temperature based on latitude (tropical = hot, polar = cold)
+  const baseTemp = 30 - Math.abs(lat) * 0.5 // Closer to equator = hotter
+  const tempVariation = Math.random() * 10 - 5 // ±5 degrees
+  const temp = Math.max(5, Math.min(45, baseTemp + tempVariation))
+
+  // Generate realistic humidity (coastal areas tend to be more humid)
+  const humidity = 40 + Math.random() * 50 // 40-90%
+
+  // Generate realistic wind speed
+  const windSpeed = 5 + Math.random() * 15 // 5-20 km/h
+
+  // Rainfall (mostly dry, occasionally rainy)
+  const rainfall = Math.random() < 0.7 ? 0 : Math.random() * 10
+
+  const getWeatherDescription = (temp: number, rain: number) => {
+    if (rain > 5) return { main: 'Rain', description: 'rainy', icon: '10d' }
+    if (rain > 0) return { main: 'Rain', description: 'light rain', icon: '09d' }
+    if (temp > 35) return { main: 'Clear', description: 'hot and sunny', icon: '01d' }
+    if (temp > 28) return { main: 'Clear', description: 'sunny', icon: '01d' }
+    if (temp > 22) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
+    return { main: 'Clouds', description: 'cloudy', icon: '03d' }
+  }
+
+  const weather = getWeatherDescription(temp, rainfall)
+
+  return {
+    location: {
+      name: locationName,
+      country: country,
+      coordinates: { lat, lon }
+    },
+    current: {
+      temperature: Math.round(temp),
+      feelsLike: Math.round(temp + (humidity > 70 ? 2 : -2)),
+      humidity: Math.round(humidity),
+      pressure: 1010 + Math.round(Math.random() * 10), // 1010-1020 hPa
+      windSpeed: Math.round(windSpeed),
+      windDirection: Math.round(Math.random() * 360),
+      visibility: Math.round(8 + Math.random() * 7), // 8-15 km
+      uvIndex: temp > 30 ? 8 : temp > 25 ? 6 : 4,
+      description: weather.description,
+      icon: weather.icon,
+      cloudiness: rainfall > 0 ? 80 : Math.round(Math.random() * 60)
+    },
+    farming: {
+      irrigationAdvice: getIrrigationAdvice({ temp, humidity, rainfall }),
+      plantingConditions: getPlantingConditions({ temp, humidity, windSpeed }),
+      pestManagement: getPestManagement({ temp, humidity }),
+      harvestingConditions: getHarvestingConditions({ humidity, rainfall, windSpeed })
+    },
+    alerts: generateFarmingAlerts({ temp, humidity, windSpeed, rainfall }),
+    timestamp: new Date().toISOString()
+  }
 }

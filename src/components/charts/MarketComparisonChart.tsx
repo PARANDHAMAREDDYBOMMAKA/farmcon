@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as d3 from 'd3'
 
 interface MarketData {
@@ -18,6 +18,24 @@ interface MarketComparisonChartProps {
 
 export default function MarketComparisonChart({ data, title, type = 'best' }: MarketComparisonChartProps) {
   const svgRef = useRef<SVGSVGElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [dimensions, setDimensions] = useState({ width: 400, height: 300 })
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.offsetWidth
+        setDimensions({
+          width: Math.max(300, containerWidth),
+          height: 300
+        })
+      }
+    }
+
+    updateDimensions()
+    window.addEventListener('resize', updateDimensions)
+    return () => window.removeEventListener('resize', updateDimensions)
+  }, [])
 
   useEffect(() => {
     if (!data || data.length === 0) return
@@ -25,9 +43,9 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
     const svg = d3.select(svgRef.current)
     svg.selectAll('*').remove() // Clear previous chart
 
-    const margin = { top: 20, right: 30, bottom: 60, left: 60 }
-    const width = 400 - margin.left - margin.right
-    const height = 300 - margin.bottom - margin.top
+    const margin = { top: 20, right: 20, bottom: 60, left: 50 }
+    const width = dimensions.width - margin.left - margin.right
+    const height = dimensions.height - margin.bottom - margin.top
 
     const chart = svg
       .attr('width', width + margin.left + margin.right)
@@ -189,11 +207,13 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       }
     })
 
-  }, [data, title, type])
+  }, [data, title, type, dimensions])
 
   return (
-    <div className="flex justify-center items-center w-full">
-      <svg ref={svgRef} className="w-full max-w-md h-80"></svg>
+    <div ref={containerRef} className="w-full overflow-x-auto">
+      <div className="flex justify-center items-center min-w-[300px]">
+        <svg ref={svgRef} className="w-full h-80"></svg>
+      </div>
     </div>
   )
 }

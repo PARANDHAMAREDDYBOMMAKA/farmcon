@@ -46,6 +46,48 @@ jobs:
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache,mode=max
 
+      - name: Clean up old Docker images from Docker Hub
+        run: |
+          # Keep only the latest 10 images, delete older ones
+          echo "Fetching tags from Docker Hub..."
+
+          # Get all tags for the repository
+          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100" \
+            -H "Authorization: Bearer $(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+            -H "Content-Type: application/json" \
+            -d '{"username":"${{ secrets.DOCKERHUB_USERNAME }}","password":"${{ secrets.DOCKERHUB_TOKEN }}"}' \
+            | jq -r '.token')" | jq -r '.results[] | select(.name | test("^main-[a-f0-9]{7}$")) | .name' | sort -r)
+
+          # Count total tags
+          TOTAL=$(echo "$TAGS" | wc -l)
+          echo "Found $TOTAL SHA-based tags"
+
+          # Skip the first 10 (most recent) and delete the rest
+          if [ $TOTAL -gt 10 ]; then
+            echo "Deleting old tags (keeping only 10 most recent)..."
+            echo "$TAGS" | tail -n +11 | while read -r TAG; do
+              echo "Deleting tag: $TAG"
+              TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+                -H "Content-Type: application/json" \
+                -d '{"username":"${{ secrets.DOCKERHUB_USERNAME }}","password":"${{ secrets.DOCKERHUB_TOKEN }}"}' \
+                | jq -r '.token')
+
+              curl -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
+                -H "Authorization: Bearer $TOKEN"
+
+              echo "Deleted tag: $TAG"
+            done
+          else
+            echo "Only $TOTAL tags found, no cleanup needed"
+          fi
+
+      - name: Clean up local Docker resources
+        if: always()
+        run: |
+          echo "Cleaning up local Docker resources..."
+          docker system prune -af --volumes || true
+          echo "Docker cleanup completed"
+
   deploy:
     runs-on: ubuntu-latest
     needs: docker

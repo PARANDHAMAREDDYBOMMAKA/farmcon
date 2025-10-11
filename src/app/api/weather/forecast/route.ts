@@ -106,22 +106,53 @@ export async function GET(request: NextRequest) {
     const parameters = data.properties.parameter
     const dates = Object.keys(parameters.T2M).sort().reverse()
 
-    // Clean NASA data (-999 values)
+    // Log raw NASA data for debugging (first date only)
+    const firstDate = dates[0]
+    console.log('🔍 Raw NASA forecast data for', locationName, '(first day):', {
+      date: firstDate,
+      T2M: parameters.T2M[firstDate],
+      T2M_MAX: parameters.T2M_MAX?.[firstDate],
+      RH2M: parameters.RH2M?.[firstDate],
+      WS2M: parameters.WS2M?.[firstDate]
+    })
+
+    // Clean NASA data (-999 values indicate missing data)
     const cleanValue = (value: number, defaultValue: number = 0) => {
       if (value === undefined || value === null || value < -900) {
-        return defaultValue
+        return { value: defaultValue, isDefault: true }
       }
-      return value
+      return { value, isDefault: false }
+    }
+
+    // Check first day to see if NASA has data for this location
+    const firstDayTemp = cleanValue(parameters.T2M[firstDate], 25)
+    const firstDayHumidity = cleanValue(parameters.RH2M?.[firstDate], 50)
+    const firstDayWind = cleanValue(parameters.WS2M?.[firstDate], 10)
+
+    const defaultCount = [
+      firstDayTemp.isDefault,
+      firstDayHumidity.isDefault,
+      firstDayWind.isDefault
+    ].filter(Boolean).length
+
+    // If 2 out of 3 key values are defaults, NASA doesn't have data
+    if (defaultCount >= 2) {
+      console.warn('⚠️ NASA API has insufficient forecast data for', locationName, '- using mock data')
+      return NextResponse.json({
+        forecast: generateMockForecast(locationName, country, parseFloat(latitude!), parseFloat(longitude!), days),
+        source: 'mock',
+        reason: 'NASA POWER API does not have sufficient data for this location'
+      })
     }
 
     // Process daily forecasts
     const dailyForecasts = dates.slice(0, Math.min(days, dates.length)).map((dateStr) => {
-      const temp = cleanValue(parameters.T2M[dateStr], 25)
-      const tempMax = cleanValue(parameters.T2M_MAX?.[dateStr], temp + 5)
-      const tempMin = cleanValue(parameters.T2M_MIN?.[dateStr], temp - 5)
-      const humidity = cleanValue(parameters.RH2M?.[dateStr], 50)
-      const windSpeed = cleanValue(parameters.WS2M?.[dateStr], 10)
-      const rainfall = cleanValue(parameters.PRECTOTCORR?.[dateStr], 0)
+      const temp = cleanValue(parameters.T2M[dateStr], 25).value
+      const tempMax = cleanValue(parameters.T2M_MAX?.[dateStr], temp + 5).value
+      const tempMin = cleanValue(parameters.T2M_MIN?.[dateStr], temp - 5).value
+      const humidity = cleanValue(parameters.RH2M?.[dateStr], 50).value
+      const windSpeed = cleanValue(parameters.WS2M?.[dateStr], 10).value
+      const rainfall = cleanValue(parameters.PRECTOTCORR?.[dateStr], 0).value
 
       // Convert NASA date format (YYYYMMDD) to ISO format
       const year = dateStr.substring(0, 4)
@@ -382,4 +413,80 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
   })
 
   return insights
+}
+
+// Generate mock forecast data with realistic random values
+function generateMockForecast(locationName: string, country: string, lat: number, lon: number, days: number) {
+  const baseTemp = 30 - Math.abs(lat) * 0.5 // Base temp from latitude
+
+  const forecasts = []
+  for (let i = 0; i < days; i++) {
+    const date = new Date()
+    date.setDate(date.getDate() - days + i + 1) // Historical dates
+
+    // Add daily variation
+    const dailyTempVariation = Math.random() * 8 - 4
+    const temp = Math.max(5, Math.min(45, baseTemp + dailyTempVariation))
+    const tempMax = temp + Math.random() * 5
+    const tempMin = temp - Math.random() * 5
+    const humidity = 40 + Math.random() * 50
+    const windSpeed = 5 + Math.random() * 15
+    const rainfall = Math.random() < 0.7 ? 0 : Math.random() * 10
+
+    const getWeatherDescription = (temp: number, rain: number) => {
+      if (rain > 5) return { main: 'Rain', description: 'rainy', icon: '10d' }
+      if (rain > 0) return { main: 'Rain', description: 'light rain', icon: '09d' }
+      if (temp > 35) return { main: 'Clear', description: 'hot and sunny', icon: '01d' }
+      if (temp > 28) return { main: 'Clear', description: 'sunny', icon: '01d' }
+      if (temp > 22) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
+      return { main: 'Clouds', description: 'cloudy', icon: '03d' }
+    }
+
+    const weather = getWeatherDescription(temp, rainfall)
+
+    forecasts.push({
+      date: date.toISOString().split('T')[0],
+      temperature: {
+        min: Math.round(tempMin),
+        max: Math.round(tempMax),
+        avg: Math.round(temp)
+      },
+      humidity: {
+        min: Math.round(humidity - 10),
+        max: Math.round(humidity + 10),
+        avg: Math.round(humidity)
+      },
+      weather: {
+        main: weather.main,
+        description: weather.description,
+        icon: weather.icon
+      },
+      wind: {
+        speed: Math.round(windSpeed),
+        direction: Math.round(Math.random() * 360)
+      },
+      rain: rainfall,
+      farming: {
+        irrigationRecommendation: getDailyIrrigationRecommendation({ tempMax, humidity, rainfall }),
+        fieldWorkSuitability: getFieldWorkSuitability({ rainfall, tempMax, windSpeed }),
+        cropStressLevel: getCropStressLevel({ tempMax, tempMin, rainfall, humidity, windSpeed })
+      }
+    })
+  }
+
+  return {
+    location: {
+      name: locationName,
+      country: country,
+      coordinates: { lat, lon }
+    },
+    forecasts,
+    farmingInsights: generateWeeklyFarmingInsights(forecasts.map(f => ({
+      tempMax: f.temperature.max,
+      tempMin: f.temperature.min,
+      rainfall: f.rain,
+      windSpeed: f.wind.speed
+    }))),
+    timestamp: new Date().toISOString()
+  }
 }

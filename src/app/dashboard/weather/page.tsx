@@ -144,6 +144,20 @@ export default function WeatherPage() {
       if (weatherResponse.ok) {
         const weatherData = await weatherResponse.json()
         setCurrentWeather(weatherData.weather)
+
+        // Show notification if using mock data
+        if (weatherData.source === 'mock') {
+          toast.error('Unable to fetch live weather data. Showing sample data.', {
+            duration: 4000,
+            icon: '⚠️'
+          })
+          console.warn('Weather source:', weatherData.source, weatherData.error)
+        } else {
+          toast.success('Weather data loaded successfully', {
+            duration: 2000,
+            icon: '🌤️'
+          })
+        }
       } else {
         toast.error('Failed to load current weather data')
       }
@@ -312,57 +326,57 @@ export default function WeatherPage() {
             {/* Location and Basic Weather */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-1">
-                <div className="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-lg p-6">
+                <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 text-white rounded-xl shadow-lg p-6 transform transition-all hover:scale-105">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-semibold text-black">{currentWeather.location.name}</h3>
-                      <p className="text-blue-100">{currentWeather.location.country}</p>
-                      <div className="mt-4">
-                        <div className="text-3xl font-bold">{currentWeather.current.temperature}°C</div>
-                        <p className="text-blue-100">Feels like {currentWeather.current.feelsLike}°C</p>
-                        <p className="text-blue-100 capitalize">{currentWeather.current.description}</p>
+                      <h3 className="text-xl font-bold text-white">{currentWeather.location.name}</h3>
+                      <p className="text-blue-100 text-sm">{currentWeather.location.country}</p>
+                      <div className="mt-6">
+                        <div className="text-5xl font-bold text-white">{currentWeather.current.temperature}°C</div>
+                        <p className="text-blue-100 text-sm mt-1">Feels like {currentWeather.current.feelsLike}°C</p>
+                        <p className="text-white capitalize font-medium mt-2">{currentWeather.current.description}</p>
                       </div>
                     </div>
-                    <div className="text-4xl">🌤️</div>
+                    <div className="text-6xl animate-bounce">🌤️</div>
                   </div>
                 </div>
               </div>
 
               <div className="lg:col-span-2">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-2xl">💧</span>
+                  <div className="bg-gradient-to-br from-cyan-50 to-cyan-100 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow border border-cyan-200">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-3xl">💧</span>
                       <div>
-                        <p className="text-sm text-black">Humidity</p>
-                        <p className="text-lg font-semibold text-black">{currentWeather.current.humidity}%</p>
+                        <p className="text-xs text-gray-600 font-medium">Humidity</p>
+                        <p className="text-2xl font-bold text-cyan-700">{currentWeather.current.humidity}%</p>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-2xl">💨</span>
+                  <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow border border-gray-200">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-3xl">💨</span>
                       <div>
-                        <p className="text-sm text-black">Wind Speed</p>
-                        <p className="text-lg font-semibold text-black">{currentWeather.current.windSpeed} m/s</p>
+                        <p className="text-xs text-gray-600 font-medium">Wind Speed</p>
+                        <p className="text-2xl font-bold text-gray-700">{currentWeather.current.windSpeed} km/h</p>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-2xl">🌡️</span>
+                  <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow border border-orange-200">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-3xl">🌡️</span>
                       <div>
-                        <p className="text-sm text-black">Pressure</p>
-                        <p className="text-lg font-semibold text-black">{currentWeather.current.pressure} hPa</p>
+                        <p className="text-xs text-gray-600 font-medium">Pressure</p>
+                        <p className="text-2xl font-bold text-orange-700">{currentWeather.current.pressure} hPa</p>
                       </div>
                     </div>
                   </div>
-                  <div className="bg-gray-50 rounded-lg p-4">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-2xl">👁️</span>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow border border-purple-200">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-3xl">👁️</span>
                       <div>
-                        <p className="text-sm text-black">Visibility</p>
-                        <p className="text-lg font-semibold text-black">{currentWeather.current.visibility} km</p>
+                        <p className="text-xs text-gray-600 font-medium">Visibility</p>
+                        <p className="text-2xl font-bold text-purple-700">{currentWeather.current.visibility} km</p>
                       </div>
                     </div>
                   </div>
@@ -391,60 +405,60 @@ export default function WeatherPage() {
             {/* Farming Insights */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Irrigation Advice */}
-              <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-black mb-3 flex items-center">
-                  <span className="mr-2">💧</span>
+              <div className="border-2 border-blue-200 rounded-xl p-5 bg-gradient-to-br from-blue-50 to-white shadow-lg hover:shadow-xl transition-all">
+                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                  <span className="mr-3 text-3xl">💧</span>
                   Irrigation Advice
                 </h4>
-                <div className={`px-3 py-2 rounded-md ${getAdviceColor(currentWeather.farming.irrigationAdvice.color)}`}>
-                  <p className="font-medium capitalize">{currentWeather.farming.irrigationAdvice.status}</p>
-                  <p className="text-sm mt-1">{currentWeather.farming.irrigationAdvice.message}</p>
+                <div className={`px-4 py-3 rounded-lg shadow-sm ${getAdviceColor(currentWeather.farming.irrigationAdvice.color)}`}>
+                  <p className="font-bold capitalize text-lg">{currentWeather.farming.irrigationAdvice.status}</p>
+                  <p className="text-sm mt-2">{currentWeather.farming.irrigationAdvice.message}</p>
                 </div>
               </div>
 
               {/* Planting Conditions */}
-              <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-black mb-3 flex items-center">
-                  <span className="mr-2">🌱</span>
+              <div className="border-2 border-green-200 rounded-xl p-5 bg-gradient-to-br from-green-50 to-white shadow-lg hover:shadow-xl transition-all">
+                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                  <span className="mr-3 text-3xl">🌱</span>
                   Planting Conditions
                 </h4>
-                <div className={`px-3 py-2 rounded-md ${getAdviceColor(currentWeather.farming.plantingConditions.color)}`}>
-                  <p className="font-medium">{currentWeather.farming.plantingConditions.rating} ({currentWeather.farming.plantingConditions.score})</p>
-                  <div className="text-sm mt-2 space-y-1">
+                <div className={`px-4 py-3 rounded-lg shadow-sm ${getAdviceColor(currentWeather.farming.plantingConditions.color)}`}>
+                  <p className="font-bold text-lg">{currentWeather.farming.plantingConditions.rating} ({currentWeather.farming.plantingConditions.score})</p>
+                  <div className="text-sm mt-3 space-y-2">
                     {currentWeather.farming.plantingConditions.conditions.map((condition, index) => (
-                      <p key={index} className="text-black">{condition}</p>
+                      <p key={index} className="font-medium">{condition}</p>
                     ))}
                   </div>
                 </div>
               </div>
 
               {/* Pest Management */}
-              <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-black mb-3 flex items-center">
-                  <span className="mr-2">🐛</span>
+              <div className="border-2 border-amber-200 rounded-xl p-5 bg-gradient-to-br from-amber-50 to-white shadow-lg hover:shadow-xl transition-all">
+                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                  <span className="mr-3 text-3xl">🐛</span>
                   Pest Risk
                 </h4>
-                <div className={`px-3 py-2 rounded-md ${getAdviceColor(currentWeather.farming.pestManagement.color)}`}>
-                  <p className="font-medium">{currentWeather.farming.pestManagement.riskLevel} Risk</p>
-                  <div className="text-sm mt-2 space-y-1">
+                <div className={`px-4 py-3 rounded-lg shadow-sm ${getAdviceColor(currentWeather.farming.pestManagement.color)}`}>
+                  <p className="font-bold text-lg">{currentWeather.farming.pestManagement.riskLevel} Risk</p>
+                  <div className="text-sm mt-3 space-y-2">
                     {currentWeather.farming.pestManagement.recommendations.map((rec, index) => (
-                      <p key={index} className="text-black">• {rec}</p>
+                      <p key={index} className="font-medium">• {rec}</p>
                     ))}
                   </div>
                 </div>
               </div>
 
               {/* Harvesting Conditions */}
-              <div className="border rounded-lg p-4">
-                <h4 className="font-semibold text-black mb-3 flex items-center">
-                  <span className="mr-2">🌾</span>
+              <div className="border-2 border-yellow-200 rounded-xl p-5 bg-gradient-to-br from-yellow-50 to-white shadow-lg hover:shadow-xl transition-all">
+                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                  <span className="mr-3 text-3xl">🌾</span>
                   Harvesting Conditions
                 </h4>
-                <div className={`px-3 py-2 rounded-md ${getAdviceColor(currentWeather.farming.harvestingConditions.color)}`}>
-                  <p className="font-medium">{currentWeather.farming.harvestingConditions.suitability}</p>
-                  <div className="text-sm mt-2 space-y-1">
+                <div className={`px-4 py-3 rounded-lg shadow-sm ${getAdviceColor(currentWeather.farming.harvestingConditions.color)}`}>
+                  <p className="font-bold text-lg">{currentWeather.farming.harvestingConditions.suitability}</p>
+                  <div className="text-sm mt-3 space-y-2">
                     {currentWeather.farming.harvestingConditions.advice.map((advice, index) => (
-                      <p key={index} className="text-black">• {advice}</p>
+                      <p key={index} className="font-medium">• {advice}</p>
                     ))}
                   </div>
                 </div>
@@ -504,20 +518,27 @@ export default function WeatherPage() {
 
             {/* Farming Insights */}
             {forecast.farmingInsights && forecast.farmingInsights.length > 0 && (
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-black">Weekly Farming Insights</h3>
+              <div className="space-y-4">
+                <h3 className="text-2xl font-bold text-gray-800 flex items-center">
+                  <span className="mr-3 text-3xl">🌾</span>
+                  Weekly Farming Insights
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {forecast.farmingInsights.map((insight, index) => (
-                    <div key={index} className={`border rounded-lg p-4 ${
-                      insight.priority === 'high' ? 'border-red-200 bg-red-50' :
-                      insight.priority === 'medium' ? 'border-yellow-200 bg-yellow-50' :
-                      'border-blue-200 bg-blue-50'
+                    <div key={index} className={`border-2 rounded-xl p-5 shadow-lg hover:shadow-xl transition-all hover:scale-105 ${
+                      insight.priority === 'high' ? 'border-red-300 bg-gradient-to-br from-red-50 to-red-100' :
+                      insight.priority === 'medium' ? 'border-yellow-300 bg-gradient-to-br from-yellow-50 to-yellow-100' :
+                      'border-blue-300 bg-gradient-to-br from-blue-50 to-blue-100'
                     }`}>
-                      <div className="flex items-start space-x-3">
-                        <span className="text-2xl">{insight.icon}</span>
+                      <div className="flex items-start space-x-4">
+                        <span className="text-4xl">{insight.icon}</span>
                         <div>
-                          <p className="font-medium text-black">{insight.message}</p>
-                          <p className="text-xs text-black mt-1">Priority: {insight.priority}</p>
+                          <p className="font-bold text-gray-800 text-base">{insight.message}</p>
+                          <p className={`text-xs font-bold mt-2 inline-block px-2 py-1 rounded ${
+                            insight.priority === 'high' ? 'bg-red-200 text-red-800' :
+                            insight.priority === 'medium' ? 'bg-yellow-200 text-yellow-800' :
+                            'bg-blue-200 text-blue-800'
+                          }`}>Priority: {insight.priority.toUpperCase()}</p>
                         </div>
                       </div>
                     </div>
@@ -538,67 +559,73 @@ export default function WeatherPage() {
 
             {/* List View - Forecast Details */}
             {forecastView === 'list' && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-black">{forecastDays}-Day Forecast</h3>
-              <div className="space-y-4">
+            <div className="space-y-6">
+              <h3 className="text-2xl font-bold text-gray-800">{forecastDays}-Day Forecast</h3>
+              <div className="space-y-5">
                 {forecast.forecasts.map((day, index) => (
-                  <div key={index} className="border rounded-lg p-6">
+                  <div key={index} className="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-r from-white to-gray-50 shadow-lg hover:shadow-xl transition-all hover:scale-[1.01]">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                       {/* Date and Weather */}
-                      <div>
-                        <h4 className="font-semibold text-black">
+                      <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg p-4 shadow-md">
+                        <h4 className="font-bold text-gray-800 text-lg">
                           {new Date(day.date).toLocaleDateString('en-IN', {
                             weekday: 'long',
                             month: 'short',
                             day: 'numeric'
                           })}
                         </h4>
-                        <div className="flex items-center space-x-3 mt-2">
-                          <span className="text-2xl">🌤️</span>
+                        <div className="flex items-center space-x-4 mt-3">
+                          <span className="text-4xl">🌤️</span>
                           <div>
-                            <p className="font-medium text-black">{day.temperature.max}°C / {day.temperature.min}°C</p>
-                            <p className="text-sm text-black capitalize">{day.weather.description}</p>
+                            <p className="font-bold text-xl text-blue-700">{day.temperature.max}°C / {day.temperature.min}°C</p>
+                            <p className="text-sm text-gray-600 capitalize font-medium">{day.weather.description}</p>
                           </div>
                         </div>
                         {day.rain > 0 && (
-                          <p className="text-sm text-blue-600 mt-2">🌧️ Rain: {day.rain}mm</p>
+                          <p className="text-sm font-bold text-blue-600 mt-3 bg-blue-100 px-2 py-1 rounded-md inline-block">🌧️ Rain: {day.rain}mm</p>
                         )}
                       </div>
 
                       {/* Irrigation */}
-                      <div>
-                        <h5 className="font-medium text-black mb-2">💧 Irrigation</h5>
-                        <div className={`px-3 py-2 rounded-md text-sm ${getAdviceColor(day.farming.irrigationRecommendation.color)}`}>
-                          <p className="font-medium capitalize">{day.farming.irrigationRecommendation.status}</p>
-                          <p className="text-black">{day.farming.irrigationRecommendation.message}</p>
+                      <div className="bg-gradient-to-br from-cyan-50 to-white rounded-lg p-4 shadow-md">
+                        <h5 className="font-bold text-gray-800 mb-3 flex items-center">
+                          <span className="text-xl mr-2">💧</span> Irrigation
+                        </h5>
+                        <div className={`px-3 py-3 rounded-lg text-sm shadow-sm ${getAdviceColor(day.farming.irrigationRecommendation.color)}`}>
+                          <p className="font-bold capitalize text-base">{day.farming.irrigationRecommendation.status}</p>
+                          <p className="font-medium mt-1">{day.farming.irrigationRecommendation.message}</p>
                           {day.farming.irrigationRecommendation.amount !== 100 && (
-                            <p className="mt-1 text-black">Amount: {day.farming.irrigationRecommendation.amount}%</p>
+                            <p className="mt-2 font-bold">Amount: {day.farming.irrigationRecommendation.amount}%</p>
                           )}
                         </div>
                       </div>
 
                       {/* Field Work */}
-                      <div>
-                        <h5 className="font-medium text-black mb-2">🚜 Field Work</h5>
-                        <div className={`px-3 py-2 rounded-md text-sm ${getAdviceColor(day.farming.fieldWorkSuitability.color)}`}>
-                          <p className="font-medium">{day.farming.fieldWorkSuitability.rating}</p>
-                          <p className="text-xs mt-1 text-black">Score: {day.farming.fieldWorkSuitability.score}</p>
-                          <div className="mt-1 space-y-1">
+                      <div className="bg-gradient-to-br from-green-50 to-white rounded-lg p-4 shadow-md">
+                        <h5 className="font-bold text-gray-800 mb-3 flex items-center">
+                          <span className="text-xl mr-2">🚜</span> Field Work
+                        </h5>
+                        <div className={`px-3 py-3 rounded-lg text-sm shadow-sm ${getAdviceColor(day.farming.fieldWorkSuitability.color)}`}>
+                          <p className="font-bold text-base">{day.farming.fieldWorkSuitability.rating}</p>
+                          <p className="text-xs mt-1 font-medium">Score: {day.farming.fieldWorkSuitability.score}</p>
+                          <div className="mt-2 space-y-1">
                             {day.farming.fieldWorkSuitability.factors.slice(0, 2).map((factor, i) => (
-                              <p key={i} className="text-xs text-black">{factor}</p>
+                              <p key={i} className="text-xs font-medium">{factor}</p>
                             ))}
                           </div>
                         </div>
                       </div>
 
                       {/* Crop Stress */}
-                      <div>
-                        <h5 className="font-medium text-black mb-2">🌿 Crop Stress</h5>
-                        <div className={`px-3 py-2 rounded-md text-sm ${getAdviceColor(day.farming.cropStressLevel.color)}`}>
-                          <p className="font-medium">{day.farming.cropStressLevel.level} Stress</p>
-                          <div className="mt-1 space-y-1">
+                      <div className="bg-gradient-to-br from-amber-50 to-white rounded-lg p-4 shadow-md">
+                        <h5 className="font-bold text-gray-800 mb-3 flex items-center">
+                          <span className="text-xl mr-2">🌿</span> Crop Stress
+                        </h5>
+                        <div className={`px-3 py-3 rounded-lg text-sm shadow-sm ${getAdviceColor(day.farming.cropStressLevel.color)}`}>
+                          <p className="font-bold text-base">{day.farming.cropStressLevel.level} Stress</p>
+                          <div className="mt-2 space-y-1">
                             {day.farming.cropStressLevel.factors.slice(0, 2).map((factor, i) => (
-                              <p key={i} className="text-xs text-black">{factor}</p>
+                              <p key={i} className="text-xs font-medium">{factor}</p>
                             ))}
                           </div>
                         </div>

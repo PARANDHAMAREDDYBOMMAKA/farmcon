@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cache, CacheKeys } from '@/lib/redis'
 
 // Government APIs for market prices (all free)
 const AGMARKNET_URL = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070'
@@ -30,6 +31,26 @@ interface MarketInsights {
   recommendation: string
 }
 
+interface MarketDataResponse {
+  prices: MarketPrice[]
+  insights: MarketInsights
+  historical: any
+  commodity: string
+  state: string | null
+  district: string | null
+  totalRecords: number
+  lastUpdated: string
+  source: string
+}
+
+// Helper function to generate cache key for market data
+function getMarketDataCacheKey(commodity: string, state: string | null, district: string | null): string {
+  const parts = ['market-data', commodity]
+  if (state) parts.push(state)
+  if (district) parts.push(district)
+  return `farmcon:${parts.join(':')}`
+}
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -37,6 +58,18 @@ export async function GET(request: NextRequest) {
     const state = searchParams.get('state')
     const district = searchParams.get('district')
     const limit = parseInt(searchParams.get('limit') || '50')
+
+    // Generate cache key
+    const cacheKey = getMarketDataCacheKey(commodity, state, district)
+
+    // Try to get cached data (TTL: 1 hour = 3600 seconds)
+    const cachedData = await cache.get<MarketDataResponse>(cacheKey)
+    if (cachedData) {
+      console.log(`Cache HIT for ${cacheKey}`)
+      return NextResponse.json(cachedData)
+    }
+
+    console.log(`Cache MISS for ${cacheKey}`)
 
     // Try government APIs first, then fallback to mock data
     let prices: MarketPrice[] = []
@@ -62,9 +95,9 @@ export async function GET(request: NextRequest) {
     const insights = generateMarketInsights(prices, commodity)
 
     // Add historical trend data
-    const historicalData = await generateHistoricalTrends(commodity, state)
+    const historicalData = await generateHistoricalTrends(commodity)
 
-    return NextResponse.json({
+    const responseData: MarketDataResponse = {
       prices,
       insights,
       historical: historicalData,
@@ -74,7 +107,13 @@ export async function GET(request: NextRequest) {
       totalRecords: prices.length,
       lastUpdated: new Date().toISOString(),
       source: 'Government of India Market Data'
-    })
+    }
+
+    // Cache the response for 1 hour (3600 seconds)
+    await cache.set(cacheKey, responseData, 3600)
+    console.log(`Cached market data for ${cacheKey}`)
+
+    return NextResponse.json(responseData)
   } catch (error) {
     console.error('Market prices API error:', error)
     return NextResponse.json(
@@ -122,6 +161,11 @@ async function fetchAGMARKNETData(
       throw new Error('Invalid response format from AGMARKNET')
     }
 
+    // If the API returns no records, throw error to fallback to mock data
+    if (data.records.length === 0) {
+      throw new Error('No records found in AGMARKNET API')
+    }
+
     return data.records.map((record: any, index: number) => ({
       id: `agmarknet-${index}`,
       commodity: record.commodity || commodity,
@@ -165,6 +209,11 @@ async function fetchENAMData(
     }
 
     const data = await response.json()
+
+    // If the API returns no data, throw error to fallback to mock data
+    if (!data || data.length === 0) {
+      throw new Error('No records found in eNAM API')
+    }
 
     return data.map((record: any, index: number) => ({
       id: `enam-${index}`,
@@ -359,7 +408,7 @@ function generateMarketInsights(prices: MarketPrice[], commodity: string): Marke
   }
 }
 
-async function generateHistoricalTrends(commodity: string, state: string | null) {
+async function generateHistoricalTrends(commodity: string) {
   // Generate mock historical data for the last 6 months
   const months = []
   const currentDate = new Date()

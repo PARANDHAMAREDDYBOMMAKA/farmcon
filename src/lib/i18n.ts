@@ -7,9 +7,12 @@
  * - Hindi (hi)
  * - Tamil (ta)
  * - Telugu (te)
- * - Bengali (bn)
  * - Kannada (kn)
+ * - Malayalam (ml)
  * - Marathi (mr)
+ * - Bengali (bn)
+ * - Punjabi (pa)
+ * - Gujarati (gu)
  */
 
 import i18n from 'i18next'
@@ -37,8 +40,21 @@ const resources = {
       dashboard: 'Dashboard',
       myOrders: 'My Orders',
       myProducts: 'My Products',
+      myCrops: 'My Crops',
+      sellCrops: 'Sell Crops',
+      buySupplies: 'Buy Supplies',
+      equipmentRental: 'Equipment Rental',
       suppliers: 'Suppliers',
       buyers: 'Buyers',
+      browseCrops: 'Browse Crops',
+      inventory: 'Inventory',
+      analytics: 'Analytics',
+      users: 'Users',
+      allProducts: 'All Products',
+      allOrders: 'All Orders',
+      settings: 'Settings',
+      expertConsultations: 'Expert Consultations',
+      competitorAnalysis: 'Competitor Analysis',
 
       // Products
       addToCart: 'Add to Cart',
@@ -96,8 +112,21 @@ const resources = {
       dashboard: 'डैशबोर्ड',
       myOrders: 'मेरे आदेश',
       myProducts: 'मेरे उत्पाद',
+      myCrops: 'मेरी फसलें',
+      sellCrops: 'फसल बेचें',
+      buySupplies: 'सामान खरीदें',
+      equipmentRental: 'उपकरण किराया',
       suppliers: 'आपूर्तिकर्ता',
       buyers: 'खरीदार',
+      browseCrops: 'फसलें देखें',
+      inventory: 'सूची',
+      analytics: 'विश्लेषण',
+      users: 'उपयोगकर्ता',
+      allProducts: 'सभी उत्पाद',
+      allOrders: 'सभी आदेश',
+      settings: 'सेटिंग्स',
+      expertConsultations: 'विशेषज्ञ परामर्श',
+      competitorAnalysis: 'प्रतिस्पर्धी विश्लेषण',
 
       // Products
       addToCart: 'कार्ट में डालें',
@@ -155,8 +184,21 @@ const resources = {
       dashboard: 'டாஷ்போர்டு',
       myOrders: 'என் ஆர்டர்கள்',
       myProducts: 'என் தயாரிப்புகள்',
+      myCrops: 'என் பயிர்கள்',
+      sellCrops: 'பயிர்களை விற்க',
+      buySupplies: 'பொருட்கள் வாங்க',
+      equipmentRental: 'உபகரண வாடகை',
       suppliers: 'சப்ளையர்கள்',
       buyers: 'வாங்குபவர்கள்',
+      browseCrops: 'பயிர்களை பார்',
+      inventory: 'சரக்கு',
+      analytics: 'பகுப்பாய்வு',
+      users: 'பயனர்கள்',
+      allProducts: 'அனைத்து தயாரிப்புகள்',
+      allOrders: 'அனைத்து ஆர்டர்கள்',
+      settings: 'அமைப்புகள்',
+      expertConsultations: 'நிபுணர் ஆலோசனைகள்',
+      competitorAnalysis: 'போட்டியாளர் பகுப்பாய்வு',
 
       // Products
       addToCart: 'கூடையில் சேர்க்கவும்',
@@ -214,8 +256,21 @@ const resources = {
       dashboard: 'డాష్‌బోర్డ్',
       myOrders: 'నా ఆర్డర్లు',
       myProducts: 'నా ఉత్పత్తులు',
+      myCrops: 'నా పంటలు',
+      sellCrops: 'పంటలను విక్రయించు',
+      buySupplies: 'సామాగ్రి కొను',
+      equipmentRental: 'పరికరాల అద్దె',
       suppliers: 'సప్లయర్లు',
       buyers: 'కొనుగోలుదారులు',
+      browseCrops: 'పంటలను చూడండి',
+      inventory: 'జాబితా',
+      analytics: 'విశ్లేషణ',
+      users: 'వినియోగదారులు',
+      allProducts: 'అన్ని ఉత్పత్తులు',
+      allOrders: 'అన్ని ఆర్డర్లు',
+      settings: 'సెట్టింగ్‌లు',
+      expertConsultations: 'నిపుణుల సంప్రదింపులు',
+      competitorAnalysis: 'పోటీదారుల విశ్లేషణ',
 
       // Products
       addToCart: 'కార్ట్‌కు జోడించండి',
@@ -252,6 +307,438 @@ const resources = {
       loading: 'లోడ్ అవుతోంది...',
       saveChanges: 'మార్పులను సేవ్ చేయండి',
       cancel: 'రద్దు చేయండి',
+    },
+  },
+  kn: {
+    translation: {
+      // Common
+      welcome: 'FarmCon ಗೆ ಸ್ವಾಗತ',
+      home: 'ಮುಖಪುಟ',
+      about: 'ನಮ್ಮ ಬಗ್ಗೆ',
+      products: 'ಉತ್ಪನ್ನಗಳು',
+      cart: 'ಕಾರ್ಟ್',
+      orders: 'ಆರ್ಡರ್‌ಗಳು',
+      profile: 'ಪ್ರೊಫೈಲ್',
+      logout: 'ಲಾಗ್ಔಟ್',
+      login: 'ಲಾಗಿನ್',
+      signup: 'ಸೈನ್ ಅಪ್',
+      search: 'ಹುಡುಕಿ',
+
+      // Dashboard
+      dashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
+      myOrders: 'ನನ್ನ ಆರ್ಡರ್‌ಗಳು',
+      myProducts: 'ನನ್ನ ಉತ್ಪನ್ನಗಳು',
+      myCrops: 'ನನ್ನ ಬೆಳೆಗಳು',
+      sellCrops: 'ಬೆಳೆಗಳನ್ನು ಮಾರಾಟ',
+      buySupplies: 'ಸಾಮಗ್ರಿಗಳನ್ನು ಖರೀದಿಸಿ',
+      equipmentRental: 'ಉಪಕರಣ ಬಾಡಿಗೆ',
+      suppliers: 'ಪೂರೈಕೆದಾರರು',
+      buyers: 'ಖರೀದಿದಾರರು',
+      browseCrops: 'ಬೆಳೆಗಳನ್ನು ಬ್ರೌಸ್',
+      inventory: 'ದಾಸ್ತಾನು',
+      analytics: 'ವಿಶ್ಲೇಷಣೆ',
+      users: 'ಬಳಕೆದಾರರು',
+      allProducts: 'ಎಲ್ಲಾ ಉತ್ಪನ್ನಗಳು',
+      allOrders: 'ಎಲ್ಲಾ ಆರ್ಡರ್‌ಗಳು',
+      settings: 'ಸೆಟ್ಟಿಂಗ್‌ಗಳು',
+      expertConsultations: 'ತಜ್ಞರ ಸಲಹೆಗಳು',
+      competitorAnalysis: 'ಪ್ರತಿಸ್ಪರ್ಧಿ ವಿಶ್ಲೇಷಣೆ',
+
+      // Products
+      addToCart: 'ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ',
+      buyNow: 'ಈಗ ಖರೀದಿಸಿ',
+      price: 'ಬೆಲೆ',
+      quantity: 'ಪ್ರಮಾಣ',
+      available: 'ಲಭ್ಯವಿದೆ',
+      outOfStock: 'ಸ್ಟಾಕ್ ಇಲ್ಲ',
+
+      // Weather
+      weather: 'ಹವಾಮಾನ',
+      temperature: 'ತಾಪಮಾನ',
+      humidity: 'ತೇವಾಂಶ',
+      rainfall: 'ಮಳೆ',
+      forecast: 'ಮುನ್ಸೂಚನೆ',
+
+      // Market Prices
+      marketPrices: 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು',
+      mandiPrices: 'ಮಂಡಿ ಬೆಲೆಗಳು',
+      commodity: 'ಸರಕು',
+      minPrice: 'ಕನಿಷ್ಠ ಬೆಲೆ',
+      maxPrice: 'ಗರಿಷ್ಠ ಬೆಲೆ',
+      modalPrice: 'ಮಾಡಲ್ ಬೆಲೆ',
+
+      // Notifications
+      notifications: 'ಅಧಿಸೂಚನೆಗಳು',
+      newOrder: 'ಹೊಸ ಆರ್ಡರ್',
+      orderShipped: 'ಆರ್ಡರ್ ರವಾನೆಯಾಗಿದೆ',
+      orderDelivered: 'ಆರ್ಡರ್ ವಿತರಿಸಲಾಗಿದೆ',
+
+      // Messages
+      successMessage: 'ಯಶಸ್ಸು!',
+      errorMessage: 'ದೋಷ ಸಂಭವಿಸಿದೆ',
+      loading: 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
+      saveChanges: 'ಬದಲಾವಣೆಗಳನ್ನು ಉಳಿಸಿ',
+      cancel: 'ರದ್ದುಮಾಡಿ',
+    },
+  },
+  ml: {
+    translation: {
+      // Common
+      welcome: 'FarmCon-ലേക്ക് സ്വാഗതം',
+      home: 'ഹോം',
+      about: 'ഞങ്ങളെക്കുറിച്ച്',
+      products: 'ഉൽപ്പന്നങ്ങൾ',
+      cart: 'കാർട്ട്',
+      orders: 'ഓർഡറുകൾ',
+      profile: 'പ്രൊഫൈൽ',
+      logout: 'ലോഗ്ഔട്ട്',
+      login: 'ലോഗിൻ',
+      signup: 'സൈൻ അപ്പ്',
+      search: 'തിരയുക',
+
+      // Dashboard
+      dashboard: 'ഡാഷ്‌ബോർഡ്',
+      myOrders: 'എന്റെ ഓർഡറുകൾ',
+      myProducts: 'എന്റെ ഉൽപ്പന്നങ്ങൾ',
+      myCrops: 'എന്റെ വിളകൾ',
+      sellCrops: 'വിളകൾ വിൽക്കുക',
+      buySupplies: 'സാധനങ്ങൾ വാങ്ങുക',
+      equipmentRental: 'ഉപകരണ വാടക',
+      suppliers: 'വിതരണക്കാർ',
+      buyers: 'വാങ്ങുന്നവർ',
+      browseCrops: 'വിളകൾ കാണുക',
+      inventory: 'സാധനസാമഗ്രികൾ',
+      analytics: 'വിശകലനം',
+      users: 'ഉപയോക്താക്കൾ',
+      allProducts: 'എല്ലാ ഉൽപ്പന്നങ്ങളും',
+      allOrders: 'എല്ലാ ഓർഡറുകളും',
+      settings: 'ക്രമീകരണങ്ങൾ',
+      expertConsultations: 'വിദഗ്ധ കൺസൾട്ടേഷനുകൾ',
+      competitorAnalysis: 'മത്സര വിശകലനം',
+
+      // Products
+      addToCart: 'കാർട്ടിലേക്ക് ചേർക്കുക',
+      buyNow: 'ഇപ്പോൾ വാങ്ങുക',
+      price: 'വില',
+      quantity: 'അളവ്',
+      available: 'ലഭ്യമാണ്',
+      outOfStock: 'സ്റ്റോക്ക് ഇല്ല',
+
+      // Weather
+      weather: 'കാലാവസ്ഥ',
+      temperature: 'താപനില',
+      humidity: 'ആർദ്രത',
+      rainfall: 'മഴ',
+      forecast: 'പ്രവചനം',
+
+      // Market Prices
+      marketPrices: 'മാർക്കറ്റ് വില',
+      mandiPrices: 'മണ്ടി വില',
+      commodity: 'ചരക്ക്',
+      minPrice: 'കുറഞ്ഞ വില',
+      maxPrice: 'കൂടിയ വില',
+      modalPrice: 'മോഡൽ വില',
+
+      // Notifications
+      notifications: 'അറിയിപ്പുകൾ',
+      newOrder: 'പുതിയ ഓർഡർ',
+      orderShipped: 'ഓർഡർ അയച്ചു',
+      orderDelivered: 'ഓർഡർ എത്തിച്ചു',
+
+      // Messages
+      successMessage: 'വിജയം!',
+      errorMessage: 'പിശക് സംഭവിച്ചു',
+      loading: 'ലോഡ് ചെയ്യുന്നു...',
+      saveChanges: 'മാറ്റങ്ങൾ സംരക്ഷിക്കുക',
+      cancel: 'റദ്ദാക്കുക',
+    },
+  },
+  mr: {
+    translation: {
+      // Common
+      welcome: 'FarmCon मध्ये आपले स्वागत आहे',
+      home: 'होम',
+      about: 'आमच्याबद्दल',
+      products: 'उत्पादने',
+      cart: 'कार्ट',
+      orders: 'ऑर्डर',
+      profile: 'प्रोफाईल',
+      logout: 'लॉगआउट',
+      login: 'लॉगिन',
+      signup: 'साइन अप',
+      search: 'शोधा',
+
+      // Dashboard
+      dashboard: 'डॅशबोर्ड',
+      myOrders: 'माझे ऑर्डर',
+      myProducts: 'माझी उत्पादने',
+      myCrops: 'माझी पिके',
+      sellCrops: 'पिके विका',
+      buySupplies: 'साहित्य खरेदी करा',
+      equipmentRental: 'उपकरणे भाडे',
+      suppliers: 'पुरवठादार',
+      buyers: 'खरेदीदार',
+      browseCrops: 'पिके पहा',
+      inventory: 'यादी',
+      analytics: 'विश्लेषण',
+      users: 'वापरकर्ते',
+      allProducts: 'सर्व उत्पादने',
+      allOrders: 'सर्व ऑर्डर',
+      settings: 'सेटिंग्ज',
+      expertConsultations: 'तज्ञ सल्लामसलत',
+      competitorAnalysis: 'स्पर्धक विश्लेषण',
+
+      // Products
+      addToCart: 'कार्टमध्ये जोडा',
+      buyNow: 'आता खरेदी करा',
+      price: 'किंमत',
+      quantity: 'प्रमाण',
+      available: 'उपलब्ध',
+      outOfStock: 'स्टॉक नाही',
+
+      // Weather
+      weather: 'हवामान',
+      temperature: 'तापमान',
+      humidity: 'आर्द्रता',
+      rainfall: 'पाऊस',
+      forecast: 'अंदाज',
+
+      // Market Prices
+      marketPrices: 'बाजार किंमती',
+      mandiPrices: 'मंडी भाव',
+      commodity: 'वस्तू',
+      minPrice: 'किमान किंमत',
+      maxPrice: 'कमाल किंमत',
+      modalPrice: 'मॉडेल किंमत',
+
+      // Notifications
+      notifications: 'सूचना',
+      newOrder: 'नवीन ऑर्डर',
+      orderShipped: 'ऑर्डर पाठवले',
+      orderDelivered: 'ऑर्डर वितरीत',
+
+      // Messages
+      successMessage: 'यश!',
+      errorMessage: 'त्रुटी झाली',
+      loading: 'लोड होत आहे...',
+      saveChanges: 'बदल जतन करा',
+      cancel: 'रद्द करा',
+    },
+  },
+  bn: {
+    translation: {
+      // Common
+      welcome: 'FarmCon এ স্বাগতম',
+      home: 'হোম',
+      about: 'আমাদের সম্পর্কে',
+      products: 'পণ্য',
+      cart: 'কার্ট',
+      orders: 'অর্ডার',
+      profile: 'প্রোফাইল',
+      logout: 'লগআউট',
+      login: 'লগইন',
+      signup: 'সাইন আপ',
+      search: 'অনুসন্ধান',
+
+      // Dashboard
+      dashboard: 'ড্যাশবোর্ড',
+      myOrders: 'আমার অর্ডার',
+      myProducts: 'আমার পণ্য',
+      myCrops: 'আমার ফসল',
+      sellCrops: 'ফসল বিক্রয়',
+      buySupplies: 'সামগ্রী কিনুন',
+      equipmentRental: 'যন্ত্রপাতি ভাড়া',
+      suppliers: 'সরবরাহকারী',
+      buyers: 'ক্রেতা',
+      browseCrops: 'ফসল ব্রাউজ',
+      inventory: 'তালিকা',
+      analytics: 'বিশ্লেষণ',
+      users: 'ব্যবহারকারী',
+      allProducts: 'সব পণ্য',
+      allOrders: 'সব অর্ডার',
+      settings: 'সেটিংস',
+      expertConsultations: 'বিশেষজ্ঞ পরামর্শ',
+      competitorAnalysis: 'প্রতিযোগী বিশ্লেষণ',
+
+      // Products
+      addToCart: 'কার্টে যোগ করুন',
+      buyNow: 'এখন কিনুন',
+      price: 'মূল্য',
+      quantity: 'পরিমাণ',
+      available: 'উপলব্ধ',
+      outOfStock: 'স্টকে নেই',
+
+      // Weather
+      weather: 'আবহাওয়া',
+      temperature: 'তাপমাত্রা',
+      humidity: 'আর্দ্রতা',
+      rainfall: 'বৃষ্টিপাত',
+      forecast: 'পূর্বাভাস',
+
+      // Market Prices
+      marketPrices: 'বাজার মূল্য',
+      mandiPrices: 'মান্ডি মূল্য',
+      commodity: 'পণ্য',
+      minPrice: 'সর্বনিম্ন মূল্য',
+      maxPrice: 'সর্বোচ্চ মূল্য',
+      modalPrice: 'মডেল মূল্য',
+
+      // Notifications
+      notifications: 'বিজ্ঞপ্তি',
+      newOrder: 'নতুন অর্ডার',
+      orderShipped: 'অর্ডার পাঠানো হয়েছে',
+      orderDelivered: 'অর্ডার সরবরাহ করা হয়েছে',
+
+      // Messages
+      successMessage: 'সফলতা!',
+      errorMessage: 'ত্রুটি ঘটেছে',
+      loading: 'লোড হচ্ছে...',
+      saveChanges: 'পরিবর্তন সংরক্ষণ করুন',
+      cancel: 'বাতিল',
+    },
+  },
+  pa: {
+    translation: {
+      // Common
+      welcome: 'FarmCon ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ',
+      home: 'ਹੋਮ',
+      about: 'ਸਾਡੇ ਬਾਰੇ',
+      products: 'ਉਤਪਾਦ',
+      cart: 'ਕਾਰਟ',
+      orders: 'ਆਰਡਰ',
+      profile: 'ਪ੍ਰੋਫਾਈਲ',
+      logout: 'ਲੌਗਆਉਟ',
+      login: 'ਲੌਗਿਨ',
+      signup: 'ਸਾਈਨ ਅੱਪ',
+      search: 'ਖੋਜ',
+
+      // Dashboard
+      dashboard: 'ਡੈਸ਼ਬੋਰਡ',
+      myOrders: 'ਮੇਰੇ ਆਰਡਰ',
+      myProducts: 'ਮੇਰੇ ਉਤਪਾਦ',
+      myCrops: 'ਮੇਰੀਆਂ ਫਸਲਾਂ',
+      sellCrops: 'ਫਸਲਾਂ ਵੇਚੋ',
+      buySupplies: 'ਸਮਾਨ ਖਰੀਦੋ',
+      equipmentRental: 'ਉਪਕਰਣ ਕਿਰਾਏ',
+      suppliers: 'ਸਪਲਾਇਰ',
+      buyers: 'ਖਰੀਦਦਾਰ',
+      browseCrops: 'ਫਸਲਾਂ ਦੇਖੋ',
+      inventory: 'ਸੂਚੀ',
+      analytics: 'ਵਿਸ਼ਲੇਸ਼ਣ',
+      users: 'ਉਪਭੋਗਤਾ',
+      allProducts: 'ਸਾਰੇ ਉਤਪਾਦ',
+      allOrders: 'ਸਾਰੇ ਆਰਡਰ',
+      settings: 'ਸੈਟਿੰਗਾਂ',
+      expertConsultations: 'ਮਾਹਰ ਸਲਾਹ',
+      competitorAnalysis: 'ਪ੍ਰਤੀਯੋਗੀ ਵਿਸ਼ਲੇਸ਼ਣ',
+
+      // Products
+      addToCart: 'ਕਾਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ',
+      buyNow: 'ਹੁਣ ਖਰੀਦੋ',
+      price: 'ਕੀਮਤ',
+      quantity: 'ਮਾਤਰਾ',
+      available: 'ਉਪਲਬਧ',
+      outOfStock: 'ਸਟਾਕ ਖਤਮ',
+
+      // Weather
+      weather: 'ਮੌਸਮ',
+      temperature: 'ਤਾਪਮਾਨ',
+      humidity: 'ਨਮੀ',
+      rainfall: 'ਬਾਰਿਸ਼',
+      forecast: 'ਪੂਰਵ ਅਨੁਮਾਨ',
+
+      // Market Prices
+      marketPrices: 'ਬਾਜ਼ਾਰ ਕੀਮਤਾਂ',
+      mandiPrices: 'ਮੰਡੀ ਭਾਅ',
+      commodity: 'ਵਸਤੂ',
+      minPrice: 'ਘੱਟੋ-ਘੱਟ ਕੀਮਤ',
+      maxPrice: 'ਵੱਧ ਤੋਂ ਵੱਧ ਕੀਮਤ',
+      modalPrice: 'ਮਾਡਲ ਕੀਮਤ',
+
+      // Notifications
+      notifications: 'ਸੂਚਨਾਵਾਂ',
+      newOrder: 'ਨਵਾਂ ਆਰਡਰ',
+      orderShipped: 'ਆਰਡਰ ਭੇਜਿਆ ਗਿਆ',
+      orderDelivered: 'ਆਰਡਰ ਡਿਲੀਵਰ ਹੋਇਆ',
+
+      // Messages
+      successMessage: 'ਸਫਲਤਾ!',
+      errorMessage: 'ਗਲਤੀ ਹੋਈ',
+      loading: 'ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...',
+      saveChanges: 'ਤਬਦੀਲੀਆਂ ਸੁਰੱਖਿਅਤ ਕਰੋ',
+      cancel: 'ਰੱਦ ਕਰੋ',
+    },
+  },
+  gu: {
+    translation: {
+      // Common
+      welcome: 'FarmCon માં આપનું સ્વાગત છે',
+      home: 'હોમ',
+      about: 'અમારા વિશે',
+      products: 'ઉત્પાદનો',
+      cart: 'કાર્ટ',
+      orders: 'ઓર્ડર',
+      profile: 'પ્રોફાઇલ',
+      logout: 'લોગઆઉટ',
+      login: 'લોગિન',
+      signup: 'સાઇન અપ',
+      search: 'શોધો',
+
+      // Dashboard
+      dashboard: 'ડેશબોર્ડ',
+      myOrders: 'મારા ઓર્ડર',
+      myProducts: 'મારા ઉત્પાદનો',
+      myCrops: 'મારા પાક',
+      sellCrops: 'પાક વેચો',
+      buySupplies: 'સામગ્રી ખરીદો',
+      equipmentRental: 'સાધન ભાડું',
+      suppliers: 'સપ્લાયર્સ',
+      buyers: 'ખરીદદારો',
+      browseCrops: 'પાક જુઓ',
+      inventory: 'યાદી',
+      analytics: 'વિશ્લેષણ',
+      users: 'વપરાશકર્તાઓ',
+      allProducts: 'બધા ઉત્પાદનો',
+      allOrders: 'બધા ઓર્ડર',
+      settings: 'સેટિંગ્સ',
+      expertConsultations: 'નિષ્ણાત પરામર્શ',
+      competitorAnalysis: 'સ્પર્ધક વિશ્લેષણ',
+
+      // Products
+      addToCart: 'કાર્ટમાં ઉમેરો',
+      buyNow: 'હવે ખરીદો',
+      price: 'કિંમત',
+      quantity: 'જથ્થો',
+      available: 'ઉપલબ્ધ',
+      outOfStock: 'સ્ટોક નથી',
+
+      // Weather
+      weather: 'હવામાન',
+      temperature: 'તાપમાન',
+      humidity: 'ભેજ',
+      rainfall: 'વરસાદ',
+      forecast: 'પૂર્વાનુમાન',
+
+      // Market Prices
+      marketPrices: 'બજાર ભાવ',
+      mandiPrices: 'મંડી ભાવ',
+      commodity: 'ચીજવસ્તુ',
+      minPrice: 'લઘુત્તમ કિંમત',
+      maxPrice: 'મહત્તમ કિંમત',
+      modalPrice: 'મોડલ કિંમત',
+
+      // Notifications
+      notifications: 'સૂચનાઓ',
+      newOrder: 'નવો ઓર્ડર',
+      orderShipped: 'ઓર્ડર મોકલ્યો',
+      orderDelivered: 'ઓર્ડર પહોંચાડ્યો',
+
+      // Messages
+      successMessage: 'સફળતા!',
+      errorMessage: 'ભૂલ આવી',
+      loading: 'લોડ થઈ રહ્યું છે...',
+      saveChanges: 'ફેરફારો સાચવો',
+      cancel: 'રદ કરો',
     },
   },
 }

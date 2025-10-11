@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
     // Fetch data from NASA POWER API
     const nasaUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,PRECTOTCORR&community=AG&longitude=${lon}&latitude=${lat}&start=${startDateStr}&end=${endDateStr}&format=JSON`
 
-    console.log('Fetching NASA weather data:', {
+    console.log('🌤️  Fetching NASA weather data:', {
       location,
       lat,
       lon,
@@ -84,26 +84,41 @@ export async function GET(request: NextRequest) {
       url: nasaUrl
     })
 
-    const weatherResponse = await fetch(nasaUrl)
+    const weatherResponse = await fetch(nasaUrl, {
+      headers: {
+        'User-Agent': 'FarmCon-Weather-App'
+      }
+    })
 
     if (!weatherResponse.ok) {
       const errorText = await weatherResponse.text()
-      console.error('NASA API request failed:', {
+      console.error('❌ NASA API request failed:', {
         status: weatherResponse.status,
         statusText: weatherResponse.statusText,
         error: errorText,
         url: nasaUrl
       })
+
+      // Return error response with details for debugging
       return NextResponse.json({
         weather: getMockWeatherData(location),
         source: 'mock',
-        error: `NASA API error: ${weatherResponse.status}`
-      })
+        error: `NASA API error: ${weatherResponse.status} - ${weatherResponse.statusText}`,
+        debug: {
+          status: weatherResponse.status,
+          url: nasaUrl,
+          coordinates: { lat, lon }
+        }
+      }, { status: 200 }) // Return 200 since we're providing mock data as fallback
     }
 
     const weatherData = await weatherResponse.json()
 
-    console.log('NASA API response received successfully')
+    console.log('✅ NASA API response received successfully', {
+      hasProperties: !!weatherData.properties,
+      hasParameters: !!weatherData.properties?.parameter,
+      parameterKeys: weatherData.properties?.parameter ? Object.keys(weatherData.properties.parameter) : []
+    })
 
     // Validate NASA POWER API response
     if (!weatherData.properties || !weatherData.properties.parameter) {

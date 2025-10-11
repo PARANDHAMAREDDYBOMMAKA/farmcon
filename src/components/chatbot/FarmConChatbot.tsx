@@ -70,12 +70,11 @@ export default function FarmConChatbot() {
   }
 
   const openHumanSupport = () => {
-    // Open Tawk.to live chat for human support
     if (typeof window !== 'undefined' && (window as any).Tawk_API) {
       const TawkAPI = (window as any).Tawk_API
-      TawkAPI.showWidget() // Show the widget first
-      TawkAPI.maximize() // Then maximize it
-      setOpened(false) // Close AI chatbot
+      TawkAPI.showWidget()
+      TawkAPI.maximize()
+      setOpened(false)
     } else {
       alert('Live support is loading. Please try again in a moment.')
     }

@@ -1,36 +1,60 @@
 'use client'
 
-import { useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import '../lib/i18n' // Import i18n configuration
+import { useEffect, useState } from 'react'
 
 const languages = [
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
   { code: 'ta', name: 'தமிழ்', flag: '🇮🇳' },
   { code: 'te', name: 'తెలుగు', flag: '🇮🇳' },
+  { code: 'kn', name: 'ಕನ್ನಡ', flag: '🇮🇳' },
+  { code: 'ml', name: 'മലയാളം', flag: '🇮🇳' },
+  { code: 'mr', name: 'मराठी', flag: '🇮🇳' },
+  { code: 'bn', name: 'বাংলা', flag: '🇮🇳' },
+  { code: 'pa', name: 'ਪੰਜਾਬੀ', flag: '🇮🇳' },
+  { code: 'gu', name: 'ગુજરાતી', flag: '🇮🇳' },
+  { code: 'ur', name: 'اردو', flag: '🇵🇰' },
+  { code: 'or', name: 'ଓଡ଼ିଆ', flag: '🇮🇳' },
 ]
 
+declare global {
+  interface Window {
+    google: any
+  }
+}
+
 export default function LanguageSwitcher() {
-  const { i18n } = useTranslation()
+  const [currentLang, setCurrentLang] = useState('en')
 
   useEffect(() => {
-    // Load saved language from localStorage
-    const savedLang = localStorage.getItem('i18nextLng')
-    if (savedLang && savedLang !== i18n.language) {
-      i18n.changeLanguage(savedLang)
-    }
-  }, [i18n])
+    // Load saved language preference
+    const savedLang = localStorage.getItem('googtrans') || '/en/en'
+    const langCode = savedLang.split('/')[2] || 'en'
+    setCurrentLang(langCode)
+  }, [])
 
-  const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng)
-    localStorage.setItem('i18nextLng', lng)
+  const changeLanguage = (langCode: string) => {
+    // Set Google Translate cookie
+    const newLang = langCode === 'en' ? '/en/en' : `/en/${langCode}`
+
+    // Set cookies for Google Translate
+    document.cookie = `googtrans=${newLang};path=/;domain=${window.location.hostname}`
+    document.cookie = `googtrans=${newLang};path=/`
+
+    // Save preference
+    localStorage.setItem('googtrans', newLang)
+    localStorage.setItem('preferredLanguage', langCode)
+
+    setCurrentLang(langCode)
+
+    // Reload the page to apply translation
+    window.location.reload()
   }
 
   return (
     <div className="relative inline-block">
       <select
-        value={i18n.language}
+        value={currentLang}
         onChange={(e) => changeLanguage(e.target.value)}
         className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
       >
@@ -45,6 +69,9 @@ export default function LanguageSwitcher() {
           <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
         </svg>
       </div>
+
+      {/* Hidden Google Translate element */}
+      <div id="google_translate_element" className="hidden"></div>
     </div>
   )
 }
