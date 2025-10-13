@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 @theme {
   --color-background: #ffffff;
@@ -154,4 +155,67 @@ html:not([data-theme="dark"]) {
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Leaflet Map Styles */
+.leaflet-container {
+  z-index: 0;
+}
+
+.leaflet-pane {
+  z-index: 400;
+}
+
+.leaflet-tile-pane {
+  z-index: 200;
+}
+
+.leaflet-overlay-pane {
+  z-index: 400;
+}
+
+.leaflet-shadow-pane {
+  z-index: 500;
+}
+
+.leaflet-marker-pane {
+  z-index: 600;
+}
+
+.leaflet-tooltip-pane {
+  z-index: 650;
+}
+
+.leaflet-popup-pane {
+  z-index: 700;
+}
+
+.leaflet-map-pane canvas {
+  z-index: 100;
+}
+
+.leaflet-control {
+  z-index: 800;
+}
+
+/* Fix for Leaflet marker icons */
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+  z-index: 600;
+}
+
+/* Custom marker styles */
+.custom-marker {
+  background: transparent;
+  border: none;
+}
+
+.driver-marker {
+  background: transparent;
+  border: none;
+}
+
+.waypoint-marker {
+  background: transparent;
+  border: none;
 }

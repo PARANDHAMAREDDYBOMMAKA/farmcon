@@ -25,16 +25,72 @@ interface DeliveryMilestone {
   estimatedTime?: string
 }
 
+interface DeliveryData {
+  id: string
+  status: string
+  trackingNumber: string | null
+  estimatedDeliveryTime: string | null
+  actualDeliveryTime: string | null
+  driver?: {
+    fullName: string
+    phone: string
+    vehicleType: string
+    vehicleNumber: string
+  }
+  milestones: Array<{
+    milestone: string
+    description: string
+    completedAt: string
+    latitude: number | null
+    longitude: number | null
+  }>
+  locationHistory: Array<{
+    latitude: number
+    longitude: number
+    address: string | null
+    timestamp: string
+  }>
+}
+
 export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrackerProps) {
   const [milestones, setMilestones] = useState<DeliveryMilestone[]>([])
   const [estimatedDelivery, setEstimatedDelivery] = useState<Date | null>(null)
   const [currentLocation, setCurrentLocation] = useState<string>('')
+  const [deliveryData, setDeliveryData] = useState<DeliveryData | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  // Fetch delivery data from API
+  useEffect(() => {
+    const fetchDeliveryData = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/deliveries?orderId=${order.id}`)
+        const data = await response.json()
+
+        if (data.deliveries && data.deliveries.length > 0) {
+          setDeliveryData(data.deliveries[0])
+        }
+      } catch (err) {
+        console.error('Error fetching delivery data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDeliveryData()
+
+    // Poll for updates if order is shipped
+    if (['shipped', 'processing', 'confirmed'].includes(order.status)) {
+      const interval = setInterval(fetchDeliveryData, 30000) // Poll every 30 seconds
+      return () => clearInterval(interval)
+    }
+  }, [order.id, order.status])
 
   useEffect(() => {
     generateMilestones()
     calculateETA()
-    simulateDeliveryProgress()
-  }, [order.status])
+    updateCurrentLocation()
+  }, [order.status, deliveryData])
 
   const generateMilestones = () => {
     const orderDate = parseISO(order.created_at)
@@ -123,31 +179,34 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
   }
 
   const calculateETA = () => {
-    const orderDate = parseISO(order.created_at)
-    const deliveryDays = order.payment_method === 'cod' ? 5 : 4
-    const eta = addDays(orderDate, deliveryDays)
-    setEstimatedDelivery(eta)
+    // Use delivery data if available
+    if (deliveryData?.estimatedDeliveryTime) {
+      setEstimatedDelivery(new Date(deliveryData.estimatedDeliveryTime))
+    } else {
+      // Fallback to calculated ETA
+      const orderDate = parseISO(order.created_at)
+      const deliveryDays = order.payment_method === 'cod' ? 5 : 4
+      const eta = addDays(orderDate, deliveryDays)
+      setEstimatedDelivery(eta)
+    }
   }
 
-  const simulateDeliveryProgress = () => {
-    if (order.status === 'shipped') {
-      const locations = [
-        'Left Hyderabad facility',
-        'Reached sorting facility, Vijayawada',
-        'In transit to Tirupati',
-        'Reached Tirupati distribution center',
-        'Out for delivery in Kalakada area'
-      ]
+  const updateCurrentLocation = () => {
+    if (!deliveryData) {
+      setCurrentLocation('')
+      return
+    }
 
-      let currentIndex = 0
-      setCurrentLocation(locations[0])
-
-      const interval = setInterval(() => {
-        currentIndex = (currentIndex + 1) % locations.length
-        setCurrentLocation(locations[currentIndex])
-      }, 10000) // Update every 10 seconds
-
-      return () => clearInterval(interval)
+    // Get latest location from history
+    if (deliveryData.locationHistory && deliveryData.locationHistory.length > 0) {
+      const latestLocation = deliveryData.locationHistory[0]
+      if (latestLocation.address) {
+        setCurrentLocation(latestLocation.address)
+      } else {
+        setCurrentLocation(`Lat: ${latestLocation.latitude.toFixed(4)}, Lng: ${latestLocation.longitude.toFixed(4)}`)
+      }
+    } else if (deliveryData.status === 'in_transit' || deliveryData.status === 'out_for_delivery') {
+      setCurrentLocation('Delivery in progress')
     }
   }
 
@@ -168,12 +227,22 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
           <div>
             <h2 className="text-2xl font-bold">Order #{order.id.slice(-8)}</h2>
             <p className="text-green-100">Total: ₹{order.total_amount}</p>
+            {deliveryData?.trackingNumber && (
+              <p className="text-sm text-green-100 mt-1">
+                Tracking: {deliveryData.trackingNumber}
+              </p>
+            )}
           </div>
           <div className="text-right">
             <div className="text-sm text-green-100">Estimated Delivery</div>
             <div className="text-xl font-semibold">
               {estimatedDelivery ? format(estimatedDelivery, 'MMM dd, yyyy') : 'Calculating...'}
             </div>
+            {deliveryData?.driver && (
+              <p className="text-sm text-green-100 mt-1">
+                Driver: {deliveryData.driver.fullName}
+              </p>
+            )}
           </div>
         </div>
 

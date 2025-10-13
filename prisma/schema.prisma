@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Profile {
@@ -201,6 +200,7 @@ model Order {
   customer              Profile     @relation("CustomerOrders", fields: [customerId], references: [id], onDelete: Cascade)
   seller                Profile     @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
   reviews               Review[]
+  delivery              Delivery?
 
   @@map("orders")
 }
@@ -300,6 +300,84 @@ model CartItem {
   @@map("cart_items")
 }
 
+model Driver {
+  id               String     @id @default(uuid()) @db.Uuid
+  fullName         String     @map("full_name")
+  phone            String     @unique
+  email            String?
+  vehicleType      String     @map("vehicle_type")
+  vehicleNumber    String     @map("vehicle_number")
+  licenseNumber    String     @map("license_number")
+  profileImageUrl  String?    @map("profile_image_url")
+  isActive         Boolean    @default(true) @map("is_active")
+  currentLatitude  Decimal?   @map("current_latitude") @db.Decimal(10, 8)
+  currentLongitude Decimal?   @map("current_longitude") @db.Decimal(11, 8)
+  lastLocationUpdate DateTime? @map("last_location_update")
+  createdAt        DateTime   @default(now()) @map("created_at")
+  updatedAt        DateTime   @updatedAt @map("updated_at")
+  deliveries       Delivery[]
+
+  @@map("drivers")
+}
+
+model Delivery {
+  id                   String             @id @default(uuid()) @db.Uuid
+  orderId              String             @unique @map("order_id") @db.Uuid
+  driverId             String?            @map("driver_id") @db.Uuid
+  status               DeliveryStatus     @default(pending)
+  pickupLatitude       Decimal?           @map("pickup_latitude") @db.Decimal(10, 8)
+  pickupLongitude      Decimal?           @map("pickup_longitude") @db.Decimal(11, 8)
+  pickupAddress        String?            @map("pickup_address")
+  deliveryLatitude     Decimal?           @map("delivery_latitude") @db.Decimal(10, 8)
+  deliveryLongitude    Decimal?           @map("delivery_longitude") @db.Decimal(11, 8)
+  deliveryAddress      String?            @map("delivery_address")
+  estimatedPickupTime  DateTime?          @map("estimated_pickup_time")
+  actualPickupTime     DateTime?          @map("actual_pickup_time")
+  estimatedDeliveryTime DateTime?         @map("estimated_delivery_time")
+  actualDeliveryTime   DateTime?          @map("actual_delivery_time")
+  distance             Decimal?           @db.Decimal(10, 2)
+  trackingNumber       String?            @unique @map("tracking_number")
+  notes                String?
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+  driver               Driver?            @relation(fields: [driverId], references: [id])
+  order                Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  locationHistory      DeliveryLocation[]
+  milestones           DeliveryMilestone[]
+
+  @@map("deliveries")
+}
+
+model DeliveryLocation {
+  id         String   @id @default(uuid()) @db.Uuid
+  deliveryId String   @map("delivery_id") @db.Uuid
+  latitude   Decimal  @db.Decimal(10, 8)
+  longitude  Decimal  @db.Decimal(11, 8)
+  accuracy   Decimal? @db.Decimal(10, 2)
+  speed      Decimal? @db.Decimal(10, 2)
+  heading    Decimal? @db.Decimal(5, 2)
+  address    String?
+  timestamp  DateTime @default(now())
+  delivery   Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+
+  @@map("delivery_locations")
+  @@index([deliveryId, timestamp])
+}
+
+model DeliveryMilestone {
+  id          String   @id @default(uuid()) @db.Uuid
+  deliveryId  String   @map("delivery_id") @db.Uuid
+  milestone   String
+  description String?
+  latitude    Decimal? @db.Decimal(10, 8)
+  longitude   Decimal? @db.Decimal(11, 8)
+  completedAt DateTime @default(now()) @map("completed_at")
+  delivery    Delivery @relation(fields: [deliveryId], references: [id], onDelete: Cascade)
+
+  @@map("delivery_milestones")
+  @@index([deliveryId, completedAt])
+}
+
 enum UserRole {
   farmer
   consumer
@@ -329,4 +407,15 @@ enum EquipmentStatus {
   rented
   maintenance
   unavailable
+}
+
+enum DeliveryStatus {
+  pending
+  assigned
+  picked_up
+  in_transit
+  out_for_delivery
+  delivered
+  cancelled
+  failed
 }

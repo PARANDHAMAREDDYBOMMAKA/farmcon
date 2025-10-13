@@ -6,7 +6,7 @@ import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'
 import DeliveryTracker from '@/components/delivery/DeliveryTracker'
-import DeliveryMap from '@/components/delivery/DeliveryMap'
+import DeliveryMap from '@/components/delivery/LeafletDeliveryMap'
 import { ordersAPI } from '@/lib/api-client'
 
 interface OrderDetails {
@@ -55,7 +55,6 @@ export default function OrderTrackingPage() {
   const router = useRouter()
   const [order, setOrder] = useState<OrderDetails | null>(null)
   const [loading, setLoading] = useState(true)
-  const [driverLocation, setDriverLocation] = useState<{lat: number, lng: number} | null>(null)
   const orderId = params?.id as string
 
   useEffect(() => {
@@ -63,30 +62,6 @@ export default function OrderTrackingPage() {
       loadOrder()
     }
   }, [user, authLoading, orderId])
-
-  // Simulate driver location updates for shipped orders
-  useEffect(() => {
-    if (order?.status === 'shipped') {
-      const interval = setInterval(() => {
-        // Simulate movement towards delivery location
-        if (order.shipping_address?.coordinates) {
-          const deliveryLat = order.shipping_address.coordinates.lat
-          const deliveryLng = order.shipping_address.coordinates.lng
-          
-          // Add some random movement around the delivery area
-          const offsetLat = (Math.random() - 0.5) * 0.01
-          const offsetLng = (Math.random() - 0.5) * 0.01
-          
-          setDriverLocation({
-            lat: deliveryLat + offsetLat,
-            lng: deliveryLng + offsetLng
-          })
-        }
-      }, 10000) // Update every 10 seconds
-
-      return () => clearInterval(interval)
-    }
-  }, [order])
 
   const loadOrder = async () => {
     try {
