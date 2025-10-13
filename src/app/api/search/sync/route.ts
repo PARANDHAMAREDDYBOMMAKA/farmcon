@@ -3,7 +3,17 @@ import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
+// GET handler for Vercel Cron Jobs
+export async function GET(request: NextRequest) {
+  return handleSync(request)
+}
+
+// POST handler for manual sync
 export async function POST(request: NextRequest) {
+  return handleSync(request)
+}
+
+async function handleSync(request: NextRequest) {
   try {
     // Check if MeiliSearch is configured before importing
     if (!process.env.MEILISEARCH_HOST || !process.env.MEILISEARCH_API_KEY) {

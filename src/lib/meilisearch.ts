@@ -48,7 +48,6 @@ export async function initializeIndexes() {
       ],
     })
 
-    // Crops index
     const cropsIndex = meilisearch.index(INDEXES.crops)
     await cropsIndex.updateSettings({
       searchableAttributes: ['name', 'variety', 'description'],
@@ -56,7 +55,6 @@ export async function initializeIndexes() {
       sortableAttributes: ['plantedDate', 'expectedHarvestDate'],
     })
 
-    // Equipment index
     const equipmentIndex = meilisearch.index(INDEXES.equipment)
     await equipmentIndex.updateSettings({
       searchableAttributes: ['name', 'description', 'brand', 'model', 'category'],
@@ -64,14 +62,12 @@ export async function initializeIndexes() {
       sortableAttributes: ['hourlyRate', 'dailyRate', 'yearManufactured'],
     })
 
-    // Suppliers index
     const suppliersIndex = meilisearch.index(INDEXES.suppliers)
     await suppliersIndex.updateSettings({
       searchableAttributes: ['fullName', 'businessName', 'city', 'state', 'email'],
       filterableAttributes: ['city', 'state', 'role'],
     })
 
-    // Farmers index
     const farmersIndex = meilisearch.index(INDEXES.farmers)
     await farmersIndex.updateSettings({
       searchableAttributes: ['fullName', 'city', 'state', 'email'],
@@ -84,13 +80,20 @@ export async function initializeIndexes() {
   }
 }
 
-// Add documents to index
 export async function addDocuments(indexName: string, documents: any[]) {
+  if (documents.length === 0) {
+    return { taskUid: 0 }
+  }
+
   try {
     const meilisearch = getClient()
     const index = meilisearch.index(indexName)
-    const response = await index.addDocuments(documents)
-    return response
+
+    const task = await index.addDocuments(documents, { primaryKey: 'id' })
+
+    await new Promise(resolve => setTimeout(resolve, 1000))
+
+    return task
   } catch (error) {
     console.error(`Error adding documents to ${indexName}:`, error)
     throw error
