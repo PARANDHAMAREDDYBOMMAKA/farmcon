@@ -23,6 +23,7 @@ export default function ImageUpload({
     const files = Array.from(e.target.files || [])
     if (files.length === 0) return
 
+    // Check if adding these files would exceed max images
     if (images.length + files.length > maxImages) {
       toast.error(`Maximum ${maxImages} images allowed`)
       return
@@ -38,7 +39,7 @@ export default function ImageUpload({
           continue
         }
 
-        if (file.size > 5 * 1024 * 1024) { 
+        if (file.size > 5 * 1024 * 1024) { // 5MB limit
           toast.error(`${file.name} is too large. Maximum size is 5MB`)
           continue
         }
@@ -69,7 +70,7 @@ export default function ImageUpload({
       toast.error('Failed to upload images')
     } finally {
       setUploading(false)
-      
+      // Reset input
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
       }
@@ -87,12 +88,44 @@ export default function ImageUpload({
         Crop Images ({images.length}/{maxImages})
       </label>
       
-      {}
+      {/* Upload Button */}
       <div className="mb-4">
         <input
           ref={fileInputRef}
           type="file"
-          accept="image}
+          accept="image/*"
+          multiple
+          onChange={handleFileSelect}
+          className="hidden"
+          disabled={uploading || images.length >= maxImages}
+        />
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading || images.length >= maxImages}
+          className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+            uploading || images.length >= maxImages 
+              ? 'opacity-50 cursor-not-allowed' 
+              : 'text-gray-700'
+          }`}
+        >
+          {uploading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Uploading...
+            </>
+          ) : (
+            <>
+              📷 Add Images
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Image Preview Grid */}
       {images.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {images.map((image, index) => (
