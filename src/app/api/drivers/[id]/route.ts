@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET driver by ID
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -50,7 +49,6 @@ export async function GET(
   }
 }
 
-// PUT update driver
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -105,7 +103,6 @@ export async function PUT(
   }
 }
 
-// DELETE driver
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -113,7 +110,6 @@ export async function DELETE(
   try {
     const { id } = await params
 
-    // Check if driver has active deliveries
     const activeDeliveries = await prisma.delivery.count({
       where: {
         driverId: id,

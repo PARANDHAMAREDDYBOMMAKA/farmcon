@@ -1,13 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { cache, CacheKeys } from '@/lib/redis'
 
-// GET /api/suppliers - Get all suppliers
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const city = searchParams.get('city')
     const state = searchParams.get('state')
     const verified = searchParams.get('verified')
+
+    const filterKey = `${city || 'all'}:${state || 'all'}:${verified || 'all'}`
+    const cacheKey = `farmcon:suppliers:${filterKey}`
+
+    const cached = await cache.get(cacheKey)
+    if (cached) {
+      return NextResponse.json({ suppliers: cached, source: 'cache' })
+    }
 
     const whereClause: any = {
       role: 'SUPPLIER'
@@ -56,12 +64,13 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Add stats for each supplier
     const suppliersWithStats = suppliers.map(supplier => ({
       ...supplier,
       totalProducts: supplier.products.length,
       activeProducts: supplier.products.filter(p => p.isActive).length
     }))
+
+    await cache.set(cacheKey, suppliersWithStats, 600)
 
     return NextResponse.json({ suppliers: suppliersWithStats })
   } catch (error) {
@@ -73,7 +82,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/suppliers - Create new supplier (admin only)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -90,7 +98,6 @@ export async function POST(request: NextRequest) {
       gstNumber
     } = body
 
-    // Validate required fields
     if (!id || !email || !fullName) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -113,6 +120,8 @@ export async function POST(request: NextRequest) {
         role: 'SUPPLIER'
       }
     })
+
+    await cache.invalidatePattern('farmcon:suppliers:*')
 
     return NextResponse.json({ supplier })
   } catch (error) {

@@ -14,7 +14,7 @@ const navigation = {
   farmer: [
     { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
     { name: 'My Crops', href: '/dashboard/crops', icon: '🌱' },
-    // { name: 'Sell Crops', href: '/dashboard/sell', icon: '💰' },
+    
     { name: 'Buy Supplies', href: '/dashboard/supplies', icon: '🛒' },
     { name: 'Equipment Rental', href: '/dashboard/equipment', icon: '🚜' },
     { name: 'Orders', href: '/dashboard/orders', icon: '📦' },
@@ -76,18 +76,17 @@ export default function DashboardLayout({
           return
         }
 
-        // Get user profile using our API
         try {
           const profile = await profileAPI.getProfile(session.user.id)
           if (!profile) {
-            // If profile doesn't exist, redirect to signin
+            
             router.push('/auth/signin?message=Profile not found. Please sign in again.')
             return
           }
           setUser(profile)
         } catch (error) {
           console.error('Profile fetch error:', error)
-          // If profile doesn't exist, redirect to signin
+          
           router.push('/auth/signin?message=Error loading profile. Please sign in again.')
           return
         }
@@ -133,11 +132,11 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col lg:flex-row">
-      {/* Sidebar */}
+      {}
       <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 sm:w-72 bg-white shadow-2xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:shadow-xl overflow-y-auto flex flex-col`}>
-        {/* Enhanced Header */}
+        {}
         <div className="flex-shrink-0 relative h-20 px-6 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 overflow-hidden">
-          {/* Background Pattern */}
+          {}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
             <div className="absolute bottom-0 right-0 w-24 h-24 bg-white rounded-full translate-x-12 translate-y-12"></div>
@@ -162,7 +161,7 @@ export default function DashboardLayout({
           </div>
         </div>
 
-        {/* Role Badge */}
+        {}
         <div className="flex-shrink-0 px-6 py-4">
           <div className="relative overflow-hidden bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-3">
             <div className="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-full -translate-y-8 translate-x-8 opacity-50"></div>
@@ -180,7 +179,7 @@ export default function DashboardLayout({
           </div>
         </div>
 
-        {/* Enhanced Navigation */}
+        {}
         <nav className="flex-1 px-4 pb-4 overflow-y-auto">
           <div className="space-y-1">
             {userNavigation.map((item) => (
@@ -202,10 +201,10 @@ export default function DashboardLayout({
           </div>
         </nav>
 
-        {/* Enhanced User Profile Section */}
+        {}
         <div className="flex-shrink-0 p-4 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-slate-50">
           <div className="relative overflow-hidden bg-white rounded-xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-            {/* Background decoration */}
+            {}
             <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full -translate-y-10 translate-x-10 opacity-30"></div>
 
             <div className="relative flex items-center space-x-3 mb-3">
@@ -242,9 +241,9 @@ export default function DashboardLayout({
         </div>
       </div>
 
-      {/* Main content */}
+      {}
       <div className="flex-1 flex flex-col w-full lg:ml-72">
-        {/* Top bar */}
+        {}
         <div className="sticky top-0 z-40 shadow-lg border-b border-gray-200 backdrop-blur-sm bg-white/95">
           <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6">
             <div className="flex items-center gap-4">
@@ -271,7 +270,7 @@ export default function DashboardLayout({
           </div>
         </div>
 
-        {/* Page content */}
+        {}
         <main className="flex-1 p-4 sm:p-6 overflow-x-hidden">
           <div className="max-w-7xl mx-auto w-full">
             {children}
@@ -279,7 +278,7 @@ export default function DashboardLayout({
         </main>
       </div>
 
-      {/* Sidebar overlay */}
+      {}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden backdrop-blur-sm"
@@ -287,7 +286,7 @@ export default function DashboardLayout({
         />
       )}
 
-      {/* Toast Provider */}
+      {}
       <ToastProvider />
     </div>
   )

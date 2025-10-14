@@ -9,13 +9,6 @@ import {
   getPopularCrops,
 } from '@/lib/openfarm'
 
-// GET /api/openfarm?action=search&query=tomato
-// GET /api/openfarm?action=crop&slug=tomato
-// GET /api/openfarm?action=all&page=1
-// GET /api/openfarm?action=guide&slug=tomato
-// GET /api/openfarm?action=companions&slug=tomato
-// GET /api/openfarm?action=tag&tag=vegetable
-// GET /api/openfarm?action=popular&limit=10
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)

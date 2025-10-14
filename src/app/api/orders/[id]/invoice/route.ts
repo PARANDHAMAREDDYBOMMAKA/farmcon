@@ -12,7 +12,6 @@ export async function GET(
       return NextResponse.json({ error: 'Order ID is required' }, { status: 400 })
     }
 
-    // Get order with full details using Prisma
     const order = await prisma.order.findUnique({
       where: { id: orderId },
       include: {
@@ -71,12 +70,11 @@ export async function GET(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
-    // Check if PDF is requested
     const url = new URL(request.url)
     const format = url.searchParams.get('format')
 
     if (format === 'pdf') {
-      // Return HTML that will be converted to PDF on client side
+      
       const invoiceHTML = generateInvoiceHTML(order, true)
       return new NextResponse(invoiceHTML, {
         headers: {
@@ -85,7 +83,6 @@ export async function GET(
       })
     }
 
-    // Generate invoice HTML for preview
     const invoiceHTML = generateInvoiceHTML(order, false)
 
     return new NextResponse(invoiceHTML, {
@@ -105,7 +102,6 @@ function generateInvoiceHTML(order: any, forPDF: boolean = false) {
   const invoiceDate = new Date(order.createdAt).toLocaleDateString('en-IN')
   const invoiceNumber = `INV-${order.id.slice(-8).toUpperCase()}`
 
-  // Calculate totals
   let subtotal = 0
   const itemsHTML = order.items.map((item: any) => {
     const itemName = item.product?.name || item.cropListing?.crop?.name || item.equipment?.name || 'Unknown Item'
@@ -123,13 +119,12 @@ function generateInvoiceHTML(order: any, forPDF: boolean = false) {
     `
   }).join('')
 
-  // Calculate taxes (assuming 18% GST for agricultural products)
   const gstRate = 0.18
   const gstAmount = subtotal * gstRate
   const totalAmount = subtotal + gstAmount
 
   const pdfScript = forPDF ? `
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+    <script src="https:
     <script>
       window.onload = function() {
         const element = document.body;

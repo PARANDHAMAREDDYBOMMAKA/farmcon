@@ -1,4 +1,4 @@
-// Client-side API utilities to call our server-side APIs
+
 import type { UserRole } from '@/types'
 
 class APIError extends Error {
@@ -26,14 +26,12 @@ async function apiCall(endpoint: string, options: RequestInit = {}) {
 }
 
 export const profileAPI = {
-  // Get user profile
+  
   async getProfile(userId: string) {
     const data = await apiCall(`/api/profile?userId=${userId}`)
     return data.profile
   },
 
-
-  // Create or update profile
   async upsertProfile(profileData: {
     id: string
     email: string
@@ -54,7 +52,6 @@ export const profileAPI = {
     return data.profile
   },
 
-  // Update profile
   async updateProfile(userId: string, updates: {
     fullName?: string
     phone?: string
@@ -74,13 +71,12 @@ export const profileAPI = {
 }
 
 export const farmerAPI = {
-  // Get farmer profile
+  
   async getFarmerProfile(userId: string) {
     const data = await apiCall(`/api/farmer?userId=${userId}`)
     return data.farmerProfile
   },
 
-  // Create or update farmer profile
   async upsertFarmerProfile(farmerData: {
     id: string
     farmName?: string

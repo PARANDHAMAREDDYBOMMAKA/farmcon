@@ -1,8 +1,7 @@
 import posthog from 'posthog-js'
 
-// Analytics helper functions
 export const analytics = {
-  // Track page views
+  
   pageView: (pageName: string, properties?: Record<string, any>) => {
     if (typeof window !== 'undefined') {
       posthog.capture('page_viewed', {
@@ -12,7 +11,6 @@ export const analytics = {
     }
   },
 
-  // Track user actions
   track: (eventName: string, properties?: Record<string, any>) => {
     if (typeof window !== 'undefined') {
       posthog.capture(eventName, properties)
@@ -20,7 +18,6 @@ export const analytics = {
     }
   },
 
-  // Identify user
   identify: (userId: string, properties?: Record<string, any>) => {
     if (typeof window !== 'undefined') {
       posthog.identify(userId, properties)
@@ -28,7 +25,6 @@ export const analytics = {
     }
   },
 
-  // Track product views
   productViewed: (productId: string, productName: string, price?: number) => {
     analytics.track('product_viewed', {
       product_id: productId,
@@ -37,7 +33,6 @@ export const analytics = {
     })
   },
 
-  // Track add to cart
   addToCart: (productId: string, productName: string, quantity: number, price?: number) => {
     analytics.track('add_to_cart', {
       product_id: productId,
@@ -48,7 +43,6 @@ export const analytics = {
     })
   },
 
-  // Track checkout
   checkoutStarted: (cartValue: number, itemCount: number) => {
     analytics.track('checkout_started', {
       cart_value: cartValue,
@@ -56,7 +50,6 @@ export const analytics = {
     })
   },
 
-  // Track purchase
   purchaseCompleted: (orderId: string, totalAmount: number, itemCount: number, paymentMethod: string) => {
     analytics.track('purchase_completed', {
       order_id: orderId,
@@ -66,7 +59,6 @@ export const analytics = {
     })
   },
 
-  // Track search
   searchPerformed: (query: string, resultsCount: number) => {
     analytics.track('search_performed', {
       search_query: query,
@@ -74,7 +66,6 @@ export const analytics = {
     })
   },
 
-  // Track signup
   signupCompleted: (userId: string, method: string, role?: string) => {
     analytics.identify(userId, {
       signup_method: method,
@@ -86,7 +77,6 @@ export const analytics = {
     })
   },
 
-  // Track signin
   signinCompleted: (userId: string, method: string) => {
     analytics.identify(userId)
     analytics.track('signin_completed', {
@@ -94,7 +84,6 @@ export const analytics = {
     })
   },
 
-  // Track chatbot interaction
   chatbotInteraction: (action: string, details?: string) => {
     analytics.track('chatbot_interaction', {
       action: action,
@@ -102,7 +91,6 @@ export const analytics = {
     })
   },
 
-  // Track errors
   error: (errorMessage: string, errorType: string, context?: Record<string, any>) => {
     analytics.track('error_occurred', {
       error_message: errorMessage,

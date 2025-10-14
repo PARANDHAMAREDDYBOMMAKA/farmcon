@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/suppliers/[id]/stats - Get supplier statistics
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -9,7 +8,6 @@ export async function GET(
   try {
     const supplierId = params.id
 
-    // Get basic product stats
     const productStats = await prisma.product.aggregate({
       where: { supplierId },
       _count: {
@@ -46,7 +44,6 @@ export async function GET(
       }
     })
 
-    // Get order stats
     const orderStats = await prisma.order.aggregate({
       where: {
         items: {
@@ -91,7 +88,6 @@ export async function GET(
       }
     })
 
-    // Get review stats
     const reviewStats = await prisma.review.aggregate({
       where: {
         product: {
@@ -106,7 +102,6 @@ export async function GET(
       }
     })
 
-    // Recent orders (last 30 days)
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
@@ -131,7 +126,6 @@ export async function GET(
       }
     })
 
-    // Category breakdown
     const categoryStats = await prisma.product.groupBy({
       by: ['categoryId'],
       where: { supplierId },

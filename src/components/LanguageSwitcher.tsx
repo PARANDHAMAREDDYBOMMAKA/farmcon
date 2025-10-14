@@ -27,27 +27,24 @@ export default function LanguageSwitcher() {
   const [currentLang, setCurrentLang] = useState('en')
 
   useEffect(() => {
-    // Load saved language preference
+    
     const savedLang = localStorage.getItem('googtrans') || '/en/en'
     const langCode = savedLang.split('/')[2] || 'en'
     setCurrentLang(langCode)
   }, [])
 
   const changeLanguage = (langCode: string) => {
-    // Set Google Translate cookie
+    
     const newLang = langCode === 'en' ? '/en/en' : `/en/${langCode}`
 
-    // Set cookies for Google Translate
     document.cookie = `googtrans=${newLang};path=/;domain=${window.location.hostname}`
     document.cookie = `googtrans=${newLang};path=/`
 
-    // Save preference
     localStorage.setItem('googtrans', newLang)
     localStorage.setItem('preferredLanguage', langCode)
 
     setCurrentLang(langCode)
 
-    // Reload the page to apply translation
     window.location.reload()
   }
 
@@ -70,7 +67,7 @@ export default function LanguageSwitcher() {
         </svg>
       </div>
 
-      {/* Hidden Google Translate element */}
+      {}
       <div id="google_translate_element" className="hidden"></div>
     </div>
   )

@@ -30,7 +30,7 @@ export default function ProductDetailPage() {
     if (!user) return
     
     try {
-      // Load product details
+      
       const productData = await productsAPI.getProductById(productId)
       
       if (!productData) {
@@ -41,7 +41,6 @@ export default function ProductDetailPage() {
 
       setProduct(productData)
 
-      // Load reviews
       const reviewsData = await reviewsAPI.getReviews(productId)
       setReviews(reviewsData || [])
 
@@ -85,7 +84,7 @@ export default function ProductDetailPage() {
   }
 
   const buyNow = async () => {
-    // Add to cart and redirect to checkout
+    
     await addToCart()
     router.push('/dashboard/cart')
   }
@@ -124,7 +123,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="p-6">
-      {/* Breadcrumb */}
+      {}
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
@@ -142,7 +141,7 @@ export default function ProductDetailPage() {
       </nav>
 
       <div className="lg:grid lg:grid-cols-2 lg:gap-8">
-        {/* Product Images */}
+        {}
         <div>
           <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
             {product.images && product.images.length > 0 ? (
@@ -178,7 +177,7 @@ export default function ProductDetailPage() {
           )}
         </div>
 
-        {/* Product Info */}
+        {}
         <div>
           <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
           
@@ -283,7 +282,7 @@ export default function ProductDetailPage() {
         </div>
       </div>
 
-      {/* Reviews Section */}
+      {}
       <div className="mt-12">
         <h3 className="text-lg font-medium text-gray-900">Customer Reviews</h3>
         {reviews.length > 0 ? (

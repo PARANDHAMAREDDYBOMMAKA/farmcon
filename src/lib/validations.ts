@@ -1,17 +1,15 @@
 import { z } from 'zod'
 
-// Indian phone number validation
 const phoneRegex = /^\+?91?[6-9]\d{9}$/
-// GST number validation (15 characters: 2 digits + 10 alphanumeric + 1 digit + 1 alphanumeric + 1 digit)
+
 const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/
-// PIN code validation (6 digits, first digit cannot be 0)
+
 const pincodeRegex = /^[1-9][0-9]{5}$/
-// PAN number validation
+
 const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
-// Aadhar number validation
+
 const aadharRegex = /^\d{4}\s?\d{4}\s?\d{4}$/
 
-// Base profile validation schema
 export const profileSchema = z.object({
   full_name: z
     .string()
@@ -73,7 +71,6 @@ export const profileSchema = z.object({
     .or(z.literal(''))
 })
 
-// Complete profile schema (for signup/complete profile)
 export const completeProfileSchema = profileSchema.extend({
   farm_size: z
     .string()
@@ -84,7 +81,6 @@ export const completeProfileSchema = profileSchema.extend({
     .optional()
 })
 
-// Farmer profile specific validation
 export const farmerProfileSchema = z.object({
   farm_name: z
     .string()
@@ -158,19 +154,17 @@ export const farmerProfileSchema = z.object({
   aadhar_number: z
     .string()
     .regex(aadharRegex, 'Please enter a valid Aadhar number')
-    .transform((val) => val.replace(/\s/g, '')) // Remove spaces
+    .transform((val) => val.replace(/\s/g, '')) 
     .optional()
     .or(z.literal(''))
 })
 
-// Combined profile update schema
 export const updateProfileSchema = profileSchema.merge(farmerProfileSchema).partial()
 
-// Validation for role-specific requirements
 export const roleSpecificValidation = {
   farmer: (data: any) => {
     const errors: string[] = []
-    // Farmers should have farm information for completeness
+    
     if (!data.farm_size && data.role === 'farmer') {
       errors.push('Farm size is recommended for farmers')
     }
@@ -179,7 +173,7 @@ export const roleSpecificValidation = {
   
   supplier: (data: any) => {
     const errors: string[] = []
-    // Suppliers should have business information
+    
     if (!data.business_name && data.role === 'supplier') {
       errors.push('Business name is required for suppliers')
     }
@@ -190,17 +184,16 @@ export const roleSpecificValidation = {
   },
   
   consumer: (data: any) => {
-    // Basic validation is sufficient for consumers
+    
     return []
   },
   
   admin: (data: any) => {
-    // Admin validation if needed
+    
     return []
   }
 }
 
-// Form field validation helpers
 export const fieldValidators = {
   phone: (phone: string) => {
     if (!phone) return 'Phone number is required'
@@ -209,13 +202,13 @@ export const fieldValidators = {
   },
   
   gst: (gst: string) => {
-    if (!gst) return null // Optional field
+    if (!gst) return null 
     if (!gstRegex.test(gst)) return 'Please enter a valid GST number'
     return null
   },
   
   pincode: (pincode: string) => {
-    if (!pincode) return null // Optional field
+    if (!pincode) return null 
     if (!pincodeRegex.test(pincode)) return 'Please enter a valid 6-digit PIN code'
     return null
   },
@@ -227,14 +220,12 @@ export const fieldValidators = {
   }
 }
 
-// Validation result type
 export type ValidationResult = {
   success: boolean
   errors: Record<string, string[]>
   data?: any
 }
 
-// Main validation function
 export function validateFormData(schema: z.ZodSchema, data: any): ValidationResult {
   try {
     const validatedData = schema.parse(data)
@@ -267,7 +258,6 @@ export function validateFormData(schema: z.ZodSchema, data: any): ValidationResu
   }
 }
 
-// Indian states for validation
 export const INDIAN_STATES = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 
   'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 

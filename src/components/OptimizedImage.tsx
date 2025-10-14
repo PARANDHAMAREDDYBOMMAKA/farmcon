@@ -28,7 +28,6 @@ export default function OptimizedImage({
 }: OptimizedImageProps) {
   const [error, setError] = useState(false)
 
-  // If image loading fails, show placeholder
   if (error) {
     return (
       <div
@@ -40,12 +39,10 @@ export default function OptimizedImage({
     )
   }
 
-  // Construct optimized image URL
   const optimizedSrc = `/api/optimize-image?url=${encodeURIComponent(src)}&quality=${quality}&format=${format}${
     width ? `&width=${width}` : ''
   }${height ? `&height=${height}` : ''}`
 
-  // Use Next.js Image for automatic optimization
   if (fill) {
     return (
       <Image

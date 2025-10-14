@@ -3,10 +3,6 @@ import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
-/**
- * Webhook endpoint for real-time Meilisearch sync
- * Call this endpoint when products/crops/equipment are added/updated
- */
 export async function POST(request: NextRequest) {
   try {
     const { type, id } = await request.json()
@@ -20,7 +16,6 @@ export async function POST(request: NextRequest) {
 
     const { updateDocuments, INDEXES } = await import('@/lib/meilisearch')
 
-    // Sync based on type
     switch (type) {
       case 'product':
         const product = await prisma.product.findUnique({

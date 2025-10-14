@@ -1,7 +1,6 @@
 import Stripe from 'stripe'
 import { loadStripe } from '@stripe/stripe-js'
 
-// Lazy load stripe to prevent build-time errors
 let stripeInstance: Stripe | null = null
 
 export const stripe = new Proxy({} as Stripe, {

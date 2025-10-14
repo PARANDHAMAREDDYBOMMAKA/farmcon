@@ -2,14 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { cache, CacheKeys } from '@/lib/redis'
 
-// GET /api/equipment - Get equipment
 export async function GET(request: NextRequest) {
   try {
 
     const { searchParams } = new URL(request.url)
     const ownerId = searchParams.get('ownerId')
 
-    // Try to get from cache first
     const cacheKey = CacheKeys.equipmentList(ownerId || undefined)
     const cached = await cache.get(cacheKey)
 
@@ -35,7 +33,6 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' }
     })
 
-    // Cache for 5 minutes
     await cache.set(cacheKey, equipment, 300)
 
     return NextResponse.json({ equipment })
@@ -48,7 +45,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/equipment - Create new equipment
 export async function POST(request: NextRequest) {
   try {
     
@@ -70,7 +66,6 @@ export async function POST(request: NextRequest) {
       specifications
     } = body
 
-    // Validate required fields
     if (!owner_id || !name || !category) {
       return NextResponse.json(
         { error: 'Owner ID, name, and category are required' },
@@ -78,7 +73,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create equipment using Prisma
     const equipment = await prisma.equipment.create({
       data: {
         ownerId: owner_id,
@@ -108,7 +102,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Invalidate equipment caches
     await cache.invalidatePattern('farmcon:equipment:*')
 
     return NextResponse.json({ equipment })

@@ -1,29 +1,13 @@
-/**
- * i18next Configuration
- * Multi-language support for FarmCon
- *
- * Supported Languages:
- * - English (en)
- * - Hindi (hi)
- * - Tamil (ta)
- * - Telugu (te)
- * - Kannada (kn)
- * - Malayalam (ml)
- * - Marathi (mr)
- * - Bengali (bn)
- * - Punjabi (pa)
- * - Gujarati (gu)
- */
+
 
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 
-// Translation resources
 const resources = {
   en: {
     translation: {
-      // Common
+      
       welcome: 'Welcome to FarmCon',
       home: 'Home',
       about: 'About',
@@ -36,7 +20,6 @@ const resources = {
       signup: 'Sign Up',
       search: 'Search',
 
-      // Dashboard
       dashboard: 'Dashboard',
       myOrders: 'My Orders',
       myProducts: 'My Products',
@@ -56,7 +39,6 @@ const resources = {
       expertConsultations: 'Expert Consultations',
       competitorAnalysis: 'Competitor Analysis',
 
-      // Products
       addToCart: 'Add to Cart',
       buyNow: 'Buy Now',
       price: 'Price',
@@ -64,14 +46,12 @@ const resources = {
       available: 'Available',
       outOfStock: 'Out of Stock',
 
-      // Weather
       weather: 'Weather',
       temperature: 'Temperature',
       humidity: 'Humidity',
       rainfall: 'Rainfall',
       forecast: 'Forecast',
 
-      // Market Prices
       marketPrices: 'Market Prices',
       mandiPrices: 'Mandi Prices',
       commodity: 'Commodity',
@@ -79,13 +59,11 @@ const resources = {
       maxPrice: 'Max Price',
       modalPrice: 'Modal Price',
 
-      // Notifications
       notifications: 'Notifications',
       newOrder: 'New Order',
       orderShipped: 'Order Shipped',
       orderDelivered: 'Order Delivered',
 
-      // Messages
       successMessage: 'Success!',
       errorMessage: 'Error occurred',
       loading: 'Loading...',
@@ -95,7 +73,7 @@ const resources = {
   },
   hi: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon में आपका स्वागत है',
       home: 'होम',
       about: 'हमारे बारे में',
@@ -108,7 +86,6 @@ const resources = {
       signup: 'साइन अप करें',
       search: 'खोजें',
 
-      // Dashboard
       dashboard: 'डैशबोर्ड',
       myOrders: 'मेरे आदेश',
       myProducts: 'मेरे उत्पाद',
@@ -128,7 +105,6 @@ const resources = {
       expertConsultations: 'विशेषज्ञ परामर्श',
       competitorAnalysis: 'प्रतिस्पर्धी विश्लेषण',
 
-      // Products
       addToCart: 'कार्ट में डालें',
       buyNow: 'अभी खरीदें',
       price: 'कीमत',
@@ -136,14 +112,12 @@ const resources = {
       available: 'उपलब्ध',
       outOfStock: 'स्टॉक में नहीं',
 
-      // Weather
       weather: 'मौसम',
       temperature: 'तापमान',
       humidity: 'आर्द्रता',
       rainfall: 'वर्षा',
       forecast: 'पूर्वानुमान',
 
-      // Market Prices
       marketPrices: 'बाजार मूल्य',
       mandiPrices: 'मंडी भाव',
       commodity: 'वस्तु',
@@ -151,13 +125,11 @@ const resources = {
       maxPrice: 'अधिकतम मूल्य',
       modalPrice: 'मॉडल मूल्य',
 
-      // Notifications
       notifications: 'सूचनाएं',
       newOrder: 'नया आदेश',
       orderShipped: 'आदेश भेज दिया गया',
       orderDelivered: 'आदेश वितरित',
 
-      // Messages
       successMessage: 'सफलता!',
       errorMessage: 'त्रुटि हुई',
       loading: 'लोड हो रहा है...',
@@ -167,7 +139,7 @@ const resources = {
   },
   ta: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon க்கு வரவேற்கிறோம்',
       home: 'முகப்பு',
       about: 'எங்களை பற்றி',
@@ -180,7 +152,6 @@ const resources = {
       signup: 'பதிவு செய்யவும்',
       search: 'தேடல்',
 
-      // Dashboard
       dashboard: 'டாஷ்போர்டு',
       myOrders: 'என் ஆர்டர்கள்',
       myProducts: 'என் தயாரிப்புகள்',
@@ -200,7 +171,6 @@ const resources = {
       expertConsultations: 'நிபுணர் ஆலோசனைகள்',
       competitorAnalysis: 'போட்டியாளர் பகுப்பாய்வு',
 
-      // Products
       addToCart: 'கூடையில் சேர்க்கவும்',
       buyNow: 'இப்போது வாங்கவும்',
       price: 'விலை',
@@ -208,14 +178,12 @@ const resources = {
       available: 'கிடைக்கும்',
       outOfStock: 'இருப்பில் இல்லை',
 
-      // Weather
       weather: 'வானிலை',
       temperature: 'வெப்பநிலை',
       humidity: 'ஈரப்பதம்',
       rainfall: 'மழை',
       forecast: 'முன்னறிவிப்பு',
 
-      // Market Prices
       marketPrices: 'சந்தை விலைகள்',
       mandiPrices: 'மண்டி விலைகள்',
       commodity: 'பொருள்',
@@ -223,13 +191,11 @@ const resources = {
       maxPrice: 'அதிகபட்ச விலை',
       modalPrice: 'மாதிரி விலை',
 
-      // Notifications
       notifications: 'அறிவிப்புகள்',
       newOrder: 'புதிய ஆர்டர்',
       orderShipped: 'ஆர்டர் அனுப்பப்பட்டது',
       orderDelivered: 'ஆர்டர் வழங்கப்பட்டது',
 
-      // Messages
       successMessage: 'வெற்றி!',
       errorMessage: 'பிழை ஏற்பட்டது',
       loading: 'ஏற்றுகிறது...',
@@ -239,7 +205,7 @@ const resources = {
   },
   te: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon కు స్వాగతం',
       home: 'హోమ్',
       about: 'మా గురించి',
@@ -252,7 +218,6 @@ const resources = {
       signup: 'సైన్ అప్',
       search: 'శోధించండి',
 
-      // Dashboard
       dashboard: 'డాష్‌బోర్డ్',
       myOrders: 'నా ఆర్డర్లు',
       myProducts: 'నా ఉత్పత్తులు',
@@ -272,7 +237,6 @@ const resources = {
       expertConsultations: 'నిపుణుల సంప్రదింపులు',
       competitorAnalysis: 'పోటీదారుల విశ్లేషణ',
 
-      // Products
       addToCart: 'కార్ట్‌కు జోడించండి',
       buyNow: 'ఇప్పుడు కొనండి',
       price: 'ధర',
@@ -280,14 +244,12 @@ const resources = {
       available: 'అందుబాటులో ఉంది',
       outOfStock: 'స్టాక్ అయిపోయింది',
 
-      // Weather
       weather: 'వాతావరణం',
       temperature: 'ఉష్ణోగ్రత',
       humidity: 'తేమ',
       rainfall: 'వర్షపాతం',
       forecast: 'అంచనా',
 
-      // Market Prices
       marketPrices: 'మార్కెట్ ధరలు',
       mandiPrices: 'మండీ ధరలు',
       commodity: 'వస్తువు',
@@ -295,13 +257,11 @@ const resources = {
       maxPrice: 'గరిష్ట ధర',
       modalPrice: 'మోడల్ ధర',
 
-      // Notifications
       notifications: 'నోటిఫికేషన్లు',
       newOrder: 'కొత్త ఆర్డర్',
       orderShipped: 'ఆర్డర్ షిప్ చేయబడింది',
       orderDelivered: 'ఆర్డర్ డెలివర్ చేయబడింది',
 
-      // Messages
       successMessage: 'విజయం!',
       errorMessage: 'లోపం సంభవించింది',
       loading: 'లోడ్ అవుతోంది...',
@@ -311,7 +271,7 @@ const resources = {
   },
   kn: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon ಗೆ ಸ್ವಾಗತ',
       home: 'ಮುಖಪುಟ',
       about: 'ನಮ್ಮ ಬಗ್ಗೆ',
@@ -324,7 +284,6 @@ const resources = {
       signup: 'ಸೈನ್ ಅಪ್',
       search: 'ಹುಡುಕಿ',
 
-      // Dashboard
       dashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
       myOrders: 'ನನ್ನ ಆರ್ಡರ್‌ಗಳು',
       myProducts: 'ನನ್ನ ಉತ್ಪನ್ನಗಳು',
@@ -344,7 +303,6 @@ const resources = {
       expertConsultations: 'ತಜ್ಞರ ಸಲಹೆಗಳು',
       competitorAnalysis: 'ಪ್ರತಿಸ್ಪರ್ಧಿ ವಿಶ್ಲೇಷಣೆ',
 
-      // Products
       addToCart: 'ಕಾರ್ಟ್‌ಗೆ ಸೇರಿಸಿ',
       buyNow: 'ಈಗ ಖರೀದಿಸಿ',
       price: 'ಬೆಲೆ',
@@ -352,14 +310,12 @@ const resources = {
       available: 'ಲಭ್ಯವಿದೆ',
       outOfStock: 'ಸ್ಟಾಕ್ ಇಲ್ಲ',
 
-      // Weather
       weather: 'ಹವಾಮಾನ',
       temperature: 'ತಾಪಮಾನ',
       humidity: 'ತೇವಾಂಶ',
       rainfall: 'ಮಳೆ',
       forecast: 'ಮುನ್ಸೂಚನೆ',
 
-      // Market Prices
       marketPrices: 'ಮಾರುಕಟ್ಟೆ ಬೆಲೆಗಳು',
       mandiPrices: 'ಮಂಡಿ ಬೆಲೆಗಳು',
       commodity: 'ಸರಕು',
@@ -367,13 +323,11 @@ const resources = {
       maxPrice: 'ಗರಿಷ್ಠ ಬೆಲೆ',
       modalPrice: 'ಮಾಡಲ್ ಬೆಲೆ',
 
-      // Notifications
       notifications: 'ಅಧಿಸೂಚನೆಗಳು',
       newOrder: 'ಹೊಸ ಆರ್ಡರ್',
       orderShipped: 'ಆರ್ಡರ್ ರವಾನೆಯಾಗಿದೆ',
       orderDelivered: 'ಆರ್ಡರ್ ವಿತರಿಸಲಾಗಿದೆ',
 
-      // Messages
       successMessage: 'ಯಶಸ್ಸು!',
       errorMessage: 'ದೋಷ ಸಂಭವಿಸಿದೆ',
       loading: 'ಲೋಡ್ ಆಗುತ್ತಿದೆ...',
@@ -383,7 +337,7 @@ const resources = {
   },
   ml: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon-ലേക്ക് സ്വാഗതം',
       home: 'ഹോം',
       about: 'ഞങ്ങളെക്കുറിച്ച്',
@@ -396,7 +350,6 @@ const resources = {
       signup: 'സൈൻ അപ്പ്',
       search: 'തിരയുക',
 
-      // Dashboard
       dashboard: 'ഡാഷ്‌ബോർഡ്',
       myOrders: 'എന്റെ ഓർഡറുകൾ',
       myProducts: 'എന്റെ ഉൽപ്പന്നങ്ങൾ',
@@ -416,7 +369,6 @@ const resources = {
       expertConsultations: 'വിദഗ്ധ കൺസൾട്ടേഷനുകൾ',
       competitorAnalysis: 'മത്സര വിശകലനം',
 
-      // Products
       addToCart: 'കാർട്ടിലേക്ക് ചേർക്കുക',
       buyNow: 'ഇപ്പോൾ വാങ്ങുക',
       price: 'വില',
@@ -424,14 +376,12 @@ const resources = {
       available: 'ലഭ്യമാണ്',
       outOfStock: 'സ്റ്റോക്ക് ഇല്ല',
 
-      // Weather
       weather: 'കാലാവസ്ഥ',
       temperature: 'താപനില',
       humidity: 'ആർദ്രത',
       rainfall: 'മഴ',
       forecast: 'പ്രവചനം',
 
-      // Market Prices
       marketPrices: 'മാർക്കറ്റ് വില',
       mandiPrices: 'മണ്ടി വില',
       commodity: 'ചരക്ക്',
@@ -439,13 +389,11 @@ const resources = {
       maxPrice: 'കൂടിയ വില',
       modalPrice: 'മോഡൽ വില',
 
-      // Notifications
       notifications: 'അറിയിപ്പുകൾ',
       newOrder: 'പുതിയ ഓർഡർ',
       orderShipped: 'ഓർഡർ അയച്ചു',
       orderDelivered: 'ഓർഡർ എത്തിച്ചു',
 
-      // Messages
       successMessage: 'വിജയം!',
       errorMessage: 'പിശക് സംഭവിച്ചു',
       loading: 'ലോഡ് ചെയ്യുന്നു...',
@@ -455,7 +403,7 @@ const resources = {
   },
   mr: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon मध्ये आपले स्वागत आहे',
       home: 'होम',
       about: 'आमच्याबद्दल',
@@ -468,7 +416,6 @@ const resources = {
       signup: 'साइन अप',
       search: 'शोधा',
 
-      // Dashboard
       dashboard: 'डॅशबोर्ड',
       myOrders: 'माझे ऑर्डर',
       myProducts: 'माझी उत्पादने',
@@ -488,7 +435,6 @@ const resources = {
       expertConsultations: 'तज्ञ सल्लामसलत',
       competitorAnalysis: 'स्पर्धक विश्लेषण',
 
-      // Products
       addToCart: 'कार्टमध्ये जोडा',
       buyNow: 'आता खरेदी करा',
       price: 'किंमत',
@@ -496,14 +442,12 @@ const resources = {
       available: 'उपलब्ध',
       outOfStock: 'स्टॉक नाही',
 
-      // Weather
       weather: 'हवामान',
       temperature: 'तापमान',
       humidity: 'आर्द्रता',
       rainfall: 'पाऊस',
       forecast: 'अंदाज',
 
-      // Market Prices
       marketPrices: 'बाजार किंमती',
       mandiPrices: 'मंडी भाव',
       commodity: 'वस्तू',
@@ -511,13 +455,11 @@ const resources = {
       maxPrice: 'कमाल किंमत',
       modalPrice: 'मॉडेल किंमत',
 
-      // Notifications
       notifications: 'सूचना',
       newOrder: 'नवीन ऑर्डर',
       orderShipped: 'ऑर्डर पाठवले',
       orderDelivered: 'ऑर्डर वितरीत',
 
-      // Messages
       successMessage: 'यश!',
       errorMessage: 'त्रुटी झाली',
       loading: 'लोड होत आहे...',
@@ -527,7 +469,7 @@ const resources = {
   },
   bn: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon এ স্বাগতম',
       home: 'হোম',
       about: 'আমাদের সম্পর্কে',
@@ -540,7 +482,6 @@ const resources = {
       signup: 'সাইন আপ',
       search: 'অনুসন্ধান',
 
-      // Dashboard
       dashboard: 'ড্যাশবোর্ড',
       myOrders: 'আমার অর্ডার',
       myProducts: 'আমার পণ্য',
@@ -560,7 +501,6 @@ const resources = {
       expertConsultations: 'বিশেষজ্ঞ পরামর্শ',
       competitorAnalysis: 'প্রতিযোগী বিশ্লেষণ',
 
-      // Products
       addToCart: 'কার্টে যোগ করুন',
       buyNow: 'এখন কিনুন',
       price: 'মূল্য',
@@ -568,14 +508,12 @@ const resources = {
       available: 'উপলব্ধ',
       outOfStock: 'স্টকে নেই',
 
-      // Weather
       weather: 'আবহাওয়া',
       temperature: 'তাপমাত্রা',
       humidity: 'আর্দ্রতা',
       rainfall: 'বৃষ্টিপাত',
       forecast: 'পূর্বাভাস',
 
-      // Market Prices
       marketPrices: 'বাজার মূল্য',
       mandiPrices: 'মান্ডি মূল্য',
       commodity: 'পণ্য',
@@ -583,13 +521,11 @@ const resources = {
       maxPrice: 'সর্বোচ্চ মূল্য',
       modalPrice: 'মডেল মূল্য',
 
-      // Notifications
       notifications: 'বিজ্ঞপ্তি',
       newOrder: 'নতুন অর্ডার',
       orderShipped: 'অর্ডার পাঠানো হয়েছে',
       orderDelivered: 'অর্ডার সরবরাহ করা হয়েছে',
 
-      // Messages
       successMessage: 'সফলতা!',
       errorMessage: 'ত্রুটি ঘটেছে',
       loading: 'লোড হচ্ছে...',
@@ -599,7 +535,7 @@ const resources = {
   },
   pa: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ',
       home: 'ਹੋਮ',
       about: 'ਸਾਡੇ ਬਾਰੇ',
@@ -612,7 +548,6 @@ const resources = {
       signup: 'ਸਾਈਨ ਅੱਪ',
       search: 'ਖੋਜ',
 
-      // Dashboard
       dashboard: 'ਡੈਸ਼ਬੋਰਡ',
       myOrders: 'ਮੇਰੇ ਆਰਡਰ',
       myProducts: 'ਮੇਰੇ ਉਤਪਾਦ',
@@ -632,7 +567,6 @@ const resources = {
       expertConsultations: 'ਮਾਹਰ ਸਲਾਹ',
       competitorAnalysis: 'ਪ੍ਰਤੀਯੋਗੀ ਵਿਸ਼ਲੇਸ਼ਣ',
 
-      // Products
       addToCart: 'ਕਾਰਟ ਵਿੱਚ ਸ਼ਾਮਲ ਕਰੋ',
       buyNow: 'ਹੁਣ ਖਰੀਦੋ',
       price: 'ਕੀਮਤ',
@@ -640,14 +574,12 @@ const resources = {
       available: 'ਉਪਲਬਧ',
       outOfStock: 'ਸਟਾਕ ਖਤਮ',
 
-      // Weather
       weather: 'ਮੌਸਮ',
       temperature: 'ਤਾਪਮਾਨ',
       humidity: 'ਨਮੀ',
       rainfall: 'ਬਾਰਿਸ਼',
       forecast: 'ਪੂਰਵ ਅਨੁਮਾਨ',
 
-      // Market Prices
       marketPrices: 'ਬਾਜ਼ਾਰ ਕੀਮਤਾਂ',
       mandiPrices: 'ਮੰਡੀ ਭਾਅ',
       commodity: 'ਵਸਤੂ',
@@ -655,13 +587,11 @@ const resources = {
       maxPrice: 'ਵੱਧ ਤੋਂ ਵੱਧ ਕੀਮਤ',
       modalPrice: 'ਮਾਡਲ ਕੀਮਤ',
 
-      // Notifications
       notifications: 'ਸੂਚਨਾਵਾਂ',
       newOrder: 'ਨਵਾਂ ਆਰਡਰ',
       orderShipped: 'ਆਰਡਰ ਭੇਜਿਆ ਗਿਆ',
       orderDelivered: 'ਆਰਡਰ ਡਿਲੀਵਰ ਹੋਇਆ',
 
-      // Messages
       successMessage: 'ਸਫਲਤਾ!',
       errorMessage: 'ਗਲਤੀ ਹੋਈ',
       loading: 'ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...',
@@ -671,7 +601,7 @@ const resources = {
   },
   gu: {
     translation: {
-      // Common
+      
       welcome: 'FarmCon માં આપનું સ્વાગત છે',
       home: 'હોમ',
       about: 'અમારા વિશે',
@@ -684,7 +614,6 @@ const resources = {
       signup: 'સાઇન અપ',
       search: 'શોધો',
 
-      // Dashboard
       dashboard: 'ડેશબોર્ડ',
       myOrders: 'મારા ઓર્ડર',
       myProducts: 'મારા ઉત્પાદનો',
@@ -704,7 +633,6 @@ const resources = {
       expertConsultations: 'નિષ્ણાત પરામર્શ',
       competitorAnalysis: 'સ્પર્ધક વિશ્લેષણ',
 
-      // Products
       addToCart: 'કાર્ટમાં ઉમેરો',
       buyNow: 'હવે ખરીદો',
       price: 'કિંમત',
@@ -712,14 +640,12 @@ const resources = {
       available: 'ઉપલબ્ધ',
       outOfStock: 'સ્ટોક નથી',
 
-      // Weather
       weather: 'હવામાન',
       temperature: 'તાપમાન',
       humidity: 'ભેજ',
       rainfall: 'વરસાદ',
       forecast: 'પૂર્વાનુમાન',
 
-      // Market Prices
       marketPrices: 'બજાર ભાવ',
       mandiPrices: 'મંડી ભાવ',
       commodity: 'ચીજવસ્તુ',
@@ -727,13 +653,11 @@ const resources = {
       maxPrice: 'મહત્તમ કિંમત',
       modalPrice: 'મોડલ કિંમત',
 
-      // Notifications
       notifications: 'સૂચનાઓ',
       newOrder: 'નવો ઓર્ડર',
       orderShipped: 'ઓર્ડર મોકલ્યો',
       orderDelivered: 'ઓર્ડર પહોંચાડ્યો',
 
-      // Messages
       successMessage: 'સફળતા!',
       errorMessage: 'ભૂલ આવી',
       loading: 'લોડ થઈ રહ્યું છે...',
@@ -743,23 +667,22 @@ const resources = {
   },
 }
 
-// Initialize i18next
 i18n
-  .use(LanguageDetector) // Detect user language
-  .use(initReactI18next) // Pass i18n instance to react-i18next
+  .use(LanguageDetector) 
+  .use(initReactI18next) 
   .init({
     resources,
-    fallbackLng: 'en', // Fallback language
-    debug: false, // Set to true for debugging
+    fallbackLng: 'en', 
+    debug: false, 
 
     interpolation: {
-      escapeValue: false, // React already escapes values
+      escapeValue: false, 
     },
 
     detection: {
-      // Order of language detection
+      
       order: ['localStorage', 'navigator', 'htmlTag'],
-      // Cache user language
+      
       caches: ['localStorage'],
     },
   })

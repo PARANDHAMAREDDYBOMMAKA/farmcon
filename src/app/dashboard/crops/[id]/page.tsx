@@ -6,6 +6,7 @@ import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'
 import type { CropWithDetails } from '@/types'
+import { Leaf, Pencil, Trash2, FileText, Calendar, DollarSign, Store, CheckCircle, XCircle } from 'lucide-react'
 
 export default function CropDetailPage() {
   const { user, loading } = useAuth('farmer')
@@ -111,7 +112,7 @@ export default function CropDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <span className="text-6xl">🚫</span>
+          <XCircle className="w-24 h-24 text-red-500 mx-auto" />
           <h2 className="mt-4 text-xl font-semibold text-gray-900">Crop not found</h2>
           <p className="mt-2 text-gray-600">{error || 'The crop you are looking for does not exist.'}</p>
           <Link
@@ -127,7 +128,7 @@ export default function CropDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {/* Header */}
+      {}
       <div className="mb-6">
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
           <Link href="/dashboard" className="hover:text-green-600">Dashboard</Link>
@@ -144,30 +145,33 @@ export default function CropDetailPage() {
               {crop.status.replace('_', ' ').charAt(0).toUpperCase() + crop.status.replace('_', ' ').slice(1)}
             </span>
             {crop.organicCertified && (
-              <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                🌿 Organic
+              <span className="inline-flex items-center gap-1 px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
+                <Leaf className="w-4 h-4" />
+                Organic
               </span>
             )}
           </div>
-          
+
           <div className="mt-4 sm:mt-0 flex space-x-3">
             <Link
               href={`/dashboard/crops/${crop.id}/edit`}
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700"
             >
-              ✏️ Edit Crop
+              <Pencil className="w-4 h-4" />
+              Edit Crop
             </Link>
             <button
               onClick={handleDelete}
-              className="inline-flex items-center px-4 py-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50"
+              className="inline-flex items-center gap-2 px-4 py-2 border border-red-300 rounded-md shadow-sm text-sm font-medium text-red-700 bg-white hover:bg-red-50"
             >
-              🗑️ Delete
+              <Trash2 className="w-4 h-4" />
+              Delete
             </button>
           </div>
         </div>
       </div>
 
-      {/* Image Gallery */}
+      {}
       {crop.images && crop.images.length > 0 && (
         <div className="mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -185,11 +189,14 @@ export default function CropDetailPage() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Details */}
+        {}
         <div className="lg:col-span-2 space-y-6">
-          {/* Basic Information */}
+          {}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">📋 Basic Information</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <FileText className="w-6 h-6 text-green-600" />
+              Basic Information
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700">Crop Name</label>
@@ -221,9 +228,12 @@ export default function CropDetailPage() {
             )}
           </div>
 
-          {/* Timeline */}
+          {}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">📅 Timeline</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Calendar className="w-6 h-6 text-green-600" />
+              Timeline
+            </h2>
             <div className="space-y-4">
               {crop.plantedDate && (
                 <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
@@ -257,17 +267,21 @@ export default function CropDetailPage() {
                     <p className="font-medium text-gray-900">Actual Harvest</p>
                     <p className="text-sm text-gray-600">{new Date(crop.actualHarvestDate).toLocaleDateString()}</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">✅ Harvested</p>
+                  <div className="text-right flex items-center gap-1">
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                    <p className="text-sm text-gray-600">Harvested</p>
                   </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Yield & Pricing */}
+          {}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">💰 Yield & Pricing</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <DollarSign className="w-6 h-6 text-green-600" />
+              Yield & Pricing
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <h3 className="font-medium text-gray-900 mb-2">Estimated Yield</h3>
@@ -301,10 +315,13 @@ export default function CropDetailPage() {
             </div>
           </div>
 
-          {/* Active Listings */}
+          {}
           {crop.listings && crop.listings.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">🏪 Active Listings</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Store className="w-6 h-6 text-green-600" />
+                Active Listings
+              </h2>
               <div className="space-y-4">
                 {crop.listings.map((listing) => (
                   <div key={listing.id} className="border rounded-lg p-4">
@@ -322,9 +339,9 @@ export default function CropDetailPage() {
           )}
         </div>
 
-        {/* Sidebar */}
+        {}
         <div className="space-y-6">
-          {/* Quick Stats */}
+          {}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">📊 Quick Stats</h2>
             <div className="space-y-3">
@@ -337,32 +354,37 @@ export default function CropDetailPage() {
                 <span className="font-medium">{new Date(crop.updatedAt).toLocaleDateString()}</span>
               </div>
               {crop.organicCertified && (
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <span className="text-gray-600">Certification</span>
-                  <span className="font-medium text-green-600">🌿 Organic</span>
+                  <span className="font-medium text-green-600 flex items-center gap-1">
+                    <Leaf className="w-4 h-4" />
+                    Organic
+                  </span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Actions */}
+          {}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">⚡ Actions</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Actions</h2>
             <div className="space-y-3">
               {crop.status === 'harvested' && (
                 <Link
                   href={`/dashboard/sell?crop=${crop.id}`}
-                  className="block w-full text-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  className="flex items-center justify-center gap-2 w-full text-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                 >
-                  🏪 List for Sale
+                  <Store className="w-4 h-4" />
+                  List for Sale
                 </Link>
               )}
-              
+
               <Link
                 href={`/dashboard/crops/${crop.id}/edit`}
-                className="block w-full text-center px-4 py-2 border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50"
+                className="flex items-center justify-center gap-2 w-full text-center px-4 py-2 border border-blue-300 text-blue-700 rounded-md hover:bg-blue-50"
               >
-                ✏️ Edit Details
+                <Pencil className="w-4 h-4" />
+                Edit Details
               </Link>
 
               <Link

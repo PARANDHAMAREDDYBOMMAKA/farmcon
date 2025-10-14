@@ -28,7 +28,6 @@ export function useSocket(userId?: string) {
   return { socket, isConnected }
 }
 
-// Hook for order updates
 export function useOrderUpdates(userId: string, onUpdate: (data: any) => void) {
   const { socket } = useSocket(userId)
 
@@ -43,7 +42,6 @@ export function useOrderUpdates(userId: string, onUpdate: (data: any) => void) {
   }, [socket, onUpdate])
 }
 
-// Hook for cart updates
 export function useCartUpdates(userId: string, onUpdate: (data: any) => void) {
   const { socket } = useSocket(userId)
 
@@ -58,7 +56,6 @@ export function useCartUpdates(userId: string, onUpdate: (data: any) => void) {
   }, [socket, onUpdate])
 }
 
-// Hook for notifications
 export function useNotifications(userId: string, onNotification: (data: any) => void) {
   const { socket } = useSocket(userId)
 
@@ -73,7 +70,6 @@ export function useNotifications(userId: string, onNotification: (data: any) => 
   }, [socket, onNotification])
 }
 
-// Hook for price updates
 export function usePriceUpdates(onUpdate: (data: any) => void) {
   const { socket } = useSocket()
 

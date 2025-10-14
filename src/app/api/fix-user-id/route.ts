@@ -8,8 +8,7 @@ export async function POST(request: NextRequest) {
     if (!currentUserId || !oldUserId) {
       return NextResponse.json({ error: 'Both user IDs are required' }, { status: 400 })
     }
-    
-    // Get the existing profile
+
     const existingProfile = await prisma.profile.findUnique({
       where: { id: oldUserId },
       include: { farmerProfile: true }
@@ -18,18 +17,15 @@ export async function POST(request: NextRequest) {
     if (!existingProfile) {
       return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
     }
-    
-    // Use a transaction to safely migrate the profile
+
     const result = await prisma.$transaction(async (tx) => {
-      // Step 1: Delete farmer profile if it exists (due to foreign key constraint)
+      
       if (existingProfile.farmerProfile) {
         await tx.farmerProfile.delete({ where: { id: oldUserId } })
       }
-      
-      // Step 2: Delete the old profile (this will free up the email constraint)
+
       await tx.profile.delete({ where: { id: oldUserId } })
-      
-      // Step 3: Create new profile with current user ID
+
       const newProfile = await tx.profile.create({
         data: {
           id: currentUserId,
@@ -46,8 +42,7 @@ export async function POST(request: NextRequest) {
           isVerified: existingProfile.isVerified
         }
       })
-      
-      // Step 4: Create farmer profile if it existed
+
       if (existingProfile.farmerProfile) {
         await tx.farmerProfile.create({
           data: {

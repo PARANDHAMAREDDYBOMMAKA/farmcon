@@ -163,7 +163,7 @@ export default function CompetitorAnalysisPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -178,7 +178,7 @@ export default function CompetitorAnalysisPage() {
         </div>
       </div>
 
-      {/* Tab Navigation */}
+      {}
       <div className="bg-white rounded-lg shadow">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8 px-6">
@@ -221,10 +221,10 @@ export default function CompetitorAnalysisPage() {
           </nav>
         </div>
 
-        {/* Input Tab */}
+        {}
         {activeTab === 'input' && (
           <div className="p-6 space-y-6">
-            {/* Preset Competitors */}
+            {}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Start - Analyze Preset Competitors</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -246,7 +246,7 @@ export default function CompetitorAnalysisPage() {
             <div className="border-t pt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Or Enter Custom URLs</h3>
 
-              {/* URL Input Fields */}
+              {}
               <div className="space-y-3">
                 {urls.map((url, index) => (
                   <div key={index} className="flex space-x-2">
@@ -269,7 +269,7 @@ export default function CompetitorAnalysisPage() {
                 ))}
               </div>
 
-              {/* Add URL Button */}
+              {}
               {urls.length < 5 && (
                 <button
                   onClick={addUrlField}
@@ -279,7 +279,7 @@ export default function CompetitorAnalysisPage() {
                 </button>
               )}
 
-              {/* Analyze Button */}
+              {}
               <div className="mt-6">
                 <button
                   onClick={analyzeCompetitors}
@@ -297,7 +297,7 @@ export default function CompetitorAnalysisPage() {
                 </button>
               </div>
 
-              {/* Info */}
+              {}
               <div className="mt-4 p-4 bg-blue-50 rounded-lg">
                 <h4 className="font-medium text-blue-900">What we analyze:</h4>
                 <ul className="mt-2 text-sm text-blue-800 space-y-1">
@@ -313,7 +313,7 @@ export default function CompetitorAnalysisPage() {
           </div>
         )}
 
-        {/* Results Tab */}
+        {}
         {activeTab === 'results' && analysis.length > 0 && (
           <div className="p-6 space-y-6">
             {analysis.map((site, index) => (
@@ -326,7 +326,7 @@ export default function CompetitorAnalysisPage() {
                   </div>
                 ) : (
                   <>
-                    {/* Site Header */}
+                    {}
                     <div className="flex items-center justify-between mb-6">
                       <div>
                         <h3 className="text-lg font-semibold text-gray-900">{site.url}</h3>
@@ -347,9 +347,9 @@ export default function CompetitorAnalysisPage() {
                       </div>
                     </div>
 
-                    {/* Technology Categories */}
+                    {}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                      {/* E-commerce */}
+                      {}
                       {site.ecommerce.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900 mb-3">🛒 E-commerce</h4>
@@ -366,7 +366,7 @@ export default function CompetitorAnalysisPage() {
                         </div>
                       )}
 
-                      {/* Frameworks */}
+                      {}
                       {site.frameworks.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900 mb-3">⚛️ Frameworks</h4>
@@ -383,7 +383,7 @@ export default function CompetitorAnalysisPage() {
                         </div>
                       )}
 
-                      {/* Analytics */}
+                      {}
                       {site.analytics.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900 mb-3">📊 Analytics</h4>
@@ -398,7 +398,7 @@ export default function CompetitorAnalysisPage() {
                         </div>
                       )}
 
-                      {/* CMS */}
+                      {}
                       {site.cms.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900 mb-3">📝 CMS</h4>
@@ -415,7 +415,7 @@ export default function CompetitorAnalysisPage() {
                         </div>
                       )}
 
-                      {/* Hosting */}
+                      {}
                       {site.hosting.length > 0 && (
                         <div>
                           <h4 className="font-medium text-gray-900 mb-3">🌐 Hosting</h4>
@@ -431,7 +431,7 @@ export default function CompetitorAnalysisPage() {
                       )}
                     </div>
 
-                    {/* All Technologies */}
+                    {}
                     {site.technologies.length > 0 && (
                       <div className="mt-6">
                         <h4 className="font-medium text-gray-900 mb-3">All Technologies ({site.technologies.length})</h4>
@@ -455,10 +455,10 @@ export default function CompetitorAnalysisPage() {
           </div>
         )}
 
-        {/* Comparison Tab */}
+        {}
         {activeTab === 'comparison' && comparison && (
           <div className="p-6 space-y-6">
-            {/* Summary Stats */}
+            {}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="bg-blue-50 rounded-lg p-6">
                 <div className="flex items-center">
@@ -489,7 +489,7 @@ export default function CompetitorAnalysisPage() {
               </div>
             </div>
 
-            {/* Popular Technologies */}
+            {}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <div className="border rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Most Popular Technologies</h3>
@@ -526,7 +526,7 @@ export default function CompetitorAnalysisPage() {
               </div>
             </div>
 
-            {/* Market Insights */}
+            {}
             <div className="border rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Market Insights</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -549,7 +549,7 @@ export default function CompetitorAnalysisPage() {
               </div>
             </div>
 
-            {/* Recommendations */}
+            {}
             <div className="border rounded-lg p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Recommendations for Your Platform</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

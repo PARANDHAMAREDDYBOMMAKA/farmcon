@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase } from '@/lib/supabase'
+import { Bell, Package, CreditCard, Truck, Star, Clock } from 'lucide-react'
 
 interface Notification {
   id: string
@@ -25,8 +26,7 @@ export default function NotificationBell() {
   useEffect(() => {
     if (user?.id) {
       loadNotifications()
-      
-      // Subscribe to real-time notifications
+
       const subscription = supabase
         .channel('notifications')
         .on(
@@ -137,17 +137,18 @@ export default function NotificationBell() {
   }
 
   const getNotificationIcon = (type: string) => {
+    const iconProps = { className: "w-5 h-5" }
     switch (type) {
       case 'order':
-        return '📦'
+        return <Package {...iconProps} className="w-5 h-5 text-blue-600" />
       case 'payment':
-        return '💳'
+        return <CreditCard {...iconProps} className="w-5 h-5 text-green-600" />
       case 'delivery':
-        return '🚚'
+        return <Truck {...iconProps} className="w-5 h-5 text-orange-600" />
       case 'review':
-        return '⭐'
+        return <Star {...iconProps} className="w-5 h-5 text-yellow-600" />
       default:
-        return '🔔'
+        return <Bell {...iconProps} className="w-5 h-5 text-gray-600" />
     }
   }
 
@@ -172,12 +173,12 @@ export default function NotificationBell() {
 
   return (
     <div className="relative">
-      {/* Bell Icon */}
+      {}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
         className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-xl transition-all duration-200"
       >
-        <span className="text-xl sm:text-2xl">🔔</span>
+        <Bell className="w-6 h-6" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center animate-pulse shadow-lg">
             {unreadCount > 9 ? '9+' : unreadCount}
@@ -185,13 +186,13 @@ export default function NotificationBell() {
         )}
       </button>
 
-      {/* Dropdown */}
+      {}
       {showDropdown && (
         <div className="fixed sm:absolute right-4 sm:right-0 mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl ring-1 ring-black ring-opacity-5 z-50 border border-gray-100">
           <div className="p-4 sm:p-5 border-b border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-xl">🔔</span>
+                <Bell className="w-5 h-5 text-green-600" />
                 <h3 className="text-base sm:text-lg font-bold text-gray-900">Notifications</h3>
                 {unreadCount > 0 && (
                   <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
@@ -219,14 +220,14 @@ export default function NotificationBell() {
             ) : notifications.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-3xl">🔔</span>
+                  <Bell className="w-8 h-8 text-gray-400" />
                 </div>
                 <p className="text-sm font-medium text-gray-900">No notifications yet</p>
                 <p className="mt-1 text-xs text-gray-500">We'll notify you when something arrives</p>
               </div>
             ) : (
               <>
-                {/* Unread Notifications */}
+                {}
                 {notifications.filter(n => !n.is_read).length > 0 && (
                   <div>
                     <div className="px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
@@ -243,9 +244,7 @@ export default function NotificationBell() {
                         >
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm">
-                              <span className="text-xl">
-                                {getNotificationIcon(notification.type)}
-                              </span>
+                              {getNotificationIcon(notification.type)}
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-2">
@@ -258,7 +257,7 @@ export default function NotificationBell() {
                                 {notification.message}
                               </p>
                               <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
-                                <span>🕐</span>
+                                <Clock className="w-3 h-3" />
                                 {timeAgo(notification.created_at)}
                               </p>
                             </div>
@@ -269,7 +268,7 @@ export default function NotificationBell() {
                   </div>
                 )}
 
-                {/* Read Notifications */}
+                {}
                 {notifications.filter(n => n.is_read).length > 0 && (
                   <div>
                     <div className="px-4 py-2 bg-gray-50 border-b border-gray-200">
@@ -286,9 +285,7 @@ export default function NotificationBell() {
                         >
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-gray-100">
-                              <span className="text-xl">
-                                {getNotificationIcon(notification.type)}
-                              </span>
+                              {getNotificationIcon(notification.type)}
                             </div>
                             <div className="flex-1 min-w-0">
                               <p className="text-xs sm:text-sm font-semibold text-gray-700">
@@ -298,7 +295,7 @@ export default function NotificationBell() {
                                 {notification.message}
                               </p>
                               <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
-                                <span>🕐</span>
+                                <Clock className="w-3 h-3" />
                                 {timeAgo(notification.created_at)}
                               </p>
                             </div>
@@ -328,7 +325,7 @@ export default function NotificationBell() {
         </div>
       )}
 
-      {/* Backdrop */}
+      {}
       {showDropdown && (
         <div
           className="fixed inset-0 z-40"

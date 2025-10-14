@@ -1,4 +1,4 @@
-// Import and re-export Prisma types for compatibility
+
 import type {
   UserRole as PrismaUserRole,
   OrderStatus as PrismaOrderStatus,
@@ -21,7 +21,6 @@ import type {
   Profile
 } from '@prisma/client'
 
-// Re-export with cleaner names
 export type UserRole = PrismaUserRole
 export type OrderStatus = PrismaOrderStatus  
 export type CropStatus = PrismaCropStatus
@@ -29,7 +28,6 @@ export type EquipmentStatus = PrismaEquipmentStatus
 export type User = PrismaProfile
 export type FarmerProfile = PrismaFarmerProfile
 
-// Re-export all other types directly
 export type {
   Product,
   Category,
@@ -46,7 +44,6 @@ export type {
   Profile
 }
 
-// Additional utility types
 export type ProfileWithFarmer = PrismaProfile & {
   farmerProfile?: PrismaFarmerProfile | null
 }

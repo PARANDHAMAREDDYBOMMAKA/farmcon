@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET all drivers
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
@@ -48,7 +47,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST create driver
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -69,7 +67,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if driver with phone already exists
     const existingDriver = await prisma.driver.findUnique({
       where: { phone }
     })

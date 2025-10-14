@@ -21,7 +21,7 @@ export default function ProfilePage() {
     pincode: '',
     business_name: '',
     gst_number: '',
-    // Farmer-specific fields
+    
     farm_name: '',
     farm_location: '',
     farm_size: '',
@@ -45,7 +45,7 @@ export default function ProfilePage() {
     if (!user) return
     
     try {
-      // Update form data with profile info
+      
       setFormData({
         full_name: user.fullName || '',
         phone: user.phone || '',
@@ -55,7 +55,7 @@ export default function ProfilePage() {
         pincode: user.pincode || '',
         business_name: user.businessName || '',
         gst_number: user.gstNumber || '',
-        // Initialize farmer fields
+        
         farm_name: '',
         farm_location: '',
         farm_size: '',
@@ -69,7 +69,6 @@ export default function ProfilePage() {
         aadhar_number: ''
       })
 
-      // If user is a farmer, load farmer profile
       if (user.role === 'farmer') {
         try {
           const farmerData = await farmerAPI.getFarmerProfile(user.id)
@@ -132,7 +131,6 @@ export default function ProfilePage() {
     try {
       if (!user) return
 
-      // Update profile using API
       await profileAPI.updateProfile(user.id, {
         fullName: formData.full_name,
         phone: formData.phone,
@@ -144,7 +142,6 @@ export default function ProfilePage() {
         gstNumber: formData.gst_number
       })
 
-      // If farmer, update farmer profile
       if (user.role === 'farmer') {
         await farmerAPI.upsertFarmerProfile({
           id: user.id,
@@ -163,8 +160,7 @@ export default function ProfilePage() {
       }
 
       setSuccess('Profile updated successfully!')
-      
-      // Reload profile data
+
       await loadProfile()
       
     } catch (err: any) {
@@ -203,7 +199,7 @@ export default function ProfilePage() {
         </div>
 
         <form onSubmit={handleSave} className="space-y-8">
-          {/* Messages */}
+          {}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
               {error}
@@ -216,7 +212,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* Basic Information */}
+          {}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
             
@@ -312,7 +308,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Business Information - for suppliers and businesses */}
+          {}
           {user.role === 'supplier' && (
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Business Information</h2>
@@ -351,7 +347,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* Farmer-specific Information */}
+          {}
           {user.role === 'farmer' && (
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Farm Information</h2>
@@ -476,7 +472,7 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Banking Information */}
+              {}
               <div className="mt-8">
                 <h3 className="text-md font-semibold text-gray-900 mb-4">Banking Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -540,7 +536,7 @@ export default function ProfilePage() {
             </div>
           )}
 
-          {/* Save Button */}
+          {}
           <div className="flex justify-end">
             <button
               type="submit"

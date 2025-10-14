@@ -36,12 +36,12 @@ export default function SignUp() {
   const router = useRouter()
 
   useEffect(() => {
-    // Check if user is already authenticated
+    
     const checkAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (session) {
-          // User is already authenticated, redirect to dashboard
+          
           router.push('/dashboard')
           return
         }
@@ -60,21 +60,6 @@ export default function SignUp() {
       ...formData,
       [e.target.name]: e.target.value
     })
-  }
-
-  const handleMultipleChange = (name: string, value: string, checked: boolean) => {
-    const currentArray = formData[name as keyof typeof formData] as string[]
-    if (checked) {
-      setFormData({
-        ...formData,
-        [name]: [...currentArray, value]
-      })
-    } else {
-      setFormData({
-        ...formData,
-        [name]: currentArray.filter(item => item !== value)
-      })
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,7 +165,7 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
-      {/* Left side - Image with Glassmorphism */}
+      {}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=1200&h=1600&fit=crop"
@@ -213,7 +198,7 @@ export default function SignUp() {
         </div>
       </div>
 
-      {/* Right side - Form */}
+      {}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
@@ -243,7 +228,7 @@ export default function SignUp() {
               )}
 
               <div className="space-y-4">
-                {/* Role Selection */}
+                {}
                 <div>
                   <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
                     I am a *
@@ -262,7 +247,7 @@ export default function SignUp() {
                   </select>
                 </div>
 
-                {/* Basic Information */}
+                {}
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
                     Full Name *
@@ -313,7 +298,7 @@ export default function SignUp() {
                   </div>
                 </div>
 
-                {/* Address Fields */}
+                {}
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
@@ -380,7 +365,7 @@ export default function SignUp() {
                   </div>
                 </div>
 
-                {/* Supplier Fields */}
+                {}
                 {formData.role === 'supplier' && (
                   <div className="space-y-4 pt-4 border-t border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900">Business Details</h3>
@@ -415,7 +400,7 @@ export default function SignUp() {
                   </div>
                 )}
 
-                {/* Farmer Fields */}
+                {}
                 {formData.role === 'farmer' && (
                   <div className="space-y-4 pt-4 border-t border-gray-200">
                     <h3 className="text-lg font-semibold text-gray-900">Farm Details</h3>
@@ -469,7 +454,7 @@ export default function SignUp() {
                   </div>
                 )}
 
-                {/* Password fields */}
+                {}
                 <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
                   <div>
                     <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">

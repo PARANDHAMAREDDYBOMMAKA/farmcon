@@ -41,7 +41,7 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
     if (!data || data.length === 0) return
 
     const svg = d3.select(svgRef.current)
-    svg.selectAll('*').remove() // Clear previous chart
+    svg.selectAll('*').remove() 
 
     const margin = { top: 20, right: 20, bottom: 60, left: 50 }
     const width = dimensions.width - margin.left - margin.right
@@ -53,9 +53,8 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`)
 
-    // Scales
     const xScale = d3.scaleBand()
-      .domain(data.map(d => d.market.split(' ').slice(0, 2).join(' '))) // Shorten market names
+      .domain(data.map(d => d.market.split(' ').slice(0, 2).join(' '))) 
       .range([0, width])
       .padding(0.2)
 
@@ -64,15 +63,13 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .nice()
       .range([height, 0])
 
-    // Color scale
     const colorScale = d3.scaleOrdinal()
       .domain(data.map(d => d.market))
       .range(type === 'best'
-        ? ['#10b981', '#059669', '#047857', '#065f46'] // Green shades for best
-        : ['#ef4444', '#dc2626', '#b91c1c', '#991b1b'] // Red shades for worst
+        ? ['#10b981', '#059669', '#047857', '#065f46'] 
+        : ['#ef4444', '#dc2626', '#b91c1c', '#991b1b'] 
       )
 
-    // Bars
     chart.selectAll('.bar')
       .data(data)
       .enter()
@@ -86,7 +83,7 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .attr('rx', 4)
       .attr('ry', 4)
       .on('mouseover', function(event, d) {
-        // Tooltip
+        
         const tooltip = d3.select('body').append('div')
           .attr('class', 'tooltip')
           .style('position', 'absolute')
@@ -110,7 +107,6 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
           .style('left', (event.pageX + 10) + 'px')
           .style('top', (event.pageY - 10) + 'px')
 
-        // Highlight bar
         d3.select(this)
           .transition()
           .duration(200)
@@ -119,10 +115,9 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
           .attr('stroke-width', 2)
       })
       .on('mouseout', function() {
-        // Remove tooltip
+        
         d3.selectAll('.tooltip').remove()
 
-        // Reset bar
         d3.select(this)
           .transition()
           .duration(200)
@@ -135,7 +130,6 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .attr('y', d => yScale(d.price))
       .attr('height', d => height - yScale(d.price))
 
-    // Price labels on bars
     chart.selectAll('.price-label')
       .data(data)
       .enter()
@@ -153,7 +147,6 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .delay((d, i) => i * 100 + 500)
       .attr('y', d => yScale(d.price) + 15)
 
-    // X Axis
     chart.append('g')
       .attr('transform', `translate(0,${height})`)
       .call(d3.axisBottom(xScale))
@@ -162,13 +155,11 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .style('text-anchor', 'end')
       .style('font-size', '10px')
 
-    // Y Axis
     chart.append('g')
       .call(d3.axisLeft(yScale)
         .tickFormat(d => `₹${d3.format(',.0f')(d as number)}`))
       .style('font-size', '10px')
 
-    // Y Axis Label
     chart.append('text')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - margin.left)
@@ -179,7 +170,6 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .style('font-weight', 'bold')
       .text('Price (₹/Quintal)')
 
-    // Title
     chart.append('text')
       .attr('x', width / 2)
       .attr('y', 0 - (margin.top / 2))
@@ -188,7 +178,6 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
       .style('font-weight', 'bold')
       .text(title)
 
-    // Add trend arrows
     data.forEach((d, i) => {
       if (d.trend && d.trend !== 'stable') {
         const x = (xScale(d.market.split(' ').slice(0, 2).join(' ')) || 0) + xScale.bandwidth() - 15

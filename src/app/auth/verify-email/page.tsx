@@ -18,7 +18,6 @@ function VerifyEmailInternal() {
       setEmail(decodeURIComponent(emailParam))
     }
 
-    // Handle email confirmation from URL
     const handleEmailConfirmation = async () => {
       const { data, error } = await supabase.auth.getSession()
       if (data.session) {
@@ -28,7 +27,6 @@ function VerifyEmailInternal() {
 
     handleEmailConfirmation()
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
         router.push('/dashboard')

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
+import { BarChart3, DollarSign, Package, CreditCard, Users, Repeat, Sparkles, TrendingUp } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
 
@@ -54,7 +55,7 @@ export default function AnalyticsPage() {
       if (data.analytics) {
         setAnalytics(data.analytics)
       } else {
-        // Mock data for demonstration
+        
         setAnalytics({
           revenue: {
             monthly: [25000, 32000, 28000, 45000, 38000, 52000],
@@ -111,7 +112,7 @@ export default function AnalyticsPage() {
   if (!analytics) {
     return (
       <div className="text-center py-12">
-        <span className="text-6xl block mb-4">📊</span>
+        <BarChart3 className="w-24 h-24 mx-auto text-gray-400 mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">No analytics data available</h3>
         <p className="text-gray-600">Analytics will appear here once you have sales data</p>
       </div>
@@ -120,7 +121,7 @@ export default function AnalyticsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -142,12 +143,12 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Key Metrics */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
-              <span className="text-2xl">💰</span>
+              <DollarSign className="w-6 h-6 text-green-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
@@ -162,7 +163,7 @@ export default function AnalyticsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <span className="text-2xl">📦</span>
+              <Package className="w-6 h-6 text-blue-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Orders</p>
@@ -175,7 +176,7 @@ export default function AnalyticsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
-              <span className="text-2xl">💳</span>
+              <CreditCard className="w-6 h-6 text-yellow-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Avg Order Value</p>
@@ -188,7 +189,7 @@ export default function AnalyticsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
-              <span className="text-2xl">👥</span>
+              <Users className="w-6 h-6 text-purple-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Customers</p>
@@ -199,7 +200,7 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Revenue Chart */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue Trend</h3>
         <div className="h-64 flex items-end space-x-2">
@@ -222,9 +223,9 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Top Products and Categories */}
+      {}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Top Selling Products */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Selling Products</h3>
           <div className="space-y-4">
@@ -247,7 +248,7 @@ export default function AnalyticsPage() {
           </div>
         </div>
 
-        {/* Categories Performance */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Category Performance</h3>
           <div className="space-y-4">
@@ -272,20 +273,20 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Customer Analytics */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Insights</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="mx-auto w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-3">
-              <span className="text-2xl">👥</span>
+              <Users className="w-8 h-8 text-blue-600" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{analytics.customers.totalCustomers}</p>
             <p className="text-sm text-gray-600">Total Customers</p>
           </div>
           <div className="text-center">
             <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
-              <span className="text-2xl">🔄</span>
+              <Repeat className="w-8 h-8 text-green-600" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{analytics.customers.repeatCustomers}</p>
             <p className="text-sm text-gray-600">Repeat Customers</p>
@@ -295,7 +296,7 @@ export default function AnalyticsPage() {
           </div>
           <div className="text-center">
             <div className="mx-auto w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-3">
-              <span className="text-2xl">✨</span>
+              <Sparkles className="w-8 h-8 text-purple-600" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{analytics.customers.newCustomers}</p>
             <p className="text-sm text-gray-600">New Customers</p>
@@ -304,20 +305,20 @@ export default function AnalyticsPage() {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Export Reports</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <span className="mr-2">📊</span>
+            <BarChart3 className="w-5 h-5 mr-2 text-gray-600" />
             <span className="text-sm font-medium">Sales Report</span>
           </button>
           <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <span className="mr-2">📈</span>
+            <TrendingUp className="w-5 h-5 mr-2 text-gray-600" />
             <span className="text-sm font-medium">Revenue Report</span>
           </button>
           <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <span className="mr-2">👥</span>
+            <Users className="w-5 h-5 mr-2 text-gray-600" />
             <span className="text-sm font-medium">Customer Report</span>
           </button>
         </div>

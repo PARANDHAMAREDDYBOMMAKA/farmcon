@@ -5,7 +5,6 @@ export async function POST(request: NextRequest) {
   try {
     const { email, recaptchaToken } = await request.json();
 
-    // Validate email
     if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       return NextResponse.json(
         { error: 'Invalid email address' },
@@ -13,18 +12,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify reCAPTCHA (skip if token is 'skip' or missing)
     if (recaptchaToken && recaptchaToken !== 'skip') {
       const isHuman = await verifyRecaptcha(recaptchaToken);
       if (!isHuman) {
         console.warn('reCAPTCHA verification failed, but allowing request to proceed');
-        // Don't block the request, just log the warning
+        
       }
     } else {
       console.warn('Skipping reCAPTCHA verification (token missing or debug mode)')
     }
 
-    // Check rate limit
     const rateLimit = await checkRateLimit(email);
     if (!rateLimit.allowed) {
       const resetTime = rateLimit.resetTime ? new Date(rateLimit.resetTime) : null;
@@ -42,11 +39,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate and store OTP
     const otp = generateOTP();
     await storeOTP(email, otp);
 
-    // Send OTP email
     await sendOTPEmail(email, otp);
 
     return NextResponse.json(

@@ -19,11 +19,10 @@ export async function GET(request: NextRequest) {
     let locationName = city || 'Unknown Location'
     let country = ''
 
-    // Geocode if needed
     if (city && (!lat || !lon)) {
-      // Forward geocoding: city name to coordinates
+
       try {
-        const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`
+        const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`
         const geocodeResponse = await fetch(geocodeUrl, {
           headers: { 'User-Agent': 'FarmCon-Weather-App' }
         })
@@ -49,9 +48,9 @@ export async function GET(request: NextRequest) {
         )
       }
     } else if (lat && lon) {
-      // Reverse geocoding: coordinates to city name
+
       try {
-        const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+        const reverseUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`
         const reverseResponse = await fetch(reverseUrl, {
           headers: { 'User-Agent': 'FarmCon-Weather-App' }
         })
@@ -67,11 +66,10 @@ export async function GET(request: NextRequest) {
         }
       } catch (error) {
         console.error('Reverse geocoding error:', error)
-        // Continue with default location name
+        
       }
     }
 
-    // Fetch from NASA POWER API - get last 7 days for recent data
     const today = new Date()
     const startDate = new Date(today)
     startDate.setDate(today.getDate() - 7)
@@ -95,7 +93,6 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json()
 
-    // Validate response
     if (!data.properties || !data.properties.parameter) {
       return NextResponse.json(
         { error: 'Invalid NASA API response' },
@@ -107,7 +104,6 @@ export async function GET(request: NextRequest) {
     const dates = Object.keys(parameters.T2M).sort().reverse()
     const recentDate = dates[0]
 
-    // Log raw NASA data for debugging
     console.log('🔍 Raw NASA API data for', locationName, ':', {
       date: recentDate,
       T2M: parameters.T2M[recentDate],
@@ -118,7 +114,6 @@ export async function GET(request: NextRequest) {
       PRECTOTCORR: parameters.PRECTOTCORR?.[recentDate]
     })
 
-    // Clean NASA data (-999 values indicate missing data)
     const cleanValue = (value: number, defaultValue: number = 0) => {
       if (value === undefined || value === null || value < -900) {
         return { value: defaultValue, isDefault: true }
@@ -134,13 +129,10 @@ export async function GET(request: NextRequest) {
     const rainfallResult = cleanValue(parameters.PRECTOTCORR?.[recentDate], 0)
 
     const temp = tempResult.value
-    const tempMax = tempMaxResult.value
-    const tempMin = tempMinResult.value
     const humidity = humidityResult.value
     const windSpeed = windSpeedResult.value
     const rainfall = rainfallResult.value
 
-    // Check if we're using mostly default values (NASA has no data for this location)
     const defaultCount = [
       tempResult.isDefault,
       tempMaxResult.isDefault,
@@ -149,7 +141,6 @@ export async function GET(request: NextRequest) {
       windSpeedResult.isDefault
     ].filter(Boolean).length
 
-    // If more than 3 out of 5 key values are defaults, NASA doesn't have data
     if (defaultCount >= 3) {
       console.warn('⚠️ NASA API has insufficient data for', locationName, '- using mock data')
       return NextResponse.json({
@@ -159,7 +150,6 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Get weather description based on conditions
     const getWeatherDescription = (temp: number, rain: number) => {
       if (rain > 5) return { main: 'Rain', description: 'rainy', icon: '10d' }
       if (rain > 0) return { main: 'Rain', description: 'light rain', icon: '09d' }
@@ -171,7 +161,6 @@ export async function GET(request: NextRequest) {
 
     const weather = getWeatherDescription(temp, rainfall)
 
-    // Mock data for fields not available in NASA API
     const mockData = {
       pressure: 1013,
       visibility: 10,
@@ -180,7 +169,6 @@ export async function GET(request: NextRequest) {
       cloudiness: rainfall > 0 ? 80 : temp > 30 ? 10 : 40
     }
 
-    // Transform data for farming context
     const weatherData = {
       location: {
         name: locationName,
@@ -195,7 +183,7 @@ export async function GET(request: NextRequest) {
         feelsLike: Math.round(temp + (humidity > 70 ? 2 : -2)),
         humidity: Math.round(humidity),
         pressure: mockData.pressure,
-        windSpeed: Math.round(windSpeed * 3.6), // m/s to km/h
+        windSpeed: Math.round(windSpeed * 3.6), 
         windDirection: mockData.windDirection,
         visibility: mockData.visibility,
         uvIndex: mockData.uvIndex,
@@ -259,7 +247,6 @@ function getPlantingConditions(data: { temp: number; humidity: number; windSpeed
   let score = 0
   let conditions = []
 
-  // Temperature check (ideal 15-25°C)
   if (temp >= 15 && temp <= 25) {
     score += 3
     conditions.push('✓ Ideal temperature for planting')
@@ -269,7 +256,6 @@ function getPlantingConditions(data: { temp: number; humidity: number; windSpeed
     conditions.push('❌ Too cold for most crops')
   }
 
-  // Humidity check
   if (humidity >= 40 && humidity <= 70) {
     score += 2
     conditions.push('✓ Good humidity levels')
@@ -277,7 +263,6 @@ function getPlantingConditions(data: { temp: number; humidity: number; windSpeed
     conditions.push('⚠ High humidity - fungal risk')
   }
 
-  // Wind check
   if (windSpeed < 5) {
     score += 1
     conditions.push('✓ Low wind - good for planting')
@@ -299,7 +284,6 @@ function getPestManagement(data: { temp: number; humidity: number }) {
   let recommendations = []
   let color = 'green'
 
-  // High temperature + high humidity = pest risk
   if (temp > 25 && humidity > 70) {
     riskLevel = 'High'
     color = 'red'
@@ -359,7 +343,6 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
   const alerts = []
   const { temp, humidity, windSpeed, rainfall } = data
 
-  // Temperature alerts
   if (temp > 40) {
     alerts.push({
       type: 'heat-warning',
@@ -376,7 +359,6 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
     })
   }
 
-  // Rain alerts
   if (rainfall > 10) {
     alerts.push({
       type: 'heavy-rain',
@@ -386,7 +368,6 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
     })
   }
 
-  // Wind alerts
   if (windSpeed > 15) {
     alerts.push({
       type: 'strong-wind',
@@ -396,7 +377,6 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
     })
   }
 
-  // Combined conditions
   if (temp > 30 && humidity > 80) {
     alerts.push({
       type: 'disease-risk',
@@ -409,20 +389,16 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
   return alerts
 }
 
-// Generate mock weather data with realistic random values
 function generateMockWeather(locationName: string, country: string, lat: number, lon: number) {
-  // Generate realistic temperature based on latitude (tropical = hot, polar = cold)
-  const baseTemp = 30 - Math.abs(lat) * 0.5 // Closer to equator = hotter
-  const tempVariation = Math.random() * 10 - 5 // ±5 degrees
+  
+  const baseTemp = 30 - Math.abs(lat) * 0.5 
+  const tempVariation = Math.random() * 10 - 5 
   const temp = Math.max(5, Math.min(45, baseTemp + tempVariation))
 
-  // Generate realistic humidity (coastal areas tend to be more humid)
-  const humidity = 40 + Math.random() * 50 // 40-90%
+  const humidity = 40 + Math.random() * 50 
 
-  // Generate realistic wind speed
-  const windSpeed = 5 + Math.random() * 15 // 5-20 km/h
+  const windSpeed = 5 + Math.random() * 15 
 
-  // Rainfall (mostly dry, occasionally rainy)
   const rainfall = Math.random() < 0.7 ? 0 : Math.random() * 10
 
   const getWeatherDescription = (temp: number, rain: number) => {
@@ -446,10 +422,10 @@ function generateMockWeather(locationName: string, country: string, lat: number,
       temperature: Math.round(temp),
       feelsLike: Math.round(temp + (humidity > 70 ? 2 : -2)),
       humidity: Math.round(humidity),
-      pressure: 1010 + Math.round(Math.random() * 10), // 1010-1020 hPa
+      pressure: 1010 + Math.round(Math.random() * 10), 
       windSpeed: Math.round(windSpeed),
       windDirection: Math.round(Math.random() * 360),
-      visibility: Math.round(8 + Math.random() * 7), // 8-15 km
+      visibility: Math.round(8 + Math.random() * 7), 
       uvIndex: temp > 30 ? 8 : temp > 25 ? 6 : 4,
       description: weather.description,
       icon: weather.icon,

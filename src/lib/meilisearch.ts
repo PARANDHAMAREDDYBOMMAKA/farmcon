@@ -1,6 +1,5 @@
 import { MeiliSearch } from 'meilisearch'
 
-// Only initialize MeiliSearch if credentials are provided
 let client: MeiliSearch | null = null
 
 function getClient(): MeiliSearch {
@@ -17,7 +16,6 @@ function getClient(): MeiliSearch {
   return client
 }
 
-// Index names
 export const INDEXES = {
   products: 'products',
   crops: 'crops',
@@ -26,12 +24,10 @@ export const INDEXES = {
   farmers: 'farmers',
 } as const
 
-// Initialize indexes with settings
 export async function initializeIndexes() {
   try {
     const meilisearch = getClient()
 
-    // Products index
     const productsIndex = meilisearch.index(INDEXES.products)
     await productsIndex.updateSettings({
       searchableAttributes: ['name', 'description', 'brand', 'category'],
@@ -100,7 +96,6 @@ export async function addDocuments(indexName: string, documents: any[]) {
   }
 }
 
-// Update documents in index
 export async function updateDocuments(indexName: string, documents: any[]) {
   try {
     const meilisearch = getClient()
@@ -113,7 +108,6 @@ export async function updateDocuments(indexName: string, documents: any[]) {
   }
 }
 
-// Delete documents from index
 export async function deleteDocuments(indexName: string, documentIds: string[]) {
   try {
     const meilisearch = getClient()
@@ -126,7 +120,6 @@ export async function deleteDocuments(indexName: string, documentIds: string[]) 
   }
 }
 
-// Search in index
 export async function search(
   indexName: string,
   query: string,

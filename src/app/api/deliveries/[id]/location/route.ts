@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// POST update driver location for delivery
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -19,7 +18,6 @@ export async function POST(
       )
     }
 
-    // Create location history record
     const locationRecord = await prisma.deliveryLocation.create({
       data: {
         deliveryId,
@@ -33,7 +31,6 @@ export async function POST(
       }
     })
 
-    // Update driver's current location if driver is assigned
     const delivery = await prisma.delivery.findUnique({
       where: { id: deliveryId },
       select: { driverId: true }
@@ -50,7 +47,6 @@ export async function POST(
       })
     }
 
-    // Update delivery status to in_transit if still assigned or picked_up
     const currentDelivery = await prisma.delivery.findUnique({
       where: { id: deliveryId },
       select: { status: true }
@@ -73,7 +69,6 @@ export async function POST(
   }
 }
 
-// GET location history for delivery
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -82,7 +77,7 @@ export async function GET(
     const { id: deliveryId } = await params
     const searchParams = request.nextUrl.searchParams
     const limit = parseInt(searchParams.get('limit') || '100')
-    const since = searchParams.get('since') // ISO timestamp
+    const since = searchParams.get('since') 
 
     const where: any = { deliveryId }
     if (since) {

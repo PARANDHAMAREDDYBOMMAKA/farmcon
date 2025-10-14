@@ -1,11 +1,4 @@
-/**
- * OpenFarm API Client
- * Free, open-source database of farming and gardening knowledge
- *
- * API: 100% FREE - No API key required
- * Data: Thousands of crops with growing guides
- * Documentation: https://openfarm.cc/
- */
+
 
 const BASE_URL = 'https://openfarm.cc/api/v1'
 
@@ -53,15 +46,12 @@ export interface CropDetails extends Crop {
   guides?: Guide[]
 }
 
-/**
- * Search for crops
- */
 export async function searchCrops(query: string): Promise<Crop[]> {
   try {
     const response = await fetch(
       `${BASE_URL}/crops?filter=${encodeURIComponent(query)}`,
       {
-        next: { revalidate: 3600 }, // Cache for 1 hour
+        next: { revalidate: 3600 }, 
       }
     )
 
@@ -77,9 +67,6 @@ export async function searchCrops(query: string): Promise<Crop[]> {
   }
 }
 
-/**
- * Get crop by slug
- */
 export async function getCropBySlug(slug: string): Promise<CropDetails | null> {
   try {
     const response = await fetch(`${BASE_URL}/crops/${slug}`, {
@@ -92,7 +79,6 @@ export async function getCropBySlug(slug: string): Promise<CropDetails | null> {
 
     const data = await response.json()
 
-    // Also fetch companions if available
     let companions: Crop[] = []
     if (data.data?.relationships?.companions?.data) {
       const companionPromises = data.data.relationships.companions.data.map(
@@ -102,7 +88,6 @@ export async function getCropBySlug(slug: string): Promise<CropDetails | null> {
       companions = companionResults.map((r) => r.data).filter(Boolean)
     }
 
-    // Fetch guides if available
     let guides: Guide[] = []
     if (data.data?.relationships?.guides?.data) {
       const guidePromises = data.data.relationships.guides.data.map(
@@ -124,9 +109,6 @@ export async function getCropBySlug(slug: string): Promise<CropDetails | null> {
   }
 }
 
-/**
- * Get all crops (paginated)
- */
 export async function getAllCrops(page: number = 1): Promise<{
   crops: Crop[]
   total: number
@@ -154,9 +136,6 @@ export async function getAllCrops(page: number = 1): Promise<{
   }
 }
 
-/**
- * Get growing guide for a crop
- */
 export async function getCropGuide(cropSlug: string): Promise<Guide | null> {
   try {
     const crop = await getCropBySlug(cropSlug)
@@ -164,7 +143,6 @@ export async function getCropGuide(cropSlug: string): Promise<Guide | null> {
       return null
     }
 
-    // Return the first guide
     return crop.guides[0]
   } catch (error) {
     console.error('Error fetching crop guide:', error)
@@ -172,9 +150,6 @@ export async function getCropGuide(cropSlug: string): Promise<Guide | null> {
   }
 }
 
-/**
- * Get companion plants for a crop
- */
 export async function getCompanionPlants(cropSlug: string): Promise<Crop[]> {
   try {
     const crop = await getCropBySlug(cropSlug)
@@ -185,9 +160,6 @@ export async function getCompanionPlants(cropSlug: string): Promise<Crop[]> {
   }
 }
 
-/**
- * Search crops by category/tag
- */
 export async function searchCropsByTag(tag: string): Promise<Crop[]> {
   try {
     const response = await fetch(
@@ -209,19 +181,14 @@ export async function searchCropsByTag(tag: string): Promise<Crop[]> {
   }
 }
 
-/**
- * Get popular crops (most guides)
- */
 export async function getPopularCrops(limit: number = 10): Promise<Crop[]> {
   try {
     const { crops } = await getAllCrops(1)
 
-    // Filter crops that have guides
     const cropsWithGuides = crops.filter(
       (crop) => crop.relationships?.guides?.data && crop.relationships.guides.data.length > 0
     )
 
-    // Return top crops
     return cropsWithGuides.slice(0, limit)
   } catch (error) {
     console.error('Error fetching popular crops:', error)
@@ -229,9 +196,6 @@ export async function getPopularCrops(limit: number = 10): Promise<Crop[]> {
   }
 }
 
-/**
- * Format crop data for display
- */
 export function formatCropInfo(crop: Crop): {
   name: string
   scientificName: string

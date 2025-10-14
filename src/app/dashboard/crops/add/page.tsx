@@ -40,7 +40,6 @@ export default function AddCropPage() {
         return
       }
 
-      // Get user profile using API
       const profile = await profileAPI.getProfile(session.user.id)
       
       if (!profile || profile.role !== 'farmer') {
@@ -82,7 +81,7 @@ export default function AddCropPage() {
     setError('')
 
     try {
-      // Validate required fields
+      
       if (!formData.name || !formData.planted_date) {
         setError('Please fill in all required fields')
         return
@@ -114,7 +113,6 @@ export default function AddCropPage() {
         throw new Error(error.error || 'Failed to add crop')
       }
 
-      // Redirect to crops page
       router.push('/dashboard/crops?success=added')
 
     } catch (err: any) {
@@ -297,7 +295,7 @@ export default function AddCropPage() {
             />
           </div>
 
-          {/* Image Upload */}
+          {}
           <ImageUpload
             images={images}
             onImagesChange={setImages}

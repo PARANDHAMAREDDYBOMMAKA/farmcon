@@ -4,8 +4,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST() {
   try {
     const email = 'sunnyreddy2005sun@gmail.com'
-    
-    // Delete all profiles with this email
+
     const result = await prisma.profile.deleteMany({
       where: { email }
     })

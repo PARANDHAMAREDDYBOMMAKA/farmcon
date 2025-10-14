@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { deleteMultipleFromCloudinary } from '@/lib/cloudinary'
 
-// GET /api/products/[id] - Get single product
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -45,7 +44,6 @@ export async function GET(
       )
     }
 
-    // Calculate average rating
     const averageRating = product.reviews.length > 0
       ? product.reviews.reduce((sum, review) => sum + review.rating, 0) / product.reviews.length
       : 0
@@ -66,7 +64,6 @@ export async function GET(
   }
 }
 
-// PUT /api/products/[id] - Update product
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -120,7 +117,6 @@ export async function PUT(
   }
 }
 
-// PATCH /api/products/[id] - Partial update (e.g., toggle status)
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -153,13 +149,12 @@ export async function PATCH(
   }
 }
 
-// DELETE /api/products/[id] - Delete product
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get product first to retrieve images
+    
     const product = await prisma.product.findUnique({
       where: { id: params.id },
       select: { images: true }
@@ -169,7 +164,6 @@ export async function DELETE(
       return NextResponse.json({ error: 'Product not found' }, { status: 404 })
     }
 
-    // Delete images from Cloudinary if they exist
     if (product.images && product.images.length > 0) {
       await deleteMultipleFromCloudinary(product.images)
     }

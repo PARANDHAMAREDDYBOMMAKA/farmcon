@@ -5,7 +5,6 @@ import { useAuth } from '@/hooks/useAuth'
 import toast from 'react-hot-toast'
 import dynamic from 'next/dynamic'
 
-// Dynamically import chart components to avoid SSR issues
 const PriceChart = dynamic(() => import('@/components/charts/PriceChart'), { ssr: false })
 const MarketComparisonChart = dynamic(() => import('@/components/charts/MarketComparisonChart'), { ssr: false })
 
@@ -69,7 +68,6 @@ export default function MarketPricesPage() {
   const [district, setDistrict] = useState('')
   const [activeTab, setActiveTab] = useState<'current' | 'historical' | 'insights'>('current')
 
-  // Client-side cache to avoid redundant API calls
   const [dataCache, setDataCache] = useState<Map<string, MarketData>>(new Map())
 
   const commodities = [
@@ -83,7 +81,6 @@ export default function MarketPricesPage() {
     'Telangana', 'Uttar Pradesh', 'West Bengal'
   ]
 
-  // Load initial data only once on mount
   useEffect(() => {
     loadMarketData()
   }, [])
@@ -91,10 +88,9 @@ export default function MarketPricesPage() {
   const loadMarketData = async () => {
     setLoading(true)
     try {
-      // Generate cache key for client-side caching
+      
       const cacheKey = `${commodity}-${state}-${district}`
 
-      // Check client-side cache first
       if (dataCache.has(cacheKey)) {
         console.log('Using client-side cached data')
         setMarketData(dataCache.get(cacheKey)!)
@@ -111,7 +107,6 @@ export default function MarketPricesPage() {
         const data = await response.json()
         setMarketData(data)
 
-        // Store in client-side cache
         setDataCache(prev => new Map(prev).set(cacheKey, data))
 
         toast.success('Market data loaded successfully')
@@ -126,27 +121,22 @@ export default function MarketPricesPage() {
     }
   }
 
-  // Handler for commodity change
   const handleCommodityChange = (newCommodity: string) => {
     setCommodity(newCommodity)
   }
 
-  // Handler for state change
   const handleStateChange = (newState: string) => {
     setState(newState)
   }
 
-  // Handler for district change
   const handleDistrictChange = (newDistrict: string) => {
     setDistrict(newDistrict)
   }
 
-  // Handler for search button click
   const handleSearch = () => {
     loadMarketData()
   }
 
-  // Handler for clearing cache
   const handleClearCache = () => {
     setDataCache(new Map())
     toast.success('Cache cleared successfully')
@@ -190,7 +180,7 @@ export default function MarketPricesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -214,7 +204,7 @@ export default function MarketPricesPage() {
         </div>
       </div>
 
-      {/* Filters */}
+      {}
       <div className="bg-white rounded-lg shadow p-4 sm:p-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
@@ -277,7 +267,7 @@ export default function MarketPricesPage() {
 
       {marketData && (
         <>
-          {/* Quick Stats */}
+          {}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <div className="flex items-center">
@@ -335,7 +325,7 @@ export default function MarketPricesPage() {
             </div>
           </div>
 
-          {/* Tab Navigation */}
+          {}
           <div className="bg-white rounded-lg shadow">
             <div className="border-b border-gray-200 overflow-x-auto">
               <nav className="-mb-px flex space-x-4 sm:space-x-8 px-4 sm:px-6 min-w-max sm:min-w-0">
@@ -372,10 +362,10 @@ export default function MarketPricesPage() {
               </nav>
             </div>
 
-            {/* Current Prices Tab */}
+            {}
             {activeTab === 'current' && (
               <div className="p-3 sm:p-6">
-                {/* Mobile Cards View */}
+                {}
                 <div className="block lg:hidden space-y-4">
                   {marketData.prices.map((price) => (
                     <div key={price.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
@@ -415,7 +405,7 @@ export default function MarketPricesPage() {
                   ))}
                 </div>
 
-                {/* Desktop Table View */}
+                {}
                 <div className="hidden lg:block">
                   <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -485,7 +475,7 @@ export default function MarketPricesPage() {
                   </div>
                 </div>
 
-                {/* No Data Message */}
+                {}
                 {marketData.prices.length === 0 && (
                   <div className="text-center py-12">
                     <span className="text-6xl block mb-4">📊</span>
@@ -496,10 +486,10 @@ export default function MarketPricesPage() {
               </div>
             )}
 
-            {/* Historical Trends Tab */}
+            {}
             {activeTab === 'historical' && (
               <div className="p-3 sm:p-6 space-y-6">
-                {/* Interactive Price Trend Chart */}
+                {}
                 <div className="bg-white rounded-lg p-3 sm:p-6 border border-gray-200 overflow-hidden">
                   <div className="w-full h-80 sm:h-96">
                     <PriceChart
@@ -511,7 +501,7 @@ export default function MarketPricesPage() {
                   </div>
                 </div>
 
-                {/* Chart Controls */}
+                {}
                 <div className="bg-gray-50 rounded-lg p-4 text-center">
                   <p className="text-sm text-gray-600 mb-2">📊 Interactive Chart Features:</p>
                   <div className="flex flex-wrap justify-center gap-2 text-xs text-gray-500">
@@ -522,7 +512,7 @@ export default function MarketPricesPage() {
                   </div>
                 </div>
 
-                {/* Historical Stats */}
+                {}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                   <div className="bg-blue-50 rounded-lg p-4 text-center">
                     <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -559,10 +549,10 @@ export default function MarketPricesPage() {
               </div>
             )}
 
-            {/* Market Insights Tab */}
+            {}
             {activeTab === 'insights' && (
               <div className="p-3 sm:p-6 space-y-6">
-                {/* Recommendation */}
+                {}
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 sm:p-6">
                   <h3 className="text-lg font-semibold text-blue-900 mb-2 flex items-center">
                     <span className="mr-2">💡</span>
@@ -571,9 +561,9 @@ export default function MarketPricesPage() {
                   <p className="text-blue-800 leading-relaxed">{marketData.insights.recommendation}</p>
                 </div>
 
-                {/* Interactive Market Comparison Charts */}
+                {}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                  {/* Best Markets Chart */}
+                  {}
                   <div className="border rounded-lg p-3 sm:p-6 bg-white overflow-hidden">
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 text-center flex items-center justify-center">
                       <span className="mr-2">🏆</span>
@@ -583,7 +573,7 @@ export default function MarketPricesPage() {
                       <MarketComparisonChart
                         data={marketData.insights.bestMarkets.map(market => ({
                           ...market,
-                          trend: Math.random() > 0.5 ? 'up' : 'stable' // Add random trends for demo
+                          trend: Math.random() > 0.5 ? 'up' : 'stable' 
                         }))}
                         title=""
                         type="best"
@@ -599,7 +589,7 @@ export default function MarketPricesPage() {
                     </div>
                   </div>
 
-                  {/* Lower Price Markets Chart */}
+                  {}
                   <div className="border rounded-lg p-3 sm:p-6 bg-white overflow-hidden">
                     <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4 text-center flex items-center justify-center">
                       <span className="mr-2">📉</span>
@@ -609,7 +599,7 @@ export default function MarketPricesPage() {
                       <MarketComparisonChart
                         data={marketData.insights.worstMarkets.map(market => ({
                           ...market,
-                          trend: Math.random() > 0.5 ? 'down' : 'stable' // Add random trends for demo
+                          trend: Math.random() > 0.5 ? 'down' : 'stable' 
                         }))}
                         title=""
                         type="worst"
@@ -626,7 +616,7 @@ export default function MarketPricesPage() {
                   </div>
                 </div>
 
-                {/* Market Analysis */}
+                {}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   <div className="text-center p-4 sm:p-6 border rounded-lg bg-gradient-to-br from-green-50 to-green-100">
                     <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-green-200 rounded-full flex items-center justify-center mb-3">
@@ -656,7 +646,7 @@ export default function MarketPricesPage() {
             )}
           </div>
 
-          {/* Data Source */}
+          {}
           <div className="bg-gray-50 rounded-lg p-4">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-gray-600">
               <div className="flex items-center gap-4">

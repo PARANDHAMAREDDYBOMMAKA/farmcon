@@ -1,10 +1,4 @@
-/**
- * Email Service - Unified interface for sending emails
- *
- * Uses Nodemailer with Gmail SMTP
- * - Requires Gmail App Password
- * - Set EMAIL_HOST, EMAIL_USER, EMAIL_PASSWORD in .env
- */
+
 
 import nodemailer from 'nodemailer'
 
@@ -20,12 +14,10 @@ export interface EmailOptions {
 }
 
 class EmailService {
-  /**
-   * Send email using Nodemailer
-   */
+  
   async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
-      // Check if email is configured
+      
       if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
         console.error('[EmailService] Email not configured. Please set EMAIL_HOST, EMAIL_USER, and EMAIL_PASSWORD in .env')
         return false
@@ -61,5 +53,4 @@ class EmailService {
   }
 }
 
-// Export singleton instance
 export const emailService = new EmailService()

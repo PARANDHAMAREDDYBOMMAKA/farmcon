@@ -19,7 +19,7 @@ export default function ForgotPasswordPage() {
     setMessage('')
 
     try {
-      // Get the current origin dynamically
+      
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {

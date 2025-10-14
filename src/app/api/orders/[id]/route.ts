@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// Delivery notification helper
 async function sendDeliveryNotifications(order: any, newStatus: string) {
   try {
     const statusMessages = {
@@ -30,7 +29,6 @@ async function sendDeliveryNotifications(order: any, newStatus: string) {
     const messages = statusMessages[newStatus as keyof typeof statusMessages]
     if (!messages) return
 
-    // Create notification for customer
     await prisma.notification.create({
       data: {
         userId: order.customerId,
@@ -41,7 +39,6 @@ async function sendDeliveryNotifications(order: any, newStatus: string) {
       }
     })
 
-    // Create notification for seller
     await prisma.notification.create({
       data: {
         userId: order.sellerId,
@@ -128,7 +125,6 @@ export async function GET(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
-    // Transform to match frontend expectations
     const transformedOrder = {
       id: order.id,
       customer_id: order.customerId,
@@ -271,12 +267,10 @@ export async function PUT(
       }
     })
 
-    // Send delivery status notifications
     if (status) {
       await sendDeliveryNotifications(order, status)
     }
 
-    // Transform to match frontend expectations
     const transformedOrder = {
       id: order.id,
       customer_id: order.customerId,

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET delivery by ID
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -89,7 +88,6 @@ export async function GET(
   }
 }
 
-// PUT update delivery
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -148,7 +146,6 @@ export async function PUT(
       }
     })
 
-    // Create milestone for status change
     if (status) {
       const milestoneDescriptions: any = {
         assigned: 'Driver assigned to delivery',

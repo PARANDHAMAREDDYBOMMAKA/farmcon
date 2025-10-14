@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/crop-listings/[id] - Get a single crop listing by ID
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -52,7 +51,6 @@ export async function GET(
   }
 }
 
-// PUT /api/crop-listings/[id] - Update a crop listing
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -68,10 +66,8 @@ export async function PUT(
       )
     }
 
-    // Remove id from updateData if present
     const { id: _, ...updateData } = body
 
-    // Convert date strings to Date objects if present
     if (updateData.harvestDate) {
       updateData.harvestDate = new Date(updateData.harvestDate)
     }
@@ -79,7 +75,6 @@ export async function PUT(
       updateData.expiryDate = new Date(updateData.expiryDate)
     }
 
-    // Convert numeric fields
     if (updateData.quantityAvailable !== undefined) {
       updateData.quantityAvailable = parseFloat(updateData.quantityAvailable.toString())
     }
@@ -114,7 +109,6 @@ export async function PUT(
   }
 }
 
-// DELETE /api/crop-listings/[id] - Delete a crop listing
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

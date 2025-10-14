@@ -68,8 +68,7 @@ export default function OrderTrackingPage() {
       if (!orderId) return
 
       const orderData = await ordersAPI.getOrderById(orderId)
-      
-      // Check if user has permission to view this order
+
       if (orderData.customer_id !== user?.id && orderData.seller_id !== user?.id) {
         router.push('/dashboard/orders')
         return
@@ -83,7 +82,6 @@ export default function OrderTrackingPage() {
       setLoading(false)
     }
   }
-
 
   if (authLoading || loading) {
     return (
@@ -116,7 +114,7 @@ export default function OrderTrackingPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
@@ -133,12 +131,12 @@ export default function OrderTrackingPage() {
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-          {/* Enhanced Delivery Tracker */}
+          {}
           <div className="xl:col-span-2">
             <DeliveryTracker order={order} />
           </div>
 
-          {/* Enhanced Delivery Map */}
+          {}
           <div className="xl:col-span-1">
             <div className="bg-white rounded-xl shadow-lg overflow-hidden h-fit">
               <div className="p-6 border-b border-gray-200">
@@ -150,7 +148,7 @@ export default function OrderTrackingPage() {
               </div>
             </div>
 
-            {/* Order Items Summary */}
+            {}
             <div className="bg-white rounded-xl shadow-lg overflow-hidden mt-6">
               <div className="p-6 border-b border-gray-200">
                 <h2 className="text-xl font-semibold text-gray-900">Order Items</h2>
@@ -192,7 +190,7 @@ export default function OrderTrackingPage() {
           </div>
         </div>
 
-        {/* Quick Actions */}
+        {}
         <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

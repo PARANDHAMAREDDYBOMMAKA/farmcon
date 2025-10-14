@@ -20,7 +20,6 @@ export default function GlobalSearch() {
   const [isOpen, setIsOpen] = useState(false)
   const router = useRouter()
 
-  // Debounced search function
   const performSearch = useCallback(
     debounce(async (searchQuery: string) => {
       if (!searchQuery.trim()) {
@@ -58,7 +57,7 @@ export default function GlobalSearch() {
 
   return (
     <div className="relative w-full max-w-md">
-      {/* Search Input */}
+      {}
       <div className="relative">
         <input
           type="text"
@@ -89,7 +88,7 @@ export default function GlobalSearch() {
         )}
       </div>
 
-      {/* Search Results Dropdown */}
+      {}
       {isOpen && query && (
         <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-96 overflow-y-auto">
           {isSearching ? (

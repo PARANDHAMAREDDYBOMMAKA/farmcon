@@ -23,7 +23,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if Stripe is configured
     if (!process.env.STRIPE_SECRET_KEY) {
       return NextResponse.json(
         { error: 'Stripe is not configured' },
@@ -31,7 +30,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get user profile for customer info
     const { data: profile, error: profileError } = await supabase
       .from('profiles')
       .select('*')
@@ -40,10 +38,9 @@ export async function POST(request: NextRequest) {
 
     if (profileError) {
       console.error('Profile fetch error:', profileError)
-      // Continue without profile data
+      
     }
 
-    // Create line items for Stripe
     const lineItems = items.map((item: any) => ({
       price_data: {
         currency: 'inr',
@@ -52,19 +49,17 @@ export async function POST(request: NextRequest) {
           description: item.description || '',
           images: item.images && item.images.length > 0 ? [item.images[0]] : []
         },
-        unit_amount: Math.round(item.unitPrice * 100) // Convert to paise
+        unit_amount: Math.round(item.unitPrice * 100) 
       },
       quantity: item.quantity
     }))
 
-    // Construct proper URLs for success and cancel
     const host = request.headers.get('host')
     const protocol = host?.includes('localhost') ? 'http' : 'https'
     const baseUrl = `${protocol}://${host}`
     
     console.log('Stripe checkout URL base:', baseUrl)
 
-    // Create Stripe Checkout Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -90,7 +85,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Store session info temporarily (you might want to store this in your database)
     const checkoutData = {
       sessionId: session.id,
       userId,
@@ -112,8 +106,7 @@ export async function POST(request: NextRequest) {
     console.error('Stripe checkout error:', error)
     console.error('Error details:', error.message)
     console.error('Error stack:', error.stack)
-    
-    // Check if it's a Stripe-specific error
+
     if (error.type) {
       console.error('Stripe error type:', error.type)
       console.error('Stripe error code:', error.code)
@@ -126,7 +119,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Handle Stripe webhook events
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
@@ -136,16 +128,14 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Session ID required' }, { status: 400 })
     }
 
-    // Retrieve the checkout session
     const session = await stripe.checkout.sessions.retrieve(sessionId)
     
     if (session.payment_status === 'paid') {
-      // Payment successful - create order in database
+      
       const metadata = session.metadata
       
       if (metadata?.userId) {
-        // Here you would create the actual order in your database
-        // For now, we'll just return success
+
         return NextResponse.json({ 
           success: true, 
           paymentStatus: 'paid',

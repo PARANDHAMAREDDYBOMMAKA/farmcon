@@ -26,7 +26,6 @@ export default function FarmConChatbot() {
     const userMessage = input.trim()
     setInput('')
 
-    // Add user message
     const newMessages = [...messages, { role: 'user' as const, content: userMessage }]
     setMessages(newMessages)
     setLoading(true)
@@ -36,7 +35,7 @@ export default function FarmConChatbot() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          messages: newMessages.slice(-10), // Send last 10 messages for context
+          messages: newMessages.slice(-10), 
           context: pathname || '/'
         })
       })
@@ -82,7 +81,7 @@ export default function FarmConChatbot() {
 
   return (
     <>
-      {/* Floating Chat Button */}
+      {}
       <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
         {!opened && (
           <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
@@ -114,13 +113,13 @@ export default function FarmConChatbot() {
         )}
       </div>
 
-      {/* Chatbot Window */}
+      {}
       {opened && (
         <div className="fixed bottom-20 sm:bottom-24 right-4 sm:right-6 z-50 animate-in slide-in-from-bottom-5 duration-300 max-w-[calc(100vw-2rem)] sm:max-w-none">
           <div
             className="backdrop-blur-xl bg-white/90 rounded-2xl shadow-2xl overflow-hidden border border-green-200/50 w-[calc(100vw-2rem)] sm:w-[380px] h-[500px] sm:h-[600px]"
           >
-            {/* Header */}
+            {}
             <div className="bg-gradient-to-r from-green-600 to-green-700 px-6 py-4 flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="relative">
@@ -144,7 +143,7 @@ export default function FarmConChatbot() {
               </button>
             </div>
 
-            {/* Messages */}
+            {}
             <div className="flex flex-col h-[calc(100%-72px)]">
               <div className="flex-1 overflow-y-auto p-4 space-y-4">
                 {messages.map((msg, idx) => (
@@ -176,7 +175,7 @@ export default function FarmConChatbot() {
                 )}
               </div>
 
-              {/* Input */}
+              {}
               <div className="border-t border-gray-200 p-4 bg-white/50 backdrop-blur-sm">
                 <div className="flex space-x-2">
                   <input

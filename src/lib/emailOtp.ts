@@ -2,18 +2,16 @@ import nodemailer from 'nodemailer';
 import otpGenerator from 'otp-generator';
 import { Redis } from '@upstash/redis';
 
-// Initialize Redis client
 const redis = new Redis({
   url: process.env.UPSTASH_REDIS_REST_URL!,
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-// Create nodemailer transporter
 const createTransporter = () => {
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST || 'smtp.gmail.com',
     port: parseInt(process.env.EMAIL_PORT || '587'),
-    secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
+    secure: process.env.EMAIL_SECURE === 'true', 
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
@@ -21,7 +19,6 @@ const createTransporter = () => {
   });
 };
 
-// Generate OTP
 export const generateOTP = (): string => {
   return otpGenerator.generate(6, {
     upperCaseAlphabets: false,
@@ -31,13 +28,11 @@ export const generateOTP = (): string => {
   });
 };
 
-// Store OTP in Redis with expiration (5 minutes)
 export const storeOTP = async (email: string, otp: string): Promise<void> => {
   const key = `otp:${email}`;
-  await redis.set(key, otp, { ex: 300 }); // 5 minutes expiration
+  await redis.set(key, otp, { ex: 300 }); 
 };
 
-// Verify OTP
 export const verifyOTP = async (email: string, otp: string): Promise<boolean> => {
   const key = `otp:${email}`;
   const storedOTP = await redis.get(key);
@@ -56,7 +51,6 @@ export const verifyOTP = async (email: string, otp: string): Promise<boolean> =>
     return false;
   }
 
-  // Convert both to strings and trim for comparison
   const storedOTPStr = String(storedOTP).trim();
   const inputOTPStr = String(otp).trim();
 
@@ -65,12 +59,10 @@ export const verifyOTP = async (email: string, otp: string): Promise<boolean> =>
     return false;
   }
 
-  // Delete OTP after successful verification
   await redis.del(key);
   return true;
 };
 
-// Send OTP email
 export const sendOTPEmail = async (email: string, otp: string): Promise<void> => {
   const transporter = createTransporter();
 
@@ -297,7 +289,6 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<void> =>
   await transporter.sendMail(mailOptions);
 };
 
-// Verify reCAPTCHA token
 export const verifyRecaptcha = async (token: string): Promise<boolean> => {
   try {
     if (!process.env.RECAPTCHA_SECRET_KEY) {
@@ -323,7 +314,6 @@ export const verifyRecaptcha = async (token: string): Promise<boolean> => {
       error_codes: data['error-codes']
     });
 
-    // Lower threshold to 0.3 for better acceptance rate
     return data.success && data.score >= 0.3;
   } catch (error) {
     console.error('reCAPTCHA verification error:', error);
@@ -331,17 +321,16 @@ export const verifyRecaptcha = async (token: string): Promise<boolean> => {
   }
 };
 
-// Rate limiting: Check if user can request OTP (max 20 per hour)
 export const checkRateLimit = async (email: string): Promise<{ allowed: boolean; remainingAttempts: number; resetTime?: number }> => {
   const key = `rate_limit:${email}`;
   const maxAttempts = 20;
-  const windowSeconds = 3600; // 1 hour
+  const windowSeconds = 3600; 
 
   const count = await redis.get(key);
   const currentCount = count ? parseInt(count as string) : 0;
 
   if (currentCount >= maxAttempts) {
-    // Get TTL to tell user when they can retry
+    
     const ttl = await redis.ttl(key);
     return {
       allowed: false,
@@ -350,7 +339,6 @@ export const checkRateLimit = async (email: string): Promise<{ allowed: boolean;
     };
   }
 
-  // Increment counter
   const newCount = currentCount + 1;
   await redis.set(key, newCount, { ex: windowSeconds });
 
@@ -360,7 +348,6 @@ export const checkRateLimit = async (email: string): Promise<{ allowed: boolean;
   };
 };
 
-// Get rate limit info
 export const getRateLimitInfo = async (email: string): Promise<{ remainingAttempts: number; resetTime?: number }> => {
   const key = `rate_limit:${email}`;
   const maxAttempts = 20;

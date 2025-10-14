@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/reviews?productId=xxx - Get all reviews for a product
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
@@ -14,7 +13,6 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Fetch reviews with reviewer profile information
     const reviews = await prisma.review.findMany({
       where: {
         productId: productId
@@ -33,7 +31,6 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Transform the data to match the expected format
     const transformedReviews = reviews.map(review => ({
       ...review,
       profiles: review.reviewer
@@ -49,13 +46,11 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/reviews - Create a new review
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
     const { productId, reviewerId, rating, comment } = body
 
-    // Validate required fields
     if (!productId || !reviewerId || !rating) {
       return NextResponse.json(
         { error: 'Product ID, reviewer ID, and rating are required' },
@@ -63,7 +58,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate rating range
     if (rating < 1 || rating > 5) {
       return NextResponse.json(
         { error: 'Rating must be between 1 and 5' },
@@ -71,7 +65,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if product exists
     const product = await prisma.product.findUnique({
       where: { id: productId }
     })
@@ -83,7 +76,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user already reviewed this product
     const existingReview = await prisma.review.findFirst({
       where: {
         productId,
@@ -98,7 +90,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create the review
     const review = await prisma.review.create({
       data: {
         productId,

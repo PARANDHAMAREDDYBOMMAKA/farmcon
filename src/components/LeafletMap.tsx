@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Fix for default marker icons in production
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -27,7 +26,6 @@ interface LeafletMapProps {
   onLocationSelect?: (lat: number, lng: number) => void
 }
 
-// Component to handle map clicks
 function MapClickHandler({ onLocationSelect }: { onLocationSelect?: (lat: number, lng: number) => void }) {
   const map = useMap()
 
@@ -47,7 +45,6 @@ function MapClickHandler({ onLocationSelect }: { onLocationSelect?: (lat: number
   return null
 }
 
-// Component to update map view
 function MapViewController({ latitude, longitude, zoom }: { latitude: number; longitude: number; zoom: number }) {
   const map = useMap()
 
@@ -58,7 +55,6 @@ function MapViewController({ latitude, longitude, zoom }: { latitude: number; lo
   return null
 }
 
-// Custom colored marker icon
 const createColoredIcon = (color: string) => {
   return L.divIcon({
     className: 'custom-marker',
@@ -69,7 +65,7 @@ const createColoredIcon = (color: string) => {
 }
 
 export default function LeafletMap({
-  latitude = 28.6139, // Default: New Delhi
+  latitude = 28.6139, 
   longitude = 77.209,
   zoom = 10,
   height = '400px',
@@ -109,7 +105,7 @@ export default function LeafletMap({
         <MapClickHandler onLocationSelect={onLocationSelect} />
         <MapViewController latitude={latitude} longitude={longitude} zoom={zoom} />
 
-        {/* Markers */}
+        {}
         {markers.map((marker, index) => (
           <Marker
             key={index}
@@ -130,7 +126,6 @@ export default function LeafletMap({
   )
 }
 
-// Satellite Map Component
 export function SatelliteMap({
   latitude = 28.6139,
   longitude = 77.209,
@@ -162,7 +157,7 @@ export function SatelliteMap({
         style={{ height: '100%', width: '100%' }}
         zoomControl={true}
       >
-        {/* Using Esri World Imagery for satellite view */}
+        {}
         <TileLayer
           attribution='&copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"

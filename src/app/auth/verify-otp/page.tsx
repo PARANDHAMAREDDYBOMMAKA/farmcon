@@ -18,7 +18,7 @@ function VerifyOTPForm() {
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   useEffect(() => {
-    // Get email and password from URL params
+    
     const emailParam = searchParams?.get('email')
     const passwordParam = searchParams?.get('password')
 
@@ -47,7 +47,7 @@ function VerifyOTPForm() {
     }
 
     try {
-      // Verify OTP
+      
       const response = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: {
@@ -62,10 +62,8 @@ function VerifyOTPForm() {
         throw new Error(data.error || 'Invalid OTP')
       }
 
-      // OTP verified successfully
       setSuccess('OTP verified! Signing you in...')
 
-      // If we have password (signin flow), sign in with Supabase
       if (password) {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
@@ -79,7 +77,6 @@ function VerifyOTPForm() {
         }
       }
 
-      // Redirect to dashboard
       setTimeout(() => {
         router.push('/dashboard')
       }, 1000)
@@ -132,7 +129,7 @@ function VerifyOTPForm() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Image/Branding */}
+      {}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-400 to-green-600 relative">
         <div className="flex flex-col justify-center px-12 text-white">
           <h2 className="text-4xl font-bold mb-6">Verify Your Email</h2>
@@ -156,7 +153,7 @@ function VerifyOTPForm() {
         </div>
       </div>
 
-      {/* Right side - Form */}
+      {}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">

@@ -1,11 +1,4 @@
-/**
- * AGMARKNET API Client
- * Government of India's Agricultural Marketing Information Network
- * Provides real-time mandi (market) prices for agricultural commodities
- *
- * API: 100% FREE - No registration required
- * Data: 3000+ markets across India
- */
+
 
 const API_KEY = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b';
 const BASE_URL = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070';
@@ -32,9 +25,6 @@ export interface AgmarknetResponse {
   offset: number;
 }
 
-/**
- * Fetch mandi prices with optional filters
- */
 export async function getMandiPrices(params?: {
   state?: string;
   district?: string;
@@ -50,7 +40,6 @@ export async function getMandiPrices(params?: {
     url.searchParams.set('limit', (params?.limit || 100).toString());
     url.searchParams.set('offset', (params?.offset || 0).toString());
 
-    // Add filters if provided
     if (params?.state) {
       url.searchParams.set('filters[state]', params.state);
     }
@@ -65,7 +54,7 @@ export async function getMandiPrices(params?: {
     }
 
     const response = await fetch(url.toString(), {
-      next: { revalidate: 3600 } // Cache for 1 hour
+      next: { revalidate: 3600 } 
     });
 
     if (!response.ok) {
@@ -80,9 +69,6 @@ export async function getMandiPrices(params?: {
   }
 }
 
-/**
- * Get all available states
- */
 export async function getAvailableStates(): Promise<string[]> {
   try {
     const data = await getMandiPrices({ limit: 1000 });
@@ -94,9 +80,6 @@ export async function getAvailableStates(): Promise<string[]> {
   }
 }
 
-/**
- * Get districts for a specific state
- */
 export async function getDistrictsByState(state: string): Promise<string[]> {
   try {
     const data = await getMandiPrices({ state, limit: 1000 });
@@ -108,9 +91,6 @@ export async function getDistrictsByState(state: string): Promise<string[]> {
   }
 }
 
-/**
- * Get all available commodities
- */
 export async function getAvailableCommodities(state?: string): Promise<string[]> {
   try {
     const data = await getMandiPrices({ state, limit: 1000 });
@@ -122,9 +102,6 @@ export async function getAvailableCommodities(state?: string): Promise<string[]>
   }
 }
 
-/**
- * Get markets for a specific district
- */
 export async function getMarketsByDistrict(state: string, district: string): Promise<string[]> {
   try {
     const data = await getMandiPrices({ state, district, limit: 1000 });
@@ -136,9 +113,6 @@ export async function getMarketsByDistrict(state: string, district: string): Pro
   }
 }
 
-/**
- * Get latest prices for a specific commodity
- */
 export async function getCommodityPrices(
   commodity: string,
   state?: string,
@@ -147,9 +121,6 @@ export async function getCommodityPrices(
   return getMandiPrices({ commodity, state, district, limit: 50 });
 }
 
-/**
- * Calculate average price for a commodity across markets
- */
 export function calculateAveragePrice(prices: MandiPrice[]): {
   avgMinPrice: number;
   avgMaxPrice: number;

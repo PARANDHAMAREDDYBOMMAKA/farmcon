@@ -59,7 +59,6 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
   const [deliveryData, setDeliveryData] = useState<DeliveryData | null>(null)
   const [loading, setLoading] = useState(true)
 
-  // Fetch delivery data from API
   useEffect(() => {
     const fetchDeliveryData = async () => {
       try {
@@ -79,9 +78,8 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
 
     fetchDeliveryData()
 
-    // Poll for updates if order is shipped
     if (['shipped', 'processing', 'confirmed'].includes(order.status)) {
-      const interval = setInterval(fetchDeliveryData, 30000) // Poll every 30 seconds
+      const interval = setInterval(fetchDeliveryData, 30000) 
       return () => clearInterval(interval)
     }
   }, [order.id, order.status])
@@ -179,11 +177,11 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
   }
 
   const calculateETA = () => {
-    // Use delivery data if available
+    
     if (deliveryData?.estimatedDeliveryTime) {
       setEstimatedDelivery(new Date(deliveryData.estimatedDeliveryTime))
     } else {
-      // Fallback to calculated ETA
+      
       const orderDate = parseISO(order.created_at)
       const deliveryDays = order.payment_method === 'cod' ? 5 : 4
       const eta = addDays(orderDate, deliveryDays)
@@ -197,7 +195,6 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
       return
     }
 
-    // Get latest location from history
     if (deliveryData.locationHistory && deliveryData.locationHistory.length > 0) {
       const latestLocation = deliveryData.locationHistory[0]
       if (latestLocation.address) {
@@ -221,7 +218,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
 
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-      {/* Header with Order Info */}
+      {}
       <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
         <div className="flex items-center justify-between">
           <div>
@@ -246,7 +243,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
           </div>
         </div>
 
-        {/* Progress Bar */}
+        {}
         <div className="mt-4">
           <div className="flex items-center justify-between text-sm text-green-100 mb-2">
             <span>Order Progress</span>
@@ -261,7 +258,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         </div>
       </div>
 
-      {/* Current Status Banner */}
+      {}
       {getCurrentMilestone() && (
         <div className="bg-blue-50 border-l-4 border-blue-400 p-4">
           <div className="flex items-center">
@@ -281,7 +278,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         </div>
       )}
 
-      {/* Live Location Update for Shipped Orders */}
+      {}
       {order.status === 'shipped' && currentLocation && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
           <div className="flex items-center">
@@ -295,14 +292,14 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         </div>
       )}
 
-      {/* Delivery Timeline */}
+      {}
       <div className="p-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-6">Delivery Timeline</h3>
 
         <div className="space-y-6">
           {milestones.map((milestone, index) => (
             <div key={milestone.id} className="flex items-start space-x-4">
-              {/* Timeline Line */}
+              {}
               <div className="flex flex-col items-center">
                 <div className={`
                   w-10 h-10 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300
@@ -320,7 +317,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                 )}
               </div>
 
-              {/* Content */}
+              {}
               <div className="flex-1 pb-6">
                 <div className="flex items-center justify-between">
                   <h4 className={`
@@ -354,7 +351,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         </div>
       </div>
 
-      {/* Action Buttons */}
+      {}
       <div className="bg-gray-50 px-6 py-4 border-t">
         <div className="flex flex-wrap gap-3">
           <button className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">

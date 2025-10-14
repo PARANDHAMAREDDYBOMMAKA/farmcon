@@ -2,12 +2,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { cache, CacheKeys } from '@/lib/redis'
 
-// GET /api/orders - Get orders for a user
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get('userId')
-    const type = searchParams.get('type') || 'customer' // 'customer' or 'seller'
+    const type = searchParams.get('type') || 'customer' 
 
     if (!userId) {
       return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
@@ -15,7 +14,6 @@ export async function GET(request: NextRequest) {
 
     console.log('Fetching orders for userId:', userId, 'type:', type)
 
-    // Try to get from cache first
     const cacheKey = CacheKeys.orders(userId, type)
     const cached = await cache.get(cacheKey)
 
@@ -84,7 +82,6 @@ export async function GET(request: NextRequest) {
         orderBy: { createdAt: 'desc' }
       })
 
-      // Transform Prisma camelCase to frontend snake_case format
       const transformedOrders = orders.map(order => ({
         id: order.id,
         customer_id: order.customerId,
@@ -142,7 +139,6 @@ export async function GET(request: NextRequest) {
         })) || []
       }))
 
-      // Cache for 2 minutes
       await cache.set(cacheKey, transformedOrders || [], 120)
 
       console.log('Found orders:', transformedOrders?.length || 0)
@@ -161,7 +157,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/orders - Create a new order
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -182,9 +177,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Create the order using Prisma transaction to ensure data consistency
     const result = await prisma.$transaction(async (tx) => {
-      // Create the order
+      
       const order = await tx.order.create({
         data: {
           customerId: customerId,
@@ -198,7 +192,6 @@ export async function POST(request: NextRequest) {
         }
       })
 
-      // Create order items
       const orderItems = items.map((item: any) => ({
         orderId: order.id,
         productId: item.productId || null,
@@ -215,7 +208,6 @@ export async function POST(request: NextRequest) {
         data: orderItems
       })
 
-      // Return the order with full details
       return await tx.order.findUnique({
         where: { id: order.id },
         include: {
@@ -260,7 +252,6 @@ export async function POST(request: NextRequest) {
       })
     })
 
-    // Transform the result to match frontend expectations
     const transformedOrder = result ? {
       id: result.id,
       customer_id: result.customerId,
@@ -304,7 +295,6 @@ export async function POST(request: NextRequest) {
       })) || []
     } : null
 
-    // Invalidate order caches for both customer and seller
     await cache.del(CacheKeys.orders(customerId, 'customer'))
     await cache.del(CacheKeys.orders(sellerId, 'seller'))
 

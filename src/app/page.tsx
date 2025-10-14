@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { Wheat, BarChart3, Smartphone, Lock, Target, Zap, Sprout, DollarSign, ShoppingCart, Truck, Store, Phone, Mail, MapPin, Heart, Globe } from 'lucide-react'
 
 export default function Home() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
@@ -43,12 +44,12 @@ export default function Home() {
   ]
 
   useEffect(() => {
-    // Check if user is authenticated and redirect to dashboard
+    
     const checkAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (session) {
-          // User is authenticated, redirect to dashboard
+          
           router.push('/dashboard')
         }
       } catch (error) {
@@ -84,13 +85,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+      {}
       <header className="fixed w-full top-0 z-50 backdrop-blur-lg bg-white/80 border-b border-gray-200/50 shadow-sm transition-all duration-300">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <nav className="flex h-20 items-center justify-between">
             <div className="flex items-center space-x-3 cursor-pointer group">
               <div className="relative w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                <span className="text-2xl">🌾</span>
+                <Wheat className="w-7 h-7 text-white" />
               </div>
               <div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">FarmCon</span>
@@ -116,10 +117,10 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
+      {}
       <main className="pt-20">
         <div className="relative bg-gradient-to-br from-green-50/50 via-white to-emerald-50/30 py-16 lg:py-24 overflow-hidden">
-          {/* Background decoration */}
+          {}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
             <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -128,9 +129,9 @@ export default function Home() {
 
           <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              {/* Left Content */}
+              {}
               <div className="text-left space-y-8 lg:pr-8">
-                {/* Main Heading */}
+                {}
                 <h1 className="text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-gray-900 leading-[1.1]">
                   Transform Your Farm with{' '}
                   <span className="relative inline-block">
@@ -141,29 +142,29 @@ export default function Home() {
                   </span>
                 </h1>
 
-                {/* Description */}
+                {}
                 <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-xl">
                   Join thousands of Indian farmers increasing yields by{' '}
                   <span className="font-bold text-green-600">40%</span> and profits by{' '}
                   <span className="font-bold text-green-600">60%</span> with our AI-powered farming platform.
                 </p>
 
-                {/* Benefits List */}
+                {}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
-                    { icon: '📊', text: 'Real-time Market Prices' },
-                    { icon: '🌾', text: 'Smart Crop Management' },
-                    { icon: '📱', text: 'Mobile-First Platform' },
-                    { icon: '🔒', text: '100% Secure & Private' }
+                    { icon: <BarChart3 className="w-6 h-6 text-green-600" />, text: 'Real-time Market Prices' },
+                    { icon: <Wheat className="w-6 h-6 text-green-600" />, text: 'Smart Crop Management' },
+                    { icon: <Smartphone className="w-6 h-6 text-green-600" />, text: 'Mobile-First Platform' },
+                    { icon: <Lock className="w-6 h-6 text-green-600" />, text: '100% Secure & Private' }
                   ].map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm border border-gray-100">
-                      <span className="text-2xl">{item.icon}</span>
+                      {item.icon}
                       <span className="text-sm font-medium text-gray-700">{item.text}</span>
                     </div>
                   ))}
                 </div>
 
-                {/* CTA Buttons */}
+                {}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4">
                   <Link
                     href="/auth/signup"
@@ -187,11 +188,11 @@ export default function Home() {
 
               </div>
 
-              {/* Right Side - Enhanced Image Carousel */}
+              {}
               <div className="relative lg:h-[650px]">
-                {/* Main Carousel Container with enhanced styling */}
+                {}
                 <div className="relative h-full rounded-3xl overflow-hidden shadow-2xl border-8 border-white">
-                  {/* Images */}
+                  {}
                   {carouselImages.map((image, index) => (
                     <div
                       key={index}
@@ -207,12 +208,12 @@ export default function Home() {
                         priority={index === 0}
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
-                      {/* Subtle gradient overlay */}
+                      {}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
                     </div>
                   ))}
 
-                  {/* Modern Carousel Indicators */}
+                  {}
                   <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-30 bg-black/20 backdrop-blur-md px-4 py-3 rounded-full">
                     {carouselImages.map((_, index) => (
                       <button
@@ -228,7 +229,7 @@ export default function Home() {
                     ))}
                   </div>
 
-                  {/* Navigation Arrows with better styling */}
+                  {}
                   <button
                     onClick={() => setCurrentImageIndex(currentImageIndex === 0 ? carouselImages.length - 1 : currentImageIndex - 1)}
                     className="absolute left-6 top-1/2 -translate-y-1/2 z-30 bg-white/90 backdrop-blur-sm hover:bg-white rounded-full p-3 shadow-xl transition-all duration-300 hover:scale-110"
@@ -254,8 +255,7 @@ export default function Home() {
           </div>
         </div>
 
-
-        {/* Stats Section */}
+        {}
         <div className="relative bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 py-20 pr-3">
           <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -269,7 +269,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Why Choose FarmCon - NEW SECTION */}
+        {}
         <div className="py-24 bg-white">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -288,7 +288,7 @@ export default function Home() {
               {whyFarmcon.map((item, idx) => (
                 <div key={idx} className="text-center p-8 rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-100 hover:shadow-xl transition-all duration-300">
                   <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
-                    <span className="text-4xl">{item.icon}</span>
+                    {item.icon}
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">{item.title}</h3>
                   <p className="text-gray-600 leading-relaxed">{item.description}</p>
@@ -298,7 +298,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Features Section */}
+        {}
         <div id="features" className="py-24 sm:py-32 bg-gradient-to-b from-white to-green-50/30">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-16">
@@ -324,7 +324,7 @@ export default function Home() {
                 >
                   <div className="relative">
                     <div className="mb-6 inline-flex p-4 rounded-2xl bg-gradient-to-br from-green-100 to-emerald-100 shadow-md">
-                      <span className="text-5xl">{feature.emoji}</span>
+                      {feature.icon}
                     </div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
                       {feature.title}
@@ -347,7 +347,7 @@ export default function Home() {
 
       </main>
 
-      {/* Enhanced Footer */}
+      {}
       <footer className="relative bg-gradient-to-br from-gray-900 via-gray-900 to-gray-800 text-gray-300 overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
@@ -377,7 +377,7 @@ export default function Home() {
             <div className="lg:col-span-2">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="relative w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-xl">
-                  <span className="text-3xl">🌾</span>
+                  <Wheat className="w-8 h-8 text-white" />
                 </div>
                 <div>
                   <span className="text-2xl font-bold text-white">FarmCon</span>
@@ -390,15 +390,15 @@ export default function Home() {
 
               <div className="space-y-3 mb-6">
                 <div className="flex items-center gap-3 text-gray-400">
-                  <span className="text-green-500">📞</span>
+                  <Phone className="w-5 h-5 text-green-500" />
                   <span>+91 1800-XXX-XXXX (Toll Free)</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-400">
-                  <span className="text-green-500">✉️</span>
+                  <Mail className="w-5 h-5 text-green-500" />
                   <span>support@farmcon.in</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-400">
-                  <span className="text-green-500">📍</span>
+                  <MapPin className="w-5 h-5 text-green-500" />
                   <span>Bangalore, Karnataka, India</span>
                 </div>
               </div>
@@ -410,7 +410,7 @@ export default function Home() {
                     href={social.href}
                     className="w-11 h-11 rounded-full bg-gray-800 hover:bg-gradient-to-br hover:from-green-600 hover:to-emerald-600 flex items-center justify-center transition-all duration-300 hover:scale-110 shadow-lg"
                   >
-                    <span className="text-xl">{social.icon}</span>
+                    {social.icon}
                   </Link>
                 ))}
               </div>
@@ -437,8 +437,8 @@ export default function Home() {
 
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-gray-500">
-                &copy; {new Date().getFullYear()} FarmCon. All rights reserved. Built with ❤️ for Indian farmers.
+              <p className="text-sm text-gray-500 flex items-center gap-2">
+                &copy; {new Date().getFullYear()} FarmCon. All rights reserved. Built with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for Indian farmers.
               </p>
               <div className="flex gap-6 text-sm">
                 <Link href="#" className="text-gray-500 hover:text-green-500 transition-colors">Privacy Policy</Link>
@@ -452,7 +452,7 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Custom CSS for animations */}
+      {}
       <style jsx>{`
         @keyframes blob {
           0%, 100% {
@@ -487,17 +487,17 @@ export default function Home() {
 
 const whyFarmcon = [
   {
-    icon: '🎯',
+    icon: <Target className="w-10 h-10 text-white" />,
     title: 'Built for Indian Farmers',
     description: 'Designed specifically for Indian agriculture with local crop varieties, regional languages, and mandi price integration.',
   },
   {
-    icon: '🔒',
+    icon: <Lock className="w-10 h-10 text-white" />,
     title: '100% Secure & Trusted',
     description: 'Your data is encrypted and protected. Verified by 10,000+ farmers and backed by agricultural experts.',
   },
   {
-    icon: '💪',
+    icon: <Zap className="w-10 h-10 text-white" />,
     title: 'Real Results',
     description: 'Farmers see 40% yield increase and 60% profit growth in the first year. Join the success story.',
   },
@@ -505,43 +505,42 @@ const whyFarmcon = [
 
 const features = [
   {
-    emoji: '🌱',
+    icon: <Sprout className="w-12 h-12 text-green-600" />,
     title: 'Smart Crop Management',
     description: 'Track crops from seed to harvest. Get AI-powered recommendations, weather alerts, and disease detection.',
     link: '/auth/signup'
   },
   {
-    emoji: '💰',
+    icon: <DollarSign className="w-12 h-12 text-green-600" />,
     title: 'Live Market Prices',
     description: 'Real-time mandi prices across India. Know the best time and place to sell for maximum profits.',
     link: '/auth/signup'
   },
   {
-    emoji: '🛒',
+    icon: <ShoppingCart className="w-12 h-12 text-green-600" />,
     title: 'Agricultural Supplies',
     description: 'Buy certified seeds, fertilizers, and equipment from verified suppliers at wholesale prices.',
     link: '/auth/signup'
   },
   {
-    emoji: '🚜',
+    icon: <Truck className="w-12 h-12 text-green-600" />,
     title: 'Equipment Rental',
     description: 'Rent tractors, harvesters, and modern equipment at affordable rates. Share with neighbors.',
     link: '/auth/signup'
   },
   {
-    emoji: '🏪',
+    icon: <Store className="w-12 h-12 text-green-600" />,
     title: 'Direct Sales',
     description: 'Sell directly to consumers and retailers. No middlemen, get 30-40% better prices.',
     link: '/auth/signup'
   },
   {
-    emoji: '📱',
+    icon: <Smartphone className="w-12 h-12 text-green-600" />,
     title: 'Mobile App',
     description: 'Works offline in rural areas. Available in Hindi, Tamil, Telugu, and 10+ regional languages.',
     link: '/auth/signup'
   },
 ]
-
 
 const stats = [
   { value: '10K+', label: 'Active Farmers' },
@@ -551,10 +550,10 @@ const stats = [
 ]
 
 const socialLinks = [
-  { icon: '📘', href: '#' },
-  { icon: '🐦', href: '#' },
-  { icon: '📸', href: '#' },
-  { icon: '📺', href: '#' },
+  { icon: <Globe className="w-5 h-5 text-white" />, href: '#', label: 'Facebook' },
+  { icon: <Globe className="w-5 h-5 text-white" />, href: '#', label: 'Twitter' },
+  { icon: <Globe className="w-5 h-5 text-white" />, href: '#', label: 'Instagram' },
+  { icon: <Globe className="w-5 h-5 text-white" />, href: '#', label: 'YouTube' },
 ]
 
 const footerLinks = [
@@ -586,3 +585,4 @@ const footerLinks = [
     ]
   },
 ]
+

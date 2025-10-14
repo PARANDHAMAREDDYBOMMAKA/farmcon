@@ -47,18 +47,16 @@ export default function WeatherChart({ data }: WeatherChartProps) {
     return <div className="p-4">No chart data</div>
   }
 
-  // Ensure chronological order (oldest -> newest), current expected to be last
   const sorted = data.slice().sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
 
-  // Adjust label format based on data length
   const isLongRange = sorted.length > 14
   const labels = sorted.map(f => {
     const date = new Date(f.date)
     if (isLongRange) {
-      // For long ranges (30 days), show only date and month
+      
       return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })
     } else {
-      // For shorter ranges, include day name
+      
       return date.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })
     }
   })
@@ -71,7 +69,6 @@ export default function WeatherChart({ data }: WeatherChartProps) {
 
   const lastIndex = labels.length - 1
 
-  // point styling arrays (highlight last/current point)
   const pointRadiusFor = (base: number) => labels.map((_, i) => (i === lastIndex ? base + 3 : base))
   const pointBackgroundFor = (baseColor: string) => labels.map((_, i) => (i === lastIndex ? '#000' : baseColor))
   const pointBorderFor = (baseBorder: string) => labels.map((_, i) => (i === lastIndex ? '#000' : baseBorder))
@@ -197,7 +194,7 @@ export default function WeatherChart({ data }: WeatherChartProps) {
         title: { display: true, text: 'Humidity (%)' },
         ticks: { callback: (v: any) => `${v}%` },
         grid: { drawOnChartArea: false },
-        // reduce clutter by offsetting slightly
+        
         offset: true
       },
       yRain: {
@@ -211,7 +208,6 @@ export default function WeatherChart({ data }: WeatherChartProps) {
     }
   }
 
-  // small plugin to draw a vertical "Now" marker at the last index
   const currentMarker = {
     id: 'currentMarker',
     afterDatasetsDraw: (chart: any) => {
@@ -221,7 +217,7 @@ export default function WeatherChart({ data }: WeatherChartProps) {
       const pixel = xScale.getPixelForValue(lastIndex)
       if (!pixel || isNaN(pixel)) return
       ctx.save()
-      // dashed vertical line
+      
       ctx.strokeStyle = 'rgba(0,0,0,0.12)'
       ctx.lineWidth = 1
       ctx.setLineDash([4, 4])
@@ -230,7 +226,7 @@ export default function WeatherChart({ data }: WeatherChartProps) {
       ctx.lineTo(pixel, chart.chartArea.bottom)
       ctx.stroke()
       ctx.setLineDash([])
-      // label
+      
       ctx.fillStyle = '#111'
       ctx.font = '12px sans-serif'
       ctx.textAlign = 'center'

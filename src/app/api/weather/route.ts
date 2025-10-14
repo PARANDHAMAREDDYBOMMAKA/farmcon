@@ -1,16 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
+import { cache, CacheKeys } from '@/lib/redis'
 
-// GET /api/weather - Get weather data for a location
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const location = searchParams.get('location') || 'New Delhi, India'
 
-    // First check if we have recent data in database (within 5 minutes)
+    const cacheKey = `farmcon:weather:${location}`
+    const cachedWeather = await cache.get(cacheKey)
+
+    if (cachedWeather) {
+      return NextResponse.json({
+        weather: cachedWeather,
+        source: 'redis-cache'
+      })
+    }
+
     const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString()
-    
-    const { data: cachedWeather } = await supabase
+
+    const { data: dbCachedWeather } = await supabase
       .from('weather_data')
       .select('*')
       .eq('location', location)
@@ -19,25 +28,23 @@ export async function GET(request: NextRequest) {
       .limit(1)
       .single()
 
-    if (cachedWeather) {
-      return NextResponse.json({ 
-        weather: formatWeatherData(cachedWeather),
-        source: 'cache'
+    if (dbCachedWeather) {
+      const weatherData = formatWeatherData(dbCachedWeather)
+      
+      await cache.set(cacheKey, weatherData, 300)
+      return NextResponse.json({
+        weather: weatherData,
+        source: 'db-cache'
       })
     }
 
-    // Fetch fresh data from NASA POWER API
-    // Note: NASA POWER API is free and doesn't require an API key
-
-    // For NASA API, we need coordinates. Use Nominatim (OpenStreetMap) for geocoding
     let lat, lon
 
     try {
-      // Use Nominatim geocoding API (free, no API key required)
       const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(location)}&limit=1`
       const geocodeResponse = await fetch(geocodeUrl, {
         headers: {
-          'User-Agent': 'FarmCon-Weather-App' // Required by Nominatim
+          'User-Agent': 'FarmCon-Weather-App' 
         }
       })
 
@@ -55,24 +62,21 @@ export async function GET(request: NextRequest) {
       lon = parseFloat(geocodeData[0].lon)
     } catch (geocodeError) {
       console.warn('Geocoding error, using default location (New Delhi):', geocodeError)
-      // Default to New Delhi if geocoding fails
+      
       lat = 28.6139
       lon = 77.2090
     }
 
-    // NASA POWER API works with historical data, not future forecasts
-    // Get data from the last 7 days to show recent weather trends
     const today = new Date()
     const startDate = new Date(today)
-    startDate.setDate(today.getDate() - 7) // 7 days ago
+    startDate.setDate(today.getDate() - 7) 
 
     const endDate = new Date(today)
-    endDate.setDate(today.getDate() - 1) // Yesterday (most recent complete data)
+    endDate.setDate(today.getDate() - 1) 
 
     const startDateStr = startDate.toISOString().split('T')[0].replace(/-/g, '')
     const endDateStr = endDate.toISOString().split('T')[0].replace(/-/g, '')
 
-    // Fetch data from NASA POWER API
     const nasaUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,PRECTOTCORR&community=AG&longitude=${lon}&latitude=${lat}&start=${startDateStr}&end=${endDateStr}&format=JSON`
 
     console.log('🌤️  Fetching NASA weather data:', {
@@ -99,7 +103,6 @@ export async function GET(request: NextRequest) {
         url: nasaUrl
       })
 
-      // Return error response with details for debugging
       return NextResponse.json({
         weather: getMockWeatherData(location),
         source: 'mock',
@@ -109,7 +112,7 @@ export async function GET(request: NextRequest) {
           url: nasaUrl,
           coordinates: { lat, lon }
         }
-      }, { status: 200 }) // Return 200 since we're providing mock data as fallback
+      }, { status: 200 }) 
     }
 
     const weatherData = await weatherResponse.json()
@@ -120,7 +123,6 @@ export async function GET(request: NextRequest) {
       parameterKeys: weatherData.properties?.parameter ? Object.keys(weatherData.properties.parameter) : []
     })
 
-    // Validate NASA POWER API response
     if (!weatherData.properties || !weatherData.properties.parameter) {
       console.warn('Invalid NASA API response structure')
       return NextResponse.json({
@@ -129,10 +131,8 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Process NASA POWER API data
     const parameters = weatherData.properties.parameter
 
-    // Check if we have valid temperature data
     if (!parameters.T2M || Object.keys(parameters.T2M).length === 0) {
       console.warn('No temperature data available from NASA API')
       return NextResponse.json({
@@ -141,12 +141,10 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const dates = Object.keys(parameters.T2M).sort().reverse() // Most recent first
+    const dates = Object.keys(parameters.T2M).sort().reverse() 
 
-    // Get most recent data (yesterday or last available day)
     const recentDate = dates[0]
 
-    // Helper function to validate and clean data (NASA uses -999 for missing data)
     const cleanValue = (value: number, defaultValue: number = 0) => {
       if (value === undefined || value === null || value < -900) {
         return defaultValue
@@ -156,10 +154,9 @@ export async function GET(request: NextRequest) {
 
     const currentTemp = cleanValue(parameters.T2M[recentDate], 25)
     const currentHumidity = cleanValue(parameters.RH2M?.[recentDate], 50)
-    const currentWindSpeed = cleanValue(parameters.WS2M?.[recentDate], 10) * 3.6 // Convert m/s to km/h
+    const currentWindSpeed = cleanValue(parameters.WS2M?.[recentDate], 10) * 3.6 
     const rainfall = cleanValue(parameters.PRECTOTCORR?.[recentDate], 0)
 
-    // If all values are defaults (missing data), use mock data
     if (currentTemp === 25 && currentHumidity === 50 && currentWindSpeed === 36) {
       console.warn('Most weather data missing from NASA API, using mock data')
       return NextResponse.json({
@@ -168,7 +165,6 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Determine weather condition based on temperature and rainfall
     const getCondition = (temp: number, rain: number) => {
       if (rain > 5) return 'Rainy'
       if (rain > 0) return 'Light Rain'
@@ -186,7 +182,7 @@ export async function GET(request: NextRequest) {
       windSpeed: Math.round(currentWindSpeed),
       rainfall: rainfall,
       forecast: dates.slice(0, 3).map((date, index) => {
-        // Since NASA provides historical data, label accordingly
+        
         const dayNames = ['Recent', 'Yesterday', '2 Days Ago']
         const tempMax = cleanValue(parameters.T2M_MAX?.[date], currentTemp + 5)
         const tempMin = cleanValue(parameters.T2M_MIN?.[date], currentTemp - 5)
@@ -202,7 +198,8 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Store in database
+    await cache.set(cacheKey, processedData, 300)
+
     await supabase
       .from('weather_data')
       .insert({
@@ -216,7 +213,7 @@ export async function GET(request: NextRequest) {
         date: new Date().toISOString().split('T')[0]
       })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       weather: processedData,
       source: 'api'
     })
@@ -228,7 +225,6 @@ export async function GET(request: NextRequest) {
       stack: error instanceof Error ? error.stack : undefined
     })
 
-    // Fallback to mock data
     const location = new URL(request.url).searchParams.get('location') || 'New Delhi, India'
     return NextResponse.json({
       weather: getMockWeatherData(location),
@@ -238,10 +234,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/weather/update - Update weather data (for cron job)
 export async function POST(request: NextRequest) {
   try {
-    // This endpoint can be called by a cron job every 5 minutes
+    
     const body = await request.json()
     const locations = body.locations || ['New Delhi, India', 'Mumbai, India', 'Bangalore, India']
 
@@ -249,7 +244,7 @@ export async function POST(request: NextRequest) {
 
     for (const location of locations) {
       try {
-        // Make internal API call to get weather data
+        
         const response = await fetch(`${request.nextUrl.origin}/api/weather?location=${encodeURIComponent(location)}`)
         const data = await response.json()
         results.push({ location, success: true, data: data.weather })
@@ -306,11 +301,11 @@ function formatWeatherData(dbWeather: any) {
 function getMockWeatherData(location: string) {
   return {
     location,
-    temperature: 25 + Math.floor(Math.random() * 15), // 25-40°C
+    temperature: 25 + Math.floor(Math.random() * 15), 
     condition: ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain'][Math.floor(Math.random() * 4)],
-    humidity: 40 + Math.floor(Math.random() * 40), // 40-80%
-    windSpeed: 5 + Math.floor(Math.random() * 20), // 5-25 km/h
-    rainfall: Math.random() * 2, // 0-2mm
+    humidity: 40 + Math.floor(Math.random() * 40), 
+    windSpeed: 5 + Math.floor(Math.random() * 20), 
+    rainfall: Math.random() * 2, 
     forecast: [
       {
         date: 'Today',

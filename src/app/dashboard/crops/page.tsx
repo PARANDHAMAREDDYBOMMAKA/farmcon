@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'
 import { cropsAPI } from '@/lib/api-client'
 import type { Crop } from '@/types'
+import { Wheat, Sprout, Leaf, CheckCircle, DollarSign, Globe, Eye, Pencil, RefreshCw, Sparkles, Store } from 'lucide-react'
 
 export default function CropsManagementPage() {
   const { user, loading } = useAuth('farmer')
@@ -43,22 +44,13 @@ export default function CropsManagementPage() {
 
       const { crop } = await response.json()
 
-      // Update local state
       setCrops(crops => 
         crops.map(c => 
           c.id === cropId ? { ...c, status: crop.status, actualHarvestDate: crop.actualHarvestDate } : c
         )
       )
 
-      // Show success message with appropriate emoji
-      const statusEmojis = {
-        planted: '🌱',
-        growing: '🌿',
-        ready_to_harvest: '🌾',
-        harvested: '✅',
-        sold: '💰'
-      }
-      toast.success(`${statusEmojis[newStatus]} Crop status updated to ${newStatus.replace('_', ' ')}!`)
+      toast.success(`Crop status updated to ${newStatus.replace('_', ' ')}!`)
 
     } catch (error: any) {
       console.error('Error updating crop status:', error)
@@ -115,62 +107,68 @@ export default function CropsManagementPage() {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div className="mb-4 sm:mb-0">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                🌾 My Crops
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent flex items-center gap-2">
+                <Wheat className="w-8 h-8 text-green-600" />
+                My Crops
               </h1>
               <p className="text-gray-700 mt-2 text-lg">Manage your crop lifecycle from planting to harvest</p>
             </div>
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={() => loadCrops()}
-                className="inline-flex items-center px-4 py-2 border border-green-600 text-green-600 rounded-lg shadow-sm text-sm font-medium hover:bg-green-50 transition-colors duration-200"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-green-600 text-green-600 rounded-lg shadow-sm text-sm font-medium hover:bg-green-50 transition-colors duration-200"
               >
-                🔄 Refresh
+                <RefreshCw className="w-4 h-4" />
+                Refresh
               </button>
               <Link
                 href="/dashboard/crops/add"
-                className="inline-flex items-center px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
               >
-                ✨ Add New Crop
+                <Sparkles className="w-4 h-4" />
+                Add New Crop
               </Link>
             </div>
           </div>
         </div>
 
-      {/* Filter Tabs */}
+      {}
       <div className="mb-8">
         <div className="bg-white rounded-2xl shadow-lg p-2 max-w-4xl mx-auto">
           <div className="flex flex-wrap gap-2">
             {[
-              { key: 'all', label: '🌍 All', emoji: '🌍' },
-              { key: 'planted', label: '🌱 Planted', emoji: '🌱' },
-              { key: 'growing', label: '🌿 Growing', emoji: '🌿' },
-              { key: 'ready_to_harvest', label: '🌾 Ready', emoji: '🌾' },
-              { key: 'harvested', label: '✅ Harvested', emoji: '✅' },
-              { key: 'sold', label: '💰 Sold', emoji: '💰' }
-            ].map((item) => (
-              <button
-                key={item.key}
-                onClick={() => setFilter(item.key)}
-                className={`flex-1 min-w-fit px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 ${
-                  filter === item.key
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <span className="flex items-center justify-center gap-2">
-                  {item.emoji}
-                  <span className="hidden sm:inline">{item.label.split(' ')[1]}</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+              { key: 'all', label: 'All', icon: Globe },
+              { key: 'planted', label: 'Planted', icon: Sprout },
+              { key: 'growing', label: 'Growing', icon: Leaf },
+              { key: 'ready_to_harvest', label: 'Ready', icon: Wheat },
+              { key: 'harvested', label: 'Harvested', icon: CheckCircle },
+              { key: 'sold', label: 'Sold', icon: DollarSign }
+            ].map((item) => {
+              const Icon = item.icon
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => setFilter(item.key)}
+                  className={`flex-1 min-w-fit px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 ${
                     filter === item.key
-                      ? 'bg-white text-green-600'
-                      : 'bg-gray-200 text-gray-600'
-                  }`}>
-                    {item.key === 'all' ? crops.length : crops.filter(c => c.status === item.key).length}
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <Icon className="w-5 h-5" />
+                    <span className="hidden sm:inline">{item.label}</span>
+                    <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+                      filter === item.key
+                        ? 'bg-white text-green-600'
+                        : 'bg-gray-200 text-gray-600'
+                    }`}>
+                      {item.key === 'all' ? crops.length : crops.filter(c => c.status === item.key).length}
+                    </span>
                   </span>
-                </span>
-              </button>
-            ))}
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>
@@ -178,12 +176,12 @@ export default function CropsManagementPage() {
       {filteredCrops.length === 0 ? (
         <div className="text-center py-20">
           <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md mx-auto">
-            <span className="text-8xl">🌱</span>
+            <Sprout className="w-24 h-24 text-green-500 mx-auto" />
             <h3 className="mt-6 text-2xl font-bold text-gray-900">
               {filter === 'all' ? 'No crops yet' : `No ${filter.replace('_', ' ')} crops`}
             </h3>
             <p className="mt-4 text-gray-600 text-lg">
-              {filter === 'all' 
+              {filter === 'all'
                 ? 'Start your farming journey by adding your first crop!'
                 : `No crops in ${filter.replace('_', ' ')} status.`
               }
@@ -191,9 +189,10 @@ export default function CropsManagementPage() {
             {filter === 'all' && (
               <Link
                 href="/dashboard/crops/add"
-                className="mt-8 inline-flex items-center px-8 py-4 border border-transparent rounded-2xl shadow-lg text-lg font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105"
+                className="mt-8 inline-flex items-center gap-2 px-8 py-4 border border-transparent rounded-2xl shadow-lg text-lg font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105"
               >
-                🌾 Add Your First Crop
+                <Wheat className="w-6 h-6" />
+                Add Your First Crop
               </Link>
             )}
           </div>
@@ -211,7 +210,7 @@ export default function CropsManagementPage() {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-6xl">🌾</span>
+                    <Wheat className="w-16 h-16 text-green-600" />
                   </div>
                 )}
                 <div className="absolute top-3 right-3 flex gap-2">
@@ -219,8 +218,9 @@ export default function CropsManagementPage() {
                     {crop.status.replace('_', ' ').charAt(0).toUpperCase() + crop.status.replace('_', ' ').slice(1)}
                   </span>
                   {crop.organicCertified && (
-                    <span className="inline-flex px-2 py-1 text-xs font-bold rounded-full bg-green-500 text-white shadow-sm">
-                      🌿 Organic
+                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-full bg-green-500 text-white shadow-sm">
+                      <Leaf className="w-3 h-3" />
+                      Organic
                     </span>
                   )}
                 </div>
@@ -288,53 +288,59 @@ export default function CropsManagementPage() {
                   <div className="flex gap-2">
                     <Link
                       href={`/dashboard/crops/${crop.id}`}
-                      className="flex-1 text-center px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-200 transform hover:scale-105"
+                      className="flex-1 text-center inline-flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-200 transform hover:scale-105"
                     >
-                      👁️ View
+                      <Eye className="w-4 h-4" />
+                      View
                     </Link>
                     <Link
                       href={`/dashboard/crops/${crop.id}/edit`}
-                      className="flex-1 text-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 transform hover:scale-105"
+                      className="flex-1 text-center inline-flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg text-sm font-semibold hover:from-blue-600 hover:to-blue-700 transition-all duration-200 transform hover:scale-105"
                     >
-                      ✏️ Edit
+                      <Pencil className="w-4 h-4" />
+                      Edit
                     </Link>
                   </div>
 
-                  {/* Status Update Buttons */}
+                  {}
                   <div className="flex flex-wrap gap-2">
                     {crop.status === 'planted' && (
                       <button
                         onClick={() => updateCropStatus(crop.id, 'growing')}
-                        className="flex-1 px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105"
+                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105"
                       >
-                        🌱 Growing
+                        <Sprout className="w-4 h-4" />
+                        Growing
                       </button>
                     )}
-                    
+
                     {crop.status === 'growing' && (
                       <button
                         onClick={() => updateCropStatus(crop.id, 'ready_to_harvest')}
-                        className="flex-1 px-3 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 transform hover:scale-105"
+                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-semibold rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-200 transform hover:scale-105"
                       >
-                        🌾 Ready
+                        <Wheat className="w-4 h-4" />
+                        Ready
                       </button>
                     )}
-                    
+
                     {crop.status === 'ready_to_harvest' && (
                       <button
                         onClick={() => updateCropStatus(crop.id, 'harvested')}
-                        className="flex-1 px-3 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-semibold rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
                       >
-                        ✅ Harvested
+                        <CheckCircle className="w-4 h-4" />
+                        Harvested
                       </button>
                     )}
 
                     {crop.status === 'harvested' && (
                       <Link
                         href={`/dashboard/sell?crop=${crop.id}`}
-                        className="flex-1 text-center px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
+                        className="flex-1 text-center inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
                       >
-                        🏪 Sell
+                        <Store className="w-4 h-4" />
+                        Sell
                       </Link>
                     )}
                   </div>

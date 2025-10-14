@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
     const lat = searchParams.get('lat')
     const lon = searchParams.get('lon')
     const city = searchParams.get('city')
-    const days = Math.min(parseInt(searchParams.get('days') || '7'), 30) // Support up to 30 days
+    const days = Math.min(parseInt(searchParams.get('days') || '7'), 30) 
 
     if (!lat && !lon && !city) {
       return NextResponse.json(
@@ -20,7 +20,6 @@ export async function GET(request: NextRequest) {
     let locationName = city || 'Unknown Location'
     let country = ''
 
-    // If city is provided, geocode it
     if (city && (!lat || !lon)) {
       try {
         const geocodeUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}&limit=1`
@@ -49,7 +48,7 @@ export async function GET(request: NextRequest) {
         )
       }
     } else if (lat && lon) {
-      // Reverse geocoding: coordinates to city name
+      
       try {
         const reverseUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
         const reverseResponse = await fetch(reverseUrl, {
@@ -67,11 +66,10 @@ export async function GET(request: NextRequest) {
         }
       } catch (error) {
         console.error('Reverse geocoding error:', error)
-        // Continue with default location name
+        
       }
     }
 
-    // Fetch from NASA POWER API - get last N days for historical forecast
     const today = new Date()
     const startDate = new Date(today)
     startDate.setDate(today.getDate() - days)
@@ -95,7 +93,6 @@ export async function GET(request: NextRequest) {
 
     const data = await response.json()
 
-    // Validate response
     if (!data.properties || !data.properties.parameter) {
       return NextResponse.json(
         { error: 'Invalid NASA API response' },
@@ -106,7 +103,6 @@ export async function GET(request: NextRequest) {
     const parameters = data.properties.parameter
     const dates = Object.keys(parameters.T2M).sort().reverse()
 
-    // Log raw NASA data for debugging (first date only)
     const firstDate = dates[0]
     console.log('🔍 Raw NASA forecast data for', locationName, '(first day):', {
       date: firstDate,
@@ -116,7 +112,6 @@ export async function GET(request: NextRequest) {
       WS2M: parameters.WS2M?.[firstDate]
     })
 
-    // Clean NASA data (-999 values indicate missing data)
     const cleanValue = (value: number, defaultValue: number = 0) => {
       if (value === undefined || value === null || value < -900) {
         return { value: defaultValue, isDefault: true }
@@ -124,7 +119,6 @@ export async function GET(request: NextRequest) {
       return { value, isDefault: false }
     }
 
-    // Check first day to see if NASA has data for this location
     const firstDayTemp = cleanValue(parameters.T2M[firstDate], 25)
     const firstDayHumidity = cleanValue(parameters.RH2M?.[firstDate], 50)
     const firstDayWind = cleanValue(parameters.WS2M?.[firstDate], 10)
@@ -135,7 +129,6 @@ export async function GET(request: NextRequest) {
       firstDayWind.isDefault
     ].filter(Boolean).length
 
-    // If 2 out of 3 key values are defaults, NASA doesn't have data
     if (defaultCount >= 2) {
       console.warn('⚠️ NASA API has insufficient forecast data for', locationName, '- using mock data')
       return NextResponse.json({
@@ -145,7 +138,6 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Process daily forecasts
     const dailyForecasts = dates.slice(0, Math.min(days, dates.length)).map((dateStr) => {
       const temp = cleanValue(parameters.T2M[dateStr], 25).value
       const tempMax = cleanValue(parameters.T2M_MAX?.[dateStr], temp + 5).value
@@ -154,7 +146,6 @@ export async function GET(request: NextRequest) {
       const windSpeed = cleanValue(parameters.WS2M?.[dateStr], 10).value
       const rainfall = cleanValue(parameters.PRECTOTCORR?.[dateStr], 0).value
 
-      // Convert NASA date format (YYYYMMDD) to ISO format
       const year = dateStr.substring(0, 4)
       const month = dateStr.substring(4, 6)
       const day = dateStr.substring(6, 8)
@@ -273,7 +264,6 @@ function getFieldWorkSuitability(day: any) {
   let score = 0
   let factors = []
 
-  // Rain check
   if (day.rainfall === 0) {
     score += 3
     factors.push('✓ No rain expected')
@@ -284,7 +274,6 @@ function getFieldWorkSuitability(day: any) {
     factors.push('❌ Rain expected - avoid field work')
   }
 
-  // Temperature check
   if (day.tempMax >= 15 && day.tempMax <= 30) {
     score += 2
     factors.push('✓ Comfortable working temperature')
@@ -294,7 +283,6 @@ function getFieldWorkSuitability(day: any) {
     factors.push('⚠ Cold conditions')
   }
 
-  // Wind check
   if (day.windSpeed < 5) {
     score += 1
     factors.push('✓ Light winds')
@@ -314,7 +302,6 @@ function getCropStressLevel(day: any) {
   let stressScore = 0
   let stressFactors = []
 
-  // Heat stress
   if (day.tempMax > 40) {
     stressScore += 3
     stressFactors.push('Extreme heat stress')
@@ -323,19 +310,16 @@ function getCropStressLevel(day: any) {
     stressFactors.push('High temperature stress')
   }
 
-  // Cold stress
   if (day.tempMin < 5) {
     stressScore += 2
     stressFactors.push('Cold stress risk')
   }
 
-  // Water stress
   if (day.rainfall === 0 && day.humidity < 30) {
     stressScore += 2
     stressFactors.push('Water stress likely')
   }
 
-  // Wind stress
   if (day.windSpeed > 15) {
     stressScore += 1
     stressFactors.push('Wind stress possible')
@@ -358,7 +342,6 @@ function getCropStressLevel(day: any) {
 function generateWeeklyFarmingInsights(forecasts: any[]) {
   const insights = []
 
-  // Rain analysis
   const totalRain = forecasts.reduce((sum, day) => sum + day.rainfall, 0)
   const rainyDays = forecasts.filter(day => day.rainfall > 1).length
 
@@ -378,7 +361,6 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
     })
   }
 
-  // Temperature analysis
   const hotDays = forecasts.filter(day => day.tempMax > 35).length
   const coldDays = forecasts.filter(day => day.tempMin < 10).length
 
@@ -400,7 +382,6 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
     })
   }
 
-  // Best work days
   const goodWorkDays = forecasts.filter(day =>
     day.rainfall < 1 && day.tempMax >= 15 && day.tempMax <= 30 && day.windSpeed < 8
   ).length
@@ -415,16 +396,14 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
   return insights
 }
 
-// Generate mock forecast data with realistic random values
 function generateMockForecast(locationName: string, country: string, lat: number, lon: number, days: number) {
-  const baseTemp = 30 - Math.abs(lat) * 0.5 // Base temp from latitude
+  const baseTemp = 30 - Math.abs(lat) * 0.5 
 
   const forecasts = []
   for (let i = 0; i < days; i++) {
     const date = new Date()
-    date.setDate(date.getDate() - days + i + 1) // Historical dates
+    date.setDate(date.getDate() - days + i + 1) 
 
-    // Add daily variation
     const dailyTempVariation = Math.random() * 8 - 4
     const temp = Math.max(5, Math.min(45, baseTemp + dailyTempVariation))
     const tempMax = temp + Math.random() * 5

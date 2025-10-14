@@ -21,12 +21,12 @@ function SignInForm() {
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   useEffect(() => {
-    // Check if user is already authenticated
+    
     const checkAuth = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (session) {
-          // User is already authenticated, redirect to dashboard
+          
           router.push('/dashboard')
           return
         }
@@ -130,7 +130,7 @@ function SignInForm() {
 
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
-      {/* Left side - Image with Glassmorphism */}
+      {}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <Image
           src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=1200&h=1600&fit=crop"
@@ -163,7 +163,7 @@ function SignInForm() {
         </div>
       </div>
 
-      {/* Right side - Form */}
+      {}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">

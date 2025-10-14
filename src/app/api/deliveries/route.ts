@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET all deliveries
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams
@@ -74,7 +73,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST create delivery
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -97,7 +95,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Order ID is required' }, { status: 400 })
     }
 
-    // Check if delivery already exists for this order
     const existingDelivery = await prisma.delivery.findUnique({
       where: { orderId }
     })
@@ -106,7 +103,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Delivery already exists for this order' }, { status: 400 })
     }
 
-    // Generate tracking number
     const trackingNumber = `FCD${Date.now()}${Math.random().toString(36).substring(2, 7).toUpperCase()}`
 
     const delivery = await prisma.delivery.create({
@@ -132,7 +128,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Create initial milestone
     await prisma.deliveryMilestone.create({
       data: {
         deliveryId: delivery.id,

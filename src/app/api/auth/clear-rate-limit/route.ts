@@ -17,10 +17,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Clear rate limit
     await redis.del(`rate_limit:${email}`);
 
-    // Also clear any existing OTP
     await redis.del(`otp:${email}`);
 
     return NextResponse.json(

@@ -74,7 +74,6 @@ export default function AddEquipmentPage() {
         return
       }
 
-      // Pre-fill location from profile
       if (user.city && user.state) {
         setFormData(prev => ({
           ...prev,
@@ -113,7 +112,7 @@ export default function AddEquipmentPage() {
     const loadingToast = toast.loading('Adding equipment...')
 
     try {
-      // Validate required fields
+      
       if (!formData.name || !formData.category) {
         const errorMsg = 'Please fill in all required fields'
         setError(errorMsg)
@@ -121,7 +120,6 @@ export default function AddEquipmentPage() {
         return
       }
 
-      // Clean up specifications - remove empty values
       const cleanSpecs: Record<string, any> = {}
       Object.entries(formData.specifications).forEach(([key, value]) => {
         if (value && value.toString().trim()) {
@@ -137,7 +135,7 @@ export default function AddEquipmentPage() {
         model: formData.model || null,
         year_manufactured: formData.year_manufactured ? parseInt(formData.year_manufactured) : null,
         description: formData.description || null,
-        images: [], // Will be updated when image upload is implemented
+        images: [], 
         hourly_rate: formData.hourly_rate ? parseFloat(formData.hourly_rate) : null,
         daily_rate: formData.daily_rate ? parseFloat(formData.daily_rate) : null,
         status: formData.status,
@@ -152,8 +150,7 @@ export default function AddEquipmentPage() {
       }
 
       toast.success('Equipment listed successfully!', { id: loadingToast })
-      
-      // Redirect to equipment page
+
       router.push('/dashboard/equipment?success=added')
 
     } catch (err: any) {
@@ -192,7 +189,7 @@ export default function AddEquipmentPage() {
             </div>
           )}
 
-          {/* Basic Information */}
+          {}
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -299,7 +296,7 @@ export default function AddEquipmentPage() {
             </div>
           </div>
 
-          {/* Pricing */}
+          {}
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Rental Pricing</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -344,7 +341,7 @@ export default function AddEquipmentPage() {
             )}
           </div>
 
-          {/* Location */}
+          {}
           <div>
             <label htmlFor="location" className="block text-sm font-medium text-gray-700">
               Location
@@ -360,7 +357,7 @@ export default function AddEquipmentPage() {
             />
           </div>
 
-          {/* Technical Specifications */}
+          {}
           <div>
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Technical Specifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -449,7 +446,7 @@ export default function AddEquipmentPage() {
             </div>
           </div>
 
-          {/* Description */}
+          {}
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
               Description
@@ -465,7 +462,7 @@ export default function AddEquipmentPage() {
             />
           </div>
 
-          {/* Submit Buttons */}
+          {}
           <div className="flex justify-end space-x-4">
             <button
               type="button"

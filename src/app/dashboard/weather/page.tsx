@@ -101,7 +101,7 @@ export default function WeatherPage() {
   const [currentWeather, setCurrentWeather] = useState<WeatherData | null>(null)
   const [forecast, setForecast] = useState<ForecastData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [location, setLocation] = useState({ lat: 28.6139, lon: 77.2090 }) // Default: Delhi
+  const [location, setLocation] = useState({ lat: 28.6139, lon: 77.2090 }) 
   const [city, setCity] = useState('Delhi')
   const [activeTab, setActiveTab] = useState<'current' | 'forecast'>('current')
   const [currentView, setCurrentView] = useState<'details' | 'charts'>('details')
@@ -109,7 +109,7 @@ export default function WeatherPage() {
   const [forecastDays, setForecastDays] = useState(5)
 
   useEffect(() => {
-    // Try to get user's location
+    
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -120,7 +120,7 @@ export default function WeatherPage() {
           loadWeatherData(position.coords.latitude, position.coords.longitude)
         },
         () => {
-          // If geolocation fails, use default location
+          
           loadWeatherData(location.lat, location.lon)
         }
       )
@@ -132,7 +132,7 @@ export default function WeatherPage() {
   const loadWeatherData = async (lat?: number, lon?: number, cityName?: string) => {
     setLoading(true)
     try {
-      // Load current weather
+      
       let weatherUrl = '/api/weather/current?'
       if (lat && lon) {
         weatherUrl += `lat=${lat}&lon=${lon}`
@@ -145,7 +145,6 @@ export default function WeatherPage() {
         const weatherData = await weatherResponse.json()
         setCurrentWeather(weatherData.weather)
 
-        // Show notification if using mock data
         if (weatherData.source === 'mock') {
           toast.error('Unable to fetch live weather data. Showing sample data.', {
             duration: 4000,
@@ -162,7 +161,6 @@ export default function WeatherPage() {
         toast.error('Failed to load current weather data')
       }
 
-      // Load forecast
       let forecastUrl = '/api/weather/forecast?'
       if (lat && lon) {
         forecastUrl += `lat=${lat}&lon=${lon}&days=${forecastDays}`
@@ -211,7 +209,6 @@ export default function WeatherPage() {
     }
   }
 
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -225,7 +222,7 @@ export default function WeatherPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -250,7 +247,7 @@ export default function WeatherPage() {
         </div>
       </div>
 
-      {/* Tab Navigation */}
+      {}
       <div className="bg-white rounded-lg shadow">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8 px-6">
@@ -277,10 +274,10 @@ export default function WeatherPage() {
           </nav>
         </div>
 
-        {/* Current Weather Tab */}
+        {}
         {activeTab === 'current' && currentWeather && (
           <div className="p-6 space-y-6">
-            {/* View Toggle */}
+            {}
             <div className="flex justify-end mb-4">
               <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
                 <button
@@ -306,7 +303,7 @@ export default function WeatherPage() {
               </div>
             </div>
 
-            {/* Charts View */}
+            {}
             {currentView === 'charts' && (
               <CurrentWeatherChart data={{
                 temperature: currentWeather.current.temperature,
@@ -320,10 +317,10 @@ export default function WeatherPage() {
               }} />
             )}
 
-            {/* Details View */}
+            {}
             {currentView === 'details' && (
               <>
-            {/* Location and Basic Weather */}
+            {}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-1">
                 <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 text-white rounded-xl shadow-lg p-6 transform transition-all hover:scale-105">
@@ -384,7 +381,7 @@ export default function WeatherPage() {
               </div>
             </div>
 
-            {/* Weather Alerts */}
+            {}
             {currentWeather.alerts && currentWeather.alerts.length > 0 && (
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold text-black">Weather Alerts</h3>
@@ -402,9 +399,9 @@ export default function WeatherPage() {
               </div>
             )}
 
-            {/* Farming Insights */}
+            {}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Irrigation Advice */}
+              {}
               <div className="border-2 border-blue-200 rounded-xl p-5 bg-gradient-to-br from-blue-50 to-white shadow-lg hover:shadow-xl transition-all">
                 <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
                   <span className="mr-3 text-3xl">💧</span>
@@ -416,7 +413,7 @@ export default function WeatherPage() {
                 </div>
               </div>
 
-              {/* Planting Conditions */}
+              {}
               <div className="border-2 border-green-200 rounded-xl p-5 bg-gradient-to-br from-green-50 to-white shadow-lg hover:shadow-xl transition-all">
                 <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
                   <span className="mr-3 text-3xl">🌱</span>
@@ -432,7 +429,7 @@ export default function WeatherPage() {
                 </div>
               </div>
 
-              {/* Pest Management */}
+              {}
               <div className="border-2 border-amber-200 rounded-xl p-5 bg-gradient-to-br from-amber-50 to-white shadow-lg hover:shadow-xl transition-all">
                 <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
                   <span className="mr-3 text-3xl">🐛</span>
@@ -448,7 +445,7 @@ export default function WeatherPage() {
                 </div>
               </div>
 
-              {/* Harvesting Conditions */}
+              {}
               <div className="border-2 border-yellow-200 rounded-xl p-5 bg-gradient-to-br from-yellow-50 to-white shadow-lg hover:shadow-xl transition-all">
                 <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
                   <span className="mr-3 text-3xl">🌾</span>
@@ -469,10 +466,10 @@ export default function WeatherPage() {
           </div>
         )}
 
-        {/* Forecast Tab */}
+        {}
         {activeTab === 'forecast' && forecast && (
           <div className="p-6 space-y-6">
-            {/* View Toggle and Days Selector */}
+            {}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
                 <button
@@ -516,7 +513,7 @@ export default function WeatherPage() {
               </div>
             </div>
 
-            {/* Farming Insights */}
+            {}
             {forecast.farmingInsights && forecast.farmingInsights.length > 0 && (
               <div className="space-y-4">
                 <h3 className="text-2xl font-bold text-gray-800 flex items-center">
@@ -547,7 +544,7 @@ export default function WeatherPage() {
               </div>
             )}
 
-            {/* Chart View */}
+            {}
             {forecastView === 'charts' && forecast.forecasts && forecast.forecasts.length > 0 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-black mb-4">
@@ -557,7 +554,7 @@ export default function WeatherPage() {
               </div>
             )}
 
-            {/* List View - Forecast Details */}
+            {}
             {forecastView === 'list' && (
             <div className="space-y-6">
               <h3 className="text-2xl font-bold text-gray-800">{forecastDays}-Day Forecast</h3>
@@ -565,7 +562,7 @@ export default function WeatherPage() {
                 {forecast.forecasts.map((day, index) => (
                   <div key={index} className="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-r from-white to-gray-50 shadow-lg hover:shadow-xl transition-all hover:scale-[1.01]">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                      {/* Date and Weather */}
+                      {}
                       <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg p-4 shadow-md">
                         <h4 className="font-bold text-gray-800 text-lg">
                           {new Date(day.date).toLocaleDateString('en-IN', {
@@ -586,7 +583,7 @@ export default function WeatherPage() {
                         )}
                       </div>
 
-                      {/* Irrigation */}
+                      {}
                       <div className="bg-gradient-to-br from-cyan-50 to-white rounded-lg p-4 shadow-md">
                         <h5 className="font-bold text-gray-800 mb-3 flex items-center">
                           <span className="text-xl mr-2">💧</span> Irrigation
@@ -600,7 +597,7 @@ export default function WeatherPage() {
                         </div>
                       </div>
 
-                      {/* Field Work */}
+                      {}
                       <div className="bg-gradient-to-br from-green-50 to-white rounded-lg p-4 shadow-md">
                         <h5 className="font-bold text-gray-800 mb-3 flex items-center">
                           <span className="text-xl mr-2">🚜</span> Field Work
@@ -616,7 +613,7 @@ export default function WeatherPage() {
                         </div>
                       </div>
 
-                      {/* Crop Stress */}
+                      {}
                       <div className="bg-gradient-to-br from-amber-50 to-white rounded-lg p-4 shadow-md">
                         <h5 className="font-bold text-gray-800 mb-3 flex items-center">
                           <span className="text-xl mr-2">🌿</span> Crop Stress

@@ -19,14 +19,14 @@ function OrderSuccessPageInternal() {
       setSessionId(session_id)
       confirmPayment(session_id)
     } else if (!session_id) {
-      // If no session ID, redirect to orders
+      
       router.push('/dashboard/orders')
     }
   }, [searchParams, router, user])
 
   const confirmPayment = async (session_id: string) => {
     try {
-      // First try to confirm the payment status
+      
       const stripeResponse = await fetch('/api/checkout/stripe', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -36,23 +36,21 @@ function OrderSuccessPageInternal() {
       if (stripeResponse.ok) {
         const { success, paymentStatus } = await stripeResponse.json()
         if (success && paymentStatus === 'paid') {
-          // Payment confirmed, now ensure order is processed
+          
           await processOrder(session_id)
           setOrderConfirmed(true)
           toast.success('🎉 Payment successful! Your order has been confirmed.')
-          
-          // Trigger cart refresh by navigating with success flag
+
           setTimeout(() => {
             window.location.href = '/dashboard/cart?payment_success=true'
           }, 2000)
         }
       } else {
-        // Fallback: try to process the order directly
+        
         await processOrder(session_id)
         setOrderConfirmed(true)
         toast.success('🎉 Payment successful! Your order has been confirmed.')
-        
-        // Trigger cart refresh by navigating with success flag
+
         setTimeout(() => {
           window.location.href = '/dashboard/cart?payment_success=true'
         }, 2000)
@@ -67,7 +65,7 @@ function OrderSuccessPageInternal() {
     if (!user?.id) return
 
     try {
-      // Call our order processing endpoint as a fallback
+      
       const response = await fetch('/api/orders/process-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -89,10 +87,10 @@ function OrderSuccessPageInternal() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Success Animation */}
+        {}
         <div className="text-center mb-8">
           {orderConfirmed ? (
-            // Confirmed state with scale animation
+            
             <div className="w-24 h-24 mx-auto mb-6 relative">
               <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-ping opacity-75"></div>
               <div className="relative w-24 h-24 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center transform transition-all duration-500 scale-100 hover:scale-110 shadow-2xl">
@@ -102,7 +100,7 @@ function OrderSuccessPageInternal() {
               </div>
             </div>
           ) : (
-            // Processing state with pulse animation
+            
             <div className="w-24 h-24 mx-auto mb-6 relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse opacity-60"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-ping opacity-40"></div>
@@ -132,7 +130,7 @@ function OrderSuccessPageInternal() {
           </p>
         </div>
 
-        {/* Order Details */}
+        {}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">What happens next?</h2>
           
@@ -163,7 +161,7 @@ function OrderSuccessPageInternal() {
           </div>
         </div>
 
-        {/* Action Buttons */}
+        {}
         <div className="space-y-3">
           <Link
             href="/dashboard/orders"
@@ -190,7 +188,7 @@ function OrderSuccessPageInternal() {
           </Link>
         </div>
 
-        {/* Session Info for Debug */}
+        {}
         {sessionId && process.env.NODE_ENV === 'development' && (
           <div className="mt-6 text-center text-xs text-gray-400">
             Session ID: {sessionId.slice(-8)}

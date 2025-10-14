@@ -1,22 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// Debug route to check database connection and table existence
 export async function GET(request: NextRequest) {
   try {
     console.log('=== Database Debug ===')
 
-    // Check environment variables
     const hasDbUrl = !!process.env.DATABASE_URL
     console.log('DATABASE_URL present:', hasDbUrl)
     console.log('DATABASE_URL preview:', process.env.DATABASE_URL?.substring(0, 50) + '...')
 
-    // Check database connection
     console.log('Testing database connection...')
     await prisma.$queryRaw`SELECT 1 as test`
     console.log('✅ Database connection successful')
 
-    // Check if profiles table exists
     console.log('Checking if profiles table exists...')
     const tableCheck = await prisma.$queryRaw`
       SELECT table_name
@@ -26,12 +22,10 @@ export async function GET(request: NextRequest) {
     `
     console.log('Profiles table check result:', tableCheck)
 
-    // Try to count profiles
     console.log('Counting profiles...')
     const profileCount = await prisma.profile.count()
     console.log('Profile count:', profileCount)
 
-    // List first few profiles (without sensitive data)
     console.log('Listing first 3 profiles...')
     const profiles = await prisma.profile.findMany({
       take: 3,
@@ -53,7 +47,7 @@ export async function GET(request: NextRequest) {
         profileCount,
         sampleProfiles: profiles.map(p => ({
           id: p.id,
-          email: p.email.substring(0, 3) + '***', // Mask email for security
+          email: p.email.substring(0, 3) + '***', 
           role: p.role,
           hasName: !!p.fullName
         }))

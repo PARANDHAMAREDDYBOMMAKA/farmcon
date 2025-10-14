@@ -72,7 +72,6 @@ export default function DriverDashboard() {
       const response = await fetch(`/api/deliveries?driverId=${driverId}`)
       const data = await response.json()
 
-      // Filter to show only active deliveries
       const activeDeliveries = data.deliveries?.filter((d: Delivery) =>
         ['assigned', 'picked_up', 'in_transit', 'out_for_delivery'].includes(d.status)
       ) || []
@@ -127,7 +126,7 @@ export default function DriverDashboard() {
     speed?: number | null,
     heading?: number | null
   ) => {
-    // Update all active deliveries with current location
+    
     for (const delivery of deliveries) {
       try {
         await fetch(`/api/deliveries/${delivery.id}/location`, {
@@ -146,7 +145,6 @@ export default function DriverDashboard() {
       }
     }
 
-    // Update driver's current location
     if (driver) {
       try {
         await fetch(`/api/drivers/${driver.id}`, {
@@ -236,7 +234,7 @@ export default function DriverDashboard() {
   return (
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-4xl mx-auto">
-        {/* Driver Info Header */}
+        {}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
@@ -257,7 +255,7 @@ export default function DriverDashboard() {
           </div>
         </div>
 
-        {/* Location Tracking */}
+        {}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Location Tracking</h2>
           <div className="flex items-center justify-between">
@@ -284,7 +282,7 @@ export default function DriverDashboard() {
           </div>
         </div>
 
-        {/* Active Deliveries */}
+        {}
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
             Active Deliveries ({deliveries.length})

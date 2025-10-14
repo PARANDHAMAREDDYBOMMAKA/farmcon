@@ -16,7 +16,7 @@ interface Category {
 }
 
 export default function CategoriesPage() {
-  const { user } = useAuth('supplier') // Only suppliers and admins should access this
+  const { user } = useAuth('supplier') 
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddForm, setShowAddForm] = useState(false)
@@ -164,7 +164,7 @@ export default function CategoriesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -183,7 +183,7 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      {/* Add/Edit Form */}
+      {}
       {showAddForm && (
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -251,7 +251,7 @@ export default function CategoriesPage() {
         </div>
       )}
 
-      {/* Categories Grid */}
+      {}
       <div className="bg-white rounded-lg shadow">
         {categories.length === 0 ? (
           <div className="text-center py-12">

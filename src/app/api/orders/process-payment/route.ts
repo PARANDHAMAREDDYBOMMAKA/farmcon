@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { stripe } from '@/lib/stripe'
 
-// POST /api/orders/process-payment - Manually process a successful payment
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -17,7 +16,6 @@ export async function POST(request: NextRequest) {
 
     console.log('Processing payment for session:', sessionId, 'user:', userId)
 
-    // Retrieve the checkout session from Stripe
     const session = await stripe.checkout.sessions.retrieve(sessionId)
     
     if (!session || session.payment_status !== 'paid') {
@@ -32,7 +30,6 @@ export async function POST(request: NextRequest) {
       amount_total: session.amount_total 
     })
 
-    // Check if order already exists for this session using Prisma
     const existingOrder = await prisma.order.findFirst({
       where: {
         stripePaymentIntentId: session.payment_intent as string
@@ -47,7 +44,6 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Get cart items for this user using Prisma
     const cartItems = await prisma.cartItem.findMany({
       where: { userId },
       include: {
@@ -75,7 +71,6 @@ export async function POST(request: NextRequest) {
 
     console.log('Found cart items:', cartItems.length)
 
-    // Group items by seller
     const itemsBySupplier = cartItems.reduce((groups: any, item: any) => {
       const supplierId = item.product?.supplierId || item.cropListing?.farmerId
       const supplierName = item.product?.supplier?.fullName || item.cropListing?.farmer?.fullName
@@ -95,7 +90,6 @@ export async function POST(request: NextRequest) {
 
     const orders = []
 
-    // Create orders for each supplier
     for (const [supplierId, supplierData] of Object.entries(itemsBySupplier) as any) {
       const items = supplierData.items
       const totalAmount = items.reduce((sum: number, item: any) => {
@@ -103,7 +97,6 @@ export async function POST(request: NextRequest) {
         return sum + (parseFloat(price) * parseFloat(item.quantity))
       }, 0)
 
-      // Create order using Prisma
       try {
         const order = await prisma.order.create({
           data: {
@@ -129,10 +122,9 @@ export async function POST(request: NextRequest) {
 
         console.log('Order created successfully:', order.id)
 
-        // Create order items and update inventory
         for (const item of items) {
           try {
-            // Create order item using Prisma
+            
             await prisma.orderItem.create({
               data: {
                 orderId: order.id,
@@ -146,7 +138,6 @@ export async function POST(request: NextRequest) {
 
             console.log('Order item created for order:', order.id)
 
-            // Update inventory for products
             if (item.productId && item.product) {
               const newStock = Math.max(0, parseFloat(item.product.stockQuantity || 0) - parseFloat(item.quantity))
               await prisma.product.update({
@@ -155,13 +146,11 @@ export async function POST(request: NextRequest) {
               })
             }
 
-            // Update crop listing quantity and status
             if (item.cropListingId && item.cropListing) {
               const soldQuantity = parseFloat(item.quantity)
               const availableQuantity = parseFloat(item.cropListing.quantityAvailable || 0)
               const newAvailableQuantity = Math.max(0, availableQuantity - soldQuantity)
 
-              // Update crop listing quantity
               await prisma.cropListing.update({
                 where: { id: item.cropListingId },
                 data: { 
@@ -170,7 +159,6 @@ export async function POST(request: NextRequest) {
                 }
               })
 
-              // Update main crop status to sold if completely sold
               if (newAvailableQuantity === 0 && item.cropListing.crop?.id) {
                 await prisma.crop.update({
                   where: { id: item.cropListing.crop.id },
@@ -184,7 +172,6 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // Send notification to seller using Prisma
         await prisma.notification.create({
           data: {
             userId: supplierId,
@@ -202,7 +189,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Clear cart after successful order creation using Prisma
     try {
       await prisma.cartItem.deleteMany({
         where: { userId }

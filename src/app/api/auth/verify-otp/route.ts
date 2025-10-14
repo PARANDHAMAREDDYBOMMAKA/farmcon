@@ -6,7 +6,6 @@ export async function POST(request: NextRequest) {
   try {
     const { email, otp } = await request.json();
 
-    // Validate inputs
     if (!email || !otp) {
       return NextResponse.json(
         { error: 'Email and OTP are required' },
@@ -21,7 +20,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify OTP
     const isValid = await verifyOTP(email, otp);
 
     if (!isValid) {
@@ -31,17 +29,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create a secure password for Supabase auth (using email + timestamp hash)
     const password = `${email}_${Date.now()}_verified`;
 
-    // Try to sign in first
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (signInError) {
-      // If user doesn't exist, create a new account
+      
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email,
         password,

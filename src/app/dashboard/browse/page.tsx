@@ -44,14 +44,12 @@ export default function BrowseCropsPage() {
         return
       }
 
-      // Get user profile using API
       const profile = await profileAPI.getProfile(session.user.id)
 
       if (profile) {
         setUser(profile)
       }
 
-      // Load crop listings via API
       const response = await fetch('/api/crop-listings')
       if (response.ok) {
         const { cropListings } = await response.json()
@@ -158,7 +156,7 @@ export default function BrowseCropsPage() {
         </div>
       </div>
 
-      {/* Filters and Search */}
+      {}
       <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <input
@@ -201,7 +199,7 @@ export default function BrowseCropsPage() {
         </div>
       </div>
 
-      {/* Crops Grid */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredListings.map((listing) => (
           <div key={listing.id} className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
@@ -218,7 +216,7 @@ export default function BrowseCropsPage() {
                 </div>
               )}
               
-              {/* Badges */}
+              {}
               <div className="absolute top-2 left-2 flex flex-col gap-1">
                 {listing.crop.organic_certified && (
                   <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">

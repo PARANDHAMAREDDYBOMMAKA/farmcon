@@ -10,11 +10,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Convert file to buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Upload to Cloudinary
     const folder = formData.get('folder') as string || 'farmcon/crops'
     const imageUrl = await uploadToCloudinary(buffer, folder)
 

@@ -1,7 +1,5 @@
 import { PrismaClient, UserRole, OrderStatus, CropStatus, EquipmentStatus } from '@prisma/client'
 
-
-// Create a global Prisma client instance
 declare global {
   var prisma: PrismaClient | undefined
 }
@@ -17,7 +15,6 @@ if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma
 }
 
-// Database error handling
 export class PrismaError extends Error {
   constructor(message: string, public code?: string, public meta?: any) {
     super(message)
@@ -25,9 +22,8 @@ export class PrismaError extends Error {
   }
 }
 
-// Utility functions for common database operations
 export const dbOperations = {
-  // Profile operations
+  
   profile: {
     async create(data: {
       id: string
@@ -154,14 +150,13 @@ export const dbOperations = {
     }) {
       try {
         console.log('Prisma upsert - data:', { id: data.id, email: data.email, role: data.role })
-        
-        // First check if a profile exists with this email
+
         const existingProfileByEmail = await prisma.profile.findUnique({
           where: { email: data.email }
         })
 
         if (existingProfileByEmail && existingProfileByEmail.id !== data.id) {
-          // Delete the old profile and create a new one with the current Supabase user ID
+          
           console.log('Deleting old profile with different ID and creating new one with current user ID')
           console.log('Old profile ID:', existingProfileByEmail.id, 'New user ID:', data.id)
           await prisma.profile.delete({
@@ -169,11 +164,10 @@ export const dbOperations = {
           })
         }
 
-        // Use Prisma's native upsert with the Supabase user ID as the primary key
         const profile = await prisma.profile.upsert({
           where: { id: data.id },
           update: {
-            email: data.email, // Also update email in case it changed
+            email: data.email, 
             fullName: data.fullName,
             phone: data.phone,
             role: data.role,
@@ -216,7 +210,6 @@ export const dbOperations = {
 
   },
 
-  // Farmer profile operations
   farmer: {
     async create(data: {
       id: string
@@ -357,7 +350,6 @@ export const dbOperations = {
     }
   },
 
-  // Product operations
   product: {
     async findMany(options?: {
       where?: any
@@ -385,7 +377,6 @@ export const dbOperations = {
     }
   },
 
-  // Order operations
   order: {
     async findMany(userId: string, type: 'customer' | 'seller' = 'customer') {
       try {
@@ -421,7 +412,6 @@ export const dbOperations = {
   }
 }
 
-// Health check function
 export async function checkDatabaseHealth(): Promise<boolean> {
   try {
     await prisma.$queryRaw`SELECT 1`
@@ -431,12 +421,10 @@ export async function checkDatabaseHealth(): Promise<boolean> {
   }
 }
 
-// Graceful shutdown
 export async function closeDatabaseConnection() {
   await prisma.$disconnect()
 }
 
-// Export types for use in the application
 export type { UserRole, OrderStatus, CropStatus, EquipmentStatus }
 export type Profile = Awaited<ReturnType<typeof dbOperations.profile.findById>>
 export type FarmerProfile = Awaited<ReturnType<typeof dbOperations.farmer.findById>>

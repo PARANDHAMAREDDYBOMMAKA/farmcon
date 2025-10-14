@@ -18,10 +18,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Get the latest user message to use for context retrieval
     const latestUserMessage = messages.filter(m => m.role === 'user').pop()?.content || ''
 
-    // Retrieve relevant context from Meilisearch if available
     let retrievedContext = ''
     if (latestUserMessage && process.env.MEILISEARCH_HOST && process.env.MEILISEARCH_API_KEY) {
       try {
@@ -35,13 +33,12 @@ export async function POST(request: NextRequest) {
         }
       } catch (error) {
         console.error('❌ Context retrieval error:', error)
-        // Continue without Meilisearch context if it fails
+        
       }
     } else {
       console.log('⚠️ Meilisearch not configured or no user message')
     }
 
-    // Build system message based on context
     const systemMessage = getSystemMessage(context, retrievedContext)
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -83,14 +80,12 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Retrieve relevant context from Meilisearch based on user query and current page
 async function getRelevantContext(userQuery: string, context?: string): Promise<string> {
   try {
-    // Lazy load MeiliSearch
-    const { search, INDEXES } = await import('@/lib/meilisearch')
+    
+    const { search } = await import('@/lib/meilisearch')
 
-    // Determine which index to search based on context
-    let indexName = 'products' // default
+    let indexName = 'products' 
 
     if (context?.includes('/dashboard/supplies') || context?.includes('supplies') || context?.includes('product')) {
       indexName = 'products'
@@ -102,16 +97,14 @@ async function getRelevantContext(userQuery: string, context?: string): Promise<
       indexName = 'equipment'
       console.log('🔍 Searching in equipment index')
     } else {
-      // For general dashboard or other pages, search across all indexes
+      
       console.log('🔍 Searching in default products index')
     }
 
-    // Search for relevant documents
     console.log(`🔎 Executing search: "${userQuery}" in ${indexName} index`)
     let searchResults = await search(indexName, userQuery, { limit: 10 })
     console.log(`📊 Search results: ${searchResults.hits?.length || 0} hits found`)
 
-    // If no results with full query, try with empty query to get all documents
     if (!searchResults.hits || searchResults.hits.length === 0) {
       console.log('⚠️ No results with full query, trying to fetch all documents...')
       searchResults = await search(indexName, '', { limit: 10 })
@@ -123,7 +116,6 @@ async function getRelevantContext(userQuery: string, context?: string): Promise<
       return ''
     }
 
-    // Format the retrieved context
     let contextText = '\n\nRELEVANT DATA FROM DATABASE:\n'
 
     searchResults.hits.forEach((hit: any, index: number) => {
@@ -170,7 +162,6 @@ function getSystemMessage(context?: string, retrievedContext?: string): string {
 
 Be concise, friendly, and use farming emojis when appropriate. Keep responses under 150 words unless asked for detailed information.`
 
-  // Add context-specific information
   let contextMessage = ''
 
   if (context) {
@@ -199,7 +190,6 @@ Be concise, friendly, and use farming emojis when appropriate. Keep responses un
 
   let systemMessage = baseMessage + contextMessage
 
-  // Append retrieved context if available
   if (retrievedContext) {
     systemMessage += retrievedContext
     console.log('✅ Added database context to system message')

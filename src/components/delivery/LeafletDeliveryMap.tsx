@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Fix for default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -60,7 +59,6 @@ interface DeliveryData {
   }>
 }
 
-// Custom marker icons
 const createWaypointIcon = (isCompleted: boolean, isCurrent: boolean, index: number) => {
   const backgroundColor = isCompleted ? '#10B981' : isCurrent ? '#3B82F6' : '#9CA3AF'
   return L.divIcon({
@@ -122,7 +120,6 @@ export default function LeafletDeliveryMap({
     setIsMounted(true)
   }, [])
 
-  // Fetch delivery data
   useEffect(() => {
     const fetchDeliveryData = async () => {
       try {
@@ -133,7 +130,7 @@ export default function LeafletDeliveryMap({
         if (data.deliveries && data.deliveries.length > 0) {
           setDeliveryData(data.deliveries[0])
         } else {
-          // No delivery record exists yet - this is okay for new orders
+          
           setDeliveryData(null)
         }
       } catch (err) {
@@ -147,7 +144,6 @@ export default function LeafletDeliveryMap({
     fetchDeliveryData()
   }, [order.id])
 
-  // Poll for location updates when order is shipped
   useEffect(() => {
     if (order.status === 'shipped' && deliveryData) {
       const pollInterval = setInterval(async () => {
@@ -160,7 +156,7 @@ export default function LeafletDeliveryMap({
         } catch (err) {
           console.error('Error polling delivery data:', err)
         }
-      }, 30000) // Poll every 30 seconds
+      }, 30000) 
 
       return () => clearInterval(pollInterval)
     }
@@ -198,7 +194,6 @@ export default function LeafletDeliveryMap({
     )
   }
 
-  // If no delivery data and order is not shipped yet, show message
   if (!deliveryData && !['shipped', 'delivered'].includes(order.status)) {
     return (
       <div className={`${className} flex items-center justify-center bg-gray-100`}>
@@ -210,22 +205,18 @@ export default function LeafletDeliveryMap({
     )
   }
 
-  // Get pickup and delivery coordinates
   const pickupLat = deliveryData?.pickupLatitude ? Number(deliveryData.pickupLatitude) : 17.3850
   const pickupLng = deliveryData?.pickupLongitude ? Number(deliveryData.pickupLongitude) : 78.4867
   const deliveryLat = deliveryData?.deliveryLatitude ? Number(deliveryData.deliveryLatitude) : 13.6168
   const deliveryLng = deliveryData?.deliveryLongitude ? Number(deliveryData.deliveryLongitude) : 79.5460
 
-  // Get driver location if available
   const driverLat = deliveryData?.driver?.currentLatitude ? Number(deliveryData.driver.currentLatitude) : null
   const driverLng = deliveryData?.driver?.currentLongitude ? Number(deliveryData.driver.currentLongitude) : null
 
-  // Create route coordinates
   const routeCoordinates: [number, number][] = []
   if (pickupLat && pickupLng && deliveryLat && deliveryLng) {
     routeCoordinates.push([pickupLat, pickupLng])
 
-    // Add milestone locations if available
     if (deliveryData?.milestones) {
       deliveryData.milestones.forEach(milestone => {
         if (milestone.latitude && milestone.longitude) {
@@ -234,7 +225,6 @@ export default function LeafletDeliveryMap({
       })
     }
 
-    // Add driver location if in transit
     if (driverLat && driverLng && ['shipped', 'in_transit', 'out_for_delivery'].includes(order.status)) {
       routeCoordinates.push([driverLat, driverLng])
     }
@@ -242,7 +232,6 @@ export default function LeafletDeliveryMap({
     routeCoordinates.push([deliveryLat, deliveryLng])
   }
 
-  // Calculate map center
   const centerLat = (pickupLat + deliveryLat) / 2
   const centerLng = (pickupLng + deliveryLng) / 2
 
@@ -259,7 +248,7 @@ export default function LeafletDeliveryMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Route line */}
+        {}
         {routeCoordinates.length > 0 && (
           <Polyline
             positions={routeCoordinates}
@@ -269,7 +258,7 @@ export default function LeafletDeliveryMap({
           />
         )}
 
-        {/* Pickup location marker */}
+        {}
         <Marker
           position={[pickupLat, pickupLng]}
           icon={createWaypointIcon(true, false, 0)}
@@ -290,7 +279,7 @@ export default function LeafletDeliveryMap({
           )}
         </Marker>
 
-        {/* Delivery location marker */}
+        {}
         <Marker
           position={[deliveryLat, deliveryLng]}
           icon={createWaypointIcon(order.status === 'delivered', false, 1)}
@@ -311,7 +300,7 @@ export default function LeafletDeliveryMap({
           )}
         </Marker>
 
-        {/* Driver location marker for active deliveries */}
+        {}
         {driverLat && driverLng && ['shipped', 'in_transit', 'out_for_delivery'].includes(order.status) && (
           <Marker
             position={[driverLat, driverLng]}

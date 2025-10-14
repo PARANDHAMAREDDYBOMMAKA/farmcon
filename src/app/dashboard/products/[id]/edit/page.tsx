@@ -89,7 +89,6 @@ export default function EditProductPage() {
         const productData = data.product || data
         setProduct(productData)
 
-        // Populate form with existing product data
         setFormData({
           name: productData.name || '',
           description: productData.description || '',
@@ -242,7 +241,7 @@ export default function EditProductPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex items-center justify-between">
           <div>
@@ -258,9 +257,9 @@ export default function EditProductPage() {
         </div>
       </div>
 
-      {/* Form */}
+      {}
       <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Information */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -345,7 +344,7 @@ export default function EditProductPage() {
           </div>
         </div>
 
-        {/* Pricing and Inventory */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -407,7 +406,7 @@ export default function EditProductPage() {
           </div>
         </div>
 
-        {/* Specifications */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Specifications (Optional)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -497,7 +496,7 @@ export default function EditProductPage() {
           </div>
         </div>
 
-        {/* Images */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Images</h2>
 

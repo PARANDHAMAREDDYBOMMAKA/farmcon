@@ -3,7 +3,6 @@ import { prisma } from '@/lib/prisma'
 import { Prisma } from '@prisma/client'
 import { cache, CacheKeys } from '@/lib/redis'
 
-// GET /api/categories - Get all categories
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -11,7 +10,6 @@ export async function GET(request: NextRequest) {
     const includeChildren = searchParams.get('includeChildren') === 'true'
     const isActive = searchParams.get('isActive')
 
-    // Try to get from cache first (only for simple queries)
     if (!parentId && !isActive) {
       const cacheKey = CacheKeys.categories()
       const cached = await cache.get(cacheKey)
@@ -45,7 +43,6 @@ export async function GET(request: NextRequest) {
       orderBy: { name: 'asc' }
     })
 
-    // If no categories exist, create default ones
     if (categories.length === 0) {
       const defaultCategories = [
         {
@@ -104,7 +101,6 @@ export async function GET(request: NextRequest) {
         data: defaultCategories
       })
 
-      // Fetch the newly created categories
       categories = await prisma.category.findMany({
         where: whereClause,
         include: {
@@ -120,7 +116,6 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Cache for 10 minutes (only for simple queries)
     if (!parentId && !isActive) {
       const cacheKey = CacheKeys.categories()
       await cache.set(cacheKey, categories, 600)
@@ -136,7 +131,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/categories - Create a new category (admin only)
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -162,7 +156,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Invalidate categories cache
     await cache.del(CacheKeys.categories())
 
     return NextResponse.json({ category })
@@ -175,7 +168,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT /api/categories - Update a category (admin only)
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
@@ -206,7 +198,6 @@ export async function PUT(request: NextRequest) {
       }
     })
 
-    // Invalidate categories cache
     await cache.del(CacheKeys.categories())
 
     return NextResponse.json({ category })
@@ -219,7 +210,6 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE /api/categories - Delete a category (admin only)
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -232,7 +222,6 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    // Check if category has products
     const productsCount = await prisma.product.count({
       where: { categoryId: id }
     })
@@ -248,7 +237,6 @@ export async function DELETE(request: NextRequest) {
       where: { id }
     })
 
-    // Invalidate categories cache
     await cache.del(CacheKeys.categories())
 
     return NextResponse.json({ message: 'Category deleted successfully' })

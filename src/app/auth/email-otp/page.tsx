@@ -21,7 +21,6 @@ function EmailOTPForm() {
     setError('')
     setSuccess('')
 
-    // Validate email format
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       setError('Please enter a valid email address')
       setLoading(false)
@@ -35,7 +34,6 @@ function EmailOTPForm() {
         return
       }
 
-      // Execute reCAPTCHA
       const recaptchaToken = await executeRecaptcha('send_otp')
 
       const response = await fetch('/api/auth/send-otp', {
@@ -110,7 +108,7 @@ function EmailOTPForm() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left side - Image/Branding */}
+      {}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-400 to-green-600 relative">
         <div className="flex flex-col justify-center px-12 text-white">
           <h2 className="text-4xl font-bold mb-6">Secure Email Verification</h2>
@@ -134,7 +132,7 @@ function EmailOTPForm() {
         </div>
       </div>
 
-      {/* Right side - Form */}
+      {}
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md space-y-8">
           <div className="text-center">

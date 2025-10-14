@@ -50,13 +50,11 @@ export default function CropDetailPage() {
         return
       }
 
-      // Get user profile using API
       const profile = await profileAPI.getProfile(session.user.id)
       if (profile) {
         setUser(profile)
       }
 
-      // Load crop listing details via API
       const response = await fetch(`/api/crop-listings/${listingId}`)
       if (response.ok) {
         const { cropListing } = await response.json()
@@ -148,7 +146,7 @@ export default function CropDetailPage() {
 
   return (
     <div className="p-6">
-      {/* Breadcrumb */}
+      {}
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
@@ -166,7 +164,7 @@ export default function CropDetailPage() {
       </nav>
 
       <div className="lg:grid lg:grid-cols-2 lg:gap-8">
-        {/* Crop Images */}
+        {}
         <div>
           <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
             {listing.images && listing.images.length > 0 ? (
@@ -202,7 +200,7 @@ export default function CropDetailPage() {
           )}
         </div>
 
-        {/* Crop Info */}
+        {}
         <div className='text-black'>
           <div className="flex items-start justify-between">
             <div>
@@ -256,7 +254,7 @@ export default function CropDetailPage() {
             </div>
           </div>
 
-          {/* Farmer Information */}
+          {}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Farmer Information</h3>
             <div className="space-y-2">
@@ -297,7 +295,7 @@ export default function CropDetailPage() {
             </div>
           )}
 
-          {/* Quantity Selection */}
+          {}
           <div className="mt-6">
             <div className="flex items-center space-x-4">
               <label htmlFor="quantity" className="text-sm font-medium text-gray-900">
@@ -321,7 +319,7 @@ export default function CropDetailPage() {
             </div>
           </div>
 
-          {/* Action Buttons */}
+          {}
           <div className="mt-8 flex space-x-4">
             <button
               onClick={addToCart}
@@ -339,7 +337,7 @@ export default function CropDetailPage() {
             </button>
           </div>
 
-          {/* Contact Farmer */}
+          {}
           <div className="mt-4">
             <p className="text-sm text-gray-500 text-center">
               Have questions? Contact the farmer directly at{' '}

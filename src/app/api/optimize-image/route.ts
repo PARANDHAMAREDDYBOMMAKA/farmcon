@@ -10,20 +10,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No image provided' }, { status: 400 })
     }
 
-    // Get options
     const width = formData.get('width') ? parseInt(formData.get('width') as string) : undefined
     const height = formData.get('height') ? parseInt(formData.get('height') as string) : undefined
     const quality = formData.get('quality') ? parseInt(formData.get('quality') as string) : 80
     const format = formData.get('format') as 'webp' | 'jpeg' | 'png' || 'webp'
 
-    // Convert file to buffer
     const bytes = await file.arrayBuffer()
     const buffer = Buffer.from(bytes)
 
-    // Process image with Sharp
     let image = sharp(buffer)
 
-    // Resize if dimensions provided
     if (width || height) {
       image = image.resize(width, height, {
         fit: 'inside',
@@ -31,7 +27,6 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Convert to desired format
     let outputBuffer: Buffer
 
     switch (format) {
@@ -48,10 +43,8 @@ export async function POST(request: NextRequest) {
         outputBuffer = await image.webp({ quality }).toBuffer()
     }
 
-    // Get metadata
     const metadata = await sharp(outputBuffer).metadata()
 
-    // Return optimized image
     return new NextResponse(outputBuffer, {
       headers: {
         'Content-Type': `image/${format}`,
@@ -73,7 +66,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// GET endpoint to optimize images from URL
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -87,7 +79,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'No image URL provided' }, { status: 400 })
     }
 
-    // Fetch the image
     const response = await fetch(imageUrl)
     if (!response.ok) {
       return NextResponse.json({ error: 'Failed to fetch image' }, { status: 400 })
@@ -95,10 +86,8 @@ export async function GET(request: NextRequest) {
 
     const buffer = Buffer.from(await response.arrayBuffer())
 
-    // Process image with Sharp
     let image = sharp(buffer)
 
-    // Resize if dimensions provided
     if (width || height) {
       image = image.resize(width, height, {
         fit: 'inside',
@@ -106,7 +95,6 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Convert to desired format
     let outputBuffer: Buffer
 
     switch (format) {
@@ -123,10 +111,8 @@ export async function GET(request: NextRequest) {
         outputBuffer = await image.webp({ quality }).toBuffer()
     }
 
-    // Get metadata
     const metadata = await sharp(outputBuffer).metadata()
 
-    // Return optimized image
     return new NextResponse(outputBuffer, {
       headers: {
         'Content-Type': `image/${format}`,

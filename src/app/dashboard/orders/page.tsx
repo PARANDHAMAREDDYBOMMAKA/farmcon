@@ -58,22 +58,19 @@ function OrdersPageInternal() {
     if (user && !authLoading) {
       loadOrders()
     }
-    
-    // Check for success parameter
+
     if (searchParams?.get('success') === 'true') {
-      // Show success message and force refresh
+      
       setTimeout(() => {
         toast.success('🎉 Orders placed successfully!')
-        // Force refresh orders to ensure they appear
+        
         loadOrders()
       }, 100)
-      
-      // Set up interval to keep refreshing until orders appear
+
       const refreshInterval = setInterval(() => {
         loadOrders()
       }, 3000)
-      
-      // Stop refreshing after 30 seconds
+
       setTimeout(() => {
         clearInterval(refreshInterval)
       }, 30000)
@@ -83,13 +80,12 @@ function OrdersPageInternal() {
   }, [user, authLoading, searchParams])
 
   useEffect(() => {
-    // Set up real-time subscription for orders based on user role
+    
     if (user?.id) {
       const subscription = supabase.channel('orders-changes')
 
-      // Subscribe to relevant order changes based on user role
       if (user.role === 'consumer') {
-        // Consumers subscribe to their purchase orders
+        
         subscription.on(
           'postgres_changes',
           {
@@ -109,7 +105,7 @@ function OrdersPageInternal() {
           }
         )
       } else if (user.role === 'farmer' || user.role === 'supplier') {
-        // Farmers and suppliers subscribe to their sales orders
+        
         subscription.on(
           'postgres_changes',
           {
@@ -144,15 +140,14 @@ function OrdersPageInternal() {
 
       let orders: any[] = []
 
-      // Load orders based on user role
       if (user.role === 'consumer') {
-        // Consumers only see their purchase orders
+        
         orders = await ordersAPI.getOrders(user.id, 'customer')
       } else if (user.role === 'farmer' || user.role === 'supplier') {
-        // Farmers and suppliers only see their sales orders
+        
         orders = await ordersAPI.getOrders(user.id, 'seller')
       } else {
-        // Admin or other roles can see both
+        
         const customerOrders = await ordersAPI.getOrders(user.id, 'customer')
         const sellerOrders = await ordersAPI.getOrders(user.id, 'seller')
         orders = [
@@ -161,7 +156,6 @@ function OrdersPageInternal() {
         ]
       }
 
-      // Sort by created date
       orders.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
       setOrders(orders)
@@ -174,7 +168,7 @@ function OrdersPageInternal() {
 
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
-      // Update order status via API
+      
       const response = await fetch(`/api/orders/${orderId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -186,7 +180,6 @@ function OrdersPageInternal() {
         throw new Error(error.error || 'Failed to update order status')
       }
 
-      // Update local state
       setOrders(orders => 
         orders.map(order => 
           order.id === orderId ? { ...order, status: newStatus as any } : order
@@ -237,9 +230,9 @@ function OrdersPageInternal() {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Enhanced Header */}
+      {}
       <div className="relative bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 text-white overflow-hidden shadow-xl">
-        {/* Background decoration */}
+        {}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-32 h-32 sm:w-64 sm:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 sm:w-48 sm:h-48 bg-white rounded-full translate-y-12 -translate-x-12"></div>
@@ -277,7 +270,7 @@ function OrdersPageInternal() {
         </div>
       </div>
 
-      {/* Filter Tabs - Scrollable on mobile */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-1.5 sm:p-2">
         <div className="overflow-x-auto scrollbar-hide -mx-1 px-1">
           <nav className="flex gap-1.5 sm:gap-2">
@@ -318,7 +311,7 @@ function OrdersPageInternal() {
 
       {filteredOrders.length === 0 ? (
         <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-12 md:p-16 overflow-hidden">
-          {/* Background decoration */}
+          {}
           <div className="absolute inset-0 opacity-5">
             <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-green-500 rounded-full -translate-y-24 sm:-translate-y-32 translate-x-24 sm:translate-x-32"></div>
             <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 bg-emerald-500 rounded-full translate-y-16 sm:translate-y-24 -translate-x-16 sm:-translate-x-24"></div>
@@ -373,14 +366,14 @@ function OrdersPageInternal() {
       ) : (
         <div className="space-y-4 sm:space-y-6">
           {filteredOrders.map((order) => {
-            // Calculate progress for visual indicator
+            
             const statusSteps = ['pending', 'confirmed', 'processing', 'shipped', 'delivered']
             const currentStepIndex = statusSteps.indexOf(order.status)
             const progress = order.status === 'cancelled' ? 0 : ((currentStepIndex + 1) / statusSteps.length) * 100
 
             return (
             <div key={order.id} className="group relative bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl md:rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
-              {/* Status Progress Bar */}
+              {}
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gray-100">
                 <div
                   className={`h-full transition-all duration-500 ${
@@ -392,10 +385,10 @@ function OrdersPageInternal() {
                 ></div>
               </div>
 
-              {/* Header */}
+              {}
               <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5 border-b border-gray-100">
                 <div className="flex flex-col gap-3">
-                  {/* Top Row: Order Info */}
+                  {}
                   <div className="flex items-start gap-2 sm:gap-3">
                     <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white shadow-lg">
                       <span className="text-base sm:text-xl font-bold">#{order.id.slice(-2)}</span>
@@ -417,7 +410,7 @@ function OrdersPageInternal() {
                     </div>
                   </div>
 
-                  {/* Bottom Row: Status and Price */}
+                  {}
                   <div className="flex items-center justify-between gap-2 sm:gap-3">
                     <span className={`inline-flex items-center gap-1 px-2.5 sm:px-3 py-1 sm:py-1.5 text-xs font-bold rounded-lg sm:rounded-xl shadow-sm flex-shrink-0 ${getStatusColor(order.status)}`}>
                       <span className="text-xs sm:text-sm">
@@ -441,9 +434,9 @@ function OrdersPageInternal() {
                 </div>
               </div>
 
-              {/* Content */}
+              {}
               <div className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 md:py-5">
-                {/* Info Section */}
+                {}
                 <div className="flex flex-col gap-2 sm:gap-3 mb-4 sm:mb-5 p-2.5 sm:p-3 md:p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl">
                   <p className="text-xs sm:text-sm font-medium text-gray-700 flex items-start gap-2">
                     <span className="text-sm sm:text-base flex-shrink-0 mt-0.5">
@@ -466,7 +459,7 @@ function OrdersPageInternal() {
                   </div>
                 </div>
 
-                {/* Order Items */}
+                {}
                 <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-5">
                   {order.items?.map((item: any) => (
                     <div key={item.id} className="group flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-gray-50/50 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 border border-gray-100">
@@ -499,7 +492,7 @@ function OrdersPageInternal() {
                   ))}
                 </div>
 
-                {/* Action buttons for sellers (farmers and suppliers) */}
+                {}
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'pending' && (
                   <div className="pt-3 sm:pt-4 border-t border-gray-200">
                     <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:gap-3">
@@ -557,9 +550,9 @@ function OrdersPageInternal() {
                   </div>
                 )}
 
-                {/* Action buttons */}
+                {}
                 <div className="pt-3 sm:pt-4 border-t border-gray-200 grid grid-cols-1 sm:flex sm:flex-row gap-2 sm:gap-3">
-                  {/* Track Order button for customers */}
+                  {}
                   {user?.id === order.customer_id && order.status !== 'pending' && order.status !== 'cancelled' && (
                     <Link
                       href={`/dashboard/orders/${order.id}/track`}
@@ -570,7 +563,7 @@ function OrdersPageInternal() {
                     </Link>
                   )}
 
-                  {/* Invoice button */}
+                  {}
                   {order.payment_status === 'paid' && (
                     <button
                       onClick={() => {

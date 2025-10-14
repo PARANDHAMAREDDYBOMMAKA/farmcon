@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { useRouter } from 'next/navigation'
+import { Bell, Package, CreditCard, Truck, Star, Clock } from 'lucide-react'
 
 interface Notification {
   id: string
@@ -126,17 +127,18 @@ export default function NotificationsPage() {
   }
 
   const getNotificationIcon = (type: string) => {
+    const iconProps = { className: "w-6 h-6" }
     switch (type) {
       case 'order':
-        return '📦'
+        return <Package {...iconProps} className="w-6 h-6 text-blue-600" />
       case 'payment':
-        return '💳'
+        return <CreditCard {...iconProps} className="w-6 h-6 text-green-600" />
       case 'delivery':
-        return '🚚'
+        return <Truck {...iconProps} className="w-6 h-6 text-orange-600" />
       case 'review':
-        return '⭐'
+        return <Star {...iconProps} className="w-6 h-6 text-yellow-600" />
       default:
-        return '🔔'
+        return <Bell {...iconProps} className="w-6 h-6 text-gray-600" />
     }
   }
 
@@ -180,12 +182,12 @@ export default function NotificationsPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
-              <span className="text-2xl">🔔</span>
+              <Bell className="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
@@ -205,7 +207,7 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* Filter Tabs */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/40 overflow-hidden">
         <div className="flex border-b border-gray-200">
           <button
@@ -241,12 +243,12 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      {/* Notifications List */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/40 overflow-hidden">
         {filteredNotifications.length === 0 ? (
           <div className="p-12 text-center">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-4xl">🔔</span>
+              <Bell className="w-10 h-10 text-gray-400" />
             </div>
             <p className="text-lg font-medium text-gray-900">No notifications</p>
             <p className="mt-2 text-sm text-gray-500">
@@ -268,7 +270,7 @@ export default function NotificationsPage() {
                       !notification.is_read ? 'bg-white shadow-md' : 'bg-gray-100'
                     }`}
                   >
-                    <span className="text-2xl">{getNotificationIcon(notification.type)}</span>
+                    {getNotificationIcon(notification.type)}
                   </div>
 
                   <div className="flex-1 min-w-0">
@@ -288,7 +290,7 @@ export default function NotificationsPage() {
                     <p className="text-sm text-gray-600 mb-2">{notification.message}</p>
                     <div className="flex items-center justify-between gap-4">
                       <p className="text-xs text-gray-400 flex items-center gap-1">
-                        <span>🕐</span>
+                        <Clock className="w-3.5 h-3.5" />
                         {timeAgo(notification.created_at)}
                       </p>
                       <div className="flex items-center gap-2">

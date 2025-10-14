@@ -2,14 +2,12 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { cache, CacheKeys } from '@/lib/redis'
 
-// GET /api/products - Get products
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const supplierId = searchParams.get('supplierId')
     const category = searchParams.get('category')
 
-    // Try to get from cache first
     const cacheKey = CacheKeys.products(supplierId || undefined, category || undefined)
     const cached = await cache.get(cacheKey)
 
@@ -51,7 +49,6 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    // Calculate average ratings
     const productsWithRatings = products.map(product => ({
       ...product,
       averageRating: product.reviews.length > 0
@@ -60,7 +57,6 @@ export async function GET(request: NextRequest) {
       reviewCount: product.reviews.length
     }))
 
-    // Cache for 5 minutes
     await cache.set(cacheKey, productsWithRatings, 300)
 
     return NextResponse.json({ products: productsWithRatings })
@@ -73,7 +69,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/products - Create a new product
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -90,7 +85,6 @@ export async function POST(request: NextRequest) {
       isActive = true
     } = body
 
-    // Validate required fields
     if (!name || !price || !stockQuantity || !unit || !categoryId || !supplierId) {
       return NextResponse.json(
         { error: 'Missing required fields' },
@@ -98,7 +92,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Filter out null/undefined images
     const validImages = Array.isArray(images) ? images.filter(img => img !== null && img !== undefined && img !== '') : []
 
     const product = await prisma.product.create({
@@ -126,7 +119,6 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Invalidate product caches
     await cache.invalidatePattern('farmcon:products:*')
     await cache.del(CacheKeys.productsList(supplierId))
 

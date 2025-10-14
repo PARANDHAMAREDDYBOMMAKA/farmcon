@@ -49,18 +49,17 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
     return <div className="p-4 text-gray-500">No chart data available</div>
   }
 
-  // Radar chart for overall conditions
   const radarData = {
     labels: ['Temperature', 'Humidity', 'Wind', 'Visibility', 'Pressure'],
     datasets: [
       {
         label: 'Current Conditions',
         data: [
-          (data.temperature / 50) * 100, // Normalize to 100
+          (data.temperature / 50) * 100, 
           data.humidity,
-          (data.windSpeed / 50) * 100, // Normalize to 100
-          (data.visibility / 10) * 100, // Normalize to 100
-          ((data.pressure - 900) / 200) * 100 // Normalize pressure range 900-1100 to 0-100
+          (data.windSpeed / 50) * 100, 
+          (data.visibility / 10) * 100, 
+          ((data.pressure - 900) / 200) * 100 
         ],
         backgroundColor: 'rgba(34, 197, 94, 0.2)',
         borderColor: 'rgba(34, 197, 94, 1)',
@@ -105,7 +104,6 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
             const label = context.label || ''
             const value = context.parsed.r
 
-            // Denormalize values for display
             if (label === 'Temperature') return `${label}: ${Math.round((value / 100) * 50)}°C`
             if (label === 'Humidity') return `${label}: ${Math.round(value)}%`
             if (label === 'Wind') return `${label}: ${Math.round((value / 100) * 50)} km/h`
@@ -118,7 +116,6 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
     }
   }
 
-  // Doughnut chart for humidity vs dry air
   const humidityData = {
     labels: ['Humidity', 'Dry Air'],
     datasets: [
@@ -137,7 +134,6 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
     ]
   }
 
-  // Doughnut chart for cloudiness
   const cloudinessData = {
     labels: ['Cloud Cover', 'Clear Sky'],
     datasets: [
@@ -182,7 +178,7 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Radar Chart - Overall Conditions */}
+        {}
         <div className="lg:col-span-2">
           <h4 className="text-lg font-semibold text-gray-900 mb-4">Weather Conditions Overview</h4>
           <div style={{ height: 350 }}>
@@ -190,7 +186,7 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
           </div>
         </div>
 
-        {/* Doughnut Charts - Specific Metrics */}
+        {}
         <div className="space-y-6">
           <div>
             <h4 className="text-sm font-semibold text-gray-900 mb-3">Humidity Level</h4>
@@ -208,7 +204,7 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
         </div>
       </div>
 
-      {/* Metric Cards */}
+      {}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
         <div className="text-center p-3 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
           <p className="text-xs text-gray-600 font-medium">Temperature</p>

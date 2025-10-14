@@ -84,7 +84,7 @@ export default function InventoryPage() {
 
   const handleStockEdit = (productId: string, currentStock: number) => {
     setEditingStock({ id: productId, value: currentStock.toString() })
-    // Focus input after state update
+    
     setTimeout(() => {
       const input = inputRefs.current[productId]
       if (input) {
@@ -178,7 +178,7 @@ export default function InventoryPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -188,7 +188,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* Stock Summary Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
@@ -251,7 +251,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* Filters */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -285,7 +285,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* Inventory Table */}
+      {}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -415,7 +415,7 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
+      {}
       {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md">

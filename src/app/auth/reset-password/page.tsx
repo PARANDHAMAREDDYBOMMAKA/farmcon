@@ -15,7 +15,7 @@ function ResetPasswordForm() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    // Check if this is a valid password reset session
+    
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session) {
@@ -51,7 +51,7 @@ function ResetPasswordForm() {
         setError(error.message)
       } else {
         setSuccess(true)
-        // Redirect to signin after a delay
+        
         setTimeout(() => {
           router.push('/auth/signin?message=Password updated successfully')
         }, 2000)

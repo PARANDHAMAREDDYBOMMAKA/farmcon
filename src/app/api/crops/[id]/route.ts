@@ -3,13 +3,12 @@ import { prisma } from '@/lib/prisma'
 import { cache, CacheKeys } from '@/lib/redis'
 import { deleteMultipleFromCloudinary } from '@/lib/cloudinary'
 
-// GET /api/crops/[id] - Get a single crop
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Try cache first
+    
     const cacheKey = CacheKeys.crop(params.id)
     const cached = await cache.get(cacheKey)
     
@@ -40,7 +39,6 @@ export async function GET(
       return NextResponse.json({ error: 'Crop not found' }, { status: 404 })
     }
 
-    // Cache for 10 minutes
     await cache.set(cacheKey, crop, 600)
 
     return NextResponse.json({ crop })
@@ -53,15 +51,13 @@ export async function GET(
   }
 }
 
-// PUT /api/crops/[id] - Update a crop
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     const body = await request.json()
-    
-    // Convert date strings to Date objects for Prisma
+
     const cropData = {
       ...body,
       plantedDate: body.plantedDate ? new Date(body.plantedDate) : null,
@@ -74,7 +70,6 @@ export async function PUT(
       data: cropData
     })
 
-    // Invalidate cache
     await cache.del(CacheKeys.crop(params.id))
     if (body.farmerId) {
       await cache.del(CacheKeys.cropsList(body.farmerId))
@@ -90,13 +85,12 @@ export async function PUT(
   }
 }
 
-// DELETE /api/crops/[id] - Delete a crop
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Get crop first to get farmerId and images for deletion
+    
     const crop = await prisma.crop.findUnique({
       where: { id: params.id },
       select: { farmerId: true, images: true }
@@ -106,7 +100,6 @@ export async function DELETE(
       return NextResponse.json({ error: 'Crop not found' }, { status: 404 })
     }
 
-    // Delete images from Cloudinary if they exist
     if (crop.images && crop.images.length > 0) {
       await deleteMultipleFromCloudinary(crop.images)
     }
@@ -115,7 +108,6 @@ export async function DELETE(
       where: { id: params.id }
     })
 
-    // Invalidate cache
     await cache.del(CacheKeys.crop(params.id))
     await cache.del(CacheKeys.cropsList(crop.farmerId))
 

@@ -30,11 +30,10 @@ function SellCropsPageInternal() {
 
   useEffect(() => {
     loadData()
-    
-    // Check if a specific crop is selected
+
     const cropId = searchParams?.get('crop')
     if (cropId) {
-      // Will set selected crop once crops are loaded
+      
     }
   }, [searchParams])
 
@@ -47,7 +46,6 @@ function SellCropsPageInternal() {
         return
       }
 
-      // Get user profile using API
       const profile = await profileAPI.getProfile(session.user.id)
 
       if (!profile || profile.role !== 'farmer') {
@@ -57,27 +55,23 @@ function SellCropsPageInternal() {
 
       setUser(profile)
 
-      // Load harvested crops using API
       const cropsData = await cropsAPI.getCrops(session.user.id)
-      
-      // Get existing crop listings to prevent re-listing
+
       const listingsResponse = await fetch(`/api/crop-listings?farmerId=${session.user.id}&isActive=true`)
       const existingListings = listingsResponse.ok ? (await listingsResponse.json()).cropListings : []
       const listedCropIds = new Set(existingListings.map((listing: any) => listing.cropId))
-      
-      // Filter for harvested crops that haven't been listed yet
+
       const harvestedCrops = cropsData.filter(crop => 
         crop.status === 'harvested' && !listedCropIds.has(crop.id)
       )
       setCrops(harvestedCrops)
-      
-      // Auto-select crop if specified in URL
+
       const cropId = searchParams?.get('crop')
       if (cropId) {
         const crop = harvestedCrops.find(c => c.id === cropId)
         if (crop) {
           setSelectedCrop(crop)
-          // Pre-fill some data
+          
           setListingData(prev => ({
             ...prev,
             harvest_date: crop.actualHarvestDate ? new Date(crop.actualHarvestDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
@@ -112,7 +106,7 @@ function SellCropsPageInternal() {
 
   const handleCropSelect = (crop: Crop) => {
     setSelectedCrop(crop)
-    // Pre-fill some data
+    
     setListingData(prev => ({
       ...prev,
       harvest_date: crop.actualHarvestDate ? new Date(crop.actualHarvestDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
@@ -129,7 +123,7 @@ function SellCropsPageInternal() {
     setSuccess('')
 
     try {
-      // Validate required fields
+      
       if (!listingData.quantity_available || !listingData.price_per_unit) {
         setError('Please fill in all required fields')
         return
@@ -150,7 +144,6 @@ function SellCropsPageInternal() {
         isActive: true
       }
 
-      // Create crop listing via API
       const listingResponse = await fetch('/api/crop-listings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -162,14 +155,8 @@ function SellCropsPageInternal() {
         throw new Error(error.error || 'Failed to create listing')
       }
 
-      // Update crop status to prevent re-listing (keep status as harvested but mark as listed)
-      // The actual 'sold' status will be set when the crop is purchased by a consumer
-
-      // Note: Caches will be cleared on next page load
-
       setSuccess('Crop listed for sale successfully!')
-      
-      // Reset form
+
       setSelectedCrop(null)
       setListingData({
         quantity_available: '',
@@ -181,7 +168,6 @@ function SellCropsPageInternal() {
         description: ''
       })
 
-      // Reload crops
       loadData()
 
     } catch (err: any) {
@@ -239,7 +225,7 @@ function SellCropsPageInternal() {
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Crop Selection */}
+            {}
             <div>
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Crop to Sell</h2>
               <div className="space-y-3">
@@ -287,7 +273,7 @@ function SellCropsPageInternal() {
               </div>
             </div>
 
-            {/* Listing Form */}
+            {}
             <div className="lg:col-span-2">
               {selectedCrop ? (
                 <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
@@ -418,7 +404,7 @@ function SellCropsPageInternal() {
                     />
                   </div>
 
-                  {/* Preview */}
+                  {}
                   {listingData.quantity_available && listingData.price_per_unit && (
                     <div className="bg-gray-50 p-4 rounded-lg">
                       <h3 className="text-sm font-medium text-gray-900 mb-2">Listing Preview</h3>

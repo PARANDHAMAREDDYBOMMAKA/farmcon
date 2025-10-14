@@ -19,7 +19,6 @@ export function useAuth(requiredRole?: string) {
           return
         }
 
-        // Get user profile using our API
         const profile = await profileAPI.getProfile(session.user.id)
 
         if (!profile) {
@@ -27,7 +26,6 @@ export function useAuth(requiredRole?: string) {
           return
         }
 
-        // Check role requirement
         if (requiredRole && profile.role !== requiredRole) {
           router.push('/dashboard')
           return

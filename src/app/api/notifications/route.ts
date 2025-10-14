@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/notifications - Get notifications for a user
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -24,7 +23,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/notifications - Create a new notification
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -55,7 +53,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT /api/notifications - Update notifications (mark as read)
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
@@ -66,7 +63,7 @@ export async function PUT(request: NextRequest) {
     }
 
     if (markAllAsRead) {
-      // Mark all notifications as read for this user
+      
       await prisma.notification.updateMany({
         where: {
           userId,
@@ -79,11 +76,11 @@ export async function PUT(request: NextRequest) {
 
       return NextResponse.json({ success: true, message: 'All notifications marked as read' })
     } else if (notificationId) {
-      // Mark specific notification as read - use updateMany to allow composite where clause
+      
       const result = await prisma.notification.updateMany({
         where: {
           id: notificationId,
-          userId // Ensure user can only update their own notifications
+          userId 
         },
         data: {
           isRead: isRead !== undefined ? isRead : true
@@ -104,7 +101,6 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE /api/notifications - Delete a notification
 export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json()
@@ -114,7 +110,6 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'User ID and Notification ID are required' }, { status: 400 })
     }
 
-    // Delete the notification, ensuring user can only delete their own - use deleteMany for composite where
     const result = await prisma.notification.deleteMany({
       where: {
         id: notificationId,

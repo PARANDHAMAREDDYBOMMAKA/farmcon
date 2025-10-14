@@ -5,7 +5,6 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Fix for default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -33,7 +32,6 @@ interface LocationTrackerProps {
   className?: string
 }
 
-// Custom marker icons
 const createCustomMarkerIcon = (color: string, label: string) => {
   return L.divIcon({
     className: 'custom-marker',
@@ -80,7 +78,6 @@ const driverIcon = L.divIcon({
   iconAnchor: [20, 20],
 })
 
-// Component to fit bounds
 function FitBounds({ pickupLocation, deliveryLocation }: { pickupLocation?: any; deliveryLocation?: any }) {
   const map = useMap()
 
@@ -112,7 +109,6 @@ export default function LeafletLocationTracker({
     setIsMounted(true)
   }, [])
 
-  // Determine map center
   const getMapCenter = (): [number, number] => {
     if (pickupLocation && deliveryLocation) {
       return [
@@ -122,12 +118,11 @@ export default function LeafletLocationTracker({
     }
     if (pickupLocation) return [pickupLocation.lat, pickupLocation.lng]
     if (deliveryLocation) return [deliveryLocation.lat, deliveryLocation.lng]
-    return [20.5937, 78.9629] // Default: India center
+    return [20.5937, 78.9629] 
   }
 
   const mapCenter = getMapCenter()
 
-  // Create route coordinates
   const routeCoordinates: [number, number][] = []
   if (pickupLocation && deliveryLocation && orderStatus !== 'pending') {
     routeCoordinates.push([pickupLocation.lat, pickupLocation.lng])
@@ -160,7 +155,7 @@ export default function LeafletLocationTracker({
 
         <FitBounds pickupLocation={pickupLocation} deliveryLocation={deliveryLocation} />
 
-        {/* Route line */}
+        {}
         {routeCoordinates.length > 0 && (
           <Polyline
             positions={routeCoordinates}
@@ -170,7 +165,7 @@ export default function LeafletLocationTracker({
           />
         )}
 
-        {/* Pickup Location Marker */}
+        {}
         {pickupLocation && (
           <Marker
             position={[pickupLocation.lat, pickupLocation.lng]}
@@ -190,7 +185,7 @@ export default function LeafletLocationTracker({
           </Marker>
         )}
 
-        {/* Delivery Location Marker */}
+        {}
         {deliveryLocation && (
           <Marker
             position={[deliveryLocation.lat, deliveryLocation.lng]}
@@ -210,7 +205,7 @@ export default function LeafletLocationTracker({
           </Marker>
         )}
 
-        {/* Driver Location Marker */}
+        {}
         {driverLocation && orderStatus === 'shipped' && (
           <Marker
             position={[driverLocation.lat, driverLocation.lng]}

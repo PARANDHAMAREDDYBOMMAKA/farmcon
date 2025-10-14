@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// POST /api/categories/init - Initialize default categories
 export async function POST() {
   try {
-    // Check if categories already exist
+    
     const existingCategories = await prisma.category.count()
 
     if (existingCategories > 0) {

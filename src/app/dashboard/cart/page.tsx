@@ -52,25 +52,22 @@ export default function CartPage() {
 
   useEffect(() => {
     loadCart()
-    
-    // Check for payment success and force refresh
+
     const urlParams = new URLSearchParams(window.location.search)
     if (urlParams.get('payment_success') === 'true') {
-      // Force reload cart after payment success
+      
       setTimeout(() => {
         loadCart()
         toast.success('🎉 Payment completed! Your cart has been cleared.')
-        // Clean up URL
-        window.history.replaceState({}, '', '/dashboard/cart')
         
-        // Redirect to orders page after showing success
+        window.history.replaceState({}, '', '/dashboard/cart')
+
         setTimeout(() => {
           router.push('/dashboard/orders?success=true')
         }, 2000)
       }, 1000)
     }
-    
-    // Set up real-time subscription for cart updates
+
     const subscription = supabase
       .channel('cart-changes')
       .on(
@@ -83,22 +80,20 @@ export default function CartPage() {
         },
         (payload) => {
           console.log('Cart updated:', payload)
-          
-          // Handle different events
+
           if (payload.eventType === 'DELETE') {
-            // Item removed from cart
-            setCartItems(prev => prev.filter(item => item.id !== payload.old.id))
             
-            // Show toast if all items are cleared (payment success)
+            setCartItems(prev => prev.filter(item => item.id !== payload.old.id))
+
             if (payload.old.user_id === user?.id) {
               setTimeout(() => {
-                if (cartItems.length <= 1) { // Will be 0 after this removal
+                if (cartItems.length <= 1) { 
                   toast.success('🛒 Cart cleared - Payment successful!')
                 }
               }, 500)
             }
           } else {
-            // For other changes, reload the cart
+            
             loadCart()
           }
         }
@@ -119,13 +114,11 @@ export default function CartPage() {
         return
       }
 
-      // Get user profile using API
       const profile = await profileAPI.getProfile(session.user.id)
       if (profile) {
         setUser(profile)
       }
 
-      // Load cart items via API
       const response = await fetch(`/api/cart?userId=${session.user.id}`)
       if (response.ok) {
         const { cartItems } = await response.json()
@@ -161,7 +154,6 @@ export default function CartPage() {
         throw new Error(error.error || 'Failed to update quantity')
       }
 
-      // Update local state
       setCartItems(items => 
         items.map(item => 
           item.id === itemId ? { ...item, quantity: newQuantity } : item
@@ -189,7 +181,6 @@ export default function CartPage() {
         throw new Error(error.error || 'Failed to remove item')
       }
 
-      // Update local state
       setCartItems(items => items.filter(item => item.id !== itemId))
 
     } catch (error) {
@@ -230,14 +221,14 @@ export default function CartPage() {
 
       if (data.checkoutType === 'stripe' && data.redirectUrl) {
         toast.success('Redirecting to Stripe checkout...', { id: loadingToast })
-        // Redirect to Stripe checkout
+        
         window.location.href = data.redirectUrl
         return
       } else {
         toast.success('Order placed successfully!', { id: loadingToast })
-        // Clear local cart state for direct orders
+        
         setCartItems([])
-        // Redirect to orders page
+        
         router.push('/dashboard/orders?success=true')
       }
 
@@ -288,7 +279,7 @@ export default function CartPage() {
           </div>
         ) : (
           <div className="lg:grid lg:grid-cols-3 lg:gap-8">
-            {/* Cart Items */}
+            {}
             <div className="lg:col-span-2 mb-8 lg:mb-0">
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div className="px-6 py-5 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-200">
@@ -362,7 +353,7 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Order Summary */}
+            {}
             <div>
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden sticky top-8">
                 <div className="px-6 py-5 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
@@ -391,7 +382,7 @@ export default function CartPage() {
                       <span className="text-xl font-bold text-gray-900">Total</span>
                       <span className="text-xl font-bold text-green-600">₹{totalAmount.toFixed(2)}</span>
                     </div>
-                    {/* Payment Method Selection */}
+                    {}
                     <div className="mb-6">
                       <p className="text-lg font-semibold text-gray-900 mb-4">Choose Payment Method</p>
                       <div className="space-y-3">

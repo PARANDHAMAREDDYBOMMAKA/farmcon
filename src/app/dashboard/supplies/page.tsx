@@ -31,18 +31,15 @@ export default function SuppliesPage() {
         return
       }
 
-      // Get user profile using API
       const profile = await profileAPI.getProfile(session.user.id)
 
       if (profile) {
         setUser(profile)
       }
 
-      // Load products using API
       const productsData = await productsAPI.getProducts()
       setProducts(productsData)
 
-      // For now, set empty categories array until we implement categories API
       setCategories([])
 
     } catch (error) {
@@ -58,7 +55,7 @@ export default function SuppliesPage() {
     setCartLoading(productId)
     
     try {
-      // Add to cart via API
+      
       const response = await fetch('/api/cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -73,8 +70,7 @@ export default function SuppliesPage() {
         const error = await response.json()
         throw new Error(error.error || 'Failed to add to cart')
       }
-      
-      // Show success message
+
       toast.success('Added to cart successfully!')
 
     } catch (error) {
@@ -123,7 +119,7 @@ export default function SuppliesPage() {
         </div>
       </div>
 
-      {/* Filters */}
+      {}
       <div className="mb-6 flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <input
@@ -150,7 +146,7 @@ export default function SuppliesPage() {
         </div>
       </div>
 
-      {/* Products Grid */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.map((product) => (
           <div key={product.id} className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">

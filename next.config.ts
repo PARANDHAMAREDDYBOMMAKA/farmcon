@@ -9,11 +9,10 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Optimize for production
+  
   poweredByHeader: false,
   compress: true,
 
-  // Image optimization
   images: {
     remotePatterns: [
       {
@@ -24,7 +23,6 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // Reduce serverless function size
   experimental: {
     serverMinification: true,
     serverSourceMaps: false,
@@ -32,7 +30,7 @@ const nextConfig: NextConfig = {
 
   webpack: (config, { isServer }) => {
     if (isServer) {
-      // Externalize heavy dependencies to reduce function size
+      
       config.externals = [
         ...config.externals,
         'engine.io-client',
@@ -46,7 +44,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Wrap with PWA first, then Sentry
 const configWithPWA = withPWA({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
@@ -67,23 +64,19 @@ const configWithPWA = withPWA({
 })(nextConfig);
 
 export default withSentryConfig(configWithPWA, {
-  // Sentry configuration
+  
   org: process.env.SENTRY_ORG,
   project: process.env.SENTRY_PROJECT,
 
-  // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
 
-  // Upload source maps to Sentry - disabled to reduce bundle size
   hideSourceMaps: true,
   disableLogger: true,
 
-  // Automatically annotate React components to show their full name in breadcrumbs and session replay
   reactComponentAnnotation: {
-    enabled: false, // Disabled to reduce bundle size
+    enabled: false, 
   },
 
-  // Disable autoInstrumentation to reduce bundle size
   autoInstrumentServerFunctions: false,
   autoInstrumentMiddleware: false,
 });

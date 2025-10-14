@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'
 import ImageUpload from '@/components/ImageUpload'
 import type { Crop } from '@/types'
+import { Pencil, XCircle, FileText, Calendar, Camera, DollarSign, Save, Leaf } from 'lucide-react'
 
 export default function EditCropPage() {
   const { user, loading } = useAuth('farmer')
@@ -137,7 +138,7 @@ export default function EditCropPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <span className="text-6xl">🚫</span>
+          <XCircle className="w-24 h-24 text-red-500 mx-auto" />
           <h2 className="mt-4 text-xl font-semibold text-gray-900">Error Loading Crop</h2>
           <p className="mt-2 text-gray-600">{error}</p>
           <Link
@@ -153,7 +154,7 @@ export default function EditCropPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      {/* Header */}
+      {}
       <div className="mb-6">
         <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
           <Link href="/dashboard" className="hover:text-green-600">Dashboard</Link>
@@ -176,7 +177,7 @@ export default function EditCropPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Basic Information */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">📋 Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -279,7 +280,7 @@ export default function EditCropPage() {
           </div>
         </div>
 
-        {/* Timeline */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">📅 Timeline</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -327,7 +328,7 @@ export default function EditCropPage() {
           </div>
         </div>
 
-        {/* Images */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">📷 Crop Images</h2>
           <ImageUpload
@@ -337,7 +338,7 @@ export default function EditCropPage() {
           />
         </div>
 
-        {/* Yield & Pricing */}
+        {}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">💰 Yield & Pricing</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -413,7 +414,7 @@ export default function EditCropPage() {
             </div>
           </div>
 
-          {/* Revenue Calculation */}
+          {}
           {formData.estimatedYield && formData.pricePerUnit && (
             <div className="mt-4 p-4 bg-green-50 rounded-lg">
               <h3 className="text-sm font-medium text-green-800 mb-2">💡 Estimated Revenue</h3>
@@ -427,7 +428,7 @@ export default function EditCropPage() {
           )}
         </div>
 
-        {/* Action Buttons */}
+        {}
         <div className="flex flex-col sm:flex-row gap-4 justify-end">
           <Link
             href={`/dashboard/crops/${params.id}`}

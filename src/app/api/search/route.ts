@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-  // Check if MeiliSearch is configured before importing
+  
   if (!process.env.MEILISEARCH_HOST || !process.env.MEILISEARCH_API_KEY) {
     return NextResponse.json(
       { error: 'Search feature is not available. MeiliSearch is not configured.' },
@@ -11,7 +11,6 @@ export async function GET(request: NextRequest) {
     )
   }
 
-  // Lazy load MeiliSearch
   const { search, INDEXES } = await import('@/lib/meilisearch')
   try {
     const { searchParams } = new URL(request.url)
@@ -26,7 +25,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Search query is required' }, { status: 400 })
     }
 
-    // Validate index
     const validIndexes = Object.values(INDEXES)
     if (!validIndexes.includes(index as any)) {
       return NextResponse.json(
@@ -35,7 +33,6 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Perform search
     const results = await search(index, query, {
       limit,
       offset,

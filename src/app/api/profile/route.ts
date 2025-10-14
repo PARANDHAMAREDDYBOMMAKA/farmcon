@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { dbOperations } from '@/lib/prisma'
 
-// GET /api/profile - Get user profile
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -28,7 +27,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/profile - Create or update profile
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -82,7 +80,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT /api/profile - Update profile
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()

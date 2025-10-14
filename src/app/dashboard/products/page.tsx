@@ -117,7 +117,7 @@ export default function ProductsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -136,7 +136,7 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
@@ -184,7 +184,7 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Filters */}
+      {}
       <div className="bg-white rounded-lg shadow p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -226,7 +226,7 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Products Grid */}
+      {}
       <div className="bg-white rounded-lg shadow">
         {filteredProducts.length === 0 ? (
           <div className="text-center py-12">

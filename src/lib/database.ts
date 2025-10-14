@@ -2,7 +2,6 @@ import { supabase } from './supabase'
 
 import type { User, FarmerProfile } from '@/types'
 
-// Database error types for better error handling
 export class DatabaseError extends Error {
   constructor(message: string, public code?: string, public details?: any) {
     super(message)
@@ -17,7 +16,6 @@ export class ValidationError extends Error {
   }
 }
 
-// Retry logic for database operations
 async function withRetry<T>(
   operation: () => Promise<T>,
   maxRetries: number = 3,
@@ -31,7 +29,6 @@ async function withRetry<T>(
     } catch (error) {
       lastError = error as Error
 
-      // Don't retry on authentication or validation errors
       if (error && typeof error === 'object' && 'code' in error) {
         const code = (error as any).code
         if (code === 'PGRST301' || code === 'PGRST116' || code?.startsWith('23')) {
@@ -41,7 +38,6 @@ async function withRetry<T>(
 
       if (attempt === maxRetries) break
 
-      // Exponential backoff
       await new Promise(resolve => setTimeout(resolve, delayMs * attempt))
     }
   }
@@ -53,7 +49,6 @@ async function withRetry<T>(
   )
 }
 
-// Validate profile data before database operations
 function validateProfileData(data: Partial<User>): void {
   if (data.email && !data.email.includes('@')) {
     throw new ValidationError('Invalid email format', 'email')
@@ -72,9 +67,8 @@ function validateProfileData(data: Partial<User>): void {
   }
 }
 
-// Enhanced profile operations with better error handling
 export const profileOperations = {
-  // Get user profile with better error handling
+  
   async getProfile(userId: string): Promise<User | null> {
     return withRetry(async () => {
       const { data, error } = await supabase
@@ -85,7 +79,7 @@ export const profileOperations = {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          return null // Profile not found
+          return null 
         }
         throw new DatabaseError(
           `Failed to fetch profile: ${error.message}`,
@@ -98,7 +92,6 @@ export const profileOperations = {
     })
   },
 
-  // Create or update profile with validation and retry logic
   async upsertProfile(profileData: Partial<User>): Promise<User> {
     validateProfileData(profileData)
 
@@ -121,7 +114,6 @@ export const profileOperations = {
     })
   },
 
-  // Update specific profile fields
   async updateProfile(userId: string, updates: Partial<User>): Promise<User> {
     validateProfileData(updates)
 
@@ -148,7 +140,6 @@ export const profileOperations = {
     })
   },
 
-  // Check if profile is complete
   async isProfileComplete(userId: string): Promise<boolean> {
     const profile = await this.getProfile(userId)
     if (!profile) return false
@@ -158,9 +149,8 @@ export const profileOperations = {
   }
 }
 
-// Enhanced farmer profile operations
 export const farmerOperations = {
-  // Get farmer profile with retry logic
+  
   async getFarmerProfile(userId: string): Promise<FarmerProfile | null> {
     return withRetry(async () => {
       const { data, error } = await supabase
@@ -171,7 +161,7 @@ export const farmerOperations = {
 
       if (error) {
         if (error.code === 'PGRST116') {
-          return null // Farmer profile not found
+          return null 
         }
         throw new DatabaseError(
           `Failed to fetch farmer profile: ${error.message}`,
@@ -184,7 +174,6 @@ export const farmerOperations = {
     })
   },
 
-  // Create or update farmer profile
   async upsertFarmerProfile(farmerData: Partial<FarmerProfile>): Promise<FarmerProfile> {
     return withRetry(async () => {
       const { data, error } = await supabase
@@ -209,7 +198,6 @@ export const farmerOperations = {
   }
 }
 
-// Database health check
 export async function checkDatabaseHealth(): Promise<boolean> {
   try {
     const { error } = await supabase
@@ -224,7 +212,6 @@ export async function checkDatabaseHealth(): Promise<boolean> {
   }
 }
 
-// Enhanced error reporting
 export function getErrorMessage(error: unknown): string {
   if (error instanceof DatabaseError) {
     return error.message
@@ -241,7 +228,6 @@ export function getErrorMessage(error: unknown): string {
   return 'An unexpected error occurred'
 }
 
-// Database connection status
 export async function getDatabaseStatus(): Promise<{
   connected: boolean
   latency?: number

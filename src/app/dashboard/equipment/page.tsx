@@ -5,6 +5,7 @@ import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'
 import { equipmentAPI } from '@/lib/api-client'
+import { Truck, MapPin, Phone } from 'lucide-react'
 
 interface Equipment {
   id: string
@@ -58,8 +59,7 @@ export default function EquipmentRentalPage() {
   const loadEquipment = async () => {
     try {
       if (!user) return
-      
-      // Load equipment using API
+
       const equipmentData = await equipmentAPI.getEquipment()
       setEquipment(equipmentData || [])
     } catch (error) {
@@ -131,7 +131,7 @@ export default function EquipmentRentalPage() {
         </div>
       </div>
 
-      {/* Filters and Search */}
+      {}
       <div className="mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <input
@@ -176,7 +176,7 @@ export default function EquipmentRentalPage() {
         </div>
       </div>
 
-      {/* Equipment Grid */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredEquipment.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
@@ -189,7 +189,7 @@ export default function EquipmentRentalPage() {
                 />
               ) : (
                 <div className="h-48 w-full bg-gray-200 flex items-center justify-center">
-                  <span className="text-4xl">🚜</span>
+                  <Truck className="w-16 h-16 text-gray-400" />
                 </div>
               )}
             </div>
@@ -212,8 +212,9 @@ export default function EquipmentRentalPage() {
                 <p className="text-sm text-gray-600">
                   Owner: <span className="font-medium">{item.owner.full_name}</span>
                 </p>
-                <p className="text-sm text-gray-500">
-                  📍 {item.location || `${item.owner.city}, ${item.owner.state}`}
+                <p className="text-sm text-gray-500 flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />
+                  {item.location || `${item.owner.city}, ${item.owner.state}`}
                 </p>
               </div>
 
@@ -249,9 +250,10 @@ export default function EquipmentRentalPage() {
               <div className="mt-4 flex space-x-2">
                 <button
                   onClick={() => contactOwner(item.owner.phone || '', item.name)}
-                  className="flex-1 bg-green-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700"
+                  className="flex-1 bg-green-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 flex items-center justify-center gap-2"
                 >
-                  📞 Contact
+                  <Phone className="w-4 h-4" />
+                  Contact
                 </button>
                 <Link
                   href={`/dashboard/equipment/${item.id}`}
@@ -283,7 +285,7 @@ export default function EquipmentRentalPage() {
 
       {filteredEquipment.length === 0 && (
         <div className="text-center py-12">
-          <span className="text-6xl">🚜</span>
+          <Truck className="w-24 h-24 text-gray-400 mx-auto" />
           <h3 className="mt-4 text-lg font-medium text-gray-900">No equipment found</h3>
           <p className="mt-2 text-gray-500">
             Try adjusting your search or filters. Be the first to list equipment for rent!

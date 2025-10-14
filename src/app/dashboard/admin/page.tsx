@@ -74,7 +74,6 @@ export default function AdminDashboard() {
         return
       }
 
-      // Get user profile and check admin access
       const { data: profile } = await supabase
         .from('profiles')
         .select('*')
@@ -88,7 +87,6 @@ export default function AdminDashboard() {
 
       setUser(profile)
 
-      // Try to get cached stats
       const cacheKey = 'admin_stats'
       const cachedStats = await redis.get(cacheKey)
       
@@ -98,7 +96,6 @@ export default function AdminDashboard() {
         await loadStats()
       }
 
-      // Load recent activity
       await loadRecentActivity()
 
     } catch (error) {
@@ -111,37 +108,31 @@ export default function AdminDashboard() {
 
   const loadStats = async () => {
     try {
-      // Get user stats
+      
       const { data: users } = await supabase
         .from('profiles')
         .select('role, email_verified')
 
-      // Get crop stats
       const { data: crops } = await supabase
         .from('crops')
         .select('status')
 
-      // Get product stats
       const { data: products } = await supabase
         .from('products')
         .select('stock_quantity, is_active')
 
-      // Get equipment stats
       const { data: equipment } = await supabase
         .from('equipment')
         .select('status')
 
-      // Get order stats
       const { data: orders } = await supabase
         .from('orders')
         .select('status, total_amount, created_at')
 
-      // Get crop listings for revenue calculation
       const { data: cropListings } = await supabase
         .from('crop_listings')
         .select('price_per_unit, quantity_available')
 
-      // Calculate stats
       const userStats = {
         total: users?.length || 0,
         farmers: users?.filter(u => u.role === 'farmer').length || 0,
@@ -178,7 +169,6 @@ export default function AdminDashboard() {
         cancelled: orders?.filter(o => o.status === 'cancelled').length || 0,
       }
 
-      // Calculate revenue
       const totalGMV = orders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0
       const currentMonth = new Date().getMonth()
       const currentYear = new Date().getFullYear()
@@ -201,7 +191,6 @@ export default function AdminDashboard() {
 
       setStats(adminStats)
 
-      // Cache for 10 minutes
       await redis.set('admin_stats', JSON.stringify(adminStats), { ex: 600 })
 
     } catch (error) {
@@ -211,7 +200,7 @@ export default function AdminDashboard() {
 
   const loadRecentActivity = async () => {
     try {
-      // Mock recent activity - in real implementation, you'd have an activity log table
+      
       const activities: RecentActivity[] = [
         {
           id: '1',
@@ -302,7 +291,7 @@ export default function AdminDashboard() {
         <p className="text-gray-600">Platform overview and management tools</p>
       </div>
 
-      {/* Navigation Tabs */}
+      {}
       <div className="mb-6">
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-8">
@@ -331,7 +320,7 @@ export default function AdminDashboard() {
 
       {activeTab === 'overview' && (
         <>
-          {/* Key Metrics */}
+          {}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
@@ -366,9 +355,9 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Detailed Stats */}
+          {}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* User Breakdown */}
+            {}
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">User Distribution</h3>
               <div className="space-y-3">
@@ -391,7 +380,7 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Crop Status */}
+            {}
             <div className="bg-white rounded-lg shadow p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Crop Status</h3>
               <div className="space-y-3">
@@ -415,7 +404,7 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Recent Activity */}
+          {}
           <div className="bg-white rounded-lg shadow p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
             <div className="space-y-4">

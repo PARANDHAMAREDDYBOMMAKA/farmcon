@@ -6,6 +6,7 @@ import Link from 'next/link'
 import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'
 import { equipmentAPI } from '@/lib/api-client'
+import { Truck, MapPin, Phone, Mail, XCircle } from 'lucide-react'
 
 interface Equipment {
   id: string
@@ -54,7 +55,7 @@ export default function EquipmentDetailPage() {
     if (!user) return
     
     try {
-      // Load equipment details
+      
       const equipmentData = await equipmentAPI.getEquipmentById(equipmentId)
       
       if (!equipmentData) {
@@ -65,13 +66,12 @@ export default function EquipmentDetailPage() {
 
       setEquipment(equipmentData as Equipment)
 
-      // Set default rental type based on available rates
       if (equipmentData.hourly_rate && !equipmentData.daily_rate) {
         setRentalType('hourly')
       } else if (equipmentData.daily_rate && !equipmentData.hourly_rate) {
         setRentalType('daily')
       } else if (equipmentData.daily_rate) {
-        setRentalType('daily') // Default to daily if both available
+        setRentalType('daily') 
       }
 
     } catch (error) {
@@ -116,7 +116,7 @@ export default function EquipmentDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <span className="text-6xl">❌</span>
+          <XCircle className="w-24 h-24 text-red-500 mx-auto" />
           <h3 className="mt-4 text-lg font-medium text-gray-900">Equipment not found</h3>
           <Link
             href="/dashboard/equipment"
@@ -131,7 +131,7 @@ export default function EquipmentDetailPage() {
 
   return (
     <div className="p-6">
-      {/* Breadcrumb */}
+      {}
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
@@ -149,7 +149,7 @@ export default function EquipmentDetailPage() {
       </nav>
 
       <div className="lg:grid lg:grid-cols-2 lg:gap-8">
-        {/* Equipment Images */}
+        {}
         <div>
           <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
             {equipment.images && equipment.images.length > 0 ? (
@@ -160,7 +160,7 @@ export default function EquipmentDetailPage() {
               />
             ) : (
               <div className="h-96 w-full bg-gray-200 flex items-center justify-center">
-                <span className="text-8xl">🚜</span>
+                <Truck className="w-32 h-32 text-gray-400" />
               </div>
             )}
           </div>
@@ -185,7 +185,7 @@ export default function EquipmentDetailPage() {
           )}
         </div>
 
-        {/* Equipment Info */}
+        {}
         <div>
           <div className="flex items-start justify-between">
             <div>
@@ -208,7 +208,7 @@ export default function EquipmentDetailPage() {
             </span>
           </div>
 
-          {/* Pricing */}
+          {}
           <div className="mt-4">
             <div className="flex flex-wrap gap-4">
               {equipment.hourly_rate && (
@@ -226,7 +226,7 @@ export default function EquipmentDetailPage() {
             </div>
           </div>
 
-          {/* Equipment Details */}
+          {}
           <div className="mt-6 space-y-4">
             <div className="grid grid-cols-2 gap-4">
               {equipment.year_manufactured && (
@@ -235,16 +235,17 @@ export default function EquipmentDetailPage() {
                   <span className="ml-2 font-medium">{equipment.year_manufactured}</span>
                 </div>
               )}
-              <div>
+              <div className="flex items-center gap-1">
                 <span className="text-gray-600">Location:</span>
-                <span className="ml-2 font-medium">
-                  📍 {equipment.location || `${equipment.owner.city}, ${equipment.owner.state}`}
+                <span className="ml-2 font-medium flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  {equipment.location || `${equipment.owner.city}, ${equipment.owner.state}`}
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Owner Information */}
+          {}
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Owner Information</h3>
             <div className="space-y-2">
@@ -266,7 +267,7 @@ export default function EquipmentDetailPage() {
             </div>
           )}
 
-          {/* Specifications */}
+          {}
           {equipment.specifications && Object.keys(equipment.specifications).length > 0 && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Specifications</h3>
@@ -281,13 +282,13 @@ export default function EquipmentDetailPage() {
             </div>
           )}
 
-          {/* Rental Calculator */}
+          {}
           {equipment.status === 'available' && (equipment.hourly_rate || equipment.daily_rate) && (
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Calculate Rental Cost</h3>
               
               <div className="space-y-4">
-                {/* Rental Type Selection */}
+                {}
                 {equipment.hourly_rate && equipment.daily_rate && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -324,7 +325,7 @@ export default function EquipmentDetailPage() {
                   </div>
                 )}
 
-                {/* Duration Selection */}
+                {}
                 <div>
                   <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
                     Duration ({rentalType === 'hourly' ? 'hours' : 'days'})
@@ -340,7 +341,7 @@ export default function EquipmentDetailPage() {
                   />
                 </div>
 
-                {/* Total Cost */}
+                {}
                 <div className="pt-2 border-t border-gray-200">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-medium text-gray-900">Total Cost:</span>
@@ -351,22 +352,24 @@ export default function EquipmentDetailPage() {
             </div>
           )}
 
-          {/* Contact Actions */}
+          {}
           <div className="mt-8 space-y-4">
             <div className="flex space-x-4">
               <button
                 onClick={() => contactOwner('phone')}
-                className="flex-1 bg-green-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-700 flex items-center justify-center"
+                className="flex-1 bg-green-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-700 flex items-center justify-center gap-2"
                 disabled={!equipment.owner.phone}
               >
-                📞 Call Owner
+                <Phone className="w-5 h-5" />
+                Call Owner
               </button>
               <button
                 onClick={() => contactOwner('email')}
-                className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-blue-700 flex items-center justify-center"
+                className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-blue-700 flex items-center justify-center gap-2"
                 disabled={!equipment.owner.email}
               >
-                ✉️ Email Owner
+                <Mail className="w-5 h-5" />
+                Email Owner
               </button>
             </div>
             

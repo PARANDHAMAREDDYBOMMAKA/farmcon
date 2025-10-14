@@ -99,7 +99,6 @@ export async function DELETE(
       return NextResponse.json({ error: 'Equipment ID is required' }, { status: 400 })
     }
 
-    // Get equipment first to retrieve images
     const equipment = await prisma.equipment.findUnique({
       where: { id: equipmentId },
       select: { images: true }
@@ -109,7 +108,6 @@ export async function DELETE(
       return NextResponse.json({ error: 'Equipment not found' }, { status: 404 })
     }
 
-    // Delete images from Cloudinary if they exist
     if (equipment.images && equipment.images.length > 0) {
       await deleteMultipleFromCloudinary(equipment.images)
     }

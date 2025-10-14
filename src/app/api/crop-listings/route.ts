@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/crop-listings - Get crop listings with optional filters
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -29,7 +28,6 @@ export async function GET(request: NextRequest) {
       whereClause.isActive = isActive === 'true'
     }
 
-    // Only show crops that aren't sold (unless specifically filtering by farmer)
     if (!farmerId) {
       whereClause.crop = {
         status: {
@@ -67,7 +65,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/crop-listings - Create a new crop listing
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -130,7 +127,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT /api/crop-listings - Update a crop listing
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
@@ -143,7 +139,6 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    // Convert date strings to Date objects if present
     if (updateData.harvestDate) {
       updateData.harvestDate = new Date(updateData.harvestDate)
     }
@@ -151,7 +146,6 @@ export async function PUT(request: NextRequest) {
       updateData.expiryDate = new Date(updateData.expiryDate)
     }
 
-    // Convert numeric fields
     if (updateData.quantityAvailable) {
       updateData.quantityAvailable = parseFloat(updateData.quantityAvailable.toString())
     }
@@ -186,7 +180,6 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// DELETE /api/crop-listings - Delete a crop listing
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)

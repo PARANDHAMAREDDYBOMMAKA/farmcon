@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { dbOperations, prisma } from '@/lib/prisma'
+import { cache, CacheKeys } from '@/lib/redis'
 
-// GET /api/dashboard/stats - Get dashboard statistics
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -10,6 +10,13 @@ export async function GET(request: NextRequest) {
 
     if (!userId || !role) {
       return NextResponse.json({ error: 'User ID and role are required' }, { status: 400 })
+    }
+
+    const cacheKey = CacheKeys.dashboardStats(userId, role)
+    const cached = await cache.get(cacheKey)
+
+    if (cached) {
+      return NextResponse.json({ stats: cached, source: 'cache' })
     }
 
     let stats = {}
@@ -31,6 +38,8 @@ export async function GET(request: NextRequest) {
         stats = {}
     }
 
+    await cache.set(cacheKey, stats, 300)
+
     return NextResponse.json({ stats })
   } catch (error) {
     console.error('Dashboard stats error:', error)
@@ -51,7 +60,7 @@ async function loadFarmerStats(farmerId: string) {
       prisma.order.findMany({
         where: { 
           sellerId: farmerId,
-          paymentStatus: 'paid'  // Only count paid orders
+          paymentStatus: 'paid'  
         },
         select: { totalAmount: true, status: true, createdAt: true }
       }),
@@ -72,7 +81,6 @@ async function loadFarmerStats(farmerId: string) {
       sum + Number(order.totalAmount), 0
     )
 
-    // Get monthly revenue (last 30 days)
     const monthlyOrders = orders.filter(order => {
       const orderDate = new Date(order.createdAt)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
@@ -114,7 +122,7 @@ async function loadConsumerStats(consumerId: string) {
       prisma.order.findMany({
         where: { 
           customerId: consumerId,
-          paymentStatus: 'paid'  // Only count paid orders
+          paymentStatus: 'paid'  
         },
         select: { totalAmount: true, status: true, createdAt: true }
       }),
@@ -128,7 +136,6 @@ async function loadConsumerStats(consumerId: string) {
       sum + Number(order.totalAmount), 0
     )
 
-    // Get monthly spending (last 30 days)
     const monthlyOrders = orders.filter(order => {
       const orderDate = new Date(order.createdAt)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
@@ -164,7 +171,7 @@ async function loadConsumerStats(consumerId: string) {
 
 async function loadSupplierStats(supplierId: string) {
   try {
-    // Get all products for this supplier
+    
     const [products, orders, productStock] = await Promise.all([
       prisma.product.findMany({
         where: { supplierId },
@@ -174,7 +181,7 @@ async function loadSupplierStats(supplierId: string) {
           stockQuantity: true
         }
       }),
-      // Get orders where this supplier's products were ordered
+      
       prisma.order.findMany({
         where: {
           items: {
@@ -198,7 +205,7 @@ async function loadSupplierStats(supplierId: string) {
           }
         }
       }),
-      // Get detailed stock information
+      
       prisma.product.aggregate({
         where: { supplierId },
         _sum: {
@@ -211,14 +218,12 @@ async function loadSupplierStats(supplierId: string) {
     const lowStockProducts = products.filter(product => product.stockQuantity < 10).length
     const outOfStockProducts = products.filter(product => product.stockQuantity === 0).length
 
-    // Calculate revenue from orders that include this supplier's products
     const monthlyOrders = orders.filter(order => {
       const orderDate = new Date(order.createdAt)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
       return orderDate >= thirtyDaysAgo
     })
 
-    // Calculate monthly revenue (only from this supplier's items)
     const monthlyRevenue = monthlyOrders.reduce((sum, order) => {
       const supplierItemsValue = order.items.reduce((itemSum, item) => {
         const itemPrice = item.product?.price ? Number(item.product.price) : 0
@@ -231,7 +236,6 @@ async function loadSupplierStats(supplierId: string) {
       order.status === 'PENDING'
     ).length
 
-    // Calculate total revenue (all time)
     const totalRevenue = orders.reduce((sum, order) => {
       const supplierItemsValue = order.items.reduce((itemSum, item) => {
         const itemPrice = item.product?.price ? Number(item.product.price) : 0

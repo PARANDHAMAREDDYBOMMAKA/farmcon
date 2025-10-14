@@ -12,8 +12,7 @@ export async function GET(request: NextRequest) {
       orderBy: { createdAt: 'desc' },
       take: 10
     })
-    
-    // Also check Supabase user
+
     let supabaseUser = null
     if (email) {
       try {

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cache, CacheKeys } from '@/lib/redis'
 
-// Government APIs for market prices (all free)
 const AGMARKNET_URL = 'https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070'
 const ENAM_URL = 'https://api.enam.gov.in/api/v1/market'
 
@@ -43,7 +42,6 @@ interface MarketDataResponse {
   source: string
 }
 
-// Helper function to generate cache key for market data
 function getMarketDataCacheKey(commodity: string, state: string | null, district: string | null): string {
   const parts = ['market-data', commodity]
   if (state) parts.push(state)
@@ -59,10 +57,8 @@ export async function GET(request: NextRequest) {
     const district = searchParams.get('district')
     const limit = parseInt(searchParams.get('limit') || '50')
 
-    // Generate cache key
     const cacheKey = getMarketDataCacheKey(commodity, state, district)
 
-    // Try to get cached data (TTL: 1 hour = 3600 seconds)
     const cachedData = await cache.get<MarketDataResponse>(cacheKey)
     if (cachedData) {
       console.log(`Cache HIT for ${cacheKey}`)
@@ -71,30 +67,26 @@ export async function GET(request: NextRequest) {
 
     console.log(`Cache MISS for ${cacheKey}`)
 
-    // Try government APIs first, then fallback to mock data
     let prices: MarketPrice[] = []
 
     try {
-      // Try AGMARKNET API
+      
       prices = await fetchAGMARKNETData(commodity, state, district, limit)
     } catch (error) {
       console.warn('AGMARKNET API failed, trying eNAM:', error)
 
       try {
-        // Try eNAM API
+        
         prices = await fetchENAMData(commodity, state, district, limit)
       } catch (error) {
         console.warn('eNAM API failed, using mock data:', error)
 
-        // Fallback to mock data with realistic Indian market prices
         prices = generateMockMarketData(commodity, state, district, limit)
       }
     }
 
-    // Generate insights from the price data
     const insights = generateMarketInsights(prices, commodity)
 
-    // Add historical trend data
     const historicalData = await generateHistoricalTrends(commodity)
 
     const responseData: MarketDataResponse = {
@@ -109,7 +101,6 @@ export async function GET(request: NextRequest) {
       source: 'Government of India Market Data'
     }
 
-    // Cache the response for 1 hour (3600 seconds)
     await cache.set(cacheKey, responseData, 3600)
     console.log(`Cached market data for ${cacheKey}`)
 
@@ -130,7 +121,7 @@ async function fetchAGMARKNETData(
   limit: number
 ): Promise<MarketPrice[]> {
   try {
-    // Free public API key - no registration required
+    
     const apiKey = '579b464db66ec23bdd000001cdd3946e44ce4aad7209ff7b23ac571b'
     let url = `${AGMARKNET_URL}?api-key=${apiKey}&format=json&limit=${limit}`
 
@@ -161,7 +152,6 @@ async function fetchAGMARKNETData(
       throw new Error('Invalid response format from AGMARKNET')
     }
 
-    // If the API returns no records, throw error to fallback to mock data
     if (data.records.length === 0) {
       throw new Error('No records found in AGMARKNET API')
     }
@@ -194,7 +184,7 @@ async function fetchENAMData(
   limit: number
 ): Promise<MarketPrice[]> {
   try {
-    // Note: eNAM API requires registration and approval
+    
     const url = `${ENAM_URL}/prices?commodity=${encodeURIComponent(commodity)}&limit=${limit}`
 
     const response = await fetch(url, {
@@ -210,7 +200,6 @@ async function fetchENAMData(
 
     const data = await response.json()
 
-    // If the API returns no data, throw error to fallback to mock data
     if (!data || data.length === 0) {
       throw new Error('No records found in eNAM API')
     }
@@ -242,7 +231,7 @@ function generateMockMarketData(
   district: string | null,
   limit: number
 ): MarketPrice[] {
-  // Realistic Indian agricultural market data
+  
   const crops = {
     'Rice': { basePrice: 2000, variation: 300, unit: 'Quintal' },
     'Wheat': { basePrice: 2100, variation: 250, unit: 'Quintal' },
@@ -283,7 +272,6 @@ function generateMockMarketData(
     const minPrice = modalPrice - (cropData.variation * 0.1)
     const maxPrice = modalPrice + (cropData.variation * 0.1)
 
-    // Calculate date (last 30 days)
     const date = new Date()
     date.setDate(date.getDate() - Math.floor(Math.random() * 30))
 
@@ -344,7 +332,6 @@ function generateMarketInsights(prices: MarketPrice[], commodity: string): Marke
   const minPrice = Math.min(...prices.map(p => p.modalPrice))
   const maxPrice = Math.max(...prices.map(p => p.modalPrice))
 
-  // Sort markets by price
   const sortedPrices = [...prices].sort((a, b) => b.modalPrice - a.modalPrice)
 
   const bestMarkets = sortedPrices.slice(0, 3).map(p => ({
@@ -359,7 +346,6 @@ function generateMarketInsights(prices: MarketPrice[], commodity: string): Marke
     state: p.state
   }))
 
-  // Analyze seasonal trend
   const recentPrices = prices.filter(p => {
     const priceDate = new Date(p.date)
     const weekAgo = new Date()
@@ -388,7 +374,6 @@ function generateMarketInsights(prices: MarketPrice[], commodity: string): Marke
     }
   }
 
-  // Generate recommendation
   let recommendation = ''
   if (seasonalTrend === 'rising') {
     recommendation = `${commodity} prices are trending upward. Good time for farmers to sell. Consumers should consider bulk purchases.`
@@ -409,7 +394,7 @@ function generateMarketInsights(prices: MarketPrice[], commodity: string): Marke
 }
 
 async function generateHistoricalTrends(commodity: string) {
-  // Generate mock historical data for the last 6 months
+  
   const months = []
   const currentDate = new Date()
 
@@ -417,15 +402,14 @@ async function generateHistoricalTrends(commodity: string) {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1)
     const monthName = date.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })
 
-    // Generate realistic price variations based on agricultural cycles
-    const basePrice = 2000 // Base price for rice
-    const seasonalFactor = Math.sin((date.getMonth() + 1) * Math.PI / 6) * 300 // Seasonal variation
-    const randomFactor = (Math.random() - 0.5) * 200 // Random market fluctuation
+    const basePrice = 2000 
+    const seasonalFactor = Math.sin((date.getMonth() + 1) * Math.PI / 6) * 300 
+    const randomFactor = (Math.random() - 0.5) * 200 
 
     months.push({
       month: monthName,
       price: Math.round(basePrice + seasonalFactor + randomFactor),
-      volume: Math.round(1000 + Math.random() * 500), // Volume in tonnes
+      volume: Math.round(1000 + Math.random() * 500), 
       trend: i === 0 ? 'current' : Math.random() > 0.5 ? 'up' : 'down'
     })
   }
@@ -447,7 +431,7 @@ function calculateVolatility(prices: number[]): string {
   const mean = prices.reduce((sum, price) => sum + price, 0) / prices.length
   const variance = prices.reduce((sum, price) => sum + Math.pow(price - mean, 2), 0) / prices.length
   const stdDev = Math.sqrt(variance)
-  const cv = (stdDev / mean) * 100 // Coefficient of variation
+  const cv = (stdDev / mean) * 100 
 
   if (cv > 15) return 'High'
   if (cv > 8) return 'Medium'

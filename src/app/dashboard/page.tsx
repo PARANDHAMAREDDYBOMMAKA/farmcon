@@ -15,11 +15,10 @@ export default function Dashboard() {
     if (user && !authLoading) {
       loadDashboardData()
     }
-    
-    // Set up interval to refresh stats periodically
+
     const statsInterval = setInterval(() => {
       if (user && !authLoading) {
-        loadDashboardStats() // Refresh stats every 30 seconds
+        loadDashboardStats() 
       }
     }, 30000)
     
@@ -30,13 +29,10 @@ export default function Dashboard() {
     try {
       if (!user) return
 
-      // Load dashboard stats
       await loadDashboardStats()
-      
-      // Load recent activity
+
       await loadRecentActivity()
-      
-      // Load weather data if farmer
+
       if (user.role === 'farmer') {
         await loadWeatherData()
       }
@@ -62,8 +58,7 @@ export default function Dashboard() {
   const loadRecentActivity = async () => {
     try {
       if (!user) return
-      
-      // Load recent orders and other activities
+
       const customerOrders = await ordersAPI.getOrders(user.id, 'customer')
       const sellerOrders = await ordersAPI.getOrders(user.id, 'seller')
       
@@ -87,8 +82,7 @@ export default function Dashboard() {
           status: order.status
         }))
       ]
-      
-      // Sort by date and take latest 5
+
       activities.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       setRecentActivity(activities.slice(0, 5))
     } catch (error) {
@@ -124,7 +118,7 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error('Error loading weather data:', error)
-      // Fallback to mock data
+      
       setWeatherData({
         location: user?.city || 'Your Location',
         temperature: 28,
@@ -150,7 +144,6 @@ export default function Dashboard() {
     return { text: 'Night', icon: '🌙', gradient: 'from-indigo-900 via-purple-900 to-blue-900' }
   }
 
-
   if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -170,9 +163,9 @@ export default function Dashboard() {
     const greeting = getGreeting()
     return (
     <div className="space-y-4 md:space-y-6">
-      {/* Header */}
+      {}
       <div className={`relative bg-gradient-to-r ${greeting.gradient} rounded-2xl p-6 md:p-8 text-white overflow-hidden shadow-xl`}>
-        {/* Animated background pattern */}
+        {}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 md:w-48 md:h-48 bg-white rounded-full translate-y-12 -translate-x-12"></div>
@@ -192,13 +185,13 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stats Cards with Glassmorphism */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div className="group relative bg-gradient-to-br from-emerald-500/90 via-green-500/90 to-teal-500/90 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/20">
-          {/* Animated gradient overlay */}
+          {}
           <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          {/* Decorative shapes */}
+          {}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
           <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
 
@@ -226,10 +219,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
 
-          {/* Decorative background */}
+          {}
           <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
 
           <div className="relative">
@@ -252,10 +245,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
 
-          {/* Animated pulse indicator */}
+          {}
           <div className="absolute top-6 right-6 w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
 
           <div className="relative">
@@ -277,10 +270,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
 
-          {/* Decorative pattern */}
+          {}
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-purple-100 to-pink-100 rounded-tl-full opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
 
           <div className="relative">
@@ -302,10 +295,10 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Weather Widget for Farmers with Glassmorphism */}
+      {}
       {weatherData && (
         <div className="relative bg-gradient-to-br from-blue-500/90 via-blue-600/90 to-cyan-600/90 backdrop-blur-xl rounded-3xl shadow-2xl p-6 md:p-8 overflow-hidden border border-white/20">
-          {/* Decorative elements */}
+          {}
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-cyan-300/20 rounded-full blur-2xl"></div>
 
@@ -361,7 +354,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Quick Actions with Glassmorphism */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
@@ -408,7 +401,7 @@ export default function Dashboard() {
     const greeting = getGreeting()
     return (
     <div className="space-y-4 md:space-y-6">
-      {/* Header */}
+      {}
       <div className={`relative bg-gradient-to-r ${greeting.gradient} rounded-2xl p-6 md:p-8 text-white overflow-hidden shadow-xl`}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
@@ -429,13 +422,13 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stats Cards with Glassmorphism */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div className="group relative bg-gradient-to-br from-green-500/90 via-emerald-500/90 to-teal-500/90 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/20">
-          {/* Animated gradient overlay */}
+          {}
           <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          {/* Decorative shapes */}
+          {}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
           <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
 
@@ -462,10 +455,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-yellow-500 to-orange-500"></div>
 
-          {/* Decorative background */}
+          {}
           <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
 
           <div className="relative">
@@ -487,10 +480,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
 
-          {/* Decorative pattern */}
+          {}
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-blue-100 to-cyan-100 rounded-tl-full opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
 
           <div className="relative">
@@ -513,10 +506,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-rose-500"></div>
 
-          {/* Decorative background */}
+          {}
           <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
 
           <div className="relative">
@@ -538,7 +531,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Quick Actions with Glassmorphism */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
@@ -632,7 +625,7 @@ export default function Dashboard() {
     const greeting = getGreeting()
     return (
     <div className="space-y-4 md:space-y-6">
-      {/* Header */}
+      {}
       <div className={`relative bg-gradient-to-r ${greeting.gradient} rounded-2xl p-6 md:p-8 text-white overflow-hidden shadow-xl`}>
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
@@ -653,13 +646,13 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stats Cards with Glassmorphism */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div className="group relative bg-gradient-to-br from-green-500/90 via-emerald-500/90 to-teal-500/90 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/20">
-          {/* Animated gradient overlay */}
+          {}
           <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          {/* Decorative shapes */}
+          {}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
           <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
 
@@ -686,10 +679,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
 
-          {/* Decorative background */}
+          {}
           <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
 
           <div className="relative">
@@ -712,10 +705,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
 
-          {/* Animated pulse indicator */}
+          {}
           <div className="absolute top-6 right-6 w-3 h-3 bg-amber-500 rounded-full animate-pulse"></div>
 
           <div className="relative">
@@ -737,10 +730,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
 
-          {/* Decorative pattern */}
+          {}
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-purple-100 to-pink-100 rounded-tl-full opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
 
           <div className="relative">
@@ -762,7 +755,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Quick Actions with Glassmorphism */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-md">
@@ -802,7 +795,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Recent Orders Summary */}
+      {}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-xl font-semibold text-gray-900">Recent Orders</h3>
@@ -848,7 +841,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Performance Overview */}
+      {}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-lg p-6">
           <h3 className="text-xl font-semibold text-gray-900 mb-4">Top Products</h3>
@@ -908,9 +901,9 @@ export default function Dashboard() {
     const greeting = getGreeting()
     return (
     <div className="space-y-4 md:space-y-6">
-      {/* Header */}
+      {}
       <div className={`relative bg-gradient-to-r ${greeting.gradient} rounded-2xl p-6 md:p-8 text-white overflow-hidden shadow-xl`}>
-        {/* Animated background pattern */}
+        {}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-32 h-32 md:w-64 md:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 md:w-48 md:h-48 bg-white rounded-full translate-y-12 -translate-x-12"></div>
@@ -930,13 +923,13 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Stats Cards with Glassmorphism */}
+      {}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <div className="group relative bg-gradient-to-br from-green-500/90 via-emerald-500/90 to-teal-500/90 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/20">
-          {/* Animated gradient overlay */}
+          {}
           <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-          {/* Decorative shapes */}
+          {}
           <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
           <div className="absolute -bottom-5 -left-5 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
 
@@ -964,10 +957,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
 
-          {/* Decorative background */}
+          {}
           <div className="absolute -top-20 -right-20 w-48 h-48 bg-gradient-to-br from-blue-100 to-cyan-100 rounded-full opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-500"></div>
 
           <div className="relative">
@@ -990,10 +983,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
 
-          {/* Decorative pattern */}
+          {}
           <div className="absolute bottom-0 right-0 w-32 h-32 bg-gradient-to-tl from-amber-100 to-orange-100 rounded-tl-full opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
 
           <div className="relative">
@@ -1015,10 +1008,10 @@ export default function Dashboard() {
         </div>
 
         <div className="group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-5 md:p-6 hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden border border-white/40">
-          {/* Gradient accent bar */}
+          {}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
 
-          {/* Animated pulse indicator */}
+          {}
           <div className="absolute top-6 right-6 w-3 h-3 bg-purple-500 rounded-full animate-pulse"></div>
 
           <div className="relative">
@@ -1040,7 +1033,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Quick Actions with Glassmorphism */}
+      {}
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
@@ -1080,7 +1073,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* System Overview */}
+      {}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">

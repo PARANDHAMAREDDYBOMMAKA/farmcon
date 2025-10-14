@@ -26,7 +26,6 @@ export async function POST(request: NextRequest) {
         const session = event.data.object as any
         console.log('Payment succeeded:', session.id)
 
-        // Get session details
         const checkoutSession = await stripe.checkout.sessions.retrieve(session.id, {
           expand: ['line_items', 'payment_intent']
         })
@@ -74,7 +73,6 @@ async function handleSuccessfulPayment(session: any) {
       return
     }
 
-    // Get user profile
     const { data: profile } = await supabase
       .from('profiles')
       .select('*')
@@ -86,7 +84,6 @@ async function handleSuccessfulPayment(session: any) {
       return
     }
 
-    // Get cart items if this was a cart checkout using Prisma
     let cartItems: any[] = []
     if (metadata.cartCheckout) {
       console.log('Fetching cart items for user:', userId)
@@ -113,7 +110,6 @@ async function handleSuccessfulPayment(session: any) {
       }
     }
 
-    // Group items by seller for separate orders
     const itemsBySupplier = cartItems.reduce((groups: any, item: any) => {
       const supplierId = item.product?.supplierId || item.cropListing?.farmerId
       const supplierName = item.product?.supplier?.fullName || item.cropListing?.farmer?.fullName
@@ -133,9 +129,8 @@ async function handleSuccessfulPayment(session: any) {
 
     const orders = []
 
-    // Create orders for each supplier or single order if no cart items
     if (Object.keys(itemsBySupplier).length === 0) {
-      // Single order without cart items (direct purchase) - using Prisma
+      
       try {
         const order = await prisma.order.create({
           data: {
@@ -165,7 +160,7 @@ async function handleSuccessfulPayment(session: any) {
         return
       }
     } else {
-      // Create orders for each supplier from cart
+      
       for (const [supplierId, supplierData] of Object.entries(itemsBySupplier) as any) {
         const items = supplierData.items
         const totalAmount = items.reduce((sum: number, item: any) => {
@@ -173,7 +168,6 @@ async function handleSuccessfulPayment(session: any) {
           return sum + (parseFloat(price) * parseFloat(item.quantity))
         }, 0)
 
-        // Create order using Prisma
         let order
         try {
           order = await prisma.order.create({
@@ -202,10 +196,9 @@ async function handleSuccessfulPayment(session: any) {
           continue
         }
 
-        // Create order items and update inventory/crop status
         for (const item of items) {
           try {
-            // Create order item using Prisma
+            
             await prisma.orderItem.create({
               data: {
                 orderId: order.id,
@@ -217,7 +210,6 @@ async function handleSuccessfulPayment(session: any) {
               }
             })
 
-            // Update inventory for products
             if (item.productId && item.product) {
               const newStock = Math.max(0, parseFloat(item.product.stockQuantity || 0) - parseFloat(item.quantity))
               await prisma.product.update({
@@ -226,22 +218,19 @@ async function handleSuccessfulPayment(session: any) {
               })
             }
 
-            // Update crop listing quantity and status
             if (item.cropListingId && item.cropListing) {
               const soldQuantity = parseFloat(item.quantity)
               const availableQuantity = parseFloat(item.cropListing.quantityAvailable || 0)
               const newAvailableQuantity = Math.max(0, availableQuantity - soldQuantity)
 
-              // Update crop listing quantity
               await prisma.cropListing.update({
                 where: { id: item.cropListingId },
                 data: { 
                   quantityAvailable: newAvailableQuantity,
-                  isActive: newAvailableQuantity > 0 // Deactivate if sold out
+                  isActive: newAvailableQuantity > 0 
                 }
               })
 
-              // Update main crop status to sold if completely sold
               if (newAvailableQuantity === 0 && item.cropListing.crop?.id) {
                 await prisma.crop.update({
                   where: { id: item.cropListing.crop.id },
@@ -259,7 +248,6 @@ async function handleSuccessfulPayment(session: any) {
       }
     }
 
-    // Clear cart items after successful payment using Prisma
     if (metadata.cartCheckout) {
       try {
         await prisma.cartItem.deleteMany({
@@ -273,7 +261,6 @@ async function handleSuccessfulPayment(session: any) {
 
     console.log(`${orders.length} order(s) created successfully`)
 
-    // Send notifications to sellers using Prisma
     for (const order of orders) {
       try {
         await prisma.notification.create({

@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
-    // Check if MeiliSearch is configured
+    
     if (!process.env.MEILISEARCH_HOST || !process.env.MEILISEARCH_API_KEY) {
       return NextResponse.json(
         {
@@ -17,17 +17,14 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    // Try to connect and get stats
     const { MeiliSearch } = await import('meilisearch')
     const client = new MeiliSearch({
       host: process.env.MEILISEARCH_HOST,
       apiKey: process.env.MEILISEARCH_API_KEY
     })
 
-    // Get health status
     const health = await client.health()
 
-    // Get all indexes and their stats
     const indexes = await client.getIndexes()
     const indexStats = await Promise.all(
       indexes.results.map(async (index) => {

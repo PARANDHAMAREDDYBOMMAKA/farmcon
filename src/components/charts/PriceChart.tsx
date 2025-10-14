@@ -196,7 +196,6 @@ export default function PriceChart({ data, commodity, type = 'line', showVolume 
     },
   }
 
-  // Animation on mount
   useEffect(() => {
     const chart = chartRef.current
     if (chart) {

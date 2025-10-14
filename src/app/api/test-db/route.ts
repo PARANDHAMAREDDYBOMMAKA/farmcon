@@ -3,13 +3,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    // Test database connection
+    
     await prisma.$queryRaw`SELECT 1`
-    
-    // Count profiles
+
     const profileCount = await prisma.profile.count()
-    
-    // Get all profiles (limit 10 for safety)
+
     const profiles = await prisma.profile.findMany({
       take: 10,
       select: {

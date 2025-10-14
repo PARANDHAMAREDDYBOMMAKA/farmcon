@@ -25,7 +25,7 @@ const EXPERT_SERVICES: ExpertService[] = [
     title: 'Agricultural Expert',
     specialty: 'Crop Management & Pest Control',
     description: 'Expert in sustainable farming practices, crop rotation, and integrated pest management. 20+ years of experience helping farmers maximize yields.',
-    calLink: 'farmcon/crop-expert', // Replace with your actual Cal.com link
+    calLink: 'farmcon/crop-expert', 
     image: '👨‍🌾',
     experience: '20+ years',
     languages: ['English', 'Hindi', 'Telugu'],
@@ -38,7 +38,7 @@ const EXPERT_SERVICES: ExpertService[] = [
     title: 'Soil Science Specialist',
     specialty: 'Soil Health & Fertilization',
     description: 'Specialized in soil testing, nutrient management, and organic farming. Helping farmers improve soil quality and reduce chemical dependency.',
-    calLink: 'farmcon/soil-expert', // Replace with your actual Cal.com link
+    calLink: 'farmcon/soil-expert', 
     image: '👩‍🌾',
     experience: '15+ years',
     languages: ['English', 'Hindi', 'Marathi'],
@@ -51,7 +51,7 @@ const EXPERT_SERVICES: ExpertService[] = [
     title: 'Agri-Business Consultant',
     specialty: 'Market Analysis & Business Strategy',
     description: 'Expert in agricultural economics, market trends, and farm business planning. Helping farmers maximize profitability.',
-    calLink: 'farmcon/business-consultant', // Replace with your actual Cal.com link
+    calLink: 'farmcon/business-consultant', 
     image: '👨‍💼',
     experience: '12+ years',
     languages: ['English', 'Hindi', 'Gujarati'],
@@ -72,7 +72,7 @@ export default function ConsultationsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
@@ -90,7 +90,7 @@ export default function ConsultationsPage() {
 
         {!showBooking ? (
           <>
-            {/* Info Banner */}
+            {}
             <div className="bg-green-50 border-l-4 border-green-400 p-6 mb-8 rounded-lg">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
@@ -111,11 +111,11 @@ export default function ConsultationsPage() {
               </div>
             </div>
 
-            {/* Experts Grid */}
+            {}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {EXPERT_SERVICES.map((expert) => (
                 <div key={expert.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-                  {/* Expert Header */}
+                  {}
                   <div className="bg-gradient-to-r from-green-500 to-blue-600 p-6 text-white">
                     <div className="flex items-center space-x-4">
                       <div className="text-6xl">{expert.image}</div>
@@ -126,7 +126,7 @@ export default function ConsultationsPage() {
                     </div>
                   </div>
 
-                  {/* Expert Details */}
+                  {}
                   <div className="p-6">
                     <div className="mb-4">
                       <div className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
@@ -138,7 +138,7 @@ export default function ConsultationsPage() {
                       {expert.description}
                     </p>
 
-                    {/* Stats */}
+                    {}
                     <div className="grid grid-cols-3 gap-4 mb-4 py-4 border-t border-b border-gray-100">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-gray-900">{expert.rating}</div>
@@ -154,7 +154,7 @@ export default function ConsultationsPage() {
                       </div>
                     </div>
 
-                    {/* Languages */}
+                    {}
                     <div className="mb-4">
                       <div className="text-xs text-gray-500 mb-2">Languages:</div>
                       <div className="flex flex-wrap gap-2">
@@ -166,7 +166,7 @@ export default function ConsultationsPage() {
                       </div>
                     </div>
 
-                    {/* Book Button */}
+                    {}
                     <button
                       onClick={() => handleBookConsultation(expert)}
                       className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
@@ -179,7 +179,7 @@ export default function ConsultationsPage() {
               ))}
             </div>
 
-            {/* How It Works */}
+            {}
             <div className="mt-12 bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">How It Works</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -208,7 +208,7 @@ export default function ConsultationsPage() {
           </>
         ) : (
           <>
-            {/* Booking View */}
+            {}
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
@@ -229,7 +229,7 @@ export default function ConsultationsPage() {
                 </button>
               </div>
 
-              {/* Important Note */}
+              {}
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
                 <div className="flex">
                   <div className="flex-shrink-0">
@@ -249,7 +249,7 @@ export default function ConsultationsPage() {
                 </div>
               </div>
 
-              {/* Cal.com Booking Widget */}
+              {}
               <CalComBooking
                 calLink={selectedExpert?.calLink || 'default'}
                 config={{

@@ -76,7 +76,7 @@ export default function RootLayout({
         <style
           dangerouslySetInnerHTML={{
             __html: `
-              /* Hide Google Translate banner */
+              
               .goog-te-banner-frame.skiptranslate,
               .goog-te-gadget-icon,
               .goog-te-balloon-frame,
@@ -85,19 +85,16 @@ export default function RootLayout({
                 display: none !important;
               }
 
-              /* Fix body top margin when translate banner appears */
               body {
                 top: 0px !important;
               }
 
-              /* Hide Google Translate branding */
               .goog-logo-link,
               .goog-te-gadget span,
               .goog-te-combo option:first-child {
                 display: none !important;
               }
 
-              /* Style the translate dropdown (if visible) */
               .goog-te-combo {
                 padding: 8px;
                 border: 1px solid #d1d5db;
@@ -109,7 +106,7 @@ export default function RootLayout({
           }}
         />
 
-        {/* Microsoft Clarity - Analytics & Session Recording */}
+        {}
         {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID && (
           <script
             type="text/javascript"
@@ -125,7 +122,7 @@ export default function RootLayout({
           />
         )}
 
-        {/* Tawk.to - Live Chat Support (Bottom-Left) */}
+        {}
         {process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID && (
           <>
             <script
@@ -148,10 +145,10 @@ export default function RootLayout({
               type="module"
               dangerouslySetInnerHTML={{
                 __html: `
-                  // Customize Tawk.to position and styling
+                  
                   const checkTawk = setInterval(() => {
                     if (window.Tawk_API && window.Tawk_API.hideWidget) {
-                      // Position on bottom-right (same place as AI chatbot)
+                      
                       window.Tawk_API.customStyle = {
                         visibility: {
                           desktop: { position: 'br', xOffset: 20, yOffset: 20 },
@@ -163,7 +160,7 @@ export default function RootLayout({
                         console.log('✅ Tawk.to Live Support loaded');
                         try {
                           window.Tawk_API.setAttributes({ name: 'FarmCon User' });
-                          // Hide widget by default - only show when "Talk to Human" is clicked
+                          
                           if (typeof window.Tawk_API.hideWidget === 'function') {
                             window.Tawk_API.hideWidget();
                           }
@@ -172,7 +169,6 @@ export default function RootLayout({
                         }
                       };
 
-                      // When chat is minimized, hide the widget completely
                       window.Tawk_API.onChatMinimized = function() {
                         try {
                           if (typeof window.Tawk_API.hideWidget === 'function') {
@@ -183,7 +179,6 @@ export default function RootLayout({
                         }
                       };
 
-                      // When chat is ended, hide the widget completely
                       window.Tawk_API.onChatEnded = function() {
                         try {
                           if (typeof window.Tawk_API.hideWidget === 'function') {
@@ -194,7 +189,6 @@ export default function RootLayout({
                         }
                       };
 
-                      // Hide immediately if already loaded
                       try {
                         if (typeof window.Tawk_API.hideWidget === 'function') {
                           window.Tawk_API.hideWidget();
@@ -213,7 +207,7 @@ export default function RootLayout({
           </>
         )}
 
-        {/* OneSignal Web Push Notifications */}
+        {}
         {process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID && (
           <>
             <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
@@ -272,13 +266,11 @@ export default function RootLayout({
 
                       console.log('✅ OneSignal initialized successfully');
 
-                      // Log current subscription status
                       const isPushSupported = await OneSignal.Notifications.isPushSupported();
                       const permission = await OneSignal.Notifications.permissionNative;
                       console.log('Push supported:', isPushSupported);
                       console.log('Notification permission:', permission);
 
-                      // Listen to subscription changes
                       OneSignal.User.PushSubscription.addEventListener('change', function(event) {
                         console.log('Subscription changed:', event);
                         if (event.current.optedIn) {
