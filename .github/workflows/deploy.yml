@@ -43,43 +43,47 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Clean up old Docker images from Docker Hub
         run: |
-          # Keep only the latest 10 images, delete older ones
+          # Keep only the latest 3 images and 'latest' tag, delete everything else
           echo "Fetching tags from Docker Hub..."
 
-          # Get all tags for the repository
-          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100" \
-            -H "Authorization: Bearer $(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+          TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
             -H "Content-Type: application/json" \
             -d '{"username":"${{ secrets.DOCKERHUB_USERNAME }}","password":"${{ secrets.DOCKERHUB_TOKEN }}"}' \
-            | jq -r '.token')" | jq -r '.results[] | select(.name | test("^main-[a-f0-9]{7}$")) | .name' | sort -r)
+            | jq -r '.token')
+
+          # Get all tags except 'latest' and 'main'
+          ALL_TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100" \
+            -H "Authorization: Bearer $TOKEN" \
+            | jq -r '.results[] | select(.name != "latest" and .name != "main") | .name' | sort -r)
 
           # Count total tags
-          TOTAL=$(echo "$TAGS" | wc -l)
-          echo "Found $TOTAL SHA-based tags"
+          TOTAL=$(echo "$ALL_TAGS" | grep -c . || echo "0")
+          echo "Found $TOTAL tags (excluding 'latest' and 'main')"
 
-          # Skip the first 10 (most recent) and delete the rest
-          if [ $TOTAL -gt 10 ]; then
-            echo "Deleting old tags (keeping only 10 most recent)..."
-            echo "$TAGS" | tail -n +11 | while read -r TAG; do
-              echo "Deleting tag: $TAG"
-              TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
-                -H "Content-Type: application/json" \
-                -d '{"username":"${{ secrets.DOCKERHUB_USERNAME }}","password":"${{ secrets.DOCKERHUB_TOKEN }}"}' \
-                | jq -r '.token')
-
-              curl -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
-                -H "Authorization: Bearer $TOKEN"
-
-              echo "Deleted tag: $TAG"
+          # Skip the first 3 (most recent) and delete the rest
+          if [ $TOTAL -gt 3 ]; then
+            echo "Deleting old tags (keeping only 3 most recent + latest/main)..."
+            echo "$ALL_TAGS" | tail -n +4 | while read -r TAG; do
+              if [ -n "$TAG" ]; then
+                echo "Deleting tag: $TAG"
+                curl -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
+                  -H "Authorization: Bearer $TOKEN"
+                echo "Deleted tag: $TAG"
+              fi
             done
           else
             echo "Only $TOTAL tags found, no cleanup needed"
           fi
+
+          # Delete buildcache tag if it exists (from old builds)
+          echo "Checking for buildcache tag..."
+          curl -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/buildcache/" \
+            -H "Authorization: Bearer $TOKEN" 2>/dev/null || echo "No buildcache tag found"
 
       - name: Clean up local Docker resources
         if: always()
