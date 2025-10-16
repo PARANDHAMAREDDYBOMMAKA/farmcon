@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import FarmConChatbot from "@/components/chatbot/FarmConChatbot";
 import PostHogProvider from "@/components/providers/PostHogProvider";
+import FingerprintProvider from "@/components/providers/FingerprintProvider";
 
 
 const geistSans = Geist({
@@ -294,8 +295,10 @@ export default function RootLayout({
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <PostHogProvider>
-          {children}
-          <FarmConChatbot />
+          <FingerprintProvider>
+            {children}
+            <FarmConChatbot />
+          </FingerprintProvider>
         </PostHogProvider>
       </body>
     </html>
