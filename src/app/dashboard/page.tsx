@@ -4,6 +4,12 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import { dashboardAPI, ordersAPI } from '@/lib/api-client'
+import {
+  Sunrise, Sun, Sunset, Moon, Sprout, TrendingUp, Package,
+  ShoppingCart, Tractor, Heart, DollarSign, CloudSun, Droplets,
+  Wind, Zap, Plus, ClipboardList, BarChart3, AlertTriangle,
+  Store, Users, Settings, Wheat, Carrot, Box, Briefcase
+} from 'lucide-react'
 export default function Dashboard() {
   const { user, loading: authLoading } = useAuth()
   const [stats, setStats] = useState<any>({})
@@ -137,11 +143,11 @@ export default function Dashboard() {
 
   const getGreeting = () => {
     const hour = new Date().getHours()
-    if (hour < 5) return { text: 'Night', icon: '🌙', gradient: 'from-indigo-900 via-purple-900 to-blue-900' }
-    if (hour < 12) return { text: 'Morning', icon: '🌅', gradient: 'from-orange-400 via-pink-400 to-purple-500' }
-    if (hour < 17) return { text: 'Afternoon', icon: '☀️', gradient: 'from-yellow-400 via-orange-400 to-red-400' }
-    if (hour < 21) return { text: 'Evening', icon: '🌇', gradient: 'from-purple-600 via-pink-500 to-orange-400' }
-    return { text: 'Night', icon: '🌙', gradient: 'from-indigo-900 via-purple-900 to-blue-900' }
+    if (hour < 5) return { text: 'Night', icon: <Moon className="w-12 h-12 md:w-16 md:h-16" />, gradient: 'from-indigo-900 via-purple-900 to-blue-900' }
+    if (hour < 12) return { text: 'Morning', icon: <Sunrise className="w-12 h-12 md:w-16 md:h-16" />, gradient: 'from-orange-400 via-pink-400 to-purple-500' }
+    if (hour < 17) return { text: 'Afternoon', icon: <Sun className="w-12 h-12 md:w-16 md:h-16" />, gradient: 'from-yellow-400 via-orange-400 to-red-400' }
+    if (hour < 21) return { text: 'Evening', icon: <Sunset className="w-12 h-12 md:w-16 md:h-16" />, gradient: 'from-purple-600 via-pink-500 to-orange-400' }
+    return { text: 'Night', icon: <Moon className="w-12 h-12 md:w-16 md:h-16" />, gradient: 'from-indigo-900 via-purple-900 to-blue-900' }
   }
 
   if (authLoading || loading) {
@@ -173,13 +179,13 @@ export default function Dashboard() {
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-4xl md:text-5xl animate-bounce">{greeting.icon}</span>
+              <div className="animate-bounce">{greeting.icon}</div>
               <h1 className="text-2xl md:text-4xl font-bold">Good {greeting.text}, {user?.fullName || 'Farmer'}!</h1>
             </div>
             <p className="text-white/90 text-sm md:text-base">Manage your crops and grow your agricultural business</p>
           </div>
           <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
-            <span className="text-2xl">🌱</span>
+            <Wheat className="w-6 h-6" />
             <span className="text-sm font-medium">Farmer Dashboard</span>
           </div>
         </div>
@@ -198,7 +204,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl">🌱</span>
+                <Sprout className="w-6 h-6 text-white" />
               </div>
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <span className="text-xs text-white">↗</span>
@@ -228,7 +234,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">💰</span>
+                <DollarSign className="w-6 h-6 text-white" />
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
                 <span>↑</span>
@@ -254,7 +260,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">📦</span>
+                <Package className="w-6 h-6 text-white" />
               </div>
               <div className="text-xs text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-full">
                 Urgent
@@ -279,7 +285,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">🚜</span>
+                <Tractor className="w-6 h-6 text-white" />
               </div>
               <div className="text-[10px] text-purple-600 font-medium bg-purple-50 px-2 py-1 rounded-full">
                 RENTAL
@@ -306,7 +312,7 @@ export default function Dashboard() {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-white/30 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
-                  <span className="text-3xl">🌤️</span>
+                  <CloudSun className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl md:text-2xl font-bold text-white">Weather Forecast</h3>
               </div>
@@ -323,11 +329,11 @@ export default function Dashboard() {
                   <p className="text-white/90 text-lg mb-4">{weatherData.condition}</p>
                   <div className="grid grid-cols-2 gap-3 mt-4">
                     <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 shadow-md">
-                      <p className="text-white/70 text-xs mb-1">💧 Humidity</p>
+                      <p className="text-white/70 text-xs mb-1 flex items-center gap-1"><Droplets className="w-3 h-3" /> Humidity</p>
                       <p className="font-bold text-white text-lg">{weatherData.humidity}%</p>
                     </div>
                     <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3 border border-white/30 shadow-md">
-                      <p className="text-white/70 text-xs mb-1">💨 Wind</p>
+                      <p className="text-white/70 text-xs mb-1 flex items-center gap-1"><Wind className="w-3 h-3" /> Wind</p>
                       <p className="font-bold text-white text-lg">{weatherData.windSpeed} km/h</p>
                     </div>
                   </div>
@@ -358,7 +364,7 @@ export default function Dashboard() {
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-2xl">⚡</span>
+            <Zap className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
         </div>
@@ -366,28 +372,28 @@ export default function Dashboard() {
           <Link href="/dashboard/crops/add" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">🌱</span>
+              <Sprout className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Add Crop</span>
           </Link>
           <Link href="/dashboard/sell" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">💰</span>
+              <DollarSign className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Create Listing</span>
           </Link>
           <Link href="/dashboard/equipment/add" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">🚜</span>
+              <Tractor className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">List Equipment</span>
           </Link>
           <Link href="/dashboard/orders" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📦</span>
+              <Package className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">View Orders</span>
           </Link>
@@ -410,13 +416,13 @@ export default function Dashboard() {
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-4xl md:text-5xl animate-bounce">{greeting.icon}</span>
+              <div className="animate-bounce">{greeting.icon}</div>
               <h1 className="text-2xl md:text-4xl font-bold">Good {greeting.text}, {user?.fullName || 'Consumer'}!</h1>
             </div>
             <p className="text-white/90 text-sm md:text-base">Browse and buy fresh crops from local farmers</p>
           </div>
           <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
-            <span className="text-2xl">🛒</span>
+            <ShoppingCart className="w-6 h-6" />
             <span className="text-sm font-medium">Consumer Dashboard</span>
           </div>
         </div>
@@ -435,7 +441,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl">📦</span>
+                <Package className="w-6 h-6 text-white" />
               </div>
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <span className="text-xs text-white">↗</span>
@@ -464,7 +470,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">🛒</span>
+                <ShoppingCart className="w-6 h-6 text-white" />
               </div>
               <div className="flex items-center gap-1 text-xs text-yellow-700 font-medium bg-yellow-50 px-2 py-1 rounded-full">
                 <span>Ready</span>
@@ -489,7 +495,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">💰</span>
+                <DollarSign className="w-6 h-6 text-white" />
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
                 <span>↑</span>
@@ -515,7 +521,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">❤️</span>
+                <Heart className="w-6 h-6 text-white" />
               </div>
               <div className="text-[10px] text-pink-600 font-medium bg-pink-50 px-2 py-1 rounded-full">
                 SAVED
@@ -535,7 +541,7 @@ export default function Dashboard() {
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-2xl">⚡</span>
+            <Zap className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
         </div>
@@ -543,28 +549,28 @@ export default function Dashboard() {
           <Link href="/dashboard/browse" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">🌾</span>
+              <Wheat className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Browse Crops</span>
           </Link>
           <Link href="/dashboard/cart" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">🛒</span>
+              <ShoppingCart className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">View Cart</span>
           </Link>
           <Link href="/dashboard/orders" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📦</span>
+              <Package className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">My Orders</span>
           </Link>
           <Link href="/dashboard/supplies" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">🧰</span>
+              <Briefcase className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Farm Supplies</span>
           </Link>
@@ -592,9 +598,10 @@ export default function Dashboard() {
                 <div className={`p-2 rounded-full ${
                   activity.type === 'purchase' ? 'bg-blue-100' : 'bg-green-100'
                 }`}>
-                  <span className="text-lg">
-                    {activity.type === 'purchase' ? '🛒' : '💰'}
-                  </span>
+                  {activity.type === 'purchase' ?
+                    <ShoppingCart className="w-5 h-5 text-blue-600" /> :
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                  }
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{activity.title}</p>
@@ -634,13 +641,13 @@ export default function Dashboard() {
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-4xl md:text-5xl animate-bounce">{greeting.icon}</span>
+              <div className="animate-bounce">{greeting.icon}</div>
               <h1 className="text-2xl md:text-4xl font-bold">Good {greeting.text}, {user?.fullName || 'Supplier'}!</h1>
             </div>
             <p className="text-white/90 text-sm md:text-base">Manage your agricultural products and supply business</p>
           </div>
           <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
-            <span className="text-2xl">🏪</span>
+            <Store className="w-6 h-6" />
             <span className="text-sm font-medium">Supplier Dashboard</span>
           </div>
         </div>
@@ -659,7 +666,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl">📦</span>
+                <Package className="w-6 h-6 text-white" />
               </div>
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <span className="text-xs text-white">↗</span>
@@ -688,7 +695,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">💰</span>
+                <DollarSign className="w-6 h-6 text-white" />
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
                 <span>↑</span>
@@ -714,7 +721,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">⏳</span>
+                <ClipboardList className="w-6 h-6 text-white" />
               </div>
               <div className="text-xs text-amber-600 font-semibold bg-amber-50 px-3 py-1 rounded-full">
                 Urgent
@@ -739,7 +746,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">⚠️</span>
+                <AlertTriangle className="w-6 h-6 text-white" />
               </div>
               <div className="text-[10px] text-purple-600 font-medium bg-purple-50 px-2 py-1 rounded-full">
                 ALERT
@@ -759,7 +766,7 @@ export default function Dashboard() {
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-2xl">⚡</span>
+            <Zap className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
         </div>
@@ -767,28 +774,28 @@ export default function Dashboard() {
           <Link href="/dashboard/products/add" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">➕</span>
+              <Plus className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Add Product</span>
           </Link>
           <Link href="/dashboard/products" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📦</span>
+              <Package className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Manage Products</span>
           </Link>
           <Link href="/dashboard/orders" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📋</span>
+              <ClipboardList className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Process Orders</span>
           </Link>
           <Link href="/dashboard/inventory" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📊</span>
+              <BarChart3 className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">View Inventory</span>
           </Link>
@@ -809,7 +816,7 @@ export default function Dashboard() {
               <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-orange-100 rounded-full">
-                    <span className="text-lg">📋</span>
+                    <ClipboardList className="w-5 h-5 text-orange-600" />
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">{activity.title}</p>
@@ -833,7 +840,7 @@ export default function Dashboard() {
             ))
           ) : (
             <div className="text-center py-8 text-gray-500">
-              <span className="text-4xl block mb-2">📋</span>
+              <ClipboardList className="w-10 h-10 mx-auto mb-2" />
               <p>No recent orders found</p>
               <p className="text-sm">Orders will appear here once customers start placing orders</p>
             </div>
@@ -911,13 +918,13 @@ export default function Dashboard() {
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-2">
-              <span className="text-4xl md:text-5xl animate-bounce">{greeting.icon}</span>
+              <div className="animate-bounce">{greeting.icon}</div>
               <h1 className="text-2xl md:text-4xl font-bold">Good {greeting.text}, {user?.fullName || 'Admin'}!</h1>
             </div>
             <p className="text-white/90 text-sm md:text-base">Manage platform users, products, and operations</p>
           </div>
           <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
-            <span className="text-2xl">⚙️</span>
+            <Settings className="w-6 h-6" />
             <span className="text-sm font-medium">Admin Dashboard</span>
           </div>
         </div>
@@ -936,7 +943,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl">👥</span>
+                <Users className="w-6 h-6 text-white" />
               </div>
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                 <span className="text-xs text-white">↗</span>
@@ -966,7 +973,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">🚜</span>
+                <Tractor className="w-6 h-6 text-white" />
               </div>
               <div className="flex items-center gap-1 text-xs text-green-600 font-medium bg-green-50 px-2 py-1 rounded-full">
                 <span>↑</span>
@@ -992,7 +999,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">📦</span>
+                <Package className="w-6 h-6 text-white" />
               </div>
               <div className="text-[10px] text-amber-600 font-medium bg-amber-50 px-2 py-1 rounded-full">
                 CATALOG
@@ -1017,7 +1024,7 @@ export default function Dashboard() {
           <div className="relative">
             <div className="flex items-center justify-between mb-3">
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
-                <span className="text-2xl">📋</span>
+                <ClipboardList className="w-6 h-6 text-white" />
               </div>
               <div className="text-[10px] text-purple-600 font-medium bg-purple-50 px-2 py-1 rounded-full">
                 ORDERS
@@ -1037,7 +1044,7 @@ export default function Dashboard() {
       <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl p-6 md:p-8 border border-white/40">
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-2xl">⚡</span>
+            <Zap className="w-6 h-6 text-white" />
           </div>
           <h3 className="text-xl md:text-2xl font-bold text-gray-900">Admin Tools</h3>
         </div>
@@ -1045,28 +1052,28 @@ export default function Dashboard() {
           <Link href="/dashboard/admin/users" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">👥</span>
+              <Users className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Manage Users</span>
           </Link>
           <Link href="/dashboard/admin/products" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📦</span>
+              <Package className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Manage Products</span>
           </Link>
           <Link href="/dashboard/admin/orders" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📋</span>
+              <ClipboardList className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">View Orders</span>
           </Link>
           <Link href="/dashboard/admin/analytics" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-amber-500 to-orange-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             <div className="relative w-14 h-14 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-500">
-              <span className="text-3xl">📊</span>
+              <BarChart3 className="w-8 h-8 text-white" />
             </div>
             <span className="relative text-sm md:text-base font-bold text-white text-center">Analytics</span>
           </Link>
@@ -1077,7 +1084,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <span>📈</span>
+            <TrendingUp className="w-5 h-5" />
             Platform Health
           </h3>
           <div className="space-y-3">
@@ -1102,7 +1109,7 @@ export default function Dashboard() {
 
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <span>⚠️</span>
+            <AlertTriangle className="w-5 h-5" />
             Recent Alerts
           </h3>
           <div className="space-y-3">

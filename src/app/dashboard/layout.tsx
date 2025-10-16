@@ -1,58 +1,76 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { profileAPI } from '@/lib/api-client'
-import NotificationBell from '@/components/notifications/NotificationBell'
+import NotificationBell, { NotificationBellRef } from '@/components/notifications/NotificationBell'
 import ToastProvider from '@/components/providers/ToastProvider'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import type { User } from '@/types'
+import {
+  Home, Sprout, ShoppingCart, Tractor, Package,
+  CloudSun, TrendingUp, GraduationCap, Carrot,
+  ClipboardList, BarChart3, Search, Settings,
+  Users, X, Menu, LogOut, Wheat, Store
+} from 'lucide-react'
+
+const iconMap: Record<string, any> = {
+  Home, Sprout, ShoppingCart, Tractor, Package,
+  CloudSun, TrendingUp, GraduationCap, Carrot,
+  ClipboardList, BarChart3, Search, Settings,
+  Users, Wheat, Store
+}
+
+const getIcon = (iconName: string, className: string = "w-5 h-5") => {
+  const IconComponent = iconMap[iconName]
+  return IconComponent ? <IconComponent className={className} /> : null
+}
 
 const navigation = {
   farmer: [
-    { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
-    { name: 'My Crops', href: '/dashboard/crops', icon: '🌱' },
-    
-    { name: 'Buy Supplies', href: '/dashboard/supplies', icon: '🛒' },
-    { name: 'Equipment Rental', href: '/dashboard/equipment', icon: '🚜' },
-    { name: 'Orders', href: '/dashboard/orders', icon: '📦' },
-    { name: 'Weather', href: '/dashboard/weather', icon: '🌤️' },
-    { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
+    { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
+    { name: 'My Crops', href: '/dashboard/crops', icon: 'Sprout' },
+
+    { name: 'Buy Supplies', href: '/dashboard/supplies', icon: 'ShoppingCart' },
+    { name: 'Equipment Rental', href: '/dashboard/equipment', icon: 'Tractor' },
+    { name: 'Orders', href: '/dashboard/orders', icon: 'Package' },
+    { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
+    { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
   ],
   consumer: [
-    { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
-    { name: 'Browse Crops', href: '/dashboard/browse', icon: '🥕' },
-    { name: 'My Orders', href: '/dashboard/orders', icon: '📦' },
-    { name: 'Cart', href: '/dashboard/cart', icon: '🛒' },
-    { name: 'Weather', href: '/dashboard/weather', icon: '🌤️' },
-    { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
+    { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
+    { name: 'Browse Crops', href: '/dashboard/browse', icon: 'Carrot' },
+    { name: 'My Orders', href: '/dashboard/orders', icon: 'Package' },
+    { name: 'Cart', href: '/dashboard/cart', icon: 'ShoppingCart' },
+    { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
+    { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
   ],
   supplier: [
-    { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
-    { name: 'My Products', href: '/dashboard/products', icon: '📦' },
-    { name: 'Orders', href: '/dashboard/orders', icon: '📋' },
-    { name: 'Inventory', href: '/dashboard/inventory', icon: '📊' },
-    { name: 'Analytics', href: '/dashboard/analytics', icon: '📈' },
-    { name: 'Weather', href: '/dashboard/weather', icon: '🌤️' },
-    { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
-    { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: '🔍' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
+    { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
+    { name: 'My Products', href: '/dashboard/products', icon: 'Package' },
+    { name: 'Orders', href: '/dashboard/orders', icon: 'ClipboardList' },
+    { name: 'Inventory', href: '/dashboard/inventory', icon: 'BarChart3' },
+    { name: 'Analytics', href: '/dashboard/analytics', icon: 'TrendingUp' },
+    { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
+    { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
+    { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: 'Search' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
   ],
   admin: [
-    { name: 'Dashboard', href: '/dashboard', icon: '🏠' },
-    { name: 'Users', href: '/dashboard/users', icon: '👥' },
-    { name: 'Products', href: '/dashboard/all-products', icon: '📦' },
-    { name: 'Orders', href: '/dashboard/all-orders', icon: '📋' },
-    { name: 'Analytics', href: '/dashboard/analytics', icon: '📊' },
-    { name: 'Weather', href: '/dashboard/weather', icon: '🌤️' },
-    { name: 'Market Prices', href: '/dashboard/market-prices', icon: '📊' },
-    { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: '🔍' },
-    { name: 'Settings', href: '/dashboard/settings', icon: '⚙️' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: '🎓' },
+    { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
+    { name: 'Users', href: '/dashboard/users', icon: 'Users' },
+    { name: 'Products', href: '/dashboard/all-products', icon: 'Package' },
+    { name: 'Orders', href: '/dashboard/all-orders', icon: 'ClipboardList' },
+    { name: 'Analytics', href: '/dashboard/analytics', icon: 'BarChart3' },
+    { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
+    { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
+    { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: 'Search' },
+    { name: 'Settings', href: '/dashboard/settings', icon: 'Settings' },
+    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
   ]
 }
 
@@ -64,6 +82,7 @@ export default function DashboardLayout({
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const notificationBellRef = useRef<NotificationBellRef>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -145,7 +164,7 @@ export default function DashboardLayout({
           <div className="relative flex items-center justify-between h-full">
             <Link href="/" className="group flex items-center space-x-3 text-white hover:text-green-100 transition-all duration-200">
               <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <span className="text-xl">🌱</span>
+                <Sprout className="w-5 h-5" />
               </div>
               <div>
                 <div className="text-xl font-bold">FarmCon</div>
@@ -156,7 +175,7 @@ export default function DashboardLayout({
               onClick={() => setSidebarOpen(false)}
               className="lg:hidden p-2 text-white hover:text-green-100 hover:bg-white/10 rounded-lg transition-all duration-200"
             >
-              <span className="text-xl">×</span>
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -167,9 +186,10 @@ export default function DashboardLayout({
             <div className="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-full -translate-y-8 translate-x-8 opacity-50"></div>
             <div className="relative flex items-center space-x-3">
               <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
-                <span className="text-white text-sm font-bold">
-                  {user.role === 'farmer' ? '🌾' : user.role === 'consumer' ? '🛒' : user.role === 'supplier' ? '📦' : '👑'}
-                </span>
+                {user.role === 'farmer' ? <Wheat className="w-4 h-4 text-white" /> :
+                 user.role === 'consumer' ? <ShoppingCart className="w-4 h-4 text-white" /> :
+                 user.role === 'supplier' ? <Store className="w-4 h-4 text-white" /> :
+                 <Settings className="w-4 h-4 text-white" />}
               </div>
               <div>
                 <div className="text-sm font-bold text-green-700 capitalize">{user.role}</div>
@@ -186,11 +206,14 @@ export default function DashboardLayout({
               <Link
                 key={item.name}
                 href={item.href}
-                onClick={() => setSidebarOpen(false)}
+                onClick={() => {
+                  setSidebarOpen(false)
+                  notificationBellRef.current?.closeDropdown()
+                }}
                 className="group flex items-center px-4 py-3 text-gray-700 hover:text-green-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 rounded-xl transition-all duration-200 hover:shadow-sm hover:scale-[1.02] transform"
               >
                 <div className="flex items-center justify-center w-10 h-10 bg-gray-100 group-hover:bg-green-100 rounded-lg transition-all duration-200 group-hover:scale-110">
-                  <span className="text-lg group-hover:scale-110 transition-transform duration-200">{item.icon}</span>
+                  {getIcon(item.icon, "w-5 h-5 group-hover:scale-110 transition-transform duration-200")}
                 </div>
                 <span className="ml-4 font-medium group-hover:font-semibold transition-all duration-200">{item.name}</span>
                 <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
@@ -234,7 +257,7 @@ export default function DashboardLayout({
               onClick={handleSignOut}
               className="w-full flex items-center justify-center space-x-2 text-sm text-gray-600 hover:text-red-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-red-50 group"
             >
-              <span className="group-hover:scale-110 transition-transform duration-200">🚪</span>
+              <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
               <span>Sign out</span>
             </button>
           </div>
@@ -251,7 +274,7 @@ export default function DashboardLayout({
                 onClick={() => setSidebarOpen(true)}
                 className="lg:hidden text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
-                <span className="text-xl">☰</span>
+                <Menu className="w-5 h-5" />
               </button>
 
               <div className="hidden sm:block text-xs sm:text-sm text-gray-600 font-medium">
@@ -259,19 +282,22 @@ export default function DashboardLayout({
                   {user.fullName?.split(' ').map(name =>
                     name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
                   ).join(' ') || 'User'}
-                </span>! 👋
+                </span>!
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <LanguageSwitcher />
-              <NotificationBell />
+              <NotificationBell ref={notificationBellRef} />
             </div>
           </div>
         </div>
 
         {}
-        <main className="flex-1 p-4 sm:p-6 overflow-x-hidden">
+        <main
+          className="flex-1 p-4 sm:p-6 overflow-x-hidden"
+          onClick={() => notificationBellRef.current?.closeDropdown()}
+        >
           <div className="max-w-7xl mx-auto w-full">
             {children}
           </div>

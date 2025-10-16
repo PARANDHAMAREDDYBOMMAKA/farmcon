@@ -13,10 +13,22 @@ export async function GET(request: NextRequest) {
     const notifications = await prisma.notification.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
-      take: 10
+      take: 50
     })
 
-    return NextResponse.json({ notifications: notifications || [] })
+    // Transform to match frontend interface (snake_case)
+    const transformedNotifications = notifications.map(notif => ({
+      id: notif.id,
+      user_id: notif.userId,
+      title: notif.title,
+      message: notif.message,
+      type: notif.type,
+      is_read: notif.isRead,
+      action_url: notif.actionUrl,
+      created_at: notif.createdAt.toISOString()
+    }))
+
+    return NextResponse.json({ notifications: transformedNotifications || [] })
   } catch (error) {
     console.error('Notifications API error:', error)
     return NextResponse.json({ notifications: [] })

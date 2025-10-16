@@ -43,47 +43,100 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
+          cache-from: |
+            type=gha
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:latest
           cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
 
       - name: Clean up old Docker images from Docker Hub
         run: |
-          # Keep only the latest 3 images and 'latest' tag, delete everything else
-          echo "Fetching tags from Docker Hub..."
+          # Keep ONLY the 'latest' tag, delete ALL other tags
+          echo "Starting Docker Hub cleanup..."
+          echo "This will keep ONLY the 'latest' tag and remove all others"
 
+          # Login to Docker Hub and get token
+          echo "Authenticating with Docker Hub..."
           TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
             -H "Content-Type: application/json" \
-            -d '{"username":"${{ secrets.DOCKERHUB_USERNAME }}","password":"${{ secrets.DOCKERHUB_TOKEN }}"}' \
+            -d "{\"username\":\"${{ secrets.DOCKERHUB_USERNAME }}\",\"password\":\"${{ secrets.DOCKERHUB_TOKEN }}\"}" \
             | jq -r '.token')
 
-          # Get all tags except 'latest' and 'main'
-          ALL_TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100" \
-            -H "Authorization: Bearer $TOKEN" \
-            | jq -r '.results[] | select(.name != "latest" and .name != "main") | .name' | sort -r)
-
-          # Count total tags
-          TOTAL=$(echo "$ALL_TAGS" | grep -c . || echo "0")
-          echo "Found $TOTAL tags (excluding 'latest' and 'main')"
-
-          # Skip the first 3 (most recent) and delete the rest
-          if [ $TOTAL -gt 3 ]; then
-            echo "Deleting old tags (keeping only 3 most recent + latest/main)..."
-            echo "$ALL_TAGS" | tail -n +4 | while read -r TAG; do
-              if [ -n "$TAG" ]; then
-                echo "Deleting tag: $TAG"
-                curl -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
-                  -H "Authorization: Bearer $TOKEN"
-                echo "Deleted tag: $TAG"
-              fi
-            done
-          else
-            echo "Only $TOTAL tags found, no cleanup needed"
+          if [ -z "$TOKEN" ] || [ "$TOKEN" = "null" ]; then
+            echo "ERROR: Failed to authenticate with Docker Hub"
+            exit 1
           fi
 
-          # Delete buildcache tag if it exists (from old builds)
-          echo "Checking for buildcache tag..."
-          curl -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/buildcache/" \
-            -H "Authorization: Bearer $TOKEN" 2>/dev/null || echo "No buildcache tag found"
+          echo "Successfully authenticated"
+
+          # Function to fetch all tags with pagination
+          fetch_all_tags() {
+            local page=1
+            local has_more=true
+            local all_tags=""
+
+            while [ "$has_more" = true ]; do
+              echo "Fetching page $page..."
+              local response=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100&page=$page" \
+                -H "Authorization: Bearer $TOKEN")
+
+              local tags=$(echo "$response" | jq -r '.results[] | select(.name != "latest") | .name')
+
+              if [ -n "$tags" ]; then
+                all_tags="$all_tags"$'\n'"$tags"
+              fi
+
+              local next=$(echo "$response" | jq -r '.next')
+              if [ "$next" = "null" ]; then
+                has_more=false
+              else
+                page=$((page + 1))
+              fi
+            done
+
+            echo "$all_tags"
+          }
+
+          # Fetch all tags except 'latest'
+          echo "Fetching all tags from Docker Hub..."
+          ALL_TAGS=$(fetch_all_tags)
+
+          # Count total tags to delete
+          TOTAL=$(echo "$ALL_TAGS" | grep -v '^$' | wc -l | tr -d ' ')
+          echo "Found $TOTAL tags to delete (keeping only 'latest')"
+
+          if [ "$TOTAL" -gt 0 ]; then
+            echo "Deleting all tags except 'latest'..."
+            DELETED=0
+            FAILED=0
+
+            echo "$ALL_TAGS" | grep -v '^$' | while read -r TAG; do
+              if [ -n "$TAG" ]; then
+                echo "Deleting tag: $TAG"
+                HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+                  "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
+                  -H "Authorization: Bearer $TOKEN")
+
+                if [ "$HTTP_CODE" = "204" ] || [ "$HTTP_CODE" = "200" ]; then
+                  echo "✓ Successfully deleted: $TAG"
+                  DELETED=$((DELETED + 1))
+                else
+                  echo "✗ Failed to delete: $TAG (HTTP $HTTP_CODE)"
+                  FAILED=$((FAILED + 1))
+                fi
+
+                # Small delay to avoid rate limiting
+                sleep 0.5
+              fi
+            done
+
+            echo "Cleanup completed: $DELETED deleted, $FAILED failed"
+          else
+            echo "No tags to delete, only 'latest' exists"
+          fi
+
+          echo "Docker Hub cleanup finished!"
 
       - name: Clean up local Docker resources
         if: always()

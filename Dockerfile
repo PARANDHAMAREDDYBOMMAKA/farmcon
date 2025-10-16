@@ -10,8 +10,9 @@ WORKDIR /app
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma
 
-# Install dependencies
-RUN npm ci
+# Install dependencies with cache mount for faster builds
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --prefer-offline --no-audit
 
 # Stage 2: Builder
 FROM base AS builder
@@ -23,11 +24,13 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
-# Generate Prisma Client
-RUN npx prisma generate
+# Generate Prisma Client with cache mount
+RUN --mount=type=cache,target=/root/.npm \
+    npx prisma generate
 
-# Build Next.js application
-RUN npm run build
+# Build Next.js application with cache mount
+RUN --mount=type=cache,target=/app/.next/cache \
+    npm run build
 
 # Stage 3: Runner (Production)
 FROM base AS runner

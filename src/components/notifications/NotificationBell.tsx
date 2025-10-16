@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
+import { usePathname } from 'next/navigation'
 import { useAuth } from '@/hooks/useAuth'
 import { supabase } from '@/lib/supabase'
 import { Bell, Package, CreditCard, Truck, Star, Clock } from 'lucide-react'
@@ -16,8 +17,13 @@ interface Notification {
   created_at: string
 }
 
-export default function NotificationBell() {
+export interface NotificationBellRef {
+  closeDropdown: () => void
+}
+
+const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
   const { user } = useAuth()
+  const pathname = usePathname()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
   const [showDropdown, setShowDropdown] = useState(false)
@@ -50,6 +56,16 @@ export default function NotificationBell() {
       }
     }
   }, [user?.id])
+
+  // Close dropdown when navigating to a different page
+  useEffect(() => {
+    setShowDropdown(false)
+  }, [pathname])
+
+  // Expose closeDropdown function to parent component via ref
+  useImperativeHandle(ref, () => ({
+    closeDropdown: () => setShowDropdown(false)
+  }))
 
   const loadNotifications = async () => {
     if (!user?.id) return
@@ -334,4 +350,8 @@ export default function NotificationBell() {
       )}
     </div>
   )
-}
+})
+
+NotificationBell.displayName = 'NotificationBell'
+
+export default NotificationBell

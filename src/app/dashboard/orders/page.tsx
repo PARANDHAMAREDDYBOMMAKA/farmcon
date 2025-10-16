@@ -7,6 +7,11 @@ import toast from 'react-hot-toast'
 import { useAuth } from '@/hooks/useAuth'
 import { ordersAPI } from '@/lib/api-client'
 import { supabase } from '@/lib/supabase'
+import {
+  Package, RefreshCw, ShoppingCart, Sprout, Plus, Calendar,
+  Clock, CheckCircle, Settings, Truck, X, ClipboardList,
+  Store, User, CreditCard, Wheat, MapPin, FileText
+} from 'lucide-react'
 
 interface OrderWithDetails {
   id: string
@@ -241,7 +246,7 @@ function OrdersPageInternal() {
         <div className="relative flex flex-col gap-4">
           <div className="flex items-start gap-2 sm:gap-3">
             <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-white/20 backdrop-blur-sm rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
-              <span className="text-2xl sm:text-3xl">📦</span>
+              <Package className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div className="flex-1 min-w-0">
               <h1 className="text-xl sm:text-2xl md:text-3xl font-bold leading-tight break-words">
@@ -263,7 +268,7 @@ function OrdersPageInternal() {
               }}
               className="flex-shrink-0 flex items-center justify-center gap-2 px-3 sm:px-6 py-2 sm:py-3 bg-white/20 backdrop-blur-sm hover:bg-white/30 rounded-lg sm:rounded-xl transition-all duration-300 hover:scale-105 shadow-lg"
             >
-              <span className={loading ? 'animate-spin text-lg sm:text-xl' : 'text-lg sm:text-xl'}>🔄</span>
+              <RefreshCw className={`w-4 h-4 sm:w-5 sm:h-5 text-white ${loading ? 'animate-spin' : ''}`} />
               <span className="font-semibold text-sm hidden sm:inline">Refresh</span>
             </button>
           </div>
