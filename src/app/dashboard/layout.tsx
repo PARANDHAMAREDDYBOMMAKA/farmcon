@@ -265,7 +265,7 @@ export default function DashboardLayout({
       </div>
 
       {}
-      <div className="flex-1 flex flex-col w-full lg:ml-72">
+      <div className="flex-1 flex flex-col w-full lg:ml-72 overflow-x-hidden">
         {}
         <div className="sticky top-0 z-40 shadow-lg border-b border-gray-200 backdrop-blur-sm bg-white/95">
           <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6">
@@ -295,7 +295,7 @@ export default function DashboardLayout({
 
         {}
         <main
-          className="flex-1 p-4 sm:p-6 overflow-x-hidden"
+          className="flex-1 p-4 sm:p-6 overflow-x-hidden overflow-y-auto"
           onClick={() => notificationBellRef.current?.closeDropdown()}
         >
           <div className="max-w-7xl mx-auto w-full">

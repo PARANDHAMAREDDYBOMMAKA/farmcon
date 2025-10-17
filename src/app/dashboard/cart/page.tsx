@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import { supabase } from '@/lib/supabase'
 import { profileAPI } from '@/lib/api-client'
 import type { User } from '@/types'
+import { PartyPopper, ShoppingCart, Package, Trash2, Check, CreditCard, Banknote, Loader2 } from 'lucide-react'
 
 interface CartItemWithProduct {
   id: string
@@ -58,8 +59,8 @@ export default function CartPage() {
       
       setTimeout(() => {
         loadCart()
-        toast.success('🎉 Payment completed! Your cart has been cleared.')
-        
+        toast.success('Payment completed! Your cart has been cleared.')
+
         window.history.replaceState({}, '', '/dashboard/cart')
 
         setTimeout(() => {
@@ -87,8 +88,8 @@ export default function CartPage() {
 
             if (payload.old.user_id === user?.id) {
               setTimeout(() => {
-                if (cartItems.length <= 1) { 
-                  toast.success('🛒 Cart cleared - Payment successful!')
+                if (cartItems.length <= 1) {
+                  toast.success('Cart cleared - Payment successful!')
                 }
               }, 500)
             }
@@ -265,7 +266,7 @@ export default function CartPage() {
         {cartItems.length === 0 ? (
           <div className="bg-white rounded-2xl shadow-lg p-12 text-center">
             <div className="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-6">
-              <span className="text-4xl">🛒</span>
+              <ShoppingCart className="w-12 h-12 text-gray-400" />
             </div>
             <h3 className="text-2xl font-semibold text-gray-900 mb-3">Your cart is empty</h3>
             <p className="text-gray-500 text-lg mb-8">Start shopping to add items to your cart.</p>
@@ -297,7 +298,7 @@ export default function CartPage() {
                           />
                         ) : (
                           <div className="h-16 w-16 bg-gray-200 rounded-lg flex items-center justify-center">
-                            <span className="text-2xl">📦</span>
+                            <Package className="w-8 h-8 text-gray-400" />
                           </div>
                         )}
                       </div>
@@ -321,7 +322,7 @@ export default function CartPage() {
                             disabled={updating === item.id}
                             className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
                           >
-                            {updating === item.id ? '⏳' : '−'}
+                            {updating === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : '−'}
                           </button>
                           <span className="mx-4 text-sm font-semibold w-8 text-center">
                             {updating === item.id ? '...' : item.quantity}
@@ -331,20 +332,20 @@ export default function CartPage() {
                             disabled={updating === item.id || item.quantity >= (item.product?.stockQuantity || item.cropListing?.quantityAvailable || 0)}
                             className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
                           >
-                            {updating === item.id ? '⏳' : '+'}
+                            {updating === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : '+'}
                           </button>
                         </div>
-                        
+
                         <div className="text-sm font-medium text-gray-900 w-20 text-right">
                           ₹{((item.product?.price || item.cropListing?.pricePerUnit || 0) * item.quantity).toFixed(2)}
                         </div>
-                        
+
                         <button
                           onClick={() => removeItem(item.id)}
                           disabled={updating === item.id}
                           className="p-2 text-red-400 hover:text-red-600 disabled:opacity-50"
                         >
-                          🗑️
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </div>
@@ -368,7 +369,7 @@ export default function CartPage() {
                     <div className="flex justify-between">
                       <span className="text-gray-600">Shipping</span>
                       <span className="text-green-600 font-medium flex items-center">
-                        <span className="text-green-500 mr-1">✓</span>
+                        <Check className="w-4 h-4 text-green-500 mr-1" />
                         Free
                       </span>
                     </div>
@@ -391,7 +392,7 @@ export default function CartPage() {
                           disabled={checkingOut || cartItems.length === 0}
                           className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-blue-600 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg"
                         >
-                          <span className="text-xl">💳</span>
+                          <CreditCard className="w-5 h-5" />
                           <span>{checkingOut ? 'Processing...' : 'Pay with Card'}</span>
                           {!checkingOut && <span className="text-blue-200">→</span>}
                         </button>
@@ -400,7 +401,7 @@ export default function CartPage() {
                           disabled={checkingOut || cartItems.length === 0}
                           className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-4 rounded-xl font-semibold hover:from-green-600 hover:to-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 shadow-lg"
                         >
-                          <span className="text-xl">💵</span>
+                          <Banknote className="w-5 h-5" />
                           <span>{checkingOut ? 'Processing...' : 'Cash on Delivery'}</span>
                           {!checkingOut && <span className="text-green-200">→</span>}
                         </button>

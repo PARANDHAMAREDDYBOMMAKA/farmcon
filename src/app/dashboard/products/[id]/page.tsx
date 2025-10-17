@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import toast from 'react-hot-toast'
+import { Package } from 'lucide-react'
 
 interface Product {
   id: string
@@ -207,7 +208,7 @@ export default function ViewProductPage() {
           ) : (
             <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
               <div className="text-center">
-                <span className="text-6xl">📦</span>
+                <Package className="h-16 w-16 mx-auto text-gray-400" />
                 <p className="text-gray-500 mt-2">No images available</p>
               </div>
             </div>

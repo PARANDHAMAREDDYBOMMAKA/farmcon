@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import { productsAPI } from '@/lib/api-client'
 import toast from 'react-hot-toast'
+import { Package, XCircle, AlertTriangle, CheckCircle, DollarSign, Check, X, Pencil } from 'lucide-react'
 
 interface Product {
   id: string
@@ -193,7 +194,7 @@ export default function InventoryPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <span className="text-2xl">📦</span>
+              <Package className="h-8 w-8 text-blue-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Products</p>
@@ -205,7 +206,7 @@ export default function InventoryPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-red-100 rounded-lg">
-              <span className="text-2xl">❌</span>
+              <XCircle className="h-8 w-8 text-red-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Out of Stock</p>
@@ -217,7 +218,7 @@ export default function InventoryPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
-              <span className="text-2xl">⚠️</span>
+              <AlertTriangle className="h-8 w-8 text-yellow-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Low Stock</p>
@@ -229,7 +230,7 @@ export default function InventoryPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
-              <span className="text-2xl">✅</span>
+              <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Good Stock</p>
@@ -241,7 +242,7 @@ export default function InventoryPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
-              <span className="text-2xl">💰</span>
+              <DollarSign className="h-8 w-8 text-purple-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Stock Value</p>
@@ -350,13 +351,13 @@ export default function InventoryPage() {
                               className="text-green-600 hover:text-green-800 text-xs"
                               disabled={updating === product.id}
                             >
-                              ✓
+                              <Check className="h-4 w-4" />
                             </button>
                             <button
                               onClick={handleStockCancel}
                               className="text-red-600 hover:text-red-800 text-xs"
                             >
-                              ✕
+                              <X className="h-4 w-4" />
                             </button>
                           </div>
                         </div>
@@ -370,7 +371,7 @@ export default function InventoryPage() {
                             className="text-orange-600 hover:text-orange-800 text-xs"
                             disabled={updating === product.id}
                           >
-                            ✏️
+                            <Pencil className="h-4 w-4" />
                           </button>
                         </div>
                       )}

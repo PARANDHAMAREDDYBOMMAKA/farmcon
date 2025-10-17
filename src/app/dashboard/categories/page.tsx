@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import toast from 'react-hot-toast'
+import { Plus, FolderOpen, Package, Sprout } from 'lucide-react'
 
 interface Category {
   id: string
@@ -176,7 +177,7 @@ export default function CategoriesPage() {
               onClick={() => setShowAddForm(true)}
               className="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
             >
-              <span className="mr-2">➕</span>
+              <Plus className="mr-2 h-5 w-5" />
               Add Category
             </button>
           </div>
@@ -215,7 +216,7 @@ export default function CategoriesPage() {
                   value={formData.imageUrl}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="🌱 (emoji or image URL)"
+                  placeholder="Enter emoji or image URL"
                 />
               </div>
             </div>
@@ -255,14 +256,14 @@ export default function CategoriesPage() {
       <div className="bg-white rounded-lg shadow">
         {categories.length === 0 ? (
           <div className="text-center py-12">
-            <span className="text-6xl block mb-4">📂</span>
+            <FolderOpen className="h-16 w-16 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No categories found</h3>
             <p className="text-gray-600 mb-6">Create your first category to organize your products</p>
             <button
               onClick={() => setShowAddForm(true)}
               className="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium"
             >
-              <span className="mr-2">➕</span>
+              <Plus className="mr-2 h-5 w-5" />
               Add First Category
             </button>
           </div>
@@ -294,7 +295,11 @@ export default function CategoriesPage() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-10 w-10 flex-shrink-0 flex items-center justify-center bg-gray-100 rounded-full">
-                          <span className="text-lg">{category.imageUrl || '📦'}</span>
+                          {category.imageUrl ? (
+                            <span className="text-lg">{category.imageUrl}</span>
+                          ) : (
+                            <Package className="h-5 w-5 text-gray-600" />
+                          )}
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">{category.name}</div>

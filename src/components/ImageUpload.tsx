@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import toast from 'react-hot-toast'
+import { Camera, X } from 'lucide-react'
 
 interface ImageUploadProps {
   images: string[]
@@ -119,7 +120,8 @@ export default function ImageUpload({
             </>
           ) : (
             <>
-              📷 Add Images
+              <Camera className="w-4 h-4 mr-2" />
+              Add Images
             </>
           )}
         </button>
@@ -142,7 +144,7 @@ export default function ImageUpload({
                 onClick={() => removeImage(index)}
                 className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors shadow-lg"
               >
-                ✕
+                <X className="w-3 h-3" />
               </button>
             </div>
           ))}
@@ -151,7 +153,7 @@ export default function ImageUpload({
 
       {images.length === 0 && (
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-          <div className="text-gray-400 text-4xl mb-2">📷</div>
+          <Camera className="w-16 h-16 text-gray-400 mx-auto mb-2" />
           <p className="text-gray-500">No images uploaded yet</p>
           <p className="text-gray-400 text-sm">Click "Add Images" to upload crop photos</p>
         </div>

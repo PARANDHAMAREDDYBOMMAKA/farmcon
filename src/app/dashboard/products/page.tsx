@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
 import { productsAPI } from '@/lib/api-client'
 import toast from 'react-hot-toast'
+import { Package, CheckCircle, AlertTriangle, XCircle, Plus } from 'lucide-react'
 
 interface Product {
   id: string
@@ -129,7 +130,7 @@ export default function ProductsPage() {
               href="/dashboard/products/add"
               className="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
             >
-              <span className="mr-2">➕</span>
+              <Plus className="mr-2 h-5 w-5" />
               Add New Product
             </Link>
           </div>
@@ -141,7 +142,7 @@ export default function ProductsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <span className="text-2xl">📦</span>
+              <Package className="h-8 w-8 text-blue-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Products</p>
@@ -152,7 +153,7 @@ export default function ProductsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
-              <span className="text-2xl">✅</span>
+              <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Active Products</p>
@@ -163,7 +164,7 @@ export default function ProductsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
-              <span className="text-2xl">⚠️</span>
+              <AlertTriangle className="h-8 w-8 text-yellow-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Low Stock</p>
@@ -174,7 +175,7 @@ export default function ProductsPage() {
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
             <div className="p-2 bg-red-100 rounded-lg">
-              <span className="text-2xl">❌</span>
+              <XCircle className="h-8 w-8 text-red-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Out of Stock</p>
@@ -230,7 +231,7 @@ export default function ProductsPage() {
       <div className="bg-white rounded-lg shadow">
         {filteredProducts.length === 0 ? (
           <div className="text-center py-12">
-            <span className="text-6xl block mb-4">📦</span>
+            <Package className="h-16 w-16 mx-auto mb-4 text-gray-400" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
             <p className="text-gray-600 mb-6">
               {products.length === 0
@@ -243,7 +244,7 @@ export default function ProductsPage() {
                 href="/dashboard/products/add"
                 className="inline-flex items-center px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg font-medium transition-colors"
               >
-                <span className="mr-2">➕</span>
+                <Plus className="mr-2 h-5 w-5" />
                 Add Your First Product
               </Link>
             )}
@@ -287,7 +288,7 @@ export default function ProductsPage() {
                             />
                           ) : (
                             <div className="h-12 w-12 rounded-lg bg-gray-200 flex items-center justify-center">
-                              <span className="text-xl">📦</span>
+                              <Package className="h-6 w-6 text-gray-400" />
                             </div>
                           )}
                         </div>
