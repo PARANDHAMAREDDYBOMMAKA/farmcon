@@ -10,7 +10,8 @@ import { supabase } from '@/lib/supabase'
 import {
   Package, RefreshCw, ShoppingCart, Sprout, Plus, Calendar,
   Clock, CheckCircle, Settings, Truck, X, ClipboardList,
-  Store, User, CreditCard, Wheat, MapPin, FileText, PartyPopper
+  Store, User, CreditCard, Wheat, MapPin, FileText, PartyPopper,
+  Search, Filter, Download, Phone, Mail, ArrowUpDown, Eye, TrendingUp
 } from 'lucide-react'
 
 interface OrderWithDetails {
@@ -57,6 +58,9 @@ function OrdersPageInternal() {
   const [orders, setOrders] = useState<OrderWithDetails[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('all')
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [sortBy, setSortBy] = useState<'date' | 'amount'>('date')
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -218,9 +222,38 @@ function OrdersPageInternal() {
     }
   }
 
-  const filteredOrders = filter === 'all' 
-    ? orders 
-    : orders.filter(order => order.status === filter)
+  // Filter, search, and sort orders
+  const filteredOrders = orders
+    .filter(order => {
+      // Status filter
+      if (filter !== 'all' && order.status !== filter) return false
+
+      // Search filter
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase()
+        const matchesOrderId = order.id.toLowerCase().includes(query)
+        const matchesSellerName = order.seller?.full_name?.toLowerCase().includes(query)
+        const matchesCustomerName = order.customer?.full_name?.toLowerCase().includes(query)
+        const matchesItems = order.items?.some(item =>
+          item.product?.name?.toLowerCase().includes(query) ||
+          item.crop_listing?.crop.name?.toLowerCase().includes(query)
+        )
+        return matchesOrderId || matchesSellerName || matchesCustomerName || matchesItems
+      }
+
+      return true
+    })
+    .sort((a, b) => {
+      let comparison = 0
+
+      if (sortBy === 'date') {
+        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      } else if (sortBy === 'amount') {
+        comparison = a.total_amount - b.total_amount
+      }
+
+      return sortOrder === 'asc' ? comparison : -comparison
+    })
 
   if (authLoading || loading) {
     return (
@@ -316,6 +349,90 @@ function OrdersPageInternal() {
         </div>
       </div>
 
+      {/* Search and Sort Controls */}
+      <div className="bg-white/80 backdrop-blur-xl rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5 md:p-6">
+        <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
+          {/* Search Bar */}
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search by order ID, seller, customer, or items..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Sort Controls */}
+          <div className="flex gap-2 sm:gap-3">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as 'date' | 'amount')}
+              className="flex-1 lg:flex-initial px-3 sm:px-4 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white transition-all"
+            >
+              <option value="date">Sort by Date</option>
+              <option value="amount">Sort by Amount</option>
+            </select>
+            <button
+              onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 rounded-lg sm:rounded-xl font-medium text-sm sm:text-base transition-all shadow-sm hover:shadow"
+            >
+              <ArrowUpDown className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Order Statistics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-5">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-green-100 overflow-hidden">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-600 flex-shrink-0" />
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Orders</p>
+            </div>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-green-600 truncate">{orders.length}</p>
+          </div>
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-blue-100 overflow-hidden">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-600 flex-shrink-0" />
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Value</p>
+            </div>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-blue-600 truncate">
+              ₹{orders.reduce((sum, order) => sum + order.total_amount, 0).toLocaleString()}
+            </p>
+          </div>
+          <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-yellow-100 overflow-hidden">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-600 flex-shrink-0" />
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Pending</p>
+            </div>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-yellow-600 truncate">
+              {orders.filter(o => o.status === 'pending').length}
+            </p>
+          </div>
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-purple-100 overflow-hidden">
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
+              <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-purple-600 flex-shrink-0" />
+              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Completed</p>
+            </div>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-purple-600 truncate">
+              {orders.filter(o => o.status === 'delivered').length}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {filteredOrders.length === 0 ? (
         <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-12 md:p-16 overflow-hidden">
           {}
@@ -330,7 +447,9 @@ function OrdersPageInternal() {
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">No orders found</h3>
             <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-4">
-              {filter === 'all'
+              {searchQuery
+                ? `No orders match "${searchQuery}". Try a different search term.`
+                : filter === 'all'
                 ? user?.role === 'consumer'
                   ? 'You haven\'t placed any orders yet. Start shopping to see your orders here!'
                   : user?.role === 'farmer'
@@ -341,6 +460,15 @@ function OrdersPageInternal() {
                 : `No ${filter} orders found. Try checking other filters.`
               }
             </p>
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4"
+              >
+                <X className="w-5 h-5" />
+                <span>Clear Search</span>
+              </button>
+            )}
             {user?.role === 'consumer' && filter === 'all' && (
               <Link
                 href="/dashboard/supplies"

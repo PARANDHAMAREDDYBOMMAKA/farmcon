@@ -13,7 +13,7 @@ export const stripe = new Proxy({} as Stripe, {
         apiVersion: '2025-08-27.basil',
       })
     }
-    return (stripeInstance as any)[prop]
+    return(stripeInstance as any)[prop]
   }
 })
 

@@ -208,6 +208,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
   }
 
   const getProgressPercentage = () => {
+    if (milestones.length === 0) return 0
     const completedMilestones = milestones.filter(m => m.status === 'completed').length
     return (completedMilestones / milestones.length) * 100
   }

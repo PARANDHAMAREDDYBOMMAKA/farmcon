@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { Wheat } from 'lucide-react'
 
 function SignInForm() {
   const [formData, setFormData] = useState({
@@ -129,7 +130,15 @@ function SignInForm() {
   }
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
+    <div className="min-h-screen flex bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 relative">
+      {/* Logo in top left corner */}
+      <Link href="/" className="absolute top-6 left-6 z-50 inline-flex items-center space-x-2 bg-white px-4 py-2 rounded-xl shadow-lg hover:shadow-xl transition-all">
+        <Wheat className="w-8 h-8 text-green-600" />
+        <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+          FarmCon
+        </span>
+      </Link>
+
       {}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
         <Image
@@ -167,12 +176,6 @@ function SignInForm() {
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center space-x-2 mb-6">
-              <span className="text-4xl">🌾</span>
-              <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
-                FarmCon
-              </span>
-            </div>
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">
               Sign in to your account
             </h2>
