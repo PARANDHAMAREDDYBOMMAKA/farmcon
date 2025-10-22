@@ -517,13 +517,23 @@ export default function SignUp() {
                 </div>
               </div>
 
-              <Link
-                href="/auth/email-otp"
-                className="w-full inline-flex justify-center items-center py-3 px-4 border-2 border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all"
-              >
-                <span className="mr-2">✉️</span>
-                Sign up with Email OTP
-              </Link>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Link
+                  href="/auth/email-otp"
+                  className="w-full inline-flex justify-center items-center py-3 px-4 border-2 border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all"
+                >
+                  <span className="mr-2">✉️</span>
+                  Email OTP
+                </Link>
+
+                <Link
+                  href="/auth/mobile-otp"
+                  className="w-full inline-flex justify-center items-center py-3 px-4 border-2 border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all"
+                >
+                  <span className="mr-2">📱</span>
+                  Mobile OTP
+                </Link>
+              </div>
 
               <p className="text-xs text-gray-500 text-center">
                 By creating an account, you agree to our Terms of Service and Privacy Policy.

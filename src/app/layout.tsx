@@ -218,6 +218,12 @@ export default function RootLayout({
                   window.OneSignalDeferred = window.OneSignalDeferred || [];
                   window.OneSignalDeferred.push(async function(OneSignal) {
                     try {
+                      // Skip OneSignal on auth pages to avoid conflicts with Firebase Auth
+                      if (window.location.pathname.includes('/auth/')) {
+                        console.log('Skipping OneSignal on auth page');
+                        return;
+                      }
+
                       await OneSignal.init({
                         appId: "${process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID}",
                         allowLocalhostAsSecureOrigin: true,
@@ -281,8 +287,24 @@ export default function RootLayout({
                         }
                       });
 
+                      // Safely handle Badge API (not supported in all browsers)
+                      try {
+                        if ('setAppBadge' in navigator) {
+                          // Badge API is supported
+                          console.log('✅ Badge API supported');
+                        } else {
+                          console.log('ℹ️ Badge API not supported in this browser');
+                        }
+                      } catch (badgeError) {
+                        console.warn('Badge API error (non-critical):', badgeError);
+                      }
+
                     } catch (error) {
                       console.error('❌ OneSignal initialization error:', error);
+                      // Prevent error from breaking the app
+                      if (error.message && error.message.includes('badge')) {
+                        console.warn('Badge API not supported, continuing without badges');
+                      }
                     }
                   });
                 `,
