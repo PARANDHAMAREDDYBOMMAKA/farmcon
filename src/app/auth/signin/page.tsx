@@ -123,7 +123,7 @@ function SignInForm() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-900">Loading...</p>
         </div>
       </div>
     )
@@ -179,7 +179,7 @@ function SignInForm() {
             <h2 className="text-3xl font-bold tracking-tight text-gray-900">
               Sign in to your account
             </h2>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-900">
               Don&apos;t have an account?{' '}
               <Link href="/auth/signup" className="font-medium text-green-600 hover:text-green-500">
                 Sign up for free
@@ -266,11 +266,11 @@ function SignInForm() {
                     <div className="w-full border-t border-gray-300" />
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-transparent text-gray-500">Or continue with</span>
+                    <span className="px-2 bg-transparent text-gray-900">Or continue with</span>
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="mt-6">
                   <button
                     type="button"
                     onClick={handleEmailOTP}
@@ -279,14 +279,6 @@ function SignInForm() {
                     <span className="mr-2">✉️</span>
                     Email OTP
                   </button>
-
-                  <Link
-                    href="/auth/mobile-otp"
-                    className="w-full inline-flex justify-center items-center py-3 px-4 border-2 border-gray-300 rounded-xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-all"
-                  >
-                    <span className="mr-2">📱</span>
-                    Mobile OTP
-                  </Link>
                 </div>
               </div>
             </form>
@@ -311,7 +303,7 @@ export default function SignIn() {
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-4 text-sm text-gray-600">Loading...</p>
+            <p className="mt-4 text-sm text-gray-900">Loading...</p>
           </div>
         </div>
       }>

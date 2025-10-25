@@ -261,7 +261,7 @@ export default function AdminDashboard() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading admin dashboard...</p>
+          <p className="mt-4 text-gray-900">Loading admin dashboard...</p>
         </div>
       </div>
     )
@@ -288,7 +288,7 @@ export default function AdminDashboard() {
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600">Platform overview and management tools</p>
+        <p className="text-gray-900">Platform overview and management tools</p>
       </div>
 
       {}
@@ -308,7 +308,7 @@ export default function AdminDashboard() {
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.key
                     ? 'border-green-500 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    : 'border-transparent text-gray-900 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 {tab.label}
@@ -323,7 +323,7 @@ export default function AdminDashboard() {
           {}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
+              <h3 className="text-sm font-medium text-gray-900">Total Users</h3>
               <p className="text-3xl font-bold text-gray-900">{stats.users.total}</p>
               <div className="mt-2 text-sm">
                 <span className="text-green-600">↗ {stats.users.verified} verified</span>
@@ -331,7 +331,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-sm font-medium text-gray-500">Total Crops</h3>
+              <h3 className="text-sm font-medium text-gray-900">Total Crops</h3>
               <p className="text-3xl font-bold text-gray-900">{stats.crops.total}</p>
               <div className="mt-2 text-sm">
                 <span className="text-blue-600">{stats.crops.growing} growing</span>
@@ -339,7 +339,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-sm font-medium text-gray-500">Total Orders</h3>
+              <h3 className="text-sm font-medium text-gray-900">Total Orders</h3>
               <p className="text-3xl font-bold text-gray-900">{stats.orders.total}</p>
               <div className="mt-2 text-sm">
                 <span className="text-yellow-600">{stats.orders.pending} pending</span>
@@ -347,7 +347,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="bg-white rounded-lg shadow p-6">
-              <h3 className="text-sm font-medium text-gray-500">Monthly GMV</h3>
+              <h3 className="text-sm font-medium text-gray-900">Monthly GMV</h3>
               <p className="text-3xl font-bold text-gray-900">{formatCurrency(stats.revenue.monthly_gmv)}</p>
               <div className="mt-2 text-sm">
                 <span className="text-green-600">Total: {formatCurrency(stats.revenue.total_gmv)}</span>
@@ -362,19 +362,19 @@ export default function AdminDashboard() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">User Distribution</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Farmers</span>
+                  <span className="text-gray-900">Farmers</span>
                   <span className="font-medium">{stats.users.farmers}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Consumers</span>
+                  <span className="text-gray-900">Consumers</span>
                   <span className="font-medium">{stats.users.consumers}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Suppliers</span>
+                  <span className="text-gray-900">Suppliers</span>
                   <span className="font-medium">{stats.users.suppliers}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Admins</span>
+                  <span className="text-gray-900">Admins</span>
                   <span className="font-medium">{stats.users.admins}</span>
                 </div>
               </div>
@@ -385,19 +385,19 @@ export default function AdminDashboard() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Crop Status</h3>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Planted</span>
+                  <span className="text-gray-900">Planted</span>
                   <span className="font-medium text-blue-600">{stats.crops.planted}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Growing</span>
+                  <span className="text-gray-900">Growing</span>
                   <span className="font-medium text-green-600">{stats.crops.growing}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Harvested</span>
+                  <span className="text-gray-900">Harvested</span>
                   <span className="font-medium text-purple-600">{stats.crops.harvested}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Listed for Sale</span>
+                  <span className="text-gray-900">Listed for Sale</span>
                   <span className="font-medium text-orange-600">{stats.crops.listed_for_sale}</span>
                 </div>
               </div>
@@ -418,7 +418,7 @@ export default function AdminDashboard() {
                         <span className="font-medium"> by {activity.user_name}</span>
                       )}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-gray-900">
                       {new Date(activity.timestamp).toLocaleString('en-IN')}
                     </p>
                   </div>
@@ -438,14 +438,14 @@ export default function AdminDashboard() {
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
             >
               <h4 className="font-medium text-gray-900">Manage Users</h4>
-              <p className="text-sm text-gray-500">View, edit, and manage user accounts and permissions</p>
+              <p className="text-sm text-gray-900">View, edit, and manage user accounts and permissions</p>
             </Link>
             <Link 
               href="/dashboard/admin/verifications"
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
             >
               <h4 className="font-medium text-gray-900">Pending Verifications</h4>
-              <p className="text-sm text-gray-500">Review and approve user verification requests</p>
+              <p className="text-sm text-gray-900">Review and approve user verification requests</p>
             </Link>
           </div>
         </div>
@@ -460,25 +460,25 @@ export default function AdminDashboard() {
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
             >
               <h4 className="font-medium text-gray-900">Products ({stats.products.total})</h4>
-              <p className="text-sm text-gray-500">Manage pesticides and supplies listings</p>
+              <p className="text-sm text-gray-900">Manage pesticides and supplies listings</p>
             </Link>
             <Link 
               href="/dashboard/admin/crops"
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
             >
               <h4 className="font-medium text-gray-900">Crop Listings ({stats.crops.listed_for_sale})</h4>
-              <p className="text-sm text-gray-500">Oversee farmer crop marketplace</p>
+              <p className="text-sm text-gray-900">Oversee farmer crop marketplace</p>
             </Link>
             <Link 
               href="/dashboard/admin/equipment"
               className="block p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
             >
               <h4 className="font-medium text-gray-900">Equipment ({stats.equipment.total})</h4>
-              <p className="text-sm text-gray-500">Monitor equipment rental listings</p>
+              <p className="text-sm text-gray-900">Monitor equipment rental listings</p>
             </Link>
             <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
-              <h4 className="font-medium text-gray-500">Content Moderation</h4>
-              <p className="text-sm text-gray-400">Review reported content and enforce policies</p>
+              <h4 className="font-medium text-gray-900">Content Moderation</h4>
+              <p className="text-sm text-gray-900">Review reported content and enforce policies</p>
             </div>
           </div>
         </div>
@@ -516,14 +516,14 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="border border-gray-200 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-2">Revenue Analytics</h4>
-              <p className="text-sm text-gray-500 mb-4">Track platform revenue and growth metrics</p>
+              <p className="text-sm text-gray-900 mb-4">Track platform revenue and growth metrics</p>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Total GMV:</span>
+                  <span className="text-gray-900">Total GMV:</span>
                   <span className="font-medium">{formatCurrency(stats.revenue.total_gmv)}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">This Month:</span>
+                  <span className="text-gray-900">This Month:</span>
                   <span className="font-medium">{formatCurrency(stats.revenue.monthly_gmv)}</span>
                 </div>
               </div>
@@ -531,14 +531,14 @@ export default function AdminDashboard() {
             
             <div className="border border-gray-200 rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-2">Platform Activity</h4>
-              <p className="text-sm text-gray-500 mb-4">Monitor user engagement and platform usage</p>
+              <p className="text-sm text-gray-900 mb-4">Monitor user engagement and platform usage</p>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Active Listings:</span>
+                  <span className="text-gray-900">Active Listings:</span>
                   <span className="font-medium">{stats.products.active + stats.crops.listed_for_sale + stats.equipment.available}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Verified Users:</span>
+                  <span className="text-gray-900">Verified Users:</span>
                   <span className="font-medium">{stats.users.verified}</span>
                 </div>
               </div>

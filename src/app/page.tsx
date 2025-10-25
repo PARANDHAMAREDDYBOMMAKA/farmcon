@@ -10,6 +10,9 @@ import { Wheat, BarChart3, Smartphone, Lock, Target, Zap, Sprout, DollarSign, Sh
 export default function Home() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [email, setEmail] = useState('')
+  const [isSubscribing, setIsSubscribing] = useState(false)
+  const [subscriptionMessage, setSubscriptionMessage] = useState('')
   const router = useRouter()
 
   const carouselImages = [
@@ -72,12 +75,47 @@ export default function Home() {
     return () => clearInterval(interval)
   }, [])
 
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!email || !email.includes('@')) {
+      setSubscriptionMessage('Please enter a valid email address')
+      return
+    }
+
+    setIsSubscribing(true)
+    setSubscriptionMessage('')
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        setSubscriptionMessage('Successfully subscribed! Check your email.')
+        setEmail('')
+      } else {
+        setSubscriptionMessage(data.error || 'Failed to subscribe. Please try again.')
+      }
+    } catch (error) {
+      setSubscriptionMessage('An error occurred. Please try again.')
+    } finally {
+      setIsSubscribing(false)
+    }
+  }
+
   if (checkingAuth) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-900">Loading...</p>
         </div>
       </div>
     )
@@ -95,7 +133,7 @@ export default function Home() {
               </div>
               <div>
                 <span className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">FarmCon</span>
-                <p className="text-xs text-gray-500">Smart Farming</p>
+                <p className="text-xs text-gray-900">Smart Farming</p>
               </div>
             </div>
             <div className="flex items-center gap-3 sm:gap-6">
@@ -143,7 +181,7 @@ export default function Home() {
                 </h1>
 
                 {}
-                <p className="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-xl">
+                <p className="text-lg lg:text-xl text-gray-900 leading-relaxed max-w-xl">
                   Join thousands of Indian farmers increasing yields by{' '}
                   <span className="font-bold text-green-600">40%</span> and profits by{' '}
                   <span className="font-bold text-green-600">60%</span> with our AI-powered farming platform.
@@ -291,7 +329,7 @@ export default function Home() {
                     {item.icon}
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                  <p className="text-gray-900 leading-relaxed">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -311,7 +349,7 @@ export default function Home() {
                   Smart Technology
                 </span>
               </p>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
+              <p className="mt-6 text-lg leading-8 text-gray-900">
                 From planting to selling, manage everything from your phone. No technical knowledge required.
               </p>
             </div>
@@ -329,7 +367,7 @@ export default function Home() {
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
                       {feature.title}
                     </h3>
-                    <p className="text-base text-gray-600 leading-relaxed mb-4">
+                    <p className="text-base text-gray-900 leading-relaxed mb-4">
                       {feature.description}
                     </p>
                     <Link href={feature.link} className="inline-flex items-center text-green-600 font-semibold">
@@ -357,19 +395,33 @@ export default function Home() {
 
         <div className="relative mx-auto max-w-7xl px-6 py-16 lg:px-8">
           <div className="mb-16 pb-12 border-b border-gray-800">
-            <div className="max-w-xl mx-auto text-center">
-              <h3 className="text-2xl font-bold text-white mb-3">Stay Updated with FarmCon</h3>
-              <p className="text-gray-400 mb-6">Get farming tips, market updates, and exclusive offers directly to your inbox.</p>
-              <div className="flex gap-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="flex-1 px-6 py-3 rounded-full bg-gray-800 border border-gray-700 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-                <button className="px-8 py-3 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200">
-                  Subscribe
-                </button>
-              </div>
+            <div className="max-w-2xl mx-auto text-center px-4">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">Stay Updated with FarmCon</h3>
+              <p className="text-sm sm:text-base text-gray-400 mb-6">Get farming tips, market updates, and exclusive offers directly to your inbox.</p>
+              <form onSubmit={handleSubscribe} className="space-y-4">
+                <div className="flex flex-col sm:flex-row gap-3 items-center">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    disabled={isSubscribing}
+                    className="w-full sm:flex-1 px-4 sm:px-6 py-3 rounded-full bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50 text-sm sm:text-base"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubscribing}
+                    className="px-8 sm:px-10 py-3 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 whitespace-nowrap text-sm sm:text-base"
+                  >
+                    {isSubscribing ? 'Subscribing...' : 'Subscribe'}
+                  </button>
+                </div>
+                {subscriptionMessage && (
+                  <p className={`text-sm ${subscriptionMessage.includes('Successfully') ? 'text-green-400' : 'text-red-400'}`}>
+                    {subscriptionMessage}
+                  </p>
+                )}
+              </form>
             </div>
           </div>
 
@@ -437,15 +489,15 @@ export default function Home() {
 
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-gray-500 flex items-center gap-2">
+              <p className="text-sm text-gray-400 flex items-center gap-2">
                 &copy; {new Date().getFullYear()} FarmCon. All rights reserved. Built with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for Indian farmers.
               </p>
               <div className="flex gap-6 text-sm">
-                <Link href="#" className="text-gray-500 hover:text-green-500 transition-colors">Privacy Policy</Link>
-                <span className="text-gray-700">•</span>
-                <Link href="#" className="text-gray-500 hover:text-green-500 transition-colors">Terms of Service</Link>
-                <span className="text-gray-700">•</span>
-                <Link href="#" className="text-gray-500 hover:text-green-500 transition-colors">Cookie Policy</Link>
+                <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors">Privacy Policy</Link>
+                <span className="text-gray-600">•</span>
+                <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors">Terms of Service</Link>
+                <span className="text-gray-600">•</span>
+                <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors">Cookie Policy</Link>
               </div>
             </div>
           </div>

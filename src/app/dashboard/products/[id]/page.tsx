@@ -117,7 +117,7 @@ export default function ViewProductPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading product...</p>
+          <p className="mt-4 text-gray-900">Loading product...</p>
         </div>
       </div>
     )
@@ -128,7 +128,7 @@ export default function ViewProductPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-600 mb-4">The product you're looking for doesn't exist.</p>
+          <p className="text-gray-900 mb-4">The product you're looking for doesn't exist.</p>
           <Link
             href="/dashboard/products"
             className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg"
@@ -149,7 +149,7 @@ export default function ViewProductPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
-            <p className="text-gray-600 mt-1">Product Details</p>
+            <p className="text-gray-900 mt-1">Product Details</p>
           </div>
           <div className="flex space-x-3">
             <Link
@@ -208,8 +208,8 @@ export default function ViewProductPage() {
           ) : (
             <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
               <div className="text-center">
-                <Package className="h-16 w-16 mx-auto text-gray-400" />
-                <p className="text-gray-500 mt-2">No images available</p>
+                <Package className="h-16 w-16 mx-auto text-gray-900" />
+                <p className="text-gray-900 mt-2">No images available</p>
               </div>
             </div>
           )}
@@ -222,21 +222,21 @@ export default function ViewProductPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">Name:</span>
+                <span className="text-gray-900">Name:</span>
                 <span className="font-medium">{product.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Brand:</span>
+                <span className="text-gray-900">Brand:</span>
                 <span className="font-medium">{product.brand || 'No brand'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Category:</span>
+                <span className="text-gray-900">Category:</span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                   {product.category.name}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Status:</span>
+                <span className="text-gray-900">Status:</span>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                   product.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                 }`}>
@@ -244,7 +244,7 @@ export default function ViewProductPage() {
                 </span>
               </div>
               <div className="pt-2">
-                <span className="text-gray-600">Description:</span>
+                <span className="text-gray-900">Description:</span>
                 <p className="mt-1 text-gray-900">{product.description}</p>
               </div>
             </div>
@@ -255,11 +255,11 @@ export default function ViewProductPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">Price:</span>
+                <span className="text-gray-900">Price:</span>
                 <span className="font-medium text-lg">₹{product.price.toLocaleString()} / {product.unit}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Stock:</span>
+                <span className="text-gray-900">Stock:</span>
                 <div className="flex items-center space-x-2">
                   <span className="font-medium">{product.stockQuantity} {product.unit}</span>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${stockInfo.color}`}>
@@ -268,7 +268,7 @@ export default function ViewProductPage() {
                 </div>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Unit:</span>
+                <span className="text-gray-900">Unit:</span>
                 <span className="font-medium">{product.unit}</span>
               </div>
             </div>
@@ -309,7 +309,7 @@ export default function ViewProductPage() {
               const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')
               return (
                 <div key={key} className="flex justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-600">{label}:</span>
+                  <span className="text-gray-900">{label}:</span>
                   <span className="font-medium">{value}</span>
                 </div>
               )
@@ -323,19 +323,19 @@ export default function ViewProductPage() {
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Supplier Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex justify-between">
-            <span className="text-gray-600">Supplier:</span>
+            <span className="text-gray-900">Supplier:</span>
             <span className="font-medium">{product.supplier.fullName}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Business:</span>
+            <span className="text-gray-900">Business:</span>
             <span className="font-medium">{product.supplier.businessName || 'N/A'}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Location:</span>
+            <span className="text-gray-900">Location:</span>
             <span className="font-medium">{product.supplier.city}, {product.supplier.state}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Contact:</span>
+            <span className="text-gray-900">Contact:</span>
             <span className="font-medium">{product.supplier.phone}</span>
           </div>
         </div>
@@ -346,11 +346,11 @@ export default function ViewProductPage() {
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Product History</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex justify-between">
-            <span className="text-gray-600">Created:</span>
+            <span className="text-gray-900">Created:</span>
             <span className="font-medium">{new Date(product.createdAt).toLocaleDateString()}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Last Updated:</span>
+            <span className="text-gray-900">Last Updated:</span>
             <span className="font-medium">{new Date(product.updatedAt).toLocaleDateString()}</span>
           </div>
         </div>

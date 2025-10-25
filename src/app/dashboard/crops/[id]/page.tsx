@@ -74,9 +74,9 @@ export default function CropDetailPage() {
       case 'harvested':
         return 'text-purple-600 bg-purple-100'
       case 'sold':
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-900 bg-gray-100'
       default:
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-900 bg-gray-100'
     }
   }
 
@@ -102,7 +102,7 @@ export default function CropDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading crop details...</p>
+          <p className="mt-4 text-gray-900">Loading crop details...</p>
         </div>
       </div>
     )
@@ -114,7 +114,7 @@ export default function CropDetailPage() {
         <div className="text-center">
           <XCircle className="w-24 h-24 text-red-500 mx-auto" />
           <h2 className="mt-4 text-xl font-semibold text-gray-900">Crop not found</h2>
-          <p className="mt-2 text-gray-600">{error || 'The crop you are looking for does not exist.'}</p>
+          <p className="mt-2 text-gray-900">{error || 'The crop you are looking for does not exist.'}</p>
           <Link
             href="/dashboard/crops"
             className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
@@ -130,7 +130,7 @@ export default function CropDetailPage() {
     <div className="max-w-4xl mx-auto p-6">
       {}
       <div className="mb-6">
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+        <nav className="flex items-center space-x-2 text-sm text-gray-900 mb-4">
           <Link href="/dashboard" className="hover:text-green-600">Dashboard</Link>
           <span>/</span>
           <Link href="/dashboard/crops" className="hover:text-green-600">Crops</Link>
@@ -239,10 +239,10 @@ export default function CropDetailPage() {
                 <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
                   <div>
                     <p className="font-medium text-gray-900">Planted Date</p>
-                    <p className="text-sm text-gray-600">{new Date(crop.plantedDate).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-900">{new Date(crop.plantedDate).toLocaleDateString()}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Days since planting</p>
+                    <p className="text-sm text-gray-900">Days since planting</p>
                     <p className="font-bold text-blue-600">{getDaysFromPlanting(crop.plantedDate)} days</p>
                   </div>
                 </div>
@@ -252,10 +252,10 @@ export default function CropDetailPage() {
                 <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
                   <div>
                     <p className="font-medium text-gray-900">Expected Harvest</p>
-                    <p className="text-sm text-gray-600">{new Date(crop.expectedHarvestDate).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-900">{new Date(crop.expectedHarvestDate).toLocaleDateString()}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Days to harvest</p>
+                    <p className="text-sm text-gray-900">Days to harvest</p>
                     <p className="font-bold text-yellow-600">{getDaysToHarvest(crop.expectedHarvestDate)} days</p>
                   </div>
                 </div>
@@ -265,11 +265,11 @@ export default function CropDetailPage() {
                 <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
                   <div>
                     <p className="font-medium text-gray-900">Actual Harvest</p>
-                    <p className="text-sm text-gray-600">{new Date(crop.actualHarvestDate).toLocaleDateString()}</p>
+                    <p className="text-sm text-gray-900">{new Date(crop.actualHarvestDate).toLocaleDateString()}</p>
                   </div>
                   <div className="text-right flex items-center gap-1">
                     <CheckCircle className="w-4 h-4 text-green-600" />
-                    <p className="text-sm text-gray-600">Harvested</p>
+                    <p className="text-sm text-gray-900">Harvested</p>
                   </div>
                 </div>
               )}
@@ -288,7 +288,7 @@ export default function CropDetailPage() {
                 {crop.estimatedYield ? (
                   <p className="text-2xl font-bold text-green-600">{crop.estimatedYield} {crop.unit}</p>
                 ) : (
-                  <p className="text-gray-500">Not specified</p>
+                  <p className="text-gray-900">Not specified</p>
                 )}
               </div>
 
@@ -328,7 +328,7 @@ export default function CropDetailPage() {
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-semibold">{listing.quantityAvailable} {listing.unit} available</p>
-                        <p className="text-gray-600">₹{listing.pricePerUnit}/{listing.unit}</p>
+                        <p className="text-gray-900">₹{listing.pricePerUnit}/{listing.unit}</p>
                       </div>
                       <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Active</span>
                     </div>
@@ -346,16 +346,16 @@ export default function CropDetailPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">📊 Quick Stats</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-600">Created</span>
-                <span className="font-medium">{new Date(crop.createdAt).toLocaleDateString()}</span>
+                <span className="text-black">Created</span>
+                <span className="font-medium text-green-600">{new Date(crop.createdAt).toLocaleDateString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Last Updated</span>
-                <span className="font-medium">{new Date(crop.updatedAt).toLocaleDateString()}</span>
+                <span className="text-black">Last Updated</span>
+                <span className="font-medium text-green-600">{new Date(crop.updatedAt).toLocaleDateString()}</span>
               </div>
               {crop.organicCertified && (
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Certification</span>
+                  <span className="text-gray-900">Certification</span>
                   <span className="font-medium text-green-600 flex items-center gap-1">
                     <Leaf className="w-4 h-4" />
                     Organic

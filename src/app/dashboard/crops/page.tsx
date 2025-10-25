@@ -69,9 +69,9 @@ export default function CropsManagementPage() {
       case 'harvested':
         return 'text-purple-600 bg-purple-100'
       case 'sold':
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-900 bg-gray-100'
       default:
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-900 bg-gray-100'
     }
   }
 
@@ -94,7 +94,7 @@ export default function CropsManagementPage() {
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-gray-900">Loading your crops...</h3>
-            <p className="text-gray-600 mt-2">Please wait while we fetch your crop data</p>
+            <p className="text-gray-900 mt-2">Please wait while we fetch your crop data</p>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function CropsManagementPage() {
                 <Wheat className="w-8 h-8 text-green-600" />
                 My Crops
               </h1>
-              <p className="text-gray-700 mt-2 text-lg">Manage your crop lifecycle from planting to harvest</p>
+              <p className="text-gray-900 mt-2 text-lg">Manage your crop lifecycle from planting to harvest</p>
             </div>
             <div className="flex gap-3">
               <button
@@ -152,7 +152,7 @@ export default function CropsManagementPage() {
                   className={`flex-1 min-w-fit px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 ${
                     filter === item.key
                       ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                      : 'text-gray-600 hover:bg-gray-100'
+                      : 'text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   <span className="flex items-center justify-center gap-2">
@@ -161,7 +161,7 @@ export default function CropsManagementPage() {
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                       filter === item.key
                         ? 'bg-white text-green-600'
-                        : 'bg-gray-200 text-gray-600'
+                        : 'bg-gray-200 text-gray-900'
                     }`}>
                       {item.key === 'all' ? crops.length : crops.filter(c => c.status === item.key).length}
                     </span>
@@ -180,7 +180,7 @@ export default function CropsManagementPage() {
             <h3 className="mt-6 text-2xl font-bold text-gray-900">
               {filter === 'all' ? 'No crops yet' : `No ${filter.replace('_', ' ')} crops`}
             </h3>
-            <p className="mt-4 text-gray-600 text-lg">
+            <p className="mt-4 text-gray-900 text-lg">
               {filter === 'all'
                 ? 'Start your farming journey by adding your first crop!'
                 : `No crops in ${filter.replace('_', ' ')} status.`
@@ -230,11 +230,11 @@ export default function CropsManagementPage() {
                 <div className="mb-4">
                   <h3 className="text-xl font-bold text-gray-900 mb-1">{crop.name}</h3>
                   {crop.variety && (
-                    <p className="text-sm text-gray-600 font-medium">{crop.variety}</p>
+                    <p className="text-sm text-gray-900 font-medium">{crop.variety}</p>
                   )}
                 </div>
 
-                <div className="mt-3 space-y-2 text-sm text-gray-600">
+                <div className="mt-3 space-y-2 text-sm text-gray-900">
                   {crop.area && (
                     <div className="flex justify-between">
                       <span>Area:</span>
@@ -279,7 +279,7 @@ export default function CropsManagementPage() {
                 </div>
 
                 {crop.description && (
-                  <p className="mt-3 text-sm text-gray-600 line-clamp-2">
+                  <p className="mt-3 text-sm text-gray-900 line-clamp-2">
                     {crop.description}
                   </p>
                 )}

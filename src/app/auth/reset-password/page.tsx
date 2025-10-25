@@ -73,7 +73,7 @@ function ResetPasswordForm() {
             <h2 className="text-3xl font-extrabold text-gray-900">
               Password Updated!
             </h2>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-900">
               Your password has been successfully updated. Redirecting to sign in...
             </p>
           </div>
@@ -92,7 +92,7 @@ function ResetPasswordForm() {
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
             Set new password
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-900">
             Please enter your new password below.
           </p>
         </div>
@@ -177,7 +177,7 @@ export default function ResetPasswordPage() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-600">Loading...</p>
+            <p className="mt-2 text-sm text-gray-900">Loading...</p>
           </div>
         </div>
       </div>

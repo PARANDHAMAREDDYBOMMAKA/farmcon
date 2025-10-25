@@ -122,7 +122,7 @@ function OrderSuccessPageInternal() {
             {orderConfirmed ? 'Order Confirmed!' : 'Processing Payment...'}
           </h1>
 
-          <p className="text-gray-600 text-lg animate-[fadeIn_0.8s_ease-in]">
+          <p className="text-gray-900 text-lg animate-[fadeIn_0.8s_ease-in]">
             {orderConfirmed
               ? 'Thank you for your purchase! Your order has been successfully placed.'
               : 'Please wait while we confirm your payment and create your order...'
@@ -139,7 +139,7 @@ function OrderSuccessPageInternal() {
               <span className="text-2xl">📧</span>
               <div>
                 <h3 className="font-medium text-gray-900">Order Confirmation</h3>
-                <p className="text-sm text-gray-600">You'll receive an email confirmation with order details</p>
+                <p className="text-sm text-gray-900">You'll receive an email confirmation with order details</p>
               </div>
             </div>
             
@@ -147,7 +147,7 @@ function OrderSuccessPageInternal() {
               <span className="text-2xl">📦</span>
               <div>
                 <h3 className="font-medium text-gray-900">Processing</h3>
-                <p className="text-sm text-gray-600">Your order will be prepared and shipped by the seller</p>
+                <p className="text-sm text-gray-900">Your order will be prepared and shipped by the seller</p>
               </div>
             </div>
             
@@ -155,7 +155,7 @@ function OrderSuccessPageInternal() {
               <span className="text-2xl">🚚</span>
               <div>
                 <h3 className="font-medium text-gray-900">Delivery Tracking</h3>
-                <p className="text-sm text-gray-600">Track your order status in real-time on the orders page</p>
+                <p className="text-sm text-gray-900">Track your order status in real-time on the orders page</p>
               </div>
             </div>
           </div>
@@ -181,7 +181,7 @@ function OrderSuccessPageInternal() {
           
           <Link
             href="/dashboard"
-            className="w-full flex items-center justify-center px-6 py-4 bg-gray-100 text-gray-600 rounded-xl font-medium hover:bg-gray-200 transition-all duration-200"
+            className="w-full flex items-center justify-center px-6 py-4 bg-gray-100 text-gray-900 rounded-xl font-medium hover:bg-gray-200 transition-all duration-200"
           >
             <span className="mr-2">🏠</span>
             Go to Dashboard
@@ -190,7 +190,7 @@ function OrderSuccessPageInternal() {
 
         {}
         {sessionId && process.env.NODE_ENV === 'development' && (
-          <div className="mt-6 text-center text-xs text-gray-400">
+          <div className="mt-6 text-center text-xs text-gray-900">
             Session ID: {sessionId.slice(-8)}
           </div>
         )}
@@ -204,7 +204,7 @@ export default function () {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600">Loading...</p>
+          <p className="mt-2 text-sm text-gray-900">Loading...</p>
         </div>
       </div>
     }>

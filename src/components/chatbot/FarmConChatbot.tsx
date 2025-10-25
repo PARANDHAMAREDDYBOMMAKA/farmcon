@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
 interface Message {
@@ -10,6 +10,7 @@ interface Message {
 
 export default function FarmConChatbot() {
   const [opened, setOpened] = useState(false)
+  const [isTawkOpen, setIsTawkOpen] = useState(true) // Start with Tawk.to open by default
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -19,6 +20,38 @@ export default function FarmConChatbot() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const pathname = usePathname()
+
+  // Listen for Tawk.to events
+  useEffect(() => {
+    const handleTawkClosed = () => {
+      setIsTawkOpen(false)
+      setOpened(true) // Show AI chatbot when Tawk.to closes
+      // Hide the "AI Chat" button
+      const returnButton = document.getElementById('tawk-return-to-ai')
+      if (returnButton) {
+        returnButton.classList.add('hidden')
+      }
+    }
+
+    const handleTawkOpened = () => {
+      setIsTawkOpen(true)
+      setOpened(false) // Hide AI chatbot when Tawk.to opens
+      // Show the "AI Chat" button
+      const returnButton = document.getElementById('tawk-return-to-ai')
+      if (returnButton) {
+        returnButton.classList.remove('hidden')
+      }
+    }
+
+    // Listen for custom events from Tawk.to
+    window.addEventListener('tawk-closed', handleTawkClosed)
+    window.addEventListener('tawk-opened', handleTawkOpened)
+
+    return () => {
+      window.removeEventListener('tawk-closed', handleTawkClosed)
+      window.removeEventListener('tawk-opened', handleTawkOpened)
+    }
+  }, [])
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return
@@ -74,6 +107,14 @@ export default function FarmConChatbot() {
       TawkAPI.showWidget()
       TawkAPI.maximize()
       setOpened(false)
+      setIsTawkOpen(true)
+      // Show the "AI Chat" button
+      const returnButton = document.getElementById('tawk-return-to-ai')
+      if (returnButton) {
+        returnButton.classList.remove('hidden')
+      }
+      // Dispatch event to notify that Tawk.to is now open
+      window.dispatchEvent(new CustomEvent('tawk-opened'))
     } else {
       alert('Live support is loading. Please try again in a moment.')
     }
@@ -81,7 +122,9 @@ export default function FarmConChatbot() {
 
   return (
     <>
-      {}
+      {/* Only show AI chatbot when Tawk.to is not open */}
+      {!isTawkOpen && (
+      <>
       <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
         {!opened && (
           <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
@@ -198,7 +241,7 @@ export default function FarmConChatbot() {
                   </button>
                 </div>
                 <div className="mt-2 flex items-center justify-between">
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-gray-900">
                     Powered by AI • Context-aware
                   </p>
                   <button
@@ -215,6 +258,8 @@ export default function FarmConChatbot() {
             </div>
           </div>
         </div>
+      )}
+      </>
       )}
     </>
   )

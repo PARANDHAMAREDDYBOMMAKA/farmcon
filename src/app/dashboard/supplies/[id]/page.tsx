@@ -94,7 +94,7 @@ export default function ProductDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading product...</p>
+          <p className="mt-4 text-gray-900">Loading product...</p>
         </div>
       </div>
     )
@@ -127,13 +127,13 @@ export default function ProductDetailPage() {
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
-            <Link href="/dashboard/supplies" className="text-gray-500 hover:text-gray-700">
+            <Link href="/dashboard/supplies" className="text-gray-900 hover:text-gray-700">
               Supplies
             </Link>
           </li>
           <li>
             <div className="flex items-center">
-              <span className="mx-2 text-gray-400">/</span>
+              <span className="mx-2 text-gray-900">/</span>
               <span className="text-gray-900">{product.name}</span>
             </div>
           </li>
@@ -191,7 +191,7 @@ export default function ProductDetailPage() {
                   ⭐
                 </span>
               ))}
-              <span className="ml-2 text-sm text-gray-500">
+              <span className="ml-2 text-sm text-gray-900">
                 ({reviews.length} reviews)
               </span>
             </div>
@@ -199,27 +199,27 @@ export default function ProductDetailPage() {
 
           <div className="mt-4">
             <p className="text-3xl font-bold text-gray-900">₹{product.price}</p>
-            <p className="text-sm text-gray-500">per {product.unit}</p>
+            <p className="text-sm text-gray-900">per {product.unit}</p>
           </div>
 
           {product.brand && (
             <div className="mt-4">
-              <p className="text-sm text-gray-600">Brand: <span className="font-medium">{product.brand}</span></p>
+              <p className="text-sm text-gray-900">Brand: <span className="font-medium">{product.brand}</span></p>
             </div>
           )}
 
           <div className="mt-4">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-gray-900">
               Sold by: <span className="font-medium">{(product as any).profiles?.full_name}</span>
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-900">
               {(product as any).profiles?.city}, {(product as any).profiles?.state}
             </p>
           </div>
 
           <div className="mt-6">
             <h3 className="text-sm font-medium text-gray-900">Description</h3>
-            <p className="mt-2 text-sm text-gray-600">{product.description}</p>
+            <p className="mt-2 text-sm text-gray-900">{product.description}</p>
           </div>
 
           {product.specifications && Object.keys(product.specifications).length > 0 && (
@@ -228,7 +228,7 @@ export default function ProductDetailPage() {
               <dl className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {Object.entries(product.specifications).map(([key, value]) => (
                   <div key={key}>
-                    <dt className="text-sm font-medium text-gray-500">{key}</dt>
+                    <dt className="text-sm font-medium text-gray-900">{key}</dt>
                     <dd className="text-sm text-gray-900">{String(value)}</dd>
                   </div>
                 ))}
@@ -253,7 +253,7 @@ export default function ProductDetailPage() {
                   </option>
                 ))}
               </select>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-900">
                 ({product.stockQuantity} in stock)
               </span>
             </div>
@@ -304,19 +304,19 @@ export default function ProductDetailPage() {
                     <p className="text-sm font-medium text-gray-900">
                       {(review as any).profiles?.full_name || 'Anonymous'}
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-900">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 {review.comment && (
-                  <p className="mt-3 text-sm text-gray-600">{review.comment}</p>
+                  <p className="mt-3 text-sm text-gray-900">{review.comment}</p>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <p className="mt-4 text-sm text-gray-500">No reviews yet. Be the first to review this product!</p>
+          <p className="mt-4 text-sm text-gray-900">No reviews yet. Be the first to review this product!</p>
         )}
       </div>
     </div>

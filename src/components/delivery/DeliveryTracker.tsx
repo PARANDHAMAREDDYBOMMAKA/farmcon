@@ -306,7 +306,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                   w-10 h-10 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300
                   ${milestone.status === 'completed' ? 'bg-green-500 border-green-500 text-white' :
                     milestone.status === 'current' ? 'bg-blue-500 border-blue-500 text-white animate-pulse' :
-                    'bg-gray-100 border-gray-300 text-gray-400'}
+                    'bg-gray-100 border-gray-300 text-gray-900'}
                 `}>
                   {milestone.status === 'completed' ? '✓' : milestone.icon}
                 </div>
@@ -324,20 +324,20 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                   <h4 className={`
                     text-lg font-semibold transition-all duration-300
                     ${milestone.status === 'completed' ? 'text-gray-900' :
-                      milestone.status === 'current' ? 'text-blue-600' : 'text-gray-400'}
+                      milestone.status === 'current' ? 'text-blue-600' : 'text-gray-900'}
                   `}>
                     {milestone.title}
                   </h4>
                   {milestone.timestamp && (
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-900">
                       {format(parseISO(milestone.timestamp), 'MMM dd, h:mm a')}
                     </span>
                   )}
                 </div>
                 <p className={`
                   text-sm mt-1 transition-all duration-300
-                  ${milestone.status === 'completed' ? 'text-gray-600' :
-                    milestone.status === 'current' ? 'text-blue-600' : 'text-gray-400'}
+                  ${milestone.status === 'completed' ? 'text-gray-900' :
+                    milestone.status === 'current' ? 'text-blue-600' : 'text-gray-900'}
                 `}>
                   {milestone.description}
                 </p>

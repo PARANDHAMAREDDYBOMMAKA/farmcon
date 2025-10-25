@@ -239,8 +239,8 @@ export default function DriverDashboard() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{driver.fullName}</h1>
-              <p className="text-gray-600">{driver.vehicleType} - {driver.vehicleNumber}</p>
-              <p className="text-sm text-gray-500">{driver.phone}</p>
+              <p className="text-gray-900">{driver.vehicleType} - {driver.vehicleNumber}</p>
+              <p className="text-sm text-gray-900">{driver.phone}</p>
             </div>
             <button
               onClick={() => {
@@ -260,11 +260,11 @@ export default function DriverDashboard() {
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Location Tracking</h2>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-600">
+              <p className="text-gray-900">
                 {locationTracking ? 'Location tracking is active' : 'Start tracking to update delivery locations'}
               </p>
               {driver.lastLocationUpdate && (
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-gray-900 mt-1">
                   Last update: {new Date(driver.lastLocationUpdate).toLocaleString()}
                 </p>
               )}
@@ -289,7 +289,7 @@ export default function DriverDashboard() {
           </h2>
 
           {deliveries.length === 0 ? (
-            <p className="text-gray-600 text-center py-8">No active deliveries</p>
+            <p className="text-gray-900 text-center py-8">No active deliveries</p>
           ) : (
             <div className="space-y-4">
               {deliveries.map((delivery) => (
@@ -300,14 +300,14 @@ export default function DriverDashboard() {
                         Order #{delivery.order.id.slice(-8)}
                       </h3>
                       {delivery.trackingNumber && (
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-gray-900">
                           Tracking: {delivery.trackingNumber}
                         </p>
                       )}
-                      <p className="text-sm text-gray-500 mt-1">
+                      <p className="text-sm text-gray-900 mt-1">
                         Customer: {delivery.order.customer.fullName}
                       </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-900">
                         Phone: {delivery.order.customer.phone}
                       </p>
                     </div>
@@ -330,14 +330,14 @@ export default function DriverDashboard() {
                     <div className="flex items-start">
                       <span className="text-lg mr-2">📦</span>
                       <div>
-                        <p className="text-xs text-gray-500">Pickup</p>
+                        <p className="text-xs text-gray-900">Pickup</p>
                         <p className="text-sm text-gray-700">{delivery.pickupAddress || 'Not specified'}</p>
                       </div>
                     </div>
                     <div className="flex items-start">
                       <span className="text-lg mr-2">📍</span>
                       <div>
-                        <p className="text-xs text-gray-500">Delivery</p>
+                        <p className="text-xs text-gray-900">Delivery</p>
                         <p className="text-sm text-gray-700">{delivery.deliveryAddress || 'Not specified'}</p>
                       </div>
                     </div>

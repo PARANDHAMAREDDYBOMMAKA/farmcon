@@ -69,7 +69,7 @@ export default function GlobalSearch() {
           className="w-full px-4 py-2 pl-10 pr-4 text-gray-900 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
         <svg
-          className="absolute left-3 top-2.5 w-5 h-5 text-gray-400"
+          className="absolute left-3 top-2.5 w-5 h-5 text-gray-900"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -92,7 +92,7 @@ export default function GlobalSearch() {
       {isOpen && query && (
         <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-96 overflow-y-auto">
           {isSearching ? (
-            <div className="p-4 text-center text-gray-500">Searching...</div>
+            <div className="p-4 text-center text-gray-900">Searching...</div>
           ) : results.length > 0 ? (
             <div className="py-2">
               {results.map((result) => (
@@ -118,7 +118,7 @@ export default function GlobalSearch() {
                         {result.name}
                       </p>
                       {result.category && (
-                        <p className="text-xs text-gray-500">{result.category}</p>
+                        <p className="text-xs text-gray-900">{result.category}</p>
                       )}
                       {result.price && (
                         <p className="text-sm font-semibold text-green-600">
@@ -139,7 +139,7 @@ export default function GlobalSearch() {
               </div>
             </div>
           ) : (
-            <div className="p-4 text-center text-gray-500">
+            <div className="p-4 text-center text-gray-900">
               No results found for "{query}"
             </div>
           )}

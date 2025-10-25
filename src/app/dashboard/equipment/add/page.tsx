@@ -168,7 +168,7 @@ export default function AddEquipmentPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-900">Loading...</p>
         </div>
       </div>
     )
@@ -179,7 +179,7 @@ export default function AddEquipmentPage() {
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">List Your Equipment</h1>
-          <p className="text-gray-600">Share your farming equipment with other farmers in your area</p>
+          <p className="text-gray-900">Share your farming equipment with other farmers in your area</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
@@ -315,7 +315,7 @@ export default function AddEquipmentPage() {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                   placeholder="500.00"
                 />
-                <p className="mt-1 text-sm text-gray-500">Leave empty if not available for hourly rental</p>
+                <p className="mt-1 text-sm text-gray-900">Leave empty if not available for hourly rental</p>
               </div>
 
               <div>
@@ -333,7 +333,7 @@ export default function AddEquipmentPage() {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                   placeholder="2000.00"
                 />
-                <p className="mt-1 text-sm text-gray-500">Leave empty if not available for daily rental</p>
+                <p className="mt-1 text-sm text-gray-900">Leave empty if not available for daily rental</p>
               </div>
             </div>
             {!formData.hourly_rate && !formData.daily_rate && (

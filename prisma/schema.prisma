@@ -419,3 +419,13 @@ enum DeliveryStatus {
   cancelled
   failed
 }
+
+model NewsletterSubscription {
+  id          String   @id @default(uuid()) @db.Uuid
+  email       String   @unique
+  isActive    Boolean  @default(true) @map("is_active")
+  subscribedAt DateTime @default(now()) @map("subscribed_at")
+  unsubscribedAt DateTime? @map("unsubscribed_at")
+
+  @@map("newsletter_subscriptions")
+}

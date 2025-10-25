@@ -138,7 +138,7 @@ export default function NotificationsPage() {
       case 'review':
         return <Star {...iconProps} className="w-6 h-6 text-yellow-600" />
       default:
-        return <Bell {...iconProps} className="w-6 h-6 text-gray-600" />
+        return <Bell {...iconProps} className="w-6 h-6 text-gray-900" />
     }
   }
 
@@ -174,7 +174,7 @@ export default function NotificationsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading notifications...</p>
+          <p className="mt-4 text-gray-900">Loading notifications...</p>
         </div>
       </div>
     )
@@ -191,7 +191,7 @@ export default function NotificationsPage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-900">
                 {unreadCount > 0 ? `${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}` : 'All caught up!'}
               </p>
             </div>
@@ -215,7 +215,7 @@ export default function NotificationsPage() {
             className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
               filter === 'all'
                 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
-                : 'text-gray-600 hover:bg-gray-50'
+                : 'text-gray-900 hover:bg-gray-50'
             }`}
           >
             All ({notifications.length})
@@ -225,7 +225,7 @@ export default function NotificationsPage() {
             className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
               filter === 'unread'
                 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
-                : 'text-gray-600 hover:bg-gray-50'
+                : 'text-gray-900 hover:bg-gray-50'
             }`}
           >
             Unread ({unreadCount})
@@ -235,7 +235,7 @@ export default function NotificationsPage() {
             className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
               filter === 'read'
                 ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
-                : 'text-gray-600 hover:bg-gray-50'
+                : 'text-gray-900 hover:bg-gray-50'
             }`}
           >
             Read ({notifications.filter(n => n.is_read).length})
@@ -248,10 +248,10 @@ export default function NotificationsPage() {
         {filteredNotifications.length === 0 ? (
           <div className="p-12 text-center">
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Bell className="w-10 h-10 text-gray-400" />
+              <Bell className="w-10 h-10 text-gray-900" />
             </div>
             <p className="text-lg font-medium text-gray-900">No notifications</p>
-            <p className="mt-2 text-sm text-gray-500">
+            <p className="mt-2 text-sm text-gray-900">
               {filter === 'unread' ? "You're all caught up!" : 'No notifications to show'}
             </p>
           </div>
@@ -287,9 +287,9 @@ export default function NotificationsPage() {
                         <span className="flex-shrink-0 w-2.5 h-2.5 bg-blue-500 rounded-full mt-1.5"></span>
                       )}
                     </div>
-                    <p className="text-sm text-gray-600 mb-2">{notification.message}</p>
+                    <p className="text-sm text-gray-900 mb-2">{notification.message}</p>
                     <div className="flex items-center justify-between gap-4">
-                      <p className="text-xs text-gray-400 flex items-center gap-1">
+                      <p className="text-xs text-gray-900 flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5" />
                         {timeAgo(notification.created_at)}
                       </p>

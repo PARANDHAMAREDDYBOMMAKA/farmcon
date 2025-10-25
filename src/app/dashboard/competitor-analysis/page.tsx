@@ -168,7 +168,7 @@ export default function CompetitorAnalysisPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Competitor Analysis</h1>
-            <p className="text-gray-600 mt-1">Analyze competitor technology stacks and market positioning</p>
+            <p className="text-gray-900 mt-1">Analyze competitor technology stacks and market positioning</p>
           </div>
           <div className="mt-4 sm:mt-0 flex items-center space-x-2">
             <span className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
@@ -187,7 +187,7 @@ export default function CompetitorAnalysisPage() {
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'input'
                   ? 'border-orange-500 text-orange-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-gray-900 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               Input URLs
@@ -200,7 +200,7 @@ export default function CompetitorAnalysisPage() {
                   ? 'border-orange-500 text-orange-600'
                   : analysis.length === 0
                   ? 'border-transparent text-gray-300 cursor-not-allowed'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-gray-900 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               Results ({analysis.length})
@@ -213,7 +213,7 @@ export default function CompetitorAnalysisPage() {
                   ? 'border-orange-500 text-orange-600'
                   : !comparison
                   ? 'border-transparent text-gray-300 cursor-not-allowed'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-gray-900 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               Comparison
@@ -235,7 +235,7 @@ export default function CompetitorAnalysisPage() {
                     className="p-4 border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50 transition-colors text-left"
                   >
                     <h4 className="font-medium text-gray-900">{preset}</h4>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <p className="text-sm text-gray-900 mt-1">
                       {presetCompetitors[preset as keyof typeof presetCompetitors].length} competitors
                     </p>
                   </button>
@@ -358,7 +358,7 @@ export default function CompetitorAnalysisPage() {
                               <div key={i} className="flex items-center justify-between p-2 bg-green-50 rounded">
                                 <span className="text-sm font-medium">{tech.name}</span>
                                 {tech.version && (
-                                  <span className="text-xs text-gray-500">v{tech.version}</span>
+                                  <span className="text-xs text-gray-900">v{tech.version}</span>
                                 )}
                               </div>
                             ))}
@@ -375,7 +375,7 @@ export default function CompetitorAnalysisPage() {
                               <div key={i} className="flex items-center justify-between p-2 bg-orange-50 rounded">
                                 <span className="text-sm font-medium">{tech.name}</span>
                                 {tech.version && (
-                                  <span className="text-xs text-gray-500">v{tech.version}</span>
+                                  <span className="text-xs text-gray-900">v{tech.version}</span>
                                 )}
                               </div>
                             ))}
@@ -391,7 +391,7 @@ export default function CompetitorAnalysisPage() {
                             {site.analytics.map((tech, i) => (
                               <div key={i} className="flex items-center justify-between p-2 bg-blue-50 rounded">
                                 <span className="text-sm font-medium">{tech.name}</span>
-                                <span className="text-xs text-gray-500">{tech.confidence}%</span>
+                                <span className="text-xs text-gray-900">{tech.confidence}%</span>
                               </div>
                             ))}
                           </div>
@@ -407,7 +407,7 @@ export default function CompetitorAnalysisPage() {
                               <div key={i} className="flex items-center justify-between p-2 bg-purple-50 rounded">
                                 <span className="text-sm font-medium">{tech.name}</span>
                                 {tech.version && (
-                                  <span className="text-xs text-gray-500">v{tech.version}</span>
+                                  <span className="text-xs text-gray-900">v{tech.version}</span>
                                 )}
                               </div>
                             ))}
@@ -423,7 +423,7 @@ export default function CompetitorAnalysisPage() {
                             {site.hosting.map((tech, i) => (
                               <div key={i} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                                 <span className="text-sm font-medium">{tech.name}</span>
-                                <span className="text-xs text-gray-500">{tech.confidence}%</span>
+                                <span className="text-xs text-gray-900">{tech.confidence}%</span>
                               </div>
                             ))}
                           </div>
@@ -504,7 +504,7 @@ export default function CompetitorAnalysisPage() {
                             style={{ width: `${(tech.usage / comparison.summary.totalSitesAnalyzed) * 100}%` }}
                           />
                         </div>
-                        <span className="text-sm text-gray-600">{tech.usage}</span>
+                        <span className="text-sm text-gray-900">{tech.usage}</span>
                       </div>
                     </div>
                   ))}
@@ -531,15 +531,15 @@ export default function CompetitorAnalysisPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Market Insights</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Most Used Stack</p>
+                  <p className="text-sm font-medium text-gray-900">Most Used Stack</p>
                   <p className="text-lg font-semibold text-gray-900">{comparison.marketInsights.mostUsedStack}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Average Performance</p>
+                  <p className="text-sm font-medium text-gray-900">Average Performance</p>
                   <p className="text-lg font-semibold text-gray-900">{comparison.marketInsights.avgPerformance}</p>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Market Leader</p>
+                  <p className="text-sm font-medium text-gray-900">Market Leader</p>
                   <p className="text-lg font-semibold text-gray-900">
                     {comparison.marketInsights.marketLeader === 'None identified'
                       ? 'No clear leader'

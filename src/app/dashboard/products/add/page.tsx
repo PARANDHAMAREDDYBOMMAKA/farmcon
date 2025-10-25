@@ -149,11 +149,11 @@ export default function AddProductPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Add New Product</h1>
-            <p className="text-gray-600 mt-1">Create a new product for your catalog</p>
+            <p className="text-gray-900 mt-1">Create a new product for your catalog</p>
           </div>
           <button
             onClick={() => router.back()}
-            className="text-gray-600 hover:text-gray-900"
+            className="text-gray-900 hover:text-gray-900"
           >
             ← Back
           </button>
@@ -399,7 +399,7 @@ export default function AddProductPage() {
               onChange={handleImageUpload}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             />
-            <p className="text-xs text-gray-500 mt-1">You can upload multiple images. First image will be the main product image.</p>
+            <p className="text-xs text-gray-900 mt-1">You can upload multiple images. First image will be the main product image.</p>
           </div>
 
           {formData.images.length > 0 && (

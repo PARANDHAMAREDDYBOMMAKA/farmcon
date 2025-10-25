@@ -137,7 +137,7 @@ export default function DashboardLayout({
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <p className="mt-4 text-gray-900">Loading...</p>
         </div>
       </div>
     )
@@ -245,7 +245,7 @@ export default function DashboardLayout({
                     name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
                   ).join(' ') || 'User'}
                 </p>
-                <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                <p className="text-xs text-gray-900 truncate">{user.email}</p>
                 <div className="flex items-center mt-1">
                   <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
                   <span className="text-xs text-green-600 font-medium">Online</span>
@@ -255,7 +255,7 @@ export default function DashboardLayout({
 
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center justify-center space-x-2 text-sm text-gray-600 hover:text-red-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-red-50 group"
+              className="w-full flex items-center justify-center space-x-2 text-sm text-gray-900 hover:text-red-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-red-50 group"
             >
               <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
               <span>Sign out</span>
@@ -272,12 +272,12 @@ export default function DashboardLayout({
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="lg:hidden text-gray-900 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <Menu className="w-5 h-5" />
               </button>
 
-              <div className="hidden sm:block text-xs sm:text-sm text-gray-600 font-medium">
+              <div className="hidden sm:block text-xs sm:text-sm text-gray-900 font-medium">
                 Welcome back, <span className="text-green-600 font-semibold">
                   {user.fullName?.split(' ').map(name =>
                     name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()

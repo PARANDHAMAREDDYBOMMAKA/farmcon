@@ -164,7 +164,7 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
       case 'review':
         return <Star {...iconProps} className="w-5 h-5 text-yellow-600" />
       default:
-        return <Bell {...iconProps} className="w-5 h-5 text-gray-600" />
+        return <Bell {...iconProps} className="w-5 h-5 text-gray-900" />
     }
   }
 
@@ -192,7 +192,7 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
       {}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-xl transition-all duration-200"
+        className="relative p-2 text-gray-900 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-xl transition-all duration-200"
       >
         <Bell className="w-6 h-6" />
         {unreadCount > 0 && (
@@ -231,15 +231,15 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
             {loading ? (
               <div className="p-4 text-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto"></div>
-                <p className="mt-2 text-sm text-gray-500">Loading...</p>
+                <p className="mt-2 text-sm text-gray-900">Loading...</p>
               </div>
             ) : notifications.length === 0 ? (
               <div className="p-8 text-center">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <Bell className="w-8 h-8 text-gray-400" />
+                  <Bell className="w-8 h-8 text-gray-900" />
                 </div>
                 <p className="text-sm font-medium text-gray-900">No notifications yet</p>
-                <p className="mt-1 text-xs text-gray-500">We'll notify you when something arrives</p>
+                <p className="mt-1 text-xs text-gray-900">We'll notify you when something arrives</p>
               </div>
             ) : (
               <>
@@ -269,10 +269,10 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
                                 </p>
                                 <span className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1"></span>
                               </div>
-                              <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">
+                              <p className="text-xs sm:text-sm text-gray-900 mt-1 line-clamp-2">
                                 {notification.message}
                               </p>
-                              <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                              <p className="text-xs text-gray-900 mt-2 flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {timeAgo(notification.created_at)}
                               </p>
@@ -307,10 +307,10 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
                               <p className="text-xs sm:text-sm font-semibold text-gray-700">
                                 {notification.title}
                               </p>
-                              <p className="text-xs sm:text-sm text-gray-600 mt-1 line-clamp-2">
+                              <p className="text-xs sm:text-sm text-gray-900 mt-1 line-clamp-2">
                                 {notification.message}
                               </p>
-                              <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                              <p className="text-xs text-gray-900 mt-2 flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {timeAgo(notification.created_at)}
                               </p>

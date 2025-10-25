@@ -218,7 +218,7 @@ function OrdersPageInternal() {
       case 'cancelled':
         return 'text-red-600 bg-red-100'
       default:
-        return 'text-gray-600 bg-gray-100'
+        return 'text-gray-900 bg-gray-100'
     }
   }
 
@@ -260,7 +260,7 @@ function OrdersPageInternal() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading orders...</p>
+          <p className="mt-4 text-gray-900">Loading orders...</p>
         </div>
       </div>
     )
@@ -321,7 +321,7 @@ function OrdersPageInternal() {
                 className={`flex-shrink-0 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-2.5 rounded-md sm:rounded-lg md:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 whitespace-nowrap touch-manipulation ${
                   filter === status
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md sm:shadow-lg'
-                    : 'text-gray-600 bg-gray-50 hover:bg-gray-100 active:bg-gray-200'
+                    : 'text-gray-900 bg-gray-50 hover:bg-gray-100 active:bg-gray-200'
                 }`}
               >
                 <span className="hidden md:inline">
@@ -355,7 +355,7 @@ function OrdersPageInternal() {
           {/* Search Bar */}
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-900" />
               <input
                 type="text"
                 placeholder="Search by order ID, seller, customer, or items..."
@@ -366,7 +366,7 @@ function OrdersPageInternal() {
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-900 hover:text-green-600"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -399,23 +399,23 @@ function OrdersPageInternal() {
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-green-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Orders</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Total Orders</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-green-600 truncate">{orders.length}</p>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-blue-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Total Value</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Total Value</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-blue-600 truncate">
-              ₹{orders.reduce((sum, order) => sum + order.total_amount, 0).toLocaleString()}
+              ₹{orders.reduce((sum, order) => sum + Number(order.total_amount), 0).toLocaleString()}
             </p>
           </div>
           <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-yellow-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Pending</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Pending</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-yellow-600 truncate">
               {orders.filter(o => o.status === 'pending').length}
@@ -424,7 +424,7 @@ function OrdersPageInternal() {
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-purple-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-purple-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">Completed</p>
+              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Completed</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-purple-600 truncate">
               {orders.filter(o => o.status === 'delivered').length}
@@ -446,7 +446,7 @@ function OrdersPageInternal() {
               <Package className="w-10 h-10 sm:w-14 sm:h-14 text-green-600" />
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">No orders found</h3>
-            <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-4">
+            <p className="text-sm sm:text-base text-gray-900 mb-6 sm:mb-8 max-w-md mx-auto px-4">
               {searchQuery
                 ? `No orders match "${searchQuery}". Try a different search term.`
                 : filter === 'all'
@@ -532,8 +532,8 @@ function OrdersPageInternal() {
                       Order #{order.id.slice(-8)}
                     </h3>
                     <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
-                      <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-400 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm text-gray-500 truncate">
+                      <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-900 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-gray-900 truncate">
                         {new Date(order.created_at).toLocaleDateString('en-IN', {
                           year: 'numeric',
                           month: 'short',
@@ -560,7 +560,7 @@ function OrdersPageInternal() {
                     <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent whitespace-nowrap">
                       ₹{order.total_amount.toLocaleString()}
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-500">{order.items?.length || 0} {order.items?.length === 1 ? 'item' : 'items'}</p>
+                    <p className="text-xs sm:text-sm text-gray-900">{order.items?.length || 0} {order.items?.length === 1 ? 'item' : 'items'}</p>
                   </div>
                 </div>
               </div>
@@ -570,7 +570,7 @@ function OrdersPageInternal() {
                 {}
                 <div className="flex flex-col gap-2 sm:gap-2.5 mb-3 sm:mb-4 p-2.5 sm:p-3 md:p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl">
                   <div className="flex items-start gap-2">
-                    {user?.role === 'consumer' ? <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-gray-600" /> : <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-gray-600" />}
+                    {user?.role === 'consumer' ? <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-gray-900" /> : <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-gray-900" />}
                     <p className="text-xs sm:text-sm font-medium text-gray-700 break-words min-w-0 flex-1">
                       <span className="font-semibold text-gray-900">
                         {user?.role === 'consumer' ? 'Seller: ' : 'Customer: '}
@@ -603,8 +603,8 @@ function OrdersPageInternal() {
                             className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-md sm:rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 bg-gradient-to-br from-gray-200 to-gray-300 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
-                            {item.product ? <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-gray-600" /> : <Wheat className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-gray-600" />}
+                          <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
+                            {item.product ? <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-600" /> : <Wheat className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-600" />}
                           </div>
                         )}
                       </div>
@@ -612,7 +612,7 @@ function OrdersPageInternal() {
                         <h4 className="text-xs sm:text-sm md:text-base font-bold text-gray-900 line-clamp-2 mb-0.5">
                           {item.product?.name || item.crop_listing?.crop.name}
                         </h4>
-                        <p className="text-xs sm:text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-900">
                           <span className="font-semibold">{item.quantity}</span> ×
                           <span className="font-semibold"> ₹{item.unit_price.toLocaleString()}</span> =
                           <span className="font-bold text-green-600"> ₹{item.total_price.toLocaleString()}</span>
@@ -723,7 +723,7 @@ export default function () {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600">Loading...</p>
+          <p className="mt-2 text-sm text-gray-900">Loading...</p>
         </div>
       </div>
     }>

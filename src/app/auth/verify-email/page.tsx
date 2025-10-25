@@ -70,7 +70,7 @@ function VerifyEmailInternal() {
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
             Verify your email
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-gray-900">
             We sent a verification link to your email address
           </p>
         </div>
@@ -82,17 +82,17 @@ function VerifyEmailInternal() {
             </div>
             
             {email && (
-              <p className="text-sm text-gray-600 mb-6">
+              <p className="text-sm text-gray-900 mb-6">
                 Check your email at <strong>{email}</strong> for a verification link.
               </p>
             )}
 
             <div className="space-y-4">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-900">
                 Click the link in the email to verify your account and start using FarmCon.
               </p>
               
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-gray-900">
                 The verification link will expire in 24 hours for security reasons.
               </p>
             </div>
@@ -125,7 +125,7 @@ function VerifyEmailInternal() {
         </div>
 
         <div className="text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-900">
             Having trouble?{' '}
             <Link href="/support" className="text-green-600 hover:text-green-500">
               Contact support
@@ -142,7 +142,7 @@ export default function () {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600">Loading...</p>
+          <p className="mt-2 text-sm text-gray-900">Loading...</p>
         </div>
       </div>
     }>

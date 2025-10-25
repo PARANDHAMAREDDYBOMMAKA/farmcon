@@ -142,7 +142,7 @@ function EmailOTPForm() {
             <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
               {step === 'email' ? 'Sign in with Email OTP' : 'Verify OTP'}
             </h2>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-900">
               {step === 'email' ? (
                 <>
                   Prefer password?{' '}
@@ -183,7 +183,7 @@ function EmailOTPForm() {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                   placeholder="you@example.com"
                 />
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-gray-900">
                   Enter your email to receive a verification code
                 </p>
               </div>
@@ -196,7 +196,7 @@ function EmailOTPForm() {
                 {loading ? 'Sending OTP...' : 'Send Verification Code'}
               </button>
 
-              <p className="text-xs text-center text-gray-500">
+              <p className="text-xs text-center text-gray-900">
                 This site is protected by reCAPTCHA and the Google{' '}
                 <a href="https://policies.google.com/privacy" className="text-green-600 hover:underline">
                   Privacy Policy
@@ -237,7 +237,7 @@ function EmailOTPForm() {
                   placeholder="000000"
                   autoFocus
                 />
-                <p className="mt-1 text-xs text-gray-500 text-center">
+                <p className="mt-1 text-xs text-gray-900 text-center">
                   Enter the 6-digit code sent to your email
                 </p>
               </div>

@@ -163,7 +163,7 @@ function VerifyOTPForm() {
             <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
               Verify Your Email
             </h2>
-            <p className="mt-2 text-sm text-gray-600">
+            <p className="mt-2 text-sm text-gray-900">
               Enter the 6-digit code sent to
             </p>
             <p className="text-sm font-medium text-gray-900">{email}</p>
@@ -198,7 +198,7 @@ function VerifyOTPForm() {
                 placeholder="000000"
                 autoFocus
               />
-              <p className="mt-2 text-xs text-gray-500 text-center">
+              <p className="mt-2 text-xs text-gray-900 text-center">
                 Enter the 6-digit code from your email
               </p>
             </div>
@@ -222,7 +222,7 @@ function VerifyOTPForm() {
               </button>
               <Link
                 href="/auth/signin"
-                className="text-gray-600 hover:text-gray-500"
+                className="text-gray-900 hover:text-gray-900"
               >
                 ← Back to sign in
               </Link>
@@ -248,7 +248,7 @@ export default function VerifyOTP() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-600">Loading...</p>
+            <p className="mt-2 text-sm text-gray-900">Loading...</p>
           </div>
         </div>
       }>

@@ -183,7 +183,7 @@ function SellCropsPageInternal() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading crops...</p>
+          <p className="mt-4 text-gray-900">Loading crops...</p>
         </div>
       </div>
     )
@@ -194,7 +194,7 @@ function SellCropsPageInternal() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Sell Your Crops</h1>
-          <p className="text-gray-600">List your harvested crops for sale in the marketplace</p>
+          <p className="text-gray-900">List your harvested crops for sale in the marketplace</p>
         </div>
 
         {error && (
@@ -213,7 +213,7 @@ function SellCropsPageInternal() {
           <div className="text-center py-12">
             <span className="text-6xl">🌾</span>
             <h3 className="mt-4 text-lg font-medium text-gray-900">No harvested crops</h3>
-            <p className="mt-2 text-gray-500">
+            <p className="mt-2 text-gray-900">
               You need to have harvested crops before you can list them for sale.
             </p>
             <Link
@@ -255,14 +255,14 @@ function SellCropsPageInternal() {
                         <h3 className="text-sm font-medium text-gray-900">
                           {crop.name} {crop.variety && `(${crop.variety})`}
                         </h3>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-900">
                           {crop.area?.toString()} acres • Harvested {crop.actualHarvestDate ? 
                             new Date(crop.actualHarvestDate).toLocaleDateString() : 
                             'Recently'
                           }
                         </p>
                         {crop.actualYield && (
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-900">
                             Yield: {crop.actualYield?.toString()} {crop.unit}
                           </p>
                         )}
@@ -299,7 +299,7 @@ function SellCropsPageInternal() {
                         placeholder={`Enter quantity in ${selectedCrop.unit}`}
                       />
                       {selectedCrop.actualYield && (
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 text-sm text-gray-900">
                           Total yield: {selectedCrop.actualYield.toString()} {selectedCrop.unit}
                         </p>
                       )}
@@ -310,7 +310,7 @@ function SellCropsPageInternal() {
                         Price per {selectedCrop.unit} *
                       </label>
                       <div className="mt-1 relative">
-                        <span className="absolute left-3 top-2 text-gray-500">₹</span>
+                        <span className="absolute left-3 top-2 text-gray-900">₹</span>
                         <input
                           type="number"
                           id="price_per_unit"
@@ -384,7 +384,7 @@ function SellCropsPageInternal() {
                         Delivery Available
                       </label>
                     </div>
-                    <p className="mt-1 text-sm text-gray-500">
+                    <p className="mt-1 text-sm text-gray-900">
                       Check if you can deliver to buyers
                     </p>
                   </div>
@@ -437,7 +437,7 @@ function SellCropsPageInternal() {
                 <div className="bg-gray-50 rounded-lg p-8 text-center">
                   <span className="text-4xl">👈</span>
                   <h3 className="mt-4 text-lg font-medium text-gray-900">Select a crop to sell</h3>
-                  <p className="mt-2 text-gray-500">
+                  <p className="mt-2 text-gray-900">
                     Choose a harvested crop from the list to create a marketplace listing.
                   </p>
                 </div>
@@ -455,7 +455,7 @@ export default function () {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-600">Loading...</p>
+          <p className="mt-2 text-sm text-gray-900">Loading...</p>
         </div>
       </div>
     }>

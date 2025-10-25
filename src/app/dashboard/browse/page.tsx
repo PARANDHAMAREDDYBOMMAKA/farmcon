@@ -118,8 +118,8 @@ export default function BrowseCropsPage() {
       }
     })
 
-  const isDaysFresh = (harvestDate: string) => {
-    const harvest = new Date(harvestDate)
+  const isDaysFresh = (harvestDate: string | Date) => {
+    const harvest = typeof harvestDate === 'string' ? new Date(harvestDate) : harvestDate
     const today = new Date()
     const diffTime = Math.abs(today.getTime() - harvest.getTime())
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
@@ -131,7 +131,7 @@ export default function BrowseCropsPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading fresh crops...</p>
+          <p className="mt-4 text-gray-900">Loading fresh crops...</p>
         </div>
       </div>
     )
@@ -143,12 +143,12 @@ export default function BrowseCropsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Fresh Crops Marketplace</h1>
-            <p className="text-gray-600">Buy fresh crops directly from farmers</p>
+            <p className="text-gray-900">Buy fresh crops directly from farmers</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <Link
               href="/dashboard/cart"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
             >
               🛒 View Cart
             </Link>
@@ -164,7 +164,7 @@ export default function BrowseCropsPage() {
             placeholder="Search crops, variety, farmer..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
           />
         </div>
         
@@ -172,7 +172,7 @@ export default function BrowseCropsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
           >
             <option value="created_at">Latest First</option>
             <option value="price_low">Price: Low to High</option>
@@ -189,12 +189,12 @@ export default function BrowseCropsPage() {
             onChange={(e) => setFilterOrganic(e.target.checked)}
             className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
           />
-          <label htmlFor="organic-filter" className="ml-2 text-sm text-gray-700">
+          <label htmlFor="organic-filter" className="ml-2 text-sm text-gray-900 font-medium">
             Organic Only
           </label>
         </div>
 
-        <div className="text-sm text-gray-500 flex items-center">
+        <div className="text-sm text-gray-700 font-medium flex items-center">
           {filteredListings.length} crops available
         </div>
       </div>
@@ -218,7 +218,7 @@ export default function BrowseCropsPage() {
               
               {}
               <div className="absolute top-2 left-2 flex flex-col gap-1">
-                {listing.crop.organic_certified && (
+                {listing.crop.organicCertified && (
                   <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                     Organic
                   </span>
@@ -241,13 +241,13 @@ export default function BrowseCropsPage() {
                 {listing.crop.name}
               </h3>
               {listing.crop.variety && (
-                <p className="text-sm text-gray-600">{listing.crop.variety}</p>
+                <p className="text-sm text-gray-900">{listing.crop.variety}</p>
               )}
-              
-              <p className="text-sm text-gray-500 mt-1">
-                by {listing.farmer.full_name}
+
+              <p className="text-sm text-gray-900 mt-1 font-semibold">
+                by {listing.farmer.fullName}
               </p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-gray-900">
                 {listing.farmer.city}, {listing.farmer.state}
               </p>
 
@@ -257,29 +257,29 @@ export default function BrowseCropsPage() {
                     <p className="text-xl font-bold text-gray-900">
                       ₹{listing.pricePerUnit.toString()}
                     </p>
-                    <p className="text-sm text-gray-500">per {listing.unit}</p>
+                    <p className="text-sm text-gray-900">per {listing.unit}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Available</p>
-                    <p className="text-sm font-medium">{listing.quantityAvailable} {listing.unit}</p>
+                    <p className="text-sm text-gray-900">Available</p>
+                    <p className="text-sm font-bold text-gray-900">{listing.quantityAvailable.toString()} {listing.unit}</p>
                   </div>
                 </div>
               </div>
 
               {listing.harvestDate && (
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-gray-900 mt-2">
                   Harvested: {new Date(listing.harvestDate).toLocaleDateString()}
                 </p>
               )}
 
-              {listing.expiry_date && (
-                <p className="text-xs text-gray-500">
-                  Best before: {new Date(listing.expiry_date).toLocaleDateString()}
+              {listing.expiryDate && (
+                <p className="text-xs text-gray-900">
+                  Best before: {new Date(listing.expiryDate).toLocaleDateString()}
                 </p>
               )}
 
               {listing.description && (
-                <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+                <p className="text-sm text-gray-900 mt-2 line-clamp-2">
                   {listing.description}
                 </p>
               )}
@@ -294,14 +294,14 @@ export default function BrowseCropsPage() {
                 </button>
                 <Link
                   href={`/dashboard/browse/${listing.id}`}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-900 hover:bg-gray-50"
                 >
                   View
                 </Link>
               </div>
 
               {listing.pickupLocation && (
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-gray-900 mt-2">
                   📍 Pickup: {listing.pickupLocation}
                 </p>
               )}
@@ -314,7 +314,7 @@ export default function BrowseCropsPage() {
         <div className="text-center py-12">
           <span className="text-6xl">🌾</span>
           <h3 className="mt-4 text-lg font-medium text-gray-900">No crops found</h3>
-          <p className="mt-2 text-gray-500">
+          <p className="mt-2 text-gray-900">
             Try adjusting your search or filters. Check back later for fresh listings!
           </p>
         </div>

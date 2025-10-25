@@ -108,7 +108,7 @@ const getIconComponent = (emoji: string) => {
     '🌧️': <CloudRain className="w-10 h-10 text-blue-600" />,
     '☀️': <Sun className="w-10 h-10 text-yellow-500" />,
     '🌤️': <CloudSun className="w-10 h-10 text-blue-500" />,
-    '☁️': <Cloud className="w-10 h-10 text-gray-500" />,
+    '☁️': <Cloud className="w-10 h-10 text-gray-900" />,
     '💧': <Droplets className="w-10 h-10 text-cyan-600" />,
     '🌾': <Wheat className="w-10 h-10 text-amber-600" />,
     '🌱': <Sprout className="w-10 h-10 text-green-600" />,
@@ -120,11 +120,11 @@ const getIconComponent = (emoji: string) => {
     '🛡️': <Shield className="w-10 h-10 text-green-700" />,
     '📅': <Calendar className="w-10 h-10 text-blue-600" />,
     '🌿': <Leaf className="w-10 h-10 text-green-500" />,
-    '💨': <Wind className="w-10 h-10 text-gray-600" />,
+    '💨': <Wind className="w-10 h-10 text-gray-900" />,
     '🌡️': <Thermometer className="w-10 h-10 text-orange-600" />,
   }
 
-  return iconMap[emoji] || <Info className="w-10 h-10 text-gray-500" />
+  return iconMap[emoji] || <Info className="w-10 h-10 text-gray-900" />
 }
 
 export default function WeatherPage() {
@@ -225,7 +225,7 @@ export default function WeatherPage() {
       case 'yellow': return 'text-yellow-600 bg-yellow-100'
       case 'green': return 'text-green-600 bg-green-100'
       case 'blue': return 'text-blue-600 bg-blue-100'
-      default: return 'text-gray-600 bg-gray-100'
+      default: return 'text-gray-900 bg-gray-100'
     }
   }
 
@@ -234,7 +234,7 @@ export default function WeatherPage() {
       case 'high': return 'text-red-600 bg-red-100 border-red-200'
       case 'medium': return 'text-yellow-600 bg-yellow-100 border-yellow-200'
       case 'low': return 'text-blue-600 bg-blue-100 border-blue-200'
-      default: return 'text-gray-600 bg-gray-100 border-gray-200'
+      default: return 'text-gray-900 bg-gray-100 border-gray-200'
     }
   }
 
@@ -314,7 +314,7 @@ export default function WeatherPage() {
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     currentView === 'details'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      : 'text-gray-900 hover:text-gray-900'
                   }`}
                 >
                   <BarChart3 className="w-4 h-4" /> Details
@@ -324,7 +324,7 @@ export default function WeatherPage() {
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     currentView === 'charts'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      : 'text-gray-900 hover:text-gray-900'
                   }`}
                 >
                   <TrendingUp className="w-4 h-4" /> Charts
@@ -374,16 +374,16 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-3">
                       <Droplets className="w-8 h-8 text-cyan-600" />
                       <div>
-                        <p className="text-xs text-gray-600 font-medium">Humidity</p>
+                        <p className="text-xs text-gray-900 font-medium">Humidity</p>
                         <p className="text-2xl font-bold text-cyan-700">{currentWeather.current.humidity}%</p>
                       </div>
                     </div>
                   </div>
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow border border-gray-200">
                     <div className="flex items-center space-x-3">
-                      <Wind className="w-8 h-8 text-gray-600" />
+                      <Wind className="w-8 h-8 text-gray-900" />
                       <div>
-                        <p className="text-xs text-gray-600 font-medium">Wind Speed</p>
+                        <p className="text-xs text-gray-900 font-medium">Wind Speed</p>
                         <p className="text-2xl font-bold text-gray-700">{currentWeather.current.windSpeed} km/h</p>
                       </div>
                     </div>
@@ -392,7 +392,7 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-3">
                       <Thermometer className="w-8 h-8 text-orange-600" />
                       <div>
-                        <p className="text-xs text-gray-600 font-medium">Pressure</p>
+                        <p className="text-xs text-gray-900 font-medium">Pressure</p>
                         <p className="text-2xl font-bold text-orange-700">{currentWeather.current.pressure} hPa</p>
                       </div>
                     </div>
@@ -401,7 +401,7 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-3">
                       <Eye className="w-8 h-8 text-purple-600" />
                       <div>
-                        <p className="text-xs text-gray-600 font-medium">Visibility</p>
+                        <p className="text-xs text-gray-900 font-medium">Visibility</p>
                         <p className="text-2xl font-bold text-purple-700">{currentWeather.current.visibility} km</p>
                       </div>
                     </div>
@@ -506,7 +506,7 @@ export default function WeatherPage() {
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     forecastView === 'list'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      : 'text-gray-900 hover:text-gray-900'
                   }`}
                 >
                   <ClipboardList className="w-4 h-4" /> List View
@@ -516,7 +516,7 @@ export default function WeatherPage() {
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     forecastView === 'charts'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-600 hover:text-gray-900'
+                      : 'text-gray-900 hover:text-gray-900'
                   }`}
                 >
                   <TrendingUp className="w-4 h-4" /> Chart View
@@ -604,7 +604,7 @@ export default function WeatherPage() {
                           <CloudSun className="w-10 h-10 text-blue-600" />
                           <div>
                             <p className="font-bold text-xl text-blue-700">{day.temperature.max}°C / {day.temperature.min}°C</p>
-                            <p className="text-sm text-gray-600 capitalize font-medium">{day.weather.description}</p>
+                            <p className="text-sm text-gray-900 capitalize font-medium">{day.weather.description}</p>
                           </div>
                         </div>
                         {day.rain > 0 && (

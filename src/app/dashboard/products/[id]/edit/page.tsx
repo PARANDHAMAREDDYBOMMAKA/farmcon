@@ -216,7 +216,7 @@ export default function EditProductPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading product...</p>
+          <p className="mt-4 text-gray-900">Loading product...</p>
         </div>
       </div>
     )
@@ -227,7 +227,7 @@ export default function EditProductPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-600 mb-4">The product you're looking for doesn't exist.</p>
+          <p className="text-gray-900 mb-4">The product you're looking for doesn't exist.</p>
           <button
             onClick={() => router.push('/dashboard/products')}
             className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg"
@@ -246,11 +246,11 @@ export default function EditProductPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Edit Product</h1>
-            <p className="text-gray-600 mt-1">Update your product information</p>
+            <p className="text-gray-900 mt-1">Update your product information</p>
           </div>
           <button
             onClick={() => router.back()}
-            className="text-gray-600 hover:text-gray-900"
+            className="text-gray-900 hover:text-gray-900"
           >
             ← Back
           </button>
@@ -511,7 +511,7 @@ export default function EditProductPage() {
               onChange={handleImageUpload}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             />
-            <p className="text-xs text-gray-500 mt-1">You can upload multiple images. First image will be the main product image.</p>
+            <p className="text-xs text-gray-900 mt-1">You can upload multiple images. First image will be the main product image.</p>
           </div>
 
           {formData.images.length > 0 && (

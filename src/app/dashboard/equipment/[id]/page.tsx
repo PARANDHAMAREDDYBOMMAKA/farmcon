@@ -106,7 +106,7 @@ export default function EquipmentDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading equipment details...</p>
+          <p className="mt-4 text-gray-900">Loading equipment details...</p>
         </div>
       </div>
     )
@@ -135,13 +135,13 @@ export default function EquipmentDetailPage() {
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
-            <Link href="/dashboard/equipment" className="text-gray-500 hover:text-gray-700">
+            <Link href="/dashboard/equipment" className="text-gray-900 hover:text-gray-700">
               Equipment Rental
             </Link>
           </li>
           <li>
             <div className="flex items-center">
-              <span className="mx-2 text-gray-400">/</span>
+              <span className="mx-2 text-gray-900">/</span>
               <span className="text-gray-900">{equipment.name}</span>
             </div>
           </li>
@@ -160,7 +160,7 @@ export default function EquipmentDetailPage() {
               />
             ) : (
               <div className="h-96 w-full bg-gray-200 flex items-center justify-center">
-                <Truck className="w-32 h-32 text-gray-400" />
+                <Truck className="w-32 h-32 text-gray-900" />
               </div>
             )}
           </div>
@@ -191,11 +191,11 @@ export default function EquipmentDetailPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{equipment.name}</h1>
               {equipment.brand && (
-                <p className="text-lg text-gray-600">
+                <p className="text-lg text-gray-900">
                   {equipment.brand} {equipment.model && `${equipment.model}`}
                 </p>
               )}
-              <p className="text-sm text-gray-500">{equipment.category}</p>
+              <p className="text-sm text-gray-900">{equipment.category}</p>
             </div>
             <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
               equipment.status === 'available' 
@@ -214,13 +214,13 @@ export default function EquipmentDetailPage() {
               {equipment.hourly_rate && (
                 <div>
                   <p className="text-2xl font-bold text-gray-900">₹{equipment.hourly_rate}</p>
-                  <p className="text-sm text-gray-500">per hour</p>
+                  <p className="text-sm text-gray-900">per hour</p>
                 </div>
               )}
               {equipment.daily_rate && (
                 <div>
                   <p className="text-2xl font-bold text-gray-900">₹{equipment.daily_rate}</p>
-                  <p className="text-sm text-gray-500">per day</p>
+                  <p className="text-sm text-gray-900">per day</p>
                 </div>
               )}
             </div>
@@ -231,12 +231,12 @@ export default function EquipmentDetailPage() {
             <div className="grid grid-cols-2 gap-4">
               {equipment.year_manufactured && (
                 <div>
-                  <span className="text-gray-600">Year:</span>
+                  <span className="text-gray-900">Year:</span>
                   <span className="ml-2 font-medium">{equipment.year_manufactured}</span>
                 </div>
               )}
               <div className="flex items-center gap-1">
-                <span className="text-gray-600">Location:</span>
+                <span className="text-gray-900">Location:</span>
                 <span className="ml-2 font-medium flex items-center gap-1">
                   <MapPin className="w-4 h-4" />
                   {equipment.location || `${equipment.owner.city}, ${equipment.owner.state}`}
@@ -250,11 +250,11 @@ export default function EquipmentDetailPage() {
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Owner Information</h3>
             <div className="space-y-2">
               <div>
-                <span className="text-gray-600">Name:</span>
+                <span className="text-gray-900">Name:</span>
                 <span className="ml-2 font-medium">{equipment.owner.full_name}</span>
               </div>
               <div>
-                <span className="text-gray-600">Location:</span>
+                <span className="text-gray-900">Location:</span>
                 <span className="ml-2 font-medium">{equipment.owner.city}, {equipment.owner.state}</span>
               </div>
             </div>
@@ -263,7 +263,7 @@ export default function EquipmentDetailPage() {
           {equipment.description && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-600">{equipment.description}</p>
+              <p className="text-gray-900">{equipment.description}</p>
             </div>
           )}
 
@@ -274,7 +274,7 @@ export default function EquipmentDetailPage() {
               <div className="grid grid-cols-1 gap-2">
                 {Object.entries(equipment.specifications).map(([key, value]) => (
                   <div key={key} className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-600 capitalize">{key.replace(/_/g, ' ')}:</span>
+                    <span className="text-gray-900 capitalize">{key.replace(/_/g, ' ')}:</span>
                     <span className="font-medium text-gray-900">{String(value)}</span>
                   </div>
                 ))}
@@ -374,7 +374,7 @@ export default function EquipmentDetailPage() {
             </div>
             
             <div className="text-center">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-gray-900">
                 Contact the owner directly to arrange rental terms and schedule pickup/delivery
               </p>
             </div>

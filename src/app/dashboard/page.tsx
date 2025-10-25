@@ -155,7 +155,7 @@ export default function Dashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading dashboard...</p>
+          <p className="mt-4 text-gray-900">Loading dashboard...</p>
         </div>
       </div>
     )
@@ -243,9 +243,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.totalRevenue || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.totalRevenue || 0).toLocaleString()}</p>
-              <p className="text-xs text-gray-500 truncate">vs last month</p>
+              <p className="text-xs text-gray-900 truncate">vs last month</p>
             </div>
           </div>
         </div>
@@ -268,9 +268,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
               <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.pendingOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.pendingOrders || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Needs attention</p>
+              <p className="text-xs text-gray-900 truncate">Needs attention</p>
             </div>
           </div>
         </div>
@@ -293,9 +293,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Equipment Listed</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Equipment Listed</p>
               <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.equipmentCount || 0).length * 0.15)}rem, 2rem)` }}>{stats.equipmentCount || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Active listings</p>
+              <p className="text-xs text-gray-900 truncate">Active listings</p>
             </div>
           </div>
         </div>
@@ -478,9 +478,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Cart Items</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Cart Items</p>
               <p className="font-extrabold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.cartItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.cartItems || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Ready to checkout</p>
+              <p className="text-xs text-gray-900 truncate">Ready to checkout</p>
             </div>
           </div>
         </div>
@@ -504,9 +504,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Total Spent</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Total Spent</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.totalSpent || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.totalSpent || 0).toLocaleString()}</p>
-              <p className="text-xs text-gray-500 truncate">This month</p>
+              <p className="text-xs text-gray-900 truncate">This month</p>
             </div>
           </div>
         </div>
@@ -529,9 +529,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Favorites</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Favorites</p>
               <p className="font-extrabold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.favoriteItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.favoriteItems || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Saved items</p>
+              <p className="text-xs text-gray-900 truncate">Saved items</p>
             </div>
           </div>
         </div>
@@ -605,8 +605,8 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <p className="font-medium text-gray-900">{activity.title}</p>
-                  <p className="text-sm text-gray-600">{activity.description}</p>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-gray-900">{activity.description}</p>
+                  <p className="text-xs text-gray-900">
                     {new Date(activity.date).toLocaleDateString()}
                   </p>
                 </div>
@@ -704,9 +704,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.monthlyRevenue || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.monthlyRevenue || 0).toLocaleString()}</p>
-              <p className="text-xs text-gray-500 truncate">vs last month</p>
+              <p className="text-xs text-gray-900 truncate">vs last month</p>
             </div>
           </div>
         </div>
@@ -729,9 +729,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
               <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.pendingOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.pendingOrders || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Needs processing</p>
+              <p className="text-xs text-gray-900 truncate">Needs processing</p>
             </div>
           </div>
         </div>
@@ -754,9 +754,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Low Stock Items</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Low Stock Items</p>
               <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.lowStockItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.lowStockItems || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Needs restocking</p>
+              <p className="text-xs text-gray-900 truncate">Needs restocking</p>
             </div>
           </div>
         </div>
@@ -820,8 +820,8 @@ export default function Dashboard() {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900">{activity.title}</p>
-                    <p className="text-sm text-gray-600">{activity.description}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-sm text-gray-900">{activity.description}</p>
+                    <p className="text-xs text-gray-900">
                       {new Date(activity.date).toLocaleDateString()}
                     </p>
                   </div>
@@ -839,7 +839,7 @@ export default function Dashboard() {
               </div>
             ))
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-900">
               <ClipboardList className="w-10 h-10 mx-auto mb-2" />
               <p>No recent orders found</p>
               <p className="text-sm">Orders will appear here once customers start placing orders</p>
@@ -861,7 +861,7 @@ export default function Dashboard() {
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
                   <p className="font-medium text-gray-900">{product.name}</p>
-                  <p className="text-sm text-gray-600">{product.sales} units sold</p>
+                  <p className="text-sm text-gray-900">{product.sales} units sold</p>
                 </div>
                 <div className="text-right">
                   <p className="font-semibold text-gray-900">₹{product.revenue.toLocaleString()}</p>
@@ -883,7 +883,7 @@ export default function Dashboard() {
               <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                 <div>
                   <p className="font-medium text-gray-900">{item.name}</p>
-                  <p className="text-sm text-gray-600">{item.stock} units remaining</p>
+                  <p className="text-sm text-gray-900">{item.stock} units remaining</p>
                 </div>
                 <div className="text-right">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -982,9 +982,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Farmers</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Farmers</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.farmers || 0).length * 0.15)}rem, 2rem)` }}>{stats.farmers || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Active farmers</p>
+              <p className="text-xs text-gray-900 truncate">Active farmers</p>
             </div>
           </div>
         </div>
@@ -1007,9 +1007,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Total Products</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Total Products</p>
               <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalProducts || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalProducts || 0}</p>
-              <p className="text-xs text-gray-500 truncate">Platform-wide</p>
+              <p className="text-xs text-gray-900 truncate">Platform-wide</p>
             </div>
           </div>
         </div>
@@ -1032,9 +1032,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 truncate">Total Orders</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Total Orders</p>
               <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalOrders || 0}</p>
-              <p className="text-xs text-gray-500 truncate">All transactions</p>
+              <p className="text-xs text-gray-900 truncate">All transactions</p>
             </div>
           </div>
         </div>
@@ -1126,7 +1126,7 @@ export default function Dashboard() {
                 }`}></div>
                 <div className="flex-1">
                   <p className="font-medium text-gray-900 text-sm">{alert.message}</p>
-                  <p className="text-xs text-gray-500 mt-1">{alert.time}</p>
+                  <p className="text-xs text-gray-900 mt-1">{alert.time}</p>
                 </div>
               </div>
             ))}

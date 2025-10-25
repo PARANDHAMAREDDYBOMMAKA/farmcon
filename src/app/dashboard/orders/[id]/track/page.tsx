@@ -89,7 +89,7 @@ export default function OrderTrackingPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading order details...</p>
+          <p className="mt-4 text-gray-900">Loading order details...</p>
         </div>
       </div>
     )
@@ -158,7 +158,7 @@ export default function OrderTrackingPage() {
                   </div>
                   <div>
                     <h2 className="text-lg sm:text-xl font-bold text-gray-900">Live Map Tracking</h2>
-                    <p className="text-gray-600 text-xs sm:text-sm">Track your order in real-time</p>
+                    <p className="text-gray-900 text-xs sm:text-sm">Track your order in real-time</p>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function OrderTrackingPage() {
                   </div>
                   <div>
                     <h2 className="text-lg sm:text-xl font-bold text-gray-900">Order Items</h2>
-                    <p className="text-gray-600 text-xs sm:text-sm">{order.items?.length || 0} items in this order</p>
+                    <p className="text-gray-900 text-xs sm:text-sm">{order.items?.length || 0} items in this order</p>
                   </div>
                 </div>
               </div>
@@ -193,7 +193,7 @@ export default function OrderTrackingPage() {
                           />
                         ) : (
                           <div className="h-12 w-12 sm:h-14 sm:w-14 bg-gradient-to-br from-gray-200 to-gray-300 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm">
-                            <Package className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
+                            <Package className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
                           </div>
                         )}
                       </div>
@@ -201,7 +201,7 @@ export default function OrderTrackingPage() {
                         <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate">
                           {item.product?.name || item.crop_listing?.crop.name}
                         </h3>
-                        <p className="text-xs sm:text-sm text-gray-600">
+                        <p className="text-xs sm:text-sm text-gray-900">
                           <span className="font-medium">{item.quantity}</span> × <span className="font-medium">₹{item.unit_price.toLocaleString()}</span>
                         </p>
                       </div>
@@ -238,7 +238,7 @@ export default function OrderTrackingPage() {
               </div>
               <div className="text-left flex-1 min-w-0">
                 <p className="font-semibold text-sm sm:text-base text-gray-900 truncate">Contact Support</p>
-                <p className="text-xs sm:text-sm text-gray-500 truncate">Get help with your order</p>
+                <p className="text-xs sm:text-sm text-gray-900 truncate">Get help with your order</p>
               </div>
             </button>
             <button
@@ -253,7 +253,7 @@ export default function OrderTrackingPage() {
               </div>
               <div className="text-left flex-1 min-w-0">
                 <p className="font-semibold text-sm sm:text-base text-gray-900 truncate">Download Invoice</p>
-                <p className="text-xs sm:text-sm text-gray-500 truncate">Get your order receipt</p>
+                <p className="text-xs sm:text-sm text-gray-900 truncate">Get your order receipt</p>
               </div>
             </button>
             <button className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-500 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all sm:col-span-2 lg:col-span-1">
@@ -262,7 +262,7 @@ export default function OrderTrackingPage() {
               </div>
               <div className="text-left flex-1 min-w-0">
                 <p className="font-semibold text-sm sm:text-base text-gray-900 truncate">Modify Order</p>
-                <p className="text-xs sm:text-sm text-gray-500 truncate">Update delivery details</p>
+                <p className="text-xs sm:text-sm text-gray-900 truncate">Update delivery details</p>
               </div>
             </button>
           </div>

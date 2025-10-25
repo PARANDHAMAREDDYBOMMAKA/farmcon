@@ -77,7 +77,7 @@ export default function ConsultationsPage() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Expert Consultations</h1>
-              <p className="text-gray-600 mt-2">Book free consultations with agricultural experts</p>
+              <p className="text-gray-900 mt-2">Book free consultations with agricultural experts</p>
             </div>
             <Link
               href="/dashboard"
@@ -134,7 +134,7 @@ export default function ConsultationsPage() {
                       </div>
                     </div>
 
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    <p className="text-gray-900 text-sm mb-4 line-clamp-3">
                       {expert.description}
                     </p>
 
@@ -142,21 +142,21 @@ export default function ConsultationsPage() {
                     <div className="grid grid-cols-3 gap-4 mb-4 py-4 border-t border-b border-gray-100">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-gray-900">{expert.rating}</div>
-                        <div className="text-xs text-gray-500">Rating</div>
+                        <div className="text-xs text-gray-900">Rating</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-gray-900">{expert.experience}</div>
-                        <div className="text-xs text-gray-500">Experience</div>
+                        <div className="text-xs text-gray-900">Experience</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-gray-900">{expert.consultations}+</div>
-                        <div className="text-xs text-gray-500">Consultations</div>
+                        <div className="text-xs text-gray-900">Consultations</div>
                       </div>
                     </div>
 
                     {}
                     <div className="mb-4">
-                      <div className="text-xs text-gray-500 mb-2">Languages:</div>
+                      <div className="text-xs text-gray-900 mb-2">Languages:</div>
                       <div className="flex flex-wrap gap-2">
                         {expert.languages.map((lang) => (
                           <span key={lang} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
@@ -186,22 +186,22 @@ export default function ConsultationsPage() {
                 <div className="text-center">
                   <div className="text-4xl mb-3">👆</div>
                   <h3 className="font-semibold text-gray-900 mb-2">1. Choose Expert</h3>
-                  <p className="text-sm text-gray-600">Select the expert based on your needs</p>
+                  <p className="text-sm text-gray-900">Select the expert based on your needs</p>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl mb-3">📅</div>
                   <h3 className="font-semibold text-gray-900 mb-2">2. Pick Time Slot</h3>
-                  <p className="text-sm text-gray-600">Choose a convenient date and time</p>
+                  <p className="text-sm text-gray-900">Choose a convenient date and time</p>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl mb-3">📝</div>
                   <h3 className="font-semibold text-gray-900 mb-2">3. Share Details</h3>
-                  <p className="text-sm text-gray-600">Provide your contact info and query</p>
+                  <p className="text-sm text-gray-900">Provide your contact info and query</p>
                 </div>
                 <div className="text-center">
                   <div className="text-4xl mb-3">💬</div>
                   <h3 className="font-semibold text-gray-900 mb-2">4. Get Expert Advice</h3>
-                  <p className="text-sm text-gray-600">Join the video call at scheduled time</p>
+                  <p className="text-sm text-gray-900">Join the video call at scheduled time</p>
                 </div>
               </div>
             </div>
@@ -215,7 +215,7 @@ export default function ConsultationsPage() {
                   <span className="text-5xl">{selectedExpert?.image}</span>
                   <div>
                     <h2 className="text-2xl font-bold text-gray-900">{selectedExpert?.name}</h2>
-                    <p className="text-gray-600">{selectedExpert?.specialty}</p>
+                    <p className="text-gray-900">{selectedExpert?.specialty}</p>
                   </div>
                 </div>
                 <button

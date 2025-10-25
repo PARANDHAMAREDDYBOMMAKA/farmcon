@@ -135,7 +135,7 @@ export default function LeafletLocationTracker({
   if (!isMounted) {
     return (
       <div className={`${className} flex items-center justify-center bg-gray-100`}>
-        <p className="text-gray-600">Loading map...</p>
+        <p className="text-gray-900">Loading map...</p>
       </div>
     )
   }
@@ -178,7 +178,7 @@ export default function LeafletLocationTracker({
               <Popup onClose={() => setSelectedMarker(null)}>
                 <div className="p-2">
                   <h3 className="font-semibold text-green-600">Pickup Location</h3>
-                  <p className="text-sm text-gray-600">{pickupLocation.address}</p>
+                  <p className="text-sm text-gray-900">{pickupLocation.address}</p>
                 </div>
               </Popup>
             )}
@@ -198,7 +198,7 @@ export default function LeafletLocationTracker({
               <Popup onClose={() => setSelectedMarker(null)}>
                 <div className="p-2">
                   <h3 className="font-semibold text-blue-600">Delivery Location</h3>
-                  <p className="text-sm text-gray-600">{deliveryLocation.address}</p>
+                  <p className="text-sm text-gray-900">{deliveryLocation.address}</p>
                 </div>
               </Popup>
             )}
@@ -218,7 +218,7 @@ export default function LeafletLocationTracker({
               <Popup onClose={() => setSelectedMarker(null)}>
                 <div className="p-2">
                   <h3 className="font-semibold text-red-600">Driver Location</h3>
-                  <p className="text-sm text-gray-600">Your order is on the way!</p>
+                  <p className="text-sm text-gray-900">Your order is on the way!</p>
                 </div>
               </Popup>
             )}

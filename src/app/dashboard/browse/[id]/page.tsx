@@ -121,7 +121,7 @@ export default function CropDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading crop details...</p>
+          <p className="mt-4 text-gray-900">Loading crop details...</p>
         </div>
       </div>
     )
@@ -150,13 +150,13 @@ export default function CropDetailPage() {
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
-            <Link href="/dashboard/browse" className="text-gray-500 hover:text-gray-700">
+            <Link href="/dashboard/browse" className="text-gray-900 hover:text-gray-700">
               Marketplace
             </Link>
           </li>
           <li>
             <div className="flex items-center">
-              <span className="mx-2 text-gray-400">/</span>
+              <span className="mx-2 text-gray-900">/</span>
               <span className="text-gray-900">{listing.crop.name}</span>
             </div>
           </li>
@@ -206,7 +206,7 @@ export default function CropDetailPage() {
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{listing.crop.name}</h1>
               {listing.crop.variety && (
-                <p className="text-lg text-gray-600">{listing.crop.variety}</p>
+                <p className="text-lg text-gray-900">{listing.crop.variety}</p>
               )}
             </div>
             <div className="flex flex-col gap-2">
@@ -223,32 +223,34 @@ export default function CropDetailPage() {
             </div>
           </div>
 
+
+
           <div className="mt-4">
             <p className="text-3xl font-bold text-gray-900">₹{Number(listing.pricePerUnit)}</p>
-            <p className="text-sm text-gray-500">per {listing.unit}</p>
+            <p className="text-sm text-gray-900">per {listing.unit}</p>
           </div>
 
           <div className="mt-4 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Available Quantity:</span>              <span className="font-medium text-gray-900">{Number(listing.quantityAvailable)} {listing.unit}</span>            </div>
+              <span className="text-gray-900">Available Quantity:</span>              <span className="font-medium text-gray-900">{Number(listing.quantityAvailable)} {listing.unit}</span>            </div>
             
             {listing.harvestDate && (
               <div className="flex items-center justify-between">
-                <span className="text-gray-600">Harvested:</span>
+                <span className="text-gray-900">Harvested:</span>
                 <span className="font-medium text-gray-900">{new Date(listing.harvestDate).toLocaleDateString('en-IN')}</span>
               </div>
             )}
             
             {listing.expiryDate && (
               <div className="flex items-center justify-between">
-                <span className="text-gray-600">Best Before:</span>
+                <span className="text-gray-900">Best Before:</span>
                 <span className="font-medium text-gray-900">{new Date(listing.expiryDate).toLocaleDateString('en-IN')}</span>
               </div>
             )}
 
             <div className="flex items-center justify-between">
-              <span className="text-gray-600">Delivery:</span>
-              <span className={`font-medium ${listing.deliveryAvailable ? 'text-green-600' : 'text-gray-500'}`}>
+              <span className="text-gray-900">Delivery:</span>
+              <span className={`font-medium ${listing.deliveryAvailable ? 'text-green-600' : 'text-gray-900'}`}>
                 {listing.deliveryAvailable ? '✅ Available' : '❌ Pickup Only'}
               </span>
             </div>
@@ -259,22 +261,22 @@ export default function CropDetailPage() {
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Farmer Information</h3>
             <div className="space-y-2">
               <div>
-                <span className="text-gray-600">Name:</span>
+                <span className="text-gray-900">Name:</span>
                 <span className="ml-2 font-medium">{listing.farmer.fullName}</span>
               </div>
               <div>
-                <span className="text-gray-600">Location:</span>
+                <span className="text-gray-900">Location:</span>
                 <span className="ml-2 font-medium">{listing.farmer.city}, {listing.farmer.state}</span>
               </div>
               {listing.crop.area && (
                 <div>
-                  <span className="text-gray-600">Farm Area:</span>
+                  <span className="text-gray-900">Farm Area:</span>
                   <span className="ml-2 font-medium">{Number(listing.crop.area)} acres</span>
                 </div>
               )}
               {listing.crop.plantedDate && (
                 <div>
-                  <span className="text-gray-600">Planted:</span>
+                  <span className="text-gray-900">Planted:</span>
                   <span className="ml-2 font-medium">{new Date(listing.crop.plantedDate).toLocaleDateString('en-IN')}</span>
                 </div>
               )}
@@ -284,14 +286,14 @@ export default function CropDetailPage() {
           {listing.description && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-600">{listing.description}</p>
+              <p className="text-gray-900">{listing.description}</p>
             </div>
           )}
 
           {listing.pickupLocation && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Pickup Location</h3>
-              <p className="text-gray-600">📍 {listing.pickupLocation}</p>
+              <p className="text-gray-900">📍 {listing.pickupLocation}</p>
             </div>
           )}
 
@@ -313,7 +315,7 @@ export default function CropDetailPage() {
                   </option>
                 ))}
               </select>
-              <span className="text-sm text-gray-500">
+              <span className="text-sm text-gray-900">
                 (Max: {Number(listing.quantityAvailable)} {listing.unit})
               </span>
             </div>
@@ -339,7 +341,7 @@ export default function CropDetailPage() {
 
           {}
           <div className="mt-4">
-            <p className="text-sm text-gray-500 text-center">
+            <p className="text-sm text-gray-900 text-center">
               Have questions? Contact the farmer directly at{' '}
               {listing.farmer.phone ? (
                 <a href={`tel:${listing.farmer.phone}`} className="text-green-600 hover:text-green-700 font-medium">

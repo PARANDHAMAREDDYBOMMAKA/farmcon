@@ -103,7 +103,7 @@ export default function AnalyticsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading analytics...</p>
+          <p className="mt-4 text-gray-900">Loading analytics...</p>
         </div>
       </div>
     )
@@ -112,9 +112,9 @@ export default function AnalyticsPage() {
   if (!analytics) {
     return (
       <div className="text-center py-12">
-        <BarChart3 className="w-24 h-24 mx-auto text-gray-400 mb-4" />
+        <BarChart3 className="w-24 h-24 mx-auto text-gray-900 mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">No analytics data available</h3>
-        <p className="text-gray-600">Analytics will appear here once you have sales data</p>
+        <p className="text-gray-900">Analytics will appear here once you have sales data</p>
       </div>
     )
   }
@@ -126,7 +126,7 @@ export default function AnalyticsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Analytics & Reports</h1>
-            <p className="text-gray-600 mt-1">Track your business performance and insights</p>
+            <p className="text-gray-900 mt-1">Track your business performance and insights</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <select
@@ -151,7 +151,7 @@ export default function AnalyticsPage() {
               <DollarSign className="w-6 h-6 text-green-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+              <p className="text-sm font-medium text-gray-900">Total Revenue</p>
               <p className="text-2xl font-bold text-gray-900">₹{analytics.revenue.total.toLocaleString()}</p>
               <p className={`text-xs ${analytics.revenue.growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                 {analytics.revenue.growth >= 0 ? '+' : ''}{analytics.revenue.growth}% vs last month
@@ -166,9 +166,9 @@ export default function AnalyticsPage() {
               <Package className="w-6 h-6 text-blue-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Orders</p>
+              <p className="text-sm font-medium text-gray-900">Total Orders</p>
               <p className="text-2xl font-bold text-gray-900">{analytics.sales.totalOrders}</p>
-              <p className="text-xs text-gray-500">{analytics.sales.totalQuantity} items sold</p>
+              <p className="text-xs text-gray-900">{analytics.sales.totalQuantity} items sold</p>
             </div>
           </div>
         </div>
@@ -179,9 +179,9 @@ export default function AnalyticsPage() {
               <CreditCard className="w-6 h-6 text-yellow-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Avg Order Value</p>
+              <p className="text-sm font-medium text-gray-900">Avg Order Value</p>
               <p className="text-2xl font-bold text-gray-900">₹{analytics.sales.averageOrderValue.toLocaleString()}</p>
-              <p className="text-xs text-gray-500">Per order</p>
+              <p className="text-xs text-gray-900">Per order</p>
             </div>
           </div>
         </div>
@@ -192,9 +192,9 @@ export default function AnalyticsPage() {
               <Users className="w-6 h-6 text-purple-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Customers</p>
+              <p className="text-sm font-medium text-gray-900">Total Customers</p>
               <p className="text-2xl font-bold text-gray-900">{analytics.customers.totalCustomers}</p>
-              <p className="text-xs text-gray-500">{analytics.customers.newCustomers} new this month</p>
+              <p className="text-xs text-gray-900">{analytics.customers.newCustomers} new this month</p>
             </div>
           </div>
         </div>
@@ -212,12 +212,12 @@ export default function AnalyticsPage() {
                   height: `${(revenue / Math.max(...analytics.revenue.monthly)) * 200}px`
                 }}
               />
-              <span className="text-xs text-gray-500 mt-2">{months[index]}</span>
+              <span className="text-xs text-gray-900 mt-2">{months[index]}</span>
             </div>
           ))}
         </div>
         <div className="mt-4 text-center">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-900">
             Revenue ranges from ₹{Math.min(...analytics.revenue.monthly).toLocaleString()} to ₹{Math.max(...analytics.revenue.monthly).toLocaleString()}
           </p>
         </div>
@@ -237,7 +237,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900">{product.name}</p>
-                    <p className="text-xs text-gray-500">{product.quantity} units sold</p>
+                    <p className="text-xs text-gray-900">{product.quantity} units sold</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -256,7 +256,7 @@ export default function AnalyticsPage() {
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-900">{category.name}</span>
-                  <span className="text-sm text-gray-600">₹{category.revenue.toLocaleString()}</span>
+                  <span className="text-sm text-gray-900">₹{category.revenue.toLocaleString()}</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2">
                   <div
@@ -266,7 +266,7 @@ export default function AnalyticsPage() {
                     }}
                   />
                 </div>
-                <p className="text-xs text-gray-500">{category.sales} sales</p>
+                <p className="text-xs text-gray-900">{category.sales} sales</p>
               </div>
             ))}
           </div>
@@ -282,15 +282,15 @@ export default function AnalyticsPage() {
               <Users className="w-8 h-8 text-blue-600" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{analytics.customers.totalCustomers}</p>
-            <p className="text-sm text-gray-600">Total Customers</p>
+            <p className="text-sm text-gray-900">Total Customers</p>
           </div>
           <div className="text-center">
             <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-3">
               <Repeat className="w-8 h-8 text-green-600" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{analytics.customers.repeatCustomers}</p>
-            <p className="text-sm text-gray-600">Repeat Customers</p>
-            <p className="text-xs text-gray-500">
+            <p className="text-sm text-gray-900">Repeat Customers</p>
+            <p className="text-xs text-gray-900">
               {((analytics.customers.repeatCustomers / analytics.customers.totalCustomers) * 100).toFixed(1)}% retention rate
             </p>
           </div>
@@ -299,8 +299,8 @@ export default function AnalyticsPage() {
               <Sparkles className="w-8 h-8 text-purple-600" />
             </div>
             <p className="text-2xl font-bold text-gray-900">{analytics.customers.newCustomers}</p>
-            <p className="text-sm text-gray-600">New Customers</p>
-            <p className="text-xs text-gray-500">This month</p>
+            <p className="text-sm text-gray-900">New Customers</p>
+            <p className="text-xs text-gray-900">This month</p>
           </div>
         </div>
       </div>
@@ -310,15 +310,15 @@ export default function AnalyticsPage() {
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Export Reports</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <BarChart3 className="w-5 h-5 mr-2 text-gray-600" />
+            <BarChart3 className="w-5 h-5 mr-2 text-gray-900" />
             <span className="text-sm font-medium">Sales Report</span>
           </button>
           <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <TrendingUp className="w-5 h-5 mr-2 text-gray-600" />
+            <TrendingUp className="w-5 h-5 mr-2 text-gray-900" />
             <span className="text-sm font-medium">Revenue Report</span>
           </button>
           <button className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-            <Users className="w-5 h-5 mr-2 text-gray-600" />
+            <Users className="w-5 h-5 mr-2 text-gray-900" />
             <span className="text-sm font-medium">Customer Report</span>
           </button>
         </div>

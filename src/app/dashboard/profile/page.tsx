@@ -176,7 +176,7 @@ export default function ProfilePage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading profile...</p>
+          <p className="mt-4 text-gray-900">Loading profile...</p>
         </div>
       </div>
     )
@@ -195,7 +195,7 @@ export default function ProfilePage() {
       <div className="max-w-4xl mx-auto">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">Edit Profile</h1>
-          <p className="text-gray-600">Update your personal and business information</p>
+          <p className="text-gray-900">Update your personal and business information</p>
         </div>
 
         <form onSubmit={handleSave} className="space-y-8">

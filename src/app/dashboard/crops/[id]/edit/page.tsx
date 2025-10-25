@@ -128,7 +128,7 @@ export default function EditCropPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading crop details...</p>
+          <p className="mt-4 text-gray-900">Loading crop details...</p>
         </div>
       </div>
     )
@@ -140,7 +140,7 @@ export default function EditCropPage() {
         <div className="text-center">
           <XCircle className="w-24 h-24 text-red-500 mx-auto" />
           <h2 className="mt-4 text-xl font-semibold text-gray-900">Error Loading Crop</h2>
-          <p className="mt-2 text-gray-600">{error}</p>
+          <p className="mt-2 text-gray-900">{error}</p>
           <Link
             href="/dashboard/crops"
             className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
@@ -156,7 +156,7 @@ export default function EditCropPage() {
     <div className="max-w-4xl mx-auto p-6">
       {}
       <div className="mb-6">
-        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4">
+        <nav className="flex items-center space-x-2 text-sm text-gray-900 mb-4">
           <Link href="/dashboard" className="hover:text-green-600">Dashboard</Link>
           <span>/</span>
           <Link href="/dashboard/crops" className="hover:text-green-600">Crops</Link>
@@ -167,7 +167,7 @@ export default function EditCropPage() {
         </nav>
 
         <h1 className="text-3xl font-bold text-gray-900">✏️ Edit Crop</h1>
-        <p className="text-gray-600 mt-2">Update your crop information and track its progress</p>
+        <p className="text-gray-900 mt-2">Update your crop information and track its progress</p>
       </div>
 
       {error && (
