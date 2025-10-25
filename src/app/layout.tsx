@@ -5,6 +5,7 @@ import "./globals.css";
 import FarmConChatbot from "@/components/chatbot/FarmConChatbot";
 import PostHogProvider from "@/components/providers/PostHogProvider";
 import FingerprintProvider from "@/components/providers/FingerprintProvider";
+import CookieConsent from "@/components/CookieConsent";
 
 
 const geistSans = Geist({
@@ -399,6 +400,7 @@ export default function RootLayout({
           <FingerprintProvider>
             {children}
             <FarmConChatbot />
+            <CookieConsent />
           </FingerprintProvider>
         </PostHogProvider>
       </body>

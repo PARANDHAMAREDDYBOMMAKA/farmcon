@@ -144,7 +144,7 @@ export default function Home() {
                 Sign In
               </Link>
               <Link
-                href="/auth/signup"
+                href="https://farmcon-cyan.vercel.app/"
                 className="group relative overflow-hidden rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-6 sm:px-8 py-3 text-sm font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 whitespace-nowrap"
               >
                 <span className="relative z-10">Get Started</span>
@@ -205,7 +205,7 @@ export default function Home() {
                 {}
                 <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-4">
                   <Link
-                    href="/auth/signup"
+                    href="https://farmcon-cyan.vercel.app/"
                     className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold text-base shadow-xl shadow-green-500/25 hover:shadow-2xl hover:shadow-green-500/40 transition-all duration-300 hover:scale-105"
                   >
                     <span>Get Started</span>
@@ -393,35 +393,229 @@ export default function Home() {
           }}></div>
         </div>
 
-        <div className="relative mx-auto max-w-7xl px-6 py-16 lg:px-8">
-          <div className="mb-16 pb-12 border-b border-gray-800">
-            <div className="max-w-2xl mx-auto text-center px-4">
-              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3">Stay Updated with FarmCon</h3>
-              <p className="text-sm sm:text-base text-gray-400 mb-6">Get farming tips, market updates, and exclusive offers directly to your inbox.</p>
-              <form onSubmit={handleSubscribe} className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-3 items-center">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    disabled={isSubscribing}
-                    className="w-full sm:flex-1 px-4 sm:px-6 py-3 rounded-full bg-white border-2 border-gray-300 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50 text-sm sm:text-base"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isSubscribing}
-                    className="px-8 sm:px-10 py-3 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 whitespace-nowrap text-sm sm:text-base"
-                  >
-                    {isSubscribing ? 'Subscribing...' : 'Subscribe'}
-                  </button>
+        <div className="relative mx-auto max-w-7xl px-6 py-20 lg:px-8">
+          <div className="mb-16 pb-16 border-b border-gray-800">
+            {/* Newsletter Section - Premium Design */}
+            <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-gray-800 via-gray-900 to-black shadow-2xl">
+              {/* Animated Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: `radial-gradient(circle at 2px 2px, rgb(16, 185, 129) 1px, transparent 0)`,
+                  backgroundSize: '50px 50px'
+                }}></div>
+              </div>
+
+              {/* Gradient Orbs */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500/30 to-emerald-500/20 rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-gradient-to-tr from-teal-500/20 to-green-500/30 rounded-full blur-3xl"></div>
+
+              <div className="relative z-10 grid lg:grid-cols-2 gap-12 p-8 md:p-12 lg:p-16">
+                {/* Left Side - Content */}
+                <div className="flex flex-col justify-center space-y-8">
+                  {/* Badge */}
+                  <div className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/30 rounded-full px-4 py-2 w-fit">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                    </span>
+                    <span className="text-green-400 text-sm font-semibold">10,000+ Farmers Subscribed</span>
+                  </div>
+
+                  {/* Title */}
+                  <div>
+                    <h3 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4 leading-tight">
+                      Never Miss an
+                      <span className="block bg-gradient-to-r from-green-400 via-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                        Update Again
+                      </span>
+                    </h3>
+                    <p className="text-lg text-gray-300 leading-relaxed max-w-lg">
+                      Get exclusive farming insights, real-time market prices, and expert tips delivered straight to your inbox every week.
+                    </p>
+                  </div>
+
+                  {/* Features Grid */}
+                  <div className="grid grid-cols-2 gap-4">
+                    {[
+                      {
+                        icon: <BarChart3 className="w-6 h-6 text-green-400" />,
+                        title: 'Market Alerts',
+                        desc: 'Price updates'
+                      },
+                      {
+                        icon: <Sprout className="w-6 h-6 text-emerald-400" />,
+                        title: 'Farming Tips',
+                        desc: 'Expert advice'
+                      },
+                      {
+                        icon: <Target className="w-6 h-6 text-teal-400" />,
+                        title: 'Crop Insights',
+                        desc: 'Data-driven'
+                      },
+                      {
+                        icon: <Zap className="w-6 h-6 text-yellow-400" />,
+                        title: 'News & Trends',
+                        desc: 'Stay ahead'
+                      }
+                    ].map((feature, idx) => (
+                      <div key={idx} className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:border-green-500/30 transition-all duration-300 group">
+                        <div className="mb-2 transform group-hover:scale-110 transition-transform">
+                          {feature.icon}
+                        </div>
+                        <h4 className="text-white font-bold text-sm mb-1">{feature.title}</h4>
+                        <p className="text-gray-400 text-xs">{feature.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Trust Indicators */}
+                  <div className="flex items-center gap-6 pt-4">
+                    <div className="flex -space-x-3">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="w-10 h-10 rounded-full border-2 border-gray-900 bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                          {String.fromCharCode(64 + i)}
+                        </div>
+                      ))}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-1 mb-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <svg key={star} className="w-4 h-4 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <p className="text-gray-400 text-xs">Trusted by thousands of farmers</p>
+                    </div>
+                  </div>
                 </div>
-                {subscriptionMessage && (
-                  <p className={`text-sm ${subscriptionMessage.includes('Successfully') ? 'text-green-400' : 'text-red-400'}`}>
-                    {subscriptionMessage}
-                  </p>
-                )}
-              </form>
+
+                {/* Right Side - Form */}
+                <div className="flex flex-col justify-center">
+                  <div className="bg-white rounded-3xl p-8 md:p-10 shadow-2xl">
+                    {/* Form Header */}
+                    <div className="text-center mb-8">
+                      <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-xl shadow-green-500/30 transform hover:rotate-6 transition-transform">
+                        <Mail className="w-10 h-10 text-white" />
+                      </div>
+                      <h4 className="text-2xl font-bold text-gray-900 mb-2">Subscribe to Our Newsletter</h4>
+                      <p className="text-gray-600">Join our community of successful farmers</p>
+                    </div>
+
+                    {/* Form */}
+                    <form onSubmit={handleSubscribe} className="space-y-5">
+                      <div className="space-y-4">
+                        <div className="relative group">
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Email Address
+                          </label>
+                          <div className="relative">
+                            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                              <Mail className="w-5 h-5 text-gray-400 group-focus-within:text-green-500 transition-colors" />
+                            </div>
+                            <input
+                              type="email"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                              placeholder="farmer@example.com"
+                              disabled={isSubscribing}
+                              required
+                              className="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 disabled:opacity-50 disabled:bg-gray-50 text-base font-medium transition-all"
+                            />
+                          </div>
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={isSubscribing}
+                          className="w-full group relative overflow-hidden px-8 py-4 rounded-xl bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold text-base hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                        >
+                          <div className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-green-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                          <span className="relative z-10 text-white">
+                            {isSubscribing ? (
+                              <span className="flex items-center gap-2 text-white">
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                <span className="text-white">Subscribing...</span>
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-2 text-white">
+                                <span className="text-white">Get Started - It's Free</span>
+                                <svg className="w-5 h-5 text-white group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                              </span>
+                            )}
+                          </span>
+                        </button>
+                      </div>
+
+                      {/* Success/Error Message */}
+                      {subscriptionMessage && (
+                        <div className={`flex items-start gap-3 p-4 rounded-xl ${
+                          subscriptionMessage.includes('Successfully')
+                            ? 'bg-green-50 border-2 border-green-200'
+                            : 'bg-red-50 border-2 border-red-200'
+                        }`}>
+                          {subscriptionMessage.includes('Successfully') ? (
+                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          ) : (
+                            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-red-500 flex items-center justify-center">
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <p className={`text-sm font-semibold ${
+                              subscriptionMessage.includes('Successfully') ? 'text-green-800' : 'text-red-800'
+                            }`}>
+                              {subscriptionMessage}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Privacy Notice */}
+                      <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <div className="flex-shrink-0 mt-0.5">
+                          <svg className="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <p className="text-xs text-gray-600 leading-relaxed">
+                          By subscribing, you agree to our{' '}
+                          <Link href="/privacy-policy" className="text-green-600 hover:text-green-700 underline font-semibold transition-colors">
+                            Privacy Policy
+                          </Link>
+                          . We respect your privacy and you can unsubscribe anytime.
+                        </p>
+                      </div>
+
+                      {/* Benefits List */}
+                      <div className="space-y-3 pt-2">
+                        {[
+                          'Weekly market price updates',
+                          'Exclusive farming tips & guides',
+                          'Early access to new features'
+                        ].map((benefit, idx) => (
+                          <div key={idx} className="flex items-center gap-3">
+                            <div className="flex-shrink-0 w-5 h-5 rounded-full bg-green-100 flex items-center justify-center">
+                              <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                            <span className="text-sm text-gray-700 font-medium">{benefit}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -493,11 +687,11 @@ export default function Home() {
                 &copy; {new Date().getFullYear()} FarmCon. All rights reserved. Built with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> for Indian farmers.
               </p>
               <div className="flex gap-6 text-sm">
-                <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors">Privacy Policy</Link>
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-green-500 transition-colors">Privacy Policy</Link>
                 <span className="text-gray-600">•</span>
-                <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors">Terms of Service</Link>
+                <Link href="/terms-of-service" className="text-gray-400 hover:text-green-500 transition-colors">Terms of Service</Link>
                 <span className="text-gray-600">•</span>
-                <Link href="#" className="text-gray-400 hover:text-green-500 transition-colors">Cookie Policy</Link>
+                <Link href="/cookie-policy" className="text-gray-400 hover:text-green-500 transition-colors">Cookie Policy</Link>
               </div>
             </div>
           </div>
@@ -560,37 +754,37 @@ const features = [
     icon: <Sprout className="w-12 h-12 text-green-600" />,
     title: 'Smart Crop Management',
     description: 'Track crops from seed to harvest. Get AI-powered recommendations, weather alerts, and disease detection.',
-    link: '/auth/signup'
+    link: 'https://farmcon-cyan.vercel.app/'
   },
   {
     icon: <DollarSign className="w-12 h-12 text-green-600" />,
     title: 'Live Market Prices',
     description: 'Real-time mandi prices across India. Know the best time and place to sell for maximum profits.',
-    link: '/auth/signup'
+    link: 'https://farmcon-cyan.vercel.app/'
   },
   {
     icon: <ShoppingCart className="w-12 h-12 text-green-600" />,
     title: 'Agricultural Supplies',
     description: 'Buy certified seeds, fertilizers, and equipment from verified suppliers at wholesale prices.',
-    link: '/auth/signup'
+    link: 'https://farmcon-cyan.vercel.app/'
   },
   {
     icon: <Truck className="w-12 h-12 text-green-600" />,
     title: 'Equipment Rental',
     description: 'Rent tractors, harvesters, and modern equipment at affordable rates. Share with neighbors.',
-    link: '/auth/signup'
+    link: 'https://farmcon-cyan.vercel.app/'
   },
   {
     icon: <Store className="w-12 h-12 text-green-600" />,
     title: 'Direct Sales',
     description: 'Sell directly to consumers and retailers. No middlemen, get 30-40% better prices.',
-    link: '/auth/signup'
+    link: 'https://farmcon-cyan.vercel.app/'
   },
   {
     icon: <Smartphone className="w-12 h-12 text-green-600" />,
     title: 'Mobile App',
     description: 'Works offline in rural areas. Available in Hindi, Tamil, Telugu, and 10+ regional languages.',
-    link: '/auth/signup'
+    link: 'https://farmcon-cyan.vercel.app/'
   },
 ]
 
