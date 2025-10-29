@@ -22,6 +22,11 @@ export const metadata: Metadata = {
   title: "FarmCon - Farm Connect Platform",
   description: "Connect farmers, suppliers, and buyers on one platform",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/farmcon.jpg",
+    shortcut: "/farmcon.jpg",
+    apple: "/farmcon.jpg",
+  },
   themeColor: "#10b981",
   appleWebApp: {
     capable: true,
@@ -49,6 +54,11 @@ export default function RootLayout({
         {/* Real Performance Optimizations */}
         <link rel="preconnect" href="https://js.stripe.com" />
         <link rel="dns-prefetch" href="https://js.stripe.com" />
+
+        {/* Favicon / manifest for browser tab (use farmcon.jpg as a fallback) */}
+        <link rel="icon" href="/farmcon.jpg" />
+        <link rel="apple-touch-icon" href="/farmcon.jpg" />
+        <link rel="manifest" href="/manifest.json" />
 
         {/* Hide Google Translate Banner and Branding */}
         <style
