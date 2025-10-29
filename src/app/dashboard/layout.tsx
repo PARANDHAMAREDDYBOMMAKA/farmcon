@@ -38,7 +38,7 @@ const navigation = {
     { name: 'Orders', href: '/dashboard/orders', icon: 'Package' },
     { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
+    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
     { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ],
   consumer: [
@@ -48,7 +48,7 @@ const navigation = {
     { name: 'Cart', href: '/dashboard/cart', icon: 'ShoppingCart' },
     { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
+    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
     { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ],
   supplier: [
@@ -60,7 +60,7 @@ const navigation = {
     { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
     { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: 'Search' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
+    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
     { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ],
   admin: [
@@ -73,7 +73,7 @@ const navigation = {
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
     { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: 'Search' },
     { name: 'Settings', href: '/dashboard/settings', icon: 'Settings' },
-    { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
+    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
     { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ]
 }
