@@ -80,6 +80,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/styled-components": "^5.1.34",
+    "@types/three": "^0.180.0",
+    "@types/webxr": "^0.5.24",
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4",
