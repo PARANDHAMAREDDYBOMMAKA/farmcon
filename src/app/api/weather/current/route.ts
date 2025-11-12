@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cache, CacheKeys } from '@/lib/redis'
+
+export const revalidate = 600
 
 export async function GET(request: NextRequest) {
   try {
@@ -70,104 +73,77 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const today = new Date()
-    const startDate = new Date(today)
-    startDate.setDate(today.getDate() - 7)
-    const endDate = new Date(today)
-    endDate.setDate(today.getDate() - 1)
+    const cacheKey = CacheKeys.weather(latitude!, longitude!)
+    const cachedData = await cache.get(cacheKey)
+    if (cachedData) {
+      return NextResponse.json({ weather: cachedData }, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=300',
+          'X-Cache': 'HIT',
+        },
+      })
+    }
 
-    const startDateStr = startDate.toISOString().split('T')[0].replace(/-/g, '')
-    const endDateStr = endDate.toISOString().split('T')[0].replace(/-/g, '')
+    // Use Open-Meteo API - completely free, no API key required
+    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m&timezone=auto`
 
-    const nasaUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,PRECTOTCORR&community=AG&longitude=${longitude}&latitude=${latitude}&start=${startDateStr}&end=${endDateStr}&format=JSON`
-
-    const response = await fetch(nasaUrl)
+    const response = await fetch(openMeteoUrl)
 
     if (!response.ok) {
-      console.error('NASA API error:', response.status)
-      return NextResponse.json(
-        { error: 'Failed to fetch weather data from NASA API' },
-        { status: response.status }
-      )
+      console.error('Open-Meteo API error:', response.status)
+      return NextResponse.json({
+        weather: generateMockWeather(locationName, country, parseFloat(latitude!), parseFloat(longitude!)),
+        source: 'mock',
+        reason: 'Weather API temporarily unavailable'
+      })
     }
 
     const data = await response.json()
 
-    if (!data.properties || !data.properties.parameter) {
-      return NextResponse.json(
-        { error: 'Invalid NASA API response' },
-        { status: 500 }
-      )
-    }
-
-    const parameters = data.properties.parameter
-    const dates = Object.keys(parameters.T2M).sort().reverse()
-    const recentDate = dates[0]
-
-    console.log('🔍 Raw NASA API data for', locationName, ':', {
-      date: recentDate,
-      T2M: parameters.T2M[recentDate],
-      T2M_MAX: parameters.T2M_MAX?.[recentDate],
-      T2M_MIN: parameters.T2M_MIN?.[recentDate],
-      RH2M: parameters.RH2M?.[recentDate],
-      WS2M: parameters.WS2M?.[recentDate],
-      PRECTOTCORR: parameters.PRECTOTCORR?.[recentDate]
-    })
-
-    const cleanValue = (value: number, defaultValue: number = 0) => {
-      if (value === undefined || value === null || value < -900) {
-        return { value: defaultValue, isDefault: true }
-      }
-      return { value, isDefault: false }
-    }
-
-    const tempResult = cleanValue(parameters.T2M[recentDate], 25)
-    const tempMaxResult = cleanValue(parameters.T2M_MAX?.[recentDate], tempResult.value + 5)
-    const tempMinResult = cleanValue(parameters.T2M_MIN?.[recentDate], tempResult.value - 5)
-    const humidityResult = cleanValue(parameters.RH2M?.[recentDate], 50)
-    const windSpeedResult = cleanValue(parameters.WS2M?.[recentDate], 10)
-    const rainfallResult = cleanValue(parameters.PRECTOTCORR?.[recentDate], 0)
-
-    const temp = tempResult.value
-    const humidity = humidityResult.value
-    const windSpeed = windSpeedResult.value
-    const rainfall = rainfallResult.value
-
-    const defaultCount = [
-      tempResult.isDefault,
-      tempMaxResult.isDefault,
-      tempMinResult.isDefault,
-      humidityResult.isDefault,
-      windSpeedResult.isDefault
-    ].filter(Boolean).length
-
-    if (defaultCount >= 3) {
-      console.warn('⚠️ NASA API has insufficient data for', locationName, '- using mock data')
+    if (!data.current) {
+      console.error('Invalid Open-Meteo API response')
       return NextResponse.json({
         weather: generateMockWeather(locationName, country, parseFloat(latitude!), parseFloat(longitude!)),
         source: 'mock',
-        reason: 'NASA POWER API does not have sufficient data for this location'
+        reason: 'Invalid API response'
       })
     }
 
-    const getWeatherDescription = (temp: number, rain: number) => {
-      if (rain > 5) return { main: 'Rain', description: 'rainy', icon: '10d' }
-      if (rain > 0) return { main: 'Rain', description: 'light rain', icon: '09d' }
-      if (temp > 35) return { main: 'Clear', description: 'hot and sunny', icon: '01d' }
-      if (temp > 28) return { main: 'Clear', description: 'sunny', icon: '01d' }
-      if (temp > 22) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
-      return { main: 'Clouds', description: 'cloudy', icon: '03d' }
+    const current = data.current
+
+    console.log('🔍 Open-Meteo API data for', locationName, ':', {
+      temperature: current.temperature_2m,
+      humidity: current.relative_humidity_2m,
+      windSpeed: current.wind_speed_10m,
+      precipitation: current.precipitation
+    })
+
+    const temp = current.temperature_2m || 25
+    const humidity = current.relative_humidity_2m || 50
+    const windSpeed = current.wind_speed_10m || 10
+    const rainfall = current.precipitation || current.rain || 0
+    const pressure = current.pressure_msl || current.surface_pressure || 1013
+    const cloudiness = current.cloud_cover || 0
+    const windDirection = current.wind_direction_10m || 0
+
+    // WMO Weather interpretation codes
+    const getWeatherFromCode = (code: number) => {
+      if (code === 0) return { main: 'Clear', description: 'clear sky', icon: '01d' }
+      if (code <= 3) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
+      if (code <= 48) return { main: 'Fog', description: 'foggy', icon: '50d' }
+      if (code <= 67) return { main: 'Rain', description: 'rainy', icon: '10d' }
+      if (code <= 77) return { main: 'Snow', description: 'snowy', icon: '13d' }
+      if (code <= 99) return { main: 'Thunderstorm', description: 'thunderstorm', icon: '11d' }
+      return { main: 'Clear', description: 'clear', icon: '01d' }
     }
 
-    const weather = getWeatherDescription(temp, rainfall)
+    const weatherCode = current.weather_code || 0
+    const weather = getWeatherFromCode(weatherCode)
 
-    const mockData = {
-      pressure: 1013,
-      visibility: 10,
-      uvIndex: temp > 30 ? 8 : temp > 25 ? 6 : 4,
-      windDirection: 180,
-      cloudiness: rainfall > 0 ? 80 : temp > 30 ? 10 : 40
-    }
+    const uvIndex = temp > 30 ? 8 : temp > 25 ? 6 : temp > 20 ? 5 : 3
+    const visibility = cloudiness < 30 ? 10 : cloudiness < 60 ? 7 : 5
+
+    const feelsLike = current.apparent_temperature || temp + (humidity > 70 ? 2 : -2)
 
     const weatherData = {
       location: {
@@ -180,16 +156,16 @@ export async function GET(request: NextRequest) {
       },
       current: {
         temperature: Math.round(temp),
-        feelsLike: Math.round(temp + (humidity > 70 ? 2 : -2)),
+        feelsLike: Math.round(feelsLike),
         humidity: Math.round(humidity),
-        pressure: mockData.pressure,
-        windSpeed: Math.round(windSpeed * 3.6), 
-        windDirection: mockData.windDirection,
-        visibility: mockData.visibility,
-        uvIndex: mockData.uvIndex,
+        pressure: Math.round(pressure),
+        windSpeed: Math.round(windSpeed),
+        windDirection: Math.round(windDirection),
+        visibility: visibility,
+        uvIndex: uvIndex,
         description: weather.description,
         icon: weather.icon,
-        cloudiness: mockData.cloudiness
+        cloudiness: Math.round(cloudiness)
       },
       farming: {
         irrigationAdvice: getIrrigationAdvice({ temp, humidity, rainfall }),
@@ -199,10 +175,17 @@ export async function GET(request: NextRequest) {
       },
       alerts: generateFarmingAlerts({ temp, humidity, windSpeed, rainfall }),
       timestamp: new Date().toISOString(),
-      source: 'NASA POWER API'
+      source: 'Open-Meteo API'
     }
 
-    return NextResponse.json({ weather: weatherData })
+    await cache.set(cacheKey, weatherData, 600)
+
+    return NextResponse.json({ weather: weatherData }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=300',
+        'X-Cache': 'MISS',
+      },
+    })
   } catch (error) {
     console.error('Weather API error:', error)
     return NextResponse.json(

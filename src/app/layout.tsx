@@ -6,6 +6,7 @@ import FarmConChatbot from "@/components/chatbot/FarmConChatbot";
 import PostHogProvider from "@/components/providers/PostHogProvider";
 import FingerprintProvider from "@/components/providers/FingerprintProvider";
 import CookieConsent from "@/components/CookieConsent";
+import ElevenLabsWidget from "@/components/ElevenLabsWidget";
 
 
 const geistSans = Geist({
@@ -51,11 +52,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Real Performance Optimizations */}
-        <link rel="preconnect" href="https://js.stripe.com" />
+        {/* Critical Resource Hints */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://js.stripe.com" />
+        <link rel="dns-prefetch" href="https://translate.google.com" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        <link rel="dns-prefetch" href="https://embed.tawk.to" />
+        <link rel="dns-prefetch" href="https://cdn.onesignal.com" />
 
-        {/* Favicon / manifest for browser tab (use farmcon.jpg as a fallback) */}
+        {/* Favicon / manifest for browser tab */}
         <link rel="icon" href="/farmcon.jpg" />
         <link rel="apple-touch-icon" href="/farmcon.jpg" />
         <link rel="manifest" href="/manifest.json" />
@@ -409,6 +415,8 @@ export default function RootLayout({
         <PostHogProvider>
           <FingerprintProvider>
             {children}
+            <ElevenLabsWidget />
+
             <FarmConChatbot />
             <CookieConsent />
           </FingerprintProvider>

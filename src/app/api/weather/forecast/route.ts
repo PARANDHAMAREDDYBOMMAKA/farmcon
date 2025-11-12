@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { cache, CacheKeys } from '@/lib/redis'
+
+export const revalidate = 1800
 
 export async function GET(request: NextRequest) {
   try {
@@ -70,100 +73,77 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    const today = new Date()
-    const startDate = new Date(today)
-    startDate.setDate(today.getDate() - days)
-    const endDate = new Date(today)
-    endDate.setDate(today.getDate() - 1)
+    const cacheKey = CacheKeys.weatherForecast(latitude!, longitude!, days)
+    const cachedData = await cache.get(cacheKey)
+    if (cachedData) {
+      return NextResponse.json({ forecast: cachedData }, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=900',
+          'X-Cache': 'HIT',
+        },
+      })
+    }
 
-    const startDateStr = startDate.toISOString().split('T')[0].replace(/-/g, '')
-    const endDateStr = endDate.toISOString().split('T')[0].replace(/-/g, '')
+    // Use Open-Meteo API - completely free, no API key required
+    // Request both daily and hourly forecasts for comprehensive data
+    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean,precipitation_sum,rain_sum,weather_code,wind_speed_10m_max,relative_humidity_2m_max,relative_humidity_2m_min,relative_humidity_2m_mean&timezone=auto&past_days=${days}&forecast_days=0`
 
-    const nasaUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,PRECTOTCORR&community=AG&longitude=${longitude}&latitude=${latitude}&start=${startDateStr}&end=${endDateStr}&format=JSON`
-
-    const response = await fetch(nasaUrl)
+    const response = await fetch(openMeteoUrl)
 
     if (!response.ok) {
-      console.error('NASA API error:', response.status)
-      return NextResponse.json(
-        { error: 'Failed to fetch weather forecast from NASA API' },
-        { status: response.status }
-      )
+      console.error('Open-Meteo API error:', response.status)
+      return NextResponse.json({
+        forecast: generateMockForecast(locationName, country, parseFloat(latitude!), parseFloat(longitude!), days),
+        source: 'mock',
+        reason: 'Weather API temporarily unavailable'
+      })
     }
 
     const data = await response.json()
 
-    if (!data.properties || !data.properties.parameter) {
-      return NextResponse.json(
-        { error: 'Invalid NASA API response' },
-        { status: 500 }
-      )
-    }
-
-    const parameters = data.properties.parameter
-    const dates = Object.keys(parameters.T2M).sort().reverse()
-
-    const firstDate = dates[0]
-    console.log('🔍 Raw NASA forecast data for', locationName, '(first day):', {
-      date: firstDate,
-      T2M: parameters.T2M[firstDate],
-      T2M_MAX: parameters.T2M_MAX?.[firstDate],
-      RH2M: parameters.RH2M?.[firstDate],
-      WS2M: parameters.WS2M?.[firstDate]
-    })
-
-    const cleanValue = (value: number, defaultValue: number = 0) => {
-      if (value === undefined || value === null || value < -900) {
-        return { value: defaultValue, isDefault: true }
-      }
-      return { value, isDefault: false }
-    }
-
-    const firstDayTemp = cleanValue(parameters.T2M[firstDate], 25)
-    const firstDayHumidity = cleanValue(parameters.RH2M?.[firstDate], 50)
-    const firstDayWind = cleanValue(parameters.WS2M?.[firstDate], 10)
-
-    const defaultCount = [
-      firstDayTemp.isDefault,
-      firstDayHumidity.isDefault,
-      firstDayWind.isDefault
-    ].filter(Boolean).length
-
-    if (defaultCount >= 2) {
-      console.warn('⚠️ NASA API has insufficient forecast data for', locationName, '- using mock data')
+    if (!data.daily || !data.daily.time || data.daily.time.length === 0) {
+      console.error('Invalid Open-Meteo API response')
       return NextResponse.json({
         forecast: generateMockForecast(locationName, country, parseFloat(latitude!), parseFloat(longitude!), days),
         source: 'mock',
-        reason: 'NASA POWER API does not have sufficient data for this location'
+        reason: 'Invalid API response'
       })
     }
 
-    const dailyForecasts = dates.slice(0, Math.min(days, dates.length)).map((dateStr) => {
-      const temp = cleanValue(parameters.T2M[dateStr], 25).value
-      const tempMax = cleanValue(parameters.T2M_MAX?.[dateStr], temp + 5).value
-      const tempMin = cleanValue(parameters.T2M_MIN?.[dateStr], temp - 5).value
-      const humidity = cleanValue(parameters.RH2M?.[dateStr], 50).value
-      const windSpeed = cleanValue(parameters.WS2M?.[dateStr], 10).value
-      const rainfall = cleanValue(parameters.PRECTOTCORR?.[dateStr], 0).value
+    const daily = data.daily
 
-      const year = dateStr.substring(0, 4)
-      const month = dateStr.substring(4, 6)
-      const day = dateStr.substring(6, 8)
-      const formattedDate = `${year}-${month}-${day}`
+    console.log('🔍 Open-Meteo forecast data for', locationName, ':', {
+      days: daily.time.length,
+      firstDay: daily.time[0],
+      temp: daily.temperature_2m_mean?.[0]
+    })
 
-      const getWeatherDescription = (temp: number, rain: number) => {
-        if (rain > 5) return { main: 'Rain', description: 'rainy', icon: '10d' }
-        if (rain > 0) return { main: 'Rain', description: 'light rain', icon: '09d' }
-        if (temp > 35) return { main: 'Clear', description: 'hot and sunny', icon: '01d' }
-        if (temp > 28) return { main: 'Clear', description: 'sunny', icon: '01d' }
-        if (temp > 22) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
-        return { main: 'Clouds', description: 'cloudy', icon: '03d' }
-      }
+    // WMO Weather interpretation codes
+    const getWeatherFromCode = (code: number) => {
+      if (code === 0) return { main: 'Clear', description: 'clear sky', icon: '01d' }
+      if (code <= 3) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
+      if (code <= 48) return { main: 'Fog', description: 'foggy', icon: '50d' }
+      if (code <= 67) return { main: 'Rain', description: 'rainy', icon: '10d' }
+      if (code <= 77) return { main: 'Snow', description: 'snowy', icon: '13d' }
+      if (code <= 99) return { main: 'Thunderstorm', description: 'thunderstorm', icon: '11d' }
+      return { main: 'Clear', description: 'clear', icon: '01d' }
+    }
 
-      const weather = getWeatherDescription(temp, rainfall)
+    const dailyForecasts = daily.time.map((date: string, index: number) => {
+      const tempMax = daily.temperature_2m_max?.[index] || 25
+      const tempMin = daily.temperature_2m_min?.[index] || 15
+      const temp = daily.temperature_2m_mean?.[index] || (tempMax + tempMin) / 2
+      const humidityMax = daily.relative_humidity_2m_max?.[index] || 70
+      const humidityMin = daily.relative_humidity_2m_min?.[index] || 40
+      const humidity = daily.relative_humidity_2m_mean?.[index] || (humidityMax + humidityMin) / 2
+      const windSpeed = daily.wind_speed_10m_max?.[index] || 10
+      const rainfall = daily.precipitation_sum?.[index] || daily.rain_sum?.[index] || 0
+      const weatherCode = daily.weather_code?.[index] || 0
+
+      const weather = getWeatherFromCode(weatherCode)
 
       return {
-        date: formattedDate,
+        date: date,
         temp,
         tempMax,
         tempMin,
@@ -185,7 +165,7 @@ export async function GET(request: NextRequest) {
           lon: parseFloat(longitude!)
         }
       },
-      forecasts: dailyForecasts.map(day => ({
+      forecasts: dailyForecasts.map((day: { date: any; tempMin: number; tempMax: number; temp: number; humidity: number; mainWeather: any; description: any; icon: any; windSpeed: number; rainfall: any }) => ({
         date: day.date,
         temperature: {
           min: Math.round(day.tempMin),
@@ -203,7 +183,7 @@ export async function GET(request: NextRequest) {
           icon: day.icon
         },
         wind: {
-          speed: Math.round(day.windSpeed * 3.6), // m/s to km/h
+          speed: Math.round(day.windSpeed),
           direction: 180 // mock
         },
         rain: day.rainfall,
@@ -215,10 +195,17 @@ export async function GET(request: NextRequest) {
       })),
       farmingInsights: generateWeeklyFarmingInsights(dailyForecasts),
       timestamp: new Date().toISOString(),
-      source: 'NASA POWER API'
+      source: 'Open-Meteo API'
     }
 
-    return NextResponse.json({ forecast: forecastData })
+    await cache.set(cacheKey, forecastData, 1800)
+
+    return NextResponse.json({ forecast: forecastData }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=900',
+        'X-Cache': 'MISS',
+      },
+    })
   } catch (error) {
     console.error('Weather forecast API error:', error)
     return NextResponse.json(
@@ -343,7 +330,6 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
   const insights = []
 
   const totalRain = forecasts.reduce((sum, day) => sum + day.rainfall, 0)
-  const rainyDays = forecasts.filter(day => day.rainfall > 1).length
 
   if (totalRain > 50) {
     insights.push({

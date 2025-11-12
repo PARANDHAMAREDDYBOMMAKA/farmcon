@@ -126,7 +126,7 @@ export class Cache {
     fetcher: () => Promise<T>,
     ttlSeconds = 300
   ): Promise<T | null> {
-    
+
     const cached = await this.get<T>(key)
     if (cached !== null) return cached
 
@@ -138,6 +138,87 @@ export class Cache {
       return value
     } catch (error) {
       console.error('Cache getOrSet fetcher error:', error)
+      return null
+    }
+  }
+
+  async setWithExpiry(key: string, value: any, expiryDate: Date): Promise<boolean> {
+    if (!this.redis) return false
+
+    try {
+      const ttlSeconds = Math.floor((expiryDate.getTime() - Date.now()) / 1000)
+      if (ttlSeconds > 0) {
+        await this.redis.setex(key, ttlSeconds, value)
+        return true
+      }
+      return false
+    } catch (error) {
+      console.warn('Cache setWithExpiry error:', error)
+      return false
+    }
+  }
+
+  async setnx(key: string, value: any, ttlSeconds = 300): Promise<boolean> {
+    if (!this.redis) return false
+
+    try {
+      const result = await this.redis.set(key, value, { nx: true, ex: ttlSeconds })
+      return result === 'OK'
+    } catch (error) {
+      console.warn('Cache setnx error:', error)
+      return false
+    }
+  }
+
+  async zadd(key: string, score: number, member: string, ttlSeconds = 0): Promise<boolean> {
+    if (!this.redis) return false
+
+    try {
+      await this.redis.zadd(key, { score, member })
+      if (ttlSeconds > 0) {
+        await this.redis.expire(key, ttlSeconds)
+      }
+      return true
+    } catch (error) {
+      console.warn('Cache zadd error:', error)
+      return false
+    }
+  }
+
+  async zrange(key: string, start: number, stop: number): Promise<string[]> {
+    if (!this.redis) return []
+
+    try {
+      return await this.redis.zrange(key, start, stop)
+    } catch (error) {
+      console.warn('Cache zrange error:', error)
+      return []
+    }
+  }
+
+  async hset(key: string, field: string, value: any, ttlSeconds = 0): Promise<boolean> {
+    if (!this.redis) return false
+
+    try {
+      await this.redis.hset(key, { [field]: value })
+      if (ttlSeconds > 0) {
+        await this.redis.expire(key, ttlSeconds)
+      }
+      return true
+    } catch (error) {
+      console.warn('Cache hset error:', error)
+      return false
+    }
+  }
+
+  async hgetall<T = Record<string, any>>(key: string): Promise<T | null> {
+    if (!this.redis) return null
+
+    try {
+      const result = await this.redis.hgetall(key)
+      return result as T
+    } catch (error) {
+      console.warn('Cache hgetall error:', error)
       return null
     }
   }
@@ -222,6 +303,9 @@ export const CacheKeys = {
   equipmentList: (ownerId?: string) => Cache.key('equipment', `list:${ownerId || 'all'}`),
   categories: () => 'farmcon:categories:all',
   suppliers: () => 'farmcon:suppliers:all',
+  weather: (lat: string, lon: string) => Cache.key('weather', `${lat}:${lon}`),
+  weatherForecast: (lat: string, lon: string, days: number) => Cache.key('forecast', `${lat}:${lon}:${days}`),
+  weatherLocation: (location: string) => Cache.key('weather', `location:${location}`),
 } as const
 
 export default redis

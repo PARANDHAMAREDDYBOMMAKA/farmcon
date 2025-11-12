@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 import { cache, CacheKeys } from '@/lib/redis'
 
+export const revalidate = 300
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
@@ -67,133 +69,92 @@ export async function GET(request: NextRequest) {
       lon = 77.2090
     }
 
-    const today = new Date()
-    const startDate = new Date(today)
-    startDate.setDate(today.getDate() - 7) 
+    // Use Open-Meteo API - completely free, no API key required
+    const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,precipitation,rain,weather_code,wind_speed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&timezone=auto&past_days=2&forecast_days=1`
 
-    const endDate = new Date(today)
-    endDate.setDate(today.getDate() - 1) 
-
-    const startDateStr = startDate.toISOString().split('T')[0].replace(/-/g, '')
-    const endDateStr = endDate.toISOString().split('T')[0].replace(/-/g, '')
-
-    const nasaUrl = `https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,T2M_MAX,T2M_MIN,RH2M,WS2M,PRECTOTCORR&community=AG&longitude=${lon}&latitude=${lat}&start=${startDateStr}&end=${endDateStr}&format=JSON`
-
-    console.log('🌤️  Fetching NASA weather data:', {
+    console.log('🌤️  Fetching Open-Meteo weather data:', {
       location,
       lat,
       lon,
-      startDateStr,
-      endDateStr,
-      url: nasaUrl
+      url: openMeteoUrl
     })
 
-    const weatherResponse = await fetch(nasaUrl, {
-      headers: {
-        'User-Agent': 'FarmCon-Weather-App'
-      }
-    })
+    const weatherResponse = await fetch(openMeteoUrl)
 
     if (!weatherResponse.ok) {
-      const errorText = await weatherResponse.text()
-      console.error('❌ NASA API request failed:', {
+      console.error('❌ Open-Meteo API request failed:', {
         status: weatherResponse.status,
-        statusText: weatherResponse.statusText,
-        error: errorText,
-        url: nasaUrl
+        statusText: weatherResponse.statusText
       })
 
       return NextResponse.json({
         weather: getMockWeatherData(location),
         source: 'mock',
-        error: `NASA API error: ${weatherResponse.status} - ${weatherResponse.statusText}`,
-        debug: {
-          status: weatherResponse.status,
-          url: nasaUrl,
-          coordinates: { lat, lon }
-        }
-      }, { status: 200 }) 
+        error: `Weather API error: ${weatherResponse.status}`
+      }, { status: 200 })
     }
 
     const weatherData = await weatherResponse.json()
 
-    console.log('✅ NASA API response received successfully', {
-      hasProperties: !!weatherData.properties,
-      hasParameters: !!weatherData.properties?.parameter,
-      parameterKeys: weatherData.properties?.parameter ? Object.keys(weatherData.properties.parameter) : []
+    console.log('✅ Open-Meteo API response received successfully', {
+      hasCurrent: !!weatherData.current,
+      hasDaily: !!weatherData.daily,
+      temperature: weatherData.current?.temperature_2m
     })
 
-    if (!weatherData.properties || !weatherData.properties.parameter) {
-      console.warn('Invalid NASA API response structure')
+    if (!weatherData.current || !weatherData.daily) {
+      console.warn('Invalid Open-Meteo API response structure')
       return NextResponse.json({
         weather: getMockWeatherData(location),
         source: 'mock'
       })
     }
 
-    const parameters = weatherData.properties.parameter
+    const current = weatherData.current
+    const daily = weatherData.daily
 
-    if (!parameters.T2M || Object.keys(parameters.T2M).length === 0) {
-      console.warn('No temperature data available from NASA API')
-      return NextResponse.json({
-        weather: getMockWeatherData(location),
-        source: 'mock'
-      })
+    const currentTemp = current.temperature_2m || 25
+    const currentHumidity = current.relative_humidity_2m || 50
+    const currentWindSpeed = current.wind_speed_10m || 10
+    const rainfall = current.precipitation || current.rain || 0
+    const weatherCode = current.weather_code || 0
+
+    // WMO Weather interpretation codes
+    const getWeatherFromCode = (code: number) => {
+      if (code === 0) return 'Clear Sky'
+      if (code <= 3) return 'Partly Cloudy'
+      if (code <= 48) return 'Foggy'
+      if (code <= 67) return 'Rainy'
+      if (code <= 77) return 'Snowy'
+      if (code <= 99) return 'Thunderstorm'
+      return 'Clear'
     }
 
-    const dates = Object.keys(parameters.T2M).sort().reverse() 
-
-    const recentDate = dates[0]
-
-    const cleanValue = (value: number, defaultValue: number = 0) => {
-      if (value === undefined || value === null || value < -900) {
-        return defaultValue
-      }
-      return value
-    }
-
-    const currentTemp = cleanValue(parameters.T2M[recentDate], 25)
-    const currentHumidity = cleanValue(parameters.RH2M?.[recentDate], 50)
-    const currentWindSpeed = cleanValue(parameters.WS2M?.[recentDate], 10) * 3.6 
-    const rainfall = cleanValue(parameters.PRECTOTCORR?.[recentDate], 0)
-
-    if (currentTemp === 25 && currentHumidity === 50 && currentWindSpeed === 36) {
-      console.warn('Most weather data missing from NASA API, using mock data')
-      return NextResponse.json({
-        weather: getMockWeatherData(location),
-        source: 'mock'
-      })
-    }
-
-    const getCondition = (temp: number, rain: number) => {
+    const getCondition = (code: number, rain: number) => {
       if (rain > 5) return 'Rainy'
       if (rain > 0) return 'Light Rain'
-      if (temp > 35) return 'Hot and Sunny'
-      if (temp > 28) return 'Sunny'
-      if (temp > 22) return 'Partly Cloudy'
-      return 'Cloudy'
+      return getWeatherFromCode(code)
     }
 
     const processedData = {
       location: location,
       temperature: Math.round(currentTemp),
-      condition: getCondition(currentTemp, rainfall),
+      condition: getCondition(weatherCode, rainfall),
       humidity: Math.round(currentHumidity),
       windSpeed: Math.round(currentWindSpeed),
-      rainfall: rainfall,
-      forecast: dates.slice(0, 3).map((date, index) => {
-        
-        const dayNames = ['Recent', 'Yesterday', '2 Days Ago']
-        const tempMax = cleanValue(parameters.T2M_MAX?.[date], currentTemp + 5)
-        const tempMin = cleanValue(parameters.T2M_MIN?.[date], currentTemp - 5)
-        const temp = cleanValue(parameters.T2M?.[date], currentTemp)
-        const rain = cleanValue(parameters.PRECTOTCORR?.[date], 0)
+      rainfall: Math.round(rainfall * 10) / 10,
+      forecast: daily.time.slice(0, 3).map((date: string, index: number) => {
+        const dayNames = ['Recent', 'Yesterday', 'Tomorrow']
+        const tempMax = daily.temperature_2m_max?.[index] || currentTemp + 5
+        const tempMin = daily.temperature_2m_min?.[index] || currentTemp - 5
+        const dayWeatherCode = daily.weather_code?.[index] || 0
+        const dayRain = daily.precipitation_sum?.[index] || 0
 
         return {
           date: dayNames[index],
           high: Math.round(tempMax),
           low: Math.round(tempMin),
-          condition: getCondition(temp, rain)
+          condition: getCondition(dayWeatherCode, dayRain)
         }
       })
     }
@@ -216,6 +177,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       weather: processedData,
       source: 'api'
+    }, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=150',
+      },
     })
 
   } catch (error) {
