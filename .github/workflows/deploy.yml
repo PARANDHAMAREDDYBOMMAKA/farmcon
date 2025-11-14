@@ -24,9 +24,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
-          buildkitd-flags: --debug
+          buildkitd-flags: --debug --oci-worker-gc=true --oci-worker-gc-keepstorage=5000000000
           driver-opts: |
             image=moby/buildkit:latest
+            network=host
+          config-inline: |
+            [worker.oci]
+              max-parallelism = 2
+            [worker.containerd]
+              max-parallelism = 2
 
       - name: Log in to DockerHub
         uses: docker/login-action@v3
@@ -63,14 +69,6 @@ jobs:
           echo "=== Final disk space ==="
           df -h
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -79,7 +77,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache,mode=max
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache,mode=min,image-manifest=true,oci-mediatypes=true,compression=zstd
           platforms: linux/amd64
           build-args: |
             BUILDKIT_INLINE_CACHE=1
@@ -89,7 +87,7 @@ jobs:
       - name: Clean up old Docker images from Docker Hub
         run: |
           set -e
-          # Keep only the latest 3 images and 'latest' tag, delete everything else
+          # Keep only the latest 2 images and protected tags, delete everything else including manifests
           echo "Fetching tags from Docker Hub..."
 
           # Login to Docker Hub and get token
@@ -111,24 +109,26 @@ jobs:
           TAGS_RESPONSE=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100" \
             -H "Authorization: Bearer $TOKEN")
 
-          # Extract tags with their last_updated timestamp, excluding protected tags
+          # Extract tags with their last_updated timestamp and digest, excluding protected tags
           ALL_TAGS=$(echo "$TAGS_RESPONSE" | jq -r '.results[] |
-            select(.name != "latest" and .name != "main" and .name != "buildcache") |
-            "\(.last_updated)|\(.name)"' | sort -r | cut -d'|' -f2)
+            select(.name != "latest" and .name != "main") |
+            "\(.last_updated)|\(.name)|\(.digest // "no-digest")"' | sort -r)
 
           # Count total tags
           TOTAL=$(echo "$ALL_TAGS" | grep -c '^' || echo "0")
-          echo "Found $TOTAL tags (excluding 'latest', 'main', and 'buildcache')"
+          echo "Found $TOTAL tags (excluding 'latest' and 'main')"
 
-          # Skip the first 3 (most recent) and delete the rest
-          if [ "$TOTAL" -gt 3 ]; then
-            TAGS_TO_DELETE=$(echo "$ALL_TAGS" | tail -n +4)
+          # Skip the first 2 (most recent) and delete the rest
+          if [ "$TOTAL" -gt 2 ]; then
+            TAGS_TO_DELETE=$(echo "$ALL_TAGS" | tail -n +3)
             TAGS_TO_DELETE_COUNT=$(echo "$TAGS_TO_DELETE" | grep -c '^' || echo "0")
-            echo "Deleting $TAGS_TO_DELETE_COUNT old tags (keeping only 3 most recent + latest/main/buildcache)..."
+            echo "Deleting $TAGS_TO_DELETE_COUNT old tags (keeping only 2 most recent + latest/main)..."
 
-            echo "$TAGS_TO_DELETE" | while IFS= read -r TAG; do
+            echo "$TAGS_TO_DELETE" | while IFS='|' read -r TIMESTAMP TAG DIGEST; do
               if [ -n "$TAG" ]; then
-                echo "Deleting tag: $TAG"
+                echo "Deleting tag: $TAG (digest: $DIGEST)"
+
+                # Delete the tag (this removes the tag reference)
                 DELETE_RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X DELETE \
                   "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
                   -H "Authorization: Bearer $TOKEN")
@@ -137,18 +137,64 @@ jobs:
 
                 if [ "$HTTP_CODE" == "204" ] || [ "$HTTP_CODE" == "200" ]; then
                   echo "✓ Successfully deleted tag: $TAG"
+
+                  # Also delete the manifest if digest is available to free up actual storage
+                  if [ "$DIGEST" != "no-digest" ] && [ "$DIGEST" != "null" ]; then
+                    echo "  Attempting to delete manifest: $DIGEST"
+                    MANIFEST_DELETE=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X DELETE \
+                      "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/manifests/$DIGEST" \
+                      -H "Authorization: Bearer $TOKEN")
+
+                    MANIFEST_HTTP_CODE=$(echo "$MANIFEST_DELETE" | grep "HTTP_CODE:" | cut -d':' -f2)
+                    if [ "$MANIFEST_HTTP_CODE" == "204" ] || [ "$MANIFEST_HTTP_CODE" == "200" ] || [ "$MANIFEST_HTTP_CODE" == "202" ]; then
+                      echo "  ✓ Manifest deleted successfully"
+                    else
+                      echo "  ℹ Manifest deletion returned HTTP $MANIFEST_HTTP_CODE (may be shared)"
+                    fi
+                  fi
                 else
                   echo "✗ Failed to delete tag: $TAG (HTTP $HTTP_CODE)"
                 fi
 
                 # Add a small delay to avoid rate limiting
-                sleep 1
+                sleep 2
               fi
             done
 
             echo "Cleanup completed"
           else
             echo "Only $TOTAL tags found, no cleanup needed"
+          fi
+
+          # Clean up buildcache periodically (every 7 days) to prevent unlimited growth
+          echo ""
+          echo "Checking buildcache age for periodic cleanup..."
+          BUILDCACHE_INFO=$(echo "$TAGS_RESPONSE" | jq -r '.results[] | select(.name == "buildcache")')
+          if [ -n "$BUILDCACHE_INFO" ]; then
+            BUILDCACHE_DATE=$(echo "$BUILDCACHE_INFO" | jq -r '.last_updated')
+            BUILDCACHE_DIGEST=$(echo "$BUILDCACHE_INFO" | jq -r '.digest // "no-digest"')
+            echo "Buildcache last updated: $BUILDCACHE_DATE"
+
+            # Calculate age in days
+            BUILDCACHE_TIMESTAMP=$(date -u -j -f "%Y-%m-%dT%H:%M:%S" "$(echo $BUILDCACHE_DATE | cut -d'.' -f1)" +%s 2>/dev/null || echo "0")
+            CURRENT_TIMESTAMP=$(date -u +%s)
+            AGE_SECONDS=$((CURRENT_TIMESTAMP - BUILDCACHE_TIMESTAMP))
+            AGE_DAYS=$((AGE_SECONDS / 86400))
+
+            echo "Buildcache age: $AGE_DAYS days"
+
+            # Delete buildcache if older than 7 days to force a fresh cache
+            if [ "$AGE_DAYS" -gt 7 ]; then
+              echo "Buildcache is older than 7 days, deleting to prevent unlimited growth..."
+              curl -s -X DELETE \
+                "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/buildcache/" \
+                -H "Authorization: Bearer $TOKEN" || echo "Failed to delete buildcache tag"
+              echo "✓ Buildcache deleted. A new cache will be created on next build."
+            else
+              echo "Buildcache is fresh (< 7 days old), keeping it for faster builds."
+            fi
+          else
+            echo "No buildcache found (this is normal for first run or after cleanup)."
           fi
 
       - name: Clean up local Docker resources
