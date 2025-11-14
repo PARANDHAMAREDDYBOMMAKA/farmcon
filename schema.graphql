@@ -1,0 +1,96 @@
+scalar DateTime
+
+type Query {
+  products(category: String, supplierId: ID): [Product!]!
+  product(id: ID!): Product
+  myOrders(status: String): [Order!]!
+  crops(farmerId: ID): [Crop!]!
+  users: [User!]!
+  user(id: ID!): User
+}
+
+type Mutation {
+  createProduct(input: CreateProductInput!): Product!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+  deleteProduct(id: ID!): Boolean!
+  createOrder(input: CreateOrderInput!): Order!
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  category: String
+  imageUrl: String
+  supplierId: ID!
+  supplier: User
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Order {
+  id: ID!
+  buyerId: ID!
+  buyer: User
+  status: String!
+  totalAmount: Float!
+  items: [OrderItem!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type OrderItem {
+  id: ID!
+  orderId: ID!
+  productId: ID!
+  product: Product
+  quantity: Int!
+  price: Float!
+}
+
+type Crop {
+  id: ID!
+  name: String!
+  quantity: Float!
+  unit: String!
+  farmerId: ID!
+  farmer: User
+  harvestDate: DateTime
+  createdAt: DateTime!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  role: String!
+  createdAt: DateTime!
+}
+
+input CreateProductInput {
+  name: String!
+  description: String
+  price: Float!
+  category: String
+  imageUrl: String
+  supplierId: ID!
+}
+
+input UpdateProductInput {
+  name: String
+  description: String
+  price: Float
+  category: String
+  imageUrl: String
+}
+
+input CreateOrderInput {
+  items: [OrderItemInput!]!
+}
+
+input OrderItemInput {
+  productId: ID!
+  quantity: Int!
+  price: Float!
+}

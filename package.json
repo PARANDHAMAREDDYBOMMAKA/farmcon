@@ -9,12 +9,16 @@
     "lint": "eslint",
     "apply-rls": "node scripts/apply-rls-policies.js",
     "db:setup": "prisma db push && npm run apply-rls",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "apollo:publish": "~/.rover/bin/rover graph publish $APOLLO_GRAPH_REF --schema ./schema.graphql",
+    "apollo:check": "~/.rover/bin/rover graph check $APOLLO_GRAPH_REF --schema ./schema.graphql",
+    "apollo:fetch": "~/.rover/bin/rover graph fetch $APOLLO_GRAPH_REF"
   },
   "dependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@elevenlabs/react": "^0.9.1",
     "@fingerprintjs/fingerprintjs": "^4.6.2",
+    "@graphql-tools/schema": "^10.0.29",
     "@hookform/resolvers": "^5.2.1",
     "@microsoft/clarity": "^1.0.0",
     "@notionhq/client": "^5.1.0",
@@ -36,6 +40,9 @@
     "date-fns": "^4.1.0",
     "firebase": "^12.4.0",
     "firebase-admin": "^13.5.0",
+    "graphql": "^16.12.0",
+    "graphql-scalars": "^1.25.0",
+    "graphql-yoga": "^5.16.2",
     "gsap": "^3.13.0",
     "html2canvas": "^1.4.1",
     "i18next": "^25.6.0",
@@ -86,6 +93,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.2",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }
