@@ -44,6 +44,25 @@ jobs:
             type=sha,prefix={{branch}}-
             type=raw,value=latest,enable={{is_default_branch}}
 
+      - name: Free up disk space before build
+        run: |
+          echo "=== Initial disk space ==="
+          df -h
+
+          echo "=== Cleaning up unused Docker resources ==="
+          docker system prune -af --volumes || true
+          docker builder prune -af || true
+
+          echo "=== Removing unnecessary system packages ==="
+          sudo rm -rf /usr/share/dotnet || true
+          sudo rm -rf /opt/ghc || true
+          sudo rm -rf /usr/local/share/boost || true
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY" || true
+          sudo apt-get clean || true
+
+          echo "=== Final disk space ==="
+          df -h
+
       - name: Cache Docker layers
         uses: actions/cache@v3
         with:
@@ -59,54 +78,75 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: |
-            type=local,src=/tmp/.buildx-cache
-            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache
-          cache-to: |
-            type=local,dest=/tmp/.buildx-cache-new,mode=max
-            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache,mode=max
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache,mode=max
           platforms: linux/amd64
           build-args: |
             BUILDKIT_INLINE_CACHE=1
-          outputs: type=docker,export-cache=true
           provenance: false
           sbom: false
 
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
       - name: Clean up old Docker images from Docker Hub
         run: |
+          set -e
           # Keep only the latest 3 images and 'latest' tag, delete everything else
           echo "Fetching tags from Docker Hub..."
 
-          TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+          # Login to Docker Hub and get token
+          LOGIN_RESPONSE=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
             -H "Content-Type: application/json" \
-            -d '{"username":"${{ secrets.DOCKERHUB_USERNAME }}","password":"${{ secrets.DOCKERHUB_TOKEN }}"}' \
-            | jq -r '.token')
+            -d "{\"username\":\"${{ secrets.DOCKERHUB_USERNAME }}\",\"password\":\"${{ secrets.DOCKERHUB_TOKEN }}\"}")
 
-          # Get all tags except 'latest', 'main', and 'buildcache'
-          ALL_TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100" \
-            -H "Authorization: Bearer $TOKEN" \
-            | jq -r '.results[] | select(.name != "latest" and .name != "main" and .name != "buildcache") | .name' | sort -r)
+          TOKEN=$(echo "$LOGIN_RESPONSE" | jq -r '.token')
+
+          if [ "$TOKEN" == "null" ] || [ -z "$TOKEN" ]; then
+            echo "Error: Failed to authenticate with Docker Hub"
+            echo "Response: $LOGIN_RESPONSE"
+            exit 1
+          fi
+
+          echo "Successfully authenticated with Docker Hub"
+
+          # Get all tags with timestamps
+          TAGS_RESPONSE=$(curl -s "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/?page_size=100" \
+            -H "Authorization: Bearer $TOKEN")
+
+          # Extract tags with their last_updated timestamp, excluding protected tags
+          ALL_TAGS=$(echo "$TAGS_RESPONSE" | jq -r '.results[] |
+            select(.name != "latest" and .name != "main" and .name != "buildcache") |
+            "\(.last_updated)|\(.name)"' | sort -r | cut -d'|' -f2)
 
           # Count total tags
-          TOTAL=$(echo "$ALL_TAGS" | grep -c . || echo "0")
+          TOTAL=$(echo "$ALL_TAGS" | grep -c '^' || echo "0")
           echo "Found $TOTAL tags (excluding 'latest', 'main', and 'buildcache')"
 
           # Skip the first 3 (most recent) and delete the rest
-          if [ $TOTAL -gt 3 ]; then
-            echo "Deleting old tags (keeping only 3 most recent + latest/main/buildcache)..."
-            echo "$ALL_TAGS" | tail -n +4 | while read -r TAG; do
+          if [ "$TOTAL" -gt 3 ]; then
+            TAGS_TO_DELETE=$(echo "$ALL_TAGS" | tail -n +4)
+            TAGS_TO_DELETE_COUNT=$(echo "$TAGS_TO_DELETE" | grep -c '^' || echo "0")
+            echo "Deleting $TAGS_TO_DELETE_COUNT old tags (keeping only 3 most recent + latest/main/buildcache)..."
+
+            echo "$TAGS_TO_DELETE" | while IFS= read -r TAG; do
               if [ -n "$TAG" ]; then
                 echo "Deleting tag: $TAG"
-                curl -X DELETE "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
-                  -H "Authorization: Bearer $TOKEN"
-                echo "Deleted tag: $TAG"
+                DELETE_RESPONSE=$(curl -s -w "\nHTTP_CODE:%{http_code}" -X DELETE \
+                  "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/$TAG/" \
+                  -H "Authorization: Bearer $TOKEN")
+
+                HTTP_CODE=$(echo "$DELETE_RESPONSE" | grep "HTTP_CODE:" | cut -d':' -f2)
+
+                if [ "$HTTP_CODE" == "204" ] || [ "$HTTP_CODE" == "200" ]; then
+                  echo "✓ Successfully deleted tag: $TAG"
+                else
+                  echo "✗ Failed to delete tag: $TAG (HTTP $HTTP_CODE)"
+                fi
+
+                # Add a small delay to avoid rate limiting
+                sleep 1
               fi
             done
+
+            echo "Cleanup completed"
           else
             echo "Only $TOTAL tags found, no cleanup needed"
           fi
