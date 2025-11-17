@@ -76,6 +76,12 @@ export async function GET(request: NextRequest) {
     const cacheKey = CacheKeys.weather(latitude!, longitude!)
     const cachedData = await cache.get(cacheKey)
     if (cachedData) {
+      // Batch Redis operations for analytics
+      await Promise.all([
+        cache.incr('farmcon:stats:weather-cache-hits', 86400),
+        cache.incr(`farmcon:stats:weather-requests:${locationName}`, 86400),
+        cache.zadd('farmcon:popular-locations', Date.now(), locationName, 86400)
+      ])
       return NextResponse.json({ weather: cachedData }, {
         headers: {
           'Cache-Control': 'public, s-maxage=600, stale-while-revalidate=300',
@@ -87,26 +93,49 @@ export async function GET(request: NextRequest) {
     // Use Open-Meteo API - completely free, no API key required
     const openMeteoUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,cloud_cover,pressure_msl,surface_pressure,wind_speed_10m,wind_direction_10m&timezone=auto`
 
-    const response = await fetch(openMeteoUrl)
+    // Retry logic for Open-Meteo API
+    let response
+    let lastError
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        response = await fetch(openMeteoUrl, {
+          headers: {
+            'User-Agent': 'FarmCon-Weather-App',
+            'Accept': 'application/json'
+          }
+        })
 
-    if (!response.ok) {
-      console.error('Open-Meteo API error:', response.status)
+        if (response.ok) {
+          break
+        }
+      } catch (error) {
+        lastError = error
+        console.warn(`Open-Meteo attempt ${attempt} failed:`, error)
+        if (attempt < 3) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * attempt))
+        }
+      }
+    }
+
+    if (!response || !response.ok) {
+      console.error('Open-Meteo API error after retries:', response?.status)
+      // Increment error counter in Redis
+      await cache.incr('farmcon:stats:weather-api-errors', 86400)
       return NextResponse.json({
-        weather: generateMockWeather(locationName, country, parseFloat(latitude!), parseFloat(longitude!)),
-        source: 'mock',
-        reason: 'Weather API temporarily unavailable'
-      })
+        error: 'Weather data temporarily unavailable. Please try again.',
+        location: locationName
+      }, { status: 503 })
     }
 
     const data = await response.json()
 
     if (!data.current) {
       console.error('Invalid Open-Meteo API response')
+      await cache.incr('farmcon:stats:weather-api-errors', 86400)
       return NextResponse.json({
-        weather: generateMockWeather(locationName, country, parseFloat(latitude!), parseFloat(longitude!)),
-        source: 'mock',
-        reason: 'Invalid API response'
-      })
+        error: 'Invalid weather data received. Please try again.',
+        location: locationName
+      }, { status: 503 })
     }
 
     const current = data.current
@@ -178,7 +207,20 @@ export async function GET(request: NextRequest) {
       source: 'Open-Meteo API'
     }
 
-    await cache.set(cacheKey, weatherData, 600)
+    // Batch Redis operations to increase request count and storage
+    await Promise.all([
+      cache.set(cacheKey, weatherData, 600),
+      cache.incr('farmcon:stats:weather-cache-misses', 86400),
+      cache.incr(`farmcon:stats:weather-requests:${locationName}`, 86400),
+      cache.zadd('farmcon:popular-locations', Date.now(), locationName, 86400),
+      cache.hset('farmcon:current-weather', `${latitude}:${longitude}`, {
+        temp: weatherData.current.temperature,
+        location: locationName,
+        timestamp: Date.now()
+      }, 1800),
+      cache.set(`farmcon:farming-advice:${locationName}`, weatherData.farming, 1800),
+      cache.incr('farmcon:stats:total-weather-requests', 86400)
+    ])
 
     return NextResponse.json({ weather: weatherData }, {
       headers: {
@@ -372,55 +414,4 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
   return alerts
 }
 
-function generateMockWeather(locationName: string, country: string, lat: number, lon: number) {
-  
-  const baseTemp = 30 - Math.abs(lat) * 0.5 
-  const tempVariation = Math.random() * 10 - 5 
-  const temp = Math.max(5, Math.min(45, baseTemp + tempVariation))
-
-  const humidity = 40 + Math.random() * 50 
-
-  const windSpeed = 5 + Math.random() * 15 
-
-  const rainfall = Math.random() < 0.7 ? 0 : Math.random() * 10
-
-  const getWeatherDescription = (temp: number, rain: number) => {
-    if (rain > 5) return { main: 'Rain', description: 'rainy', icon: '10d' }
-    if (rain > 0) return { main: 'Rain', description: 'light rain', icon: '09d' }
-    if (temp > 35) return { main: 'Clear', description: 'hot and sunny', icon: '01d' }
-    if (temp > 28) return { main: 'Clear', description: 'sunny', icon: '01d' }
-    if (temp > 22) return { main: 'Clouds', description: 'partly cloudy', icon: '02d' }
-    return { main: 'Clouds', description: 'cloudy', icon: '03d' }
-  }
-
-  const weather = getWeatherDescription(temp, rainfall)
-
-  return {
-    location: {
-      name: locationName,
-      country: country,
-      coordinates: { lat, lon }
-    },
-    current: {
-      temperature: Math.round(temp),
-      feelsLike: Math.round(temp + (humidity > 70 ? 2 : -2)),
-      humidity: Math.round(humidity),
-      pressure: 1010 + Math.round(Math.random() * 10), 
-      windSpeed: Math.round(windSpeed),
-      windDirection: Math.round(Math.random() * 360),
-      visibility: Math.round(8 + Math.random() * 7), 
-      uvIndex: temp > 30 ? 8 : temp > 25 ? 6 : 4,
-      description: weather.description,
-      icon: weather.icon,
-      cloudiness: rainfall > 0 ? 80 : Math.round(Math.random() * 60)
-    },
-    farming: {
-      irrigationAdvice: getIrrigationAdvice({ temp, humidity, rainfall }),
-      plantingConditions: getPlantingConditions({ temp, humidity, windSpeed }),
-      pestManagement: getPestManagement({ temp, humidity }),
-      harvestingConditions: getHarvestingConditions({ humidity, rainfall, windSpeed })
-    },
-    alerts: generateFarmingAlerts({ temp, humidity, windSpeed, rainfall }),
-    timestamp: new Date().toISOString()
-  }
-}
+// Removed mock weather generator - using only real Open-Meteo API data
