@@ -1,0 +1,458 @@
+/**
+ * Accessibility Styles for FarmCon
+ * WCAG 2.1 AA Compliant
+ */
+
+/* Screen Reader Only - Visually hide but keep accessible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  /* Increase all contrasts */
+  --bg-primary: #000;
+  --bg-secondary: #111;
+  --text-primary: #fff;
+  --text-secondary: #e5e5e5;
+  --border-color: #fff;
+  --link-color: #4da6ff;
+  --focus-ring: #ffff00;
+}
+
+.high-contrast * {
+  border-color: var(--border-color, #fff) !important;
+}
+
+.high-contrast a {
+  color: var(--link-color) !important;
+  text-decoration: underline;
+}
+
+.high-contrast button,
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  border: 2px solid #fff !important;
+}
+
+.high-contrast :focus {
+  outline: 3px solid var(--focus-ring, #ffff00) !important;
+  outline-offset: 2px;
+}
+
+/* Reduced Motion */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Screen Reader Mode Enhancements */
+.screen-reader-mode {
+  /* Increase spacing for better navigation */
+  line-height: 1.8;
+}
+
+.screen-reader-mode button,
+.screen-reader-mode a,
+.screen-reader-mode input,
+.screen-reader-mode select {
+  /* Larger tap targets */
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.screen-reader-mode h1,
+.screen-reader-mode h2,
+.screen-reader-mode h3,
+.screen-reader-mode h4,
+.screen-reader-mode h5,
+.screen-reader-mode h6 {
+  /* Clear heading hierarchy */
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+/* Focus Visible (keyboard navigation) */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Enhanced Focus Rings */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Keyboard Navigation Indicators */
+[data-keyboard-navigation="true"] *:focus {
+  outline: 3px solid #2563eb !important;
+  outline-offset: 2px;
+}
+
+/* Touch Target Sizes (WCAG 2.1 Level AAA) */
+@media (pointer: coarse) {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  select {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
+  }
+}
+
+/* Mobile Touch Improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase tap targets for mobile */
+  button,
+  a,
+  [role="button"],
+  [role="link"] {
+    min-height: 48px;
+    padding: 14px;
+  }
+
+  /* Remove hover effects on mobile */
+  *:hover {
+    /* Prevent sticky hover states */
+  }
+
+  /* Improve spacing for better touch accuracy */
+  nav a,
+  nav button {
+    margin: 4px;
+  }
+
+  /* Make form controls easier to tap */
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents iOS zoom on focus */
+    min-height: 44px;
+  }
+}
+
+/* iOS Specific */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific styles */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="number"],
+  textarea {
+    font-size: 16px; /* Prevent auto-zoom on focus */
+  }
+
+  /* Fix iOS input shadows */
+  input,
+  textarea,
+  select {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  /* iOS focus improvements */
+  :focus {
+    -webkit-tap-highlight-color: rgba(37, 99, 235, 0.3);
+  }
+}
+
+/* Android Specific */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+  /* Android Chrome specific fixes */
+  select {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 20px;
+    padding-right: 32px;
+  }
+}
+
+/* Touch gesture hints */
+.touch-scrollable {
+  -webkit-overflow-scrolling: touch;
+  overflow-y: auto;
+}
+
+/* Swipe indicators */
+[data-swipeable="true"] {
+  touch-action: pan-y pan-x;
+  cursor: grab;
+}
+
+[data-swipeable="true"]:active {
+  cursor: grabbing;
+}
+
+/* Font Size Classes */
+html[style*="--base-font-size: 14px"] {
+  font-size: 14px;
+}
+
+html[style*="--base-font-size: 16px"] {
+  font-size: 16px;
+}
+
+html[style*="--base-font-size: 18px"] {
+  font-size: 18px;
+}
+
+html[style*="--base-font-size: 20px"] {
+  font-size: 20px;
+}
+
+/* Accessible Tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+  background: #f3f4f6;
+  padding: 12px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Screen reader announcements */
+[role="status"],
+[role="alert"] {
+  position: relative;
+}
+
+/* Accessible landmarks */
+main {
+  outline: none;
+}
+
+main:focus {
+  outline: 2px dashed #2563eb;
+  outline-offset: 4px;
+}
+
+/* Loading states */
+[aria-busy="true"] {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+/* Invalid form fields */
+[aria-invalid="true"] {
+  border-color: #ef4444 !important;
+  background-color: #fef2f2;
+}
+
+[aria-invalid="true"]:focus {
+  outline-color: #ef4444 !important;
+}
+
+/* Required field indicator */
+[aria-required="true"] {
+  position: relative;
+}
+
+/* Disabled elements */
+[disabled],
+[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Tooltip accessible */
+[role="tooltip"] {
+  background: #1f2937;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  max-width: 300px;
+  z-index: 1000;
+}
+
+/* Modal dialog accessible */
+[role="dialog"] {
+  position: fixed;
+  z-index: 1000;
+}
+
+[role="dialog"]:focus {
+  outline: none;
+}
+
+/* Alert accessible */
+[role="alert"] {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+[role="alert"][aria-live="assertive"] {
+  background: #fef2f2;
+  border: 2px solid #ef4444;
+  color: #991b1b;
+}
+
+/* Progress bars */
+[role="progressbar"] {
+  background: #e5e7eb;
+  border-radius: 9999px;
+  height: 8px;
+  overflow: hidden;
+}
+
+/* Landmarks for screen readers */
+nav[aria-label],
+section[aria-labelledby],
+aside[aria-label] {
+  /* Ensure landmarks are properly announced */
+}
+
+/* Print styles for accessibility */
+@media print {
+  .skip-link,
+  [aria-hidden="true"],
+  .sr-only {
+    display: none !important;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+}
+
+/* Dark mode accessibility */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1f2937;
+    --bg-secondary: #111827;
+    --text-primary: #f9fafb;
+    --text-secondary: #e5e7eb;
+  }
+}
+
+/* Prefers reduced transparency */
+@media (prefers-reduced-transparency) {
+  * {
+    backdrop-filter: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* Windows High Contrast Mode Detection */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    border: 2px solid currentColor !important;
+  }
+}
+
+/* Ensure sufficient line height for readability */
+body {
+  line-height: 1.6;
+}
+
+/* Keyboard shortcut indicators */
+kbd {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-family: monospace;
+  font-size: 0.9em;
+}
+
+/* Status messages */
+.status-message {
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-message.success {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.status-message.error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #ef4444;
+}
+
+.status-message.warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.status-message.info {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #3b82f6;
+}

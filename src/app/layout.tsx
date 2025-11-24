@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
+import "@/styles/accessibility.css";
 import FarmConChatbot from "@/components/chatbot/FarmConChatbot";
 import PostHogProvider from "@/components/providers/PostHogProvider";
 import FingerprintProvider from "@/components/providers/FingerprintProvider";
 import CookieConsent from "@/components/CookieConsent";
 import ElevenLabsWidget from "@/components/ElevenLabsWidget";
+import { AccessibilityProvider } from "@/components/accessibility/AccessibilityProvider";
+import { AccessibilityPanel } from "@/components/accessibility/AccessibilityPanel";
 
 
 const geistSans = Geist({
@@ -412,15 +415,28 @@ export default function RootLayout({
           </>
         )}
 
-        <PostHogProvider>
-          <FingerprintProvider>
-            {children}
-            <ElevenLabsWidget />
+        <AccessibilityProvider>
+          <PostHogProvider>
+            <FingerprintProvider>
+              {/* Skip to main content link */}
+              <a href="#main-content" className="skip-link">
+                Skip to main content
+              </a>
 
-            <FarmConChatbot />
-            <CookieConsent />
-          </FingerprintProvider>
-        </PostHogProvider>
+              {/* Main content wrapper */}
+              <main id="main-content" tabIndex={-1}>
+                {children}
+              </main>
+
+              <ElevenLabsWidget />
+              <FarmConChatbot />
+              <CookieConsent />
+
+              {/* Accessibility settings panel */}
+              <AccessibilityPanel />
+            </FingerprintProvider>
+          </PostHogProvider>
+        </AccessibilityProvider>
       </body>
     </html>
   );
