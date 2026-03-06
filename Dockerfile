@@ -6,8 +6,8 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat openssl
 WORKDIR /app
 
-# Copy package files and prisma schema (needed for postinstall)
-COPY package.json package-lock.json* ./
+# Copy package files, npm config, and prisma schema (needed for postinstall)
+COPY package.json package-lock.json* .npmrc* ./
 COPY prisma ./prisma
 
 # Install dependencies with cache mount for faster builds
