@@ -76,11 +76,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/farmcon:buildcache,mode=min,image-manifest=true,oci-mediatypes=true,compression=zstd
+          cache-from: type=gha
+          cache-to: type=gha,mode=min
           platforms: linux/amd64
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
           provenance: false
           sbom: false
 
@@ -166,35 +164,18 @@ jobs:
             echo "Only $TOTAL tags found, no cleanup needed"
           fi
 
-          # Clean up buildcache periodically (every 7 days) to prevent unlimited growth
+          # Delete buildcache tag if it exists (legacy cleanup - no longer using registry cache)
           echo ""
-          echo "Checking buildcache age for periodic cleanup..."
-          BUILDCACHE_INFO=$(echo "$TAGS_RESPONSE" | jq -r '.results[] | select(.name == "buildcache")')
-          if [ -n "$BUILDCACHE_INFO" ]; then
-            BUILDCACHE_DATE=$(echo "$BUILDCACHE_INFO" | jq -r '.last_updated')
-            BUILDCACHE_DIGEST=$(echo "$BUILDCACHE_INFO" | jq -r '.digest // "no-digest"')
-            echo "Buildcache last updated: $BUILDCACHE_DATE"
-
-            # Calculate age in days (using Linux-compatible date command)
-            BUILDCACHE_TIMESTAMP=$(date -u -d "$(echo $BUILDCACHE_DATE | cut -d'.' -f1 | sed 's/T/ /')" +%s 2>/dev/null || echo "0")
-            CURRENT_TIMESTAMP=$(date -u +%s)
-            AGE_SECONDS=$((CURRENT_TIMESTAMP - BUILDCACHE_TIMESTAMP))
-            AGE_DAYS=$((AGE_SECONDS / 86400))
-
-            echo "Buildcache age: $AGE_DAYS days"
-
-            # Delete buildcache if older than 7 days to force a fresh cache
-            if [ "$AGE_DAYS" -gt 7 ]; then
-              echo "Buildcache is older than 7 days, deleting to prevent unlimited growth..."
-              curl -s -X DELETE \
-                "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/buildcache/" \
-                -H "Authorization: Bearer $TOKEN" || echo "Failed to delete buildcache tag"
-              echo "✓ Buildcache deleted. A new cache will be created on next build."
-            else
-              echo "Buildcache is fresh (< 7 days old), keeping it for faster builds."
-            fi
+          echo "Cleaning up legacy buildcache if present..."
+          BUILDCACHE_EXISTS=$(echo "$TAGS_RESPONSE" | jq -r '.results[] | select(.name == "buildcache") | .name')
+          if [ -n "$BUILDCACHE_EXISTS" ]; then
+            echo "Found legacy buildcache tag, deleting..."
+            curl -s -X DELETE \
+              "https://hub.docker.com/v2/repositories/${{ secrets.DOCKERHUB_USERNAME }}/farmcon/tags/buildcache/" \
+              -H "Authorization: Bearer $TOKEN" || echo "Failed to delete buildcache tag"
+            echo "✓ Legacy buildcache deleted"
           else
-            echo "No buildcache found (this is normal for first run or after cleanup)."
+            echo "No legacy buildcache found"
           fi
 
       - name: Clean up local Docker resources
