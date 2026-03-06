@@ -198,7 +198,7 @@ export default function FarmConChatbot() {
                       className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
                         msg.role === 'user'
                           ? 'bg-green-600 text-white ml-4'
-                          : 'bg-gray-100 text-gray-800 mr-4'
+                          : 'bg-slate-100 text-gray-800 mr-4'
                       }`}
                     >
                       <p className="text-sm whitespace-pre-wrap break-words">{msg.content}</p>
@@ -207,7 +207,7 @@ export default function FarmConChatbot() {
                 ))}
                 {loading && (
                   <div className="flex justify-start">
-                    <div className="bg-gray-100 text-gray-800 rounded-2xl px-4 py-2.5">
+                    <div className="bg-slate-100 text-gray-800 rounded-2xl px-4 py-2.5">
                       <div className="flex space-x-2">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
@@ -241,7 +241,7 @@ export default function FarmConChatbot() {
                   </button>
                 </div>
                 <div className="mt-2 flex items-center justify-between">
-                  <p className="text-xs text-gray-900">
+                  <p className="text-xs text-slate-700">
                     Powered by AI • Context-aware
                   </p>
                   <button

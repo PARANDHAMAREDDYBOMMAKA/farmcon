@@ -89,7 +89,7 @@ export default function OrderTrackingPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading order details...</p>
+          <p className="mt-4 text-slate-700">Loading order details...</p>
         </div>
       </div>
     )
@@ -100,7 +100,7 @@ export default function OrderTrackingPage() {
       <div className="p-6">
         <div className="text-center">
           <span className="text-6xl">❓</span>
-          <h3 className="mt-4 text-lg font-medium text-gray-900">Order not found</h3>
+          <h3 className="mt-4 text-lg font-medium text-slate-700">Order not found</h3>
           <Link
             href="/dashboard/orders"
             className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
@@ -113,10 +113,10 @@ export default function OrderTrackingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-green-50/30 to-emerald-50/30 py-4 sm:py-6 md:py-8">
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-green-50/30 to-emerald-50/30 py-4 sm:py-6 md:py-8">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
         {}
-        <div className="relative bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 md:p-8 text-white overflow-hidden shadow-xl mb-6 sm:mb-8">
+        <div className="relative bg-linear-to-br from-green-500 via-emerald-600 to-teal-600 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 md:p-8 text-white overflow-hidden shadow-xl mb-6 sm:mb-8">
           {}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 right-0 w-32 sm:w-48 md:w-64 h-32 sm:h-48 md:h-64 bg-white rounded-full -translate-y-16 translate-x-16"></div>
@@ -125,7 +125,7 @@ export default function OrderTrackingPage() {
 
           <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
             <div className="flex items-start gap-2 sm:gap-3 flex-1">
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
+              <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center shadow-lg">
                 <MapPin className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
               </div>
               <div className="flex-1">
@@ -151,14 +151,14 @@ export default function OrderTrackingPage() {
           {}
           <div className="xl:col-span-1 space-y-4 sm:space-y-6">
             <div className="bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden h-fit">
-              <div className="p-4 sm:p-5 md:p-6 border-b border-gray-200 bg-gradient-to-r from-green-50 to-emerald-50">
+              <div className="p-4 sm:p-5 md:p-6 border-b border-gray-200 bg-linear-to-r from-green-50 to-emerald-50">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-green-500 to-emerald-600 rounded-lg flex items-center justify-center">
                     <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">Live Map Tracking</h2>
-                    <p className="text-gray-900 text-xs sm:text-sm">Track your order in real-time</p>
+                    <h2 className="text-lg sm:text-xl font-bold text-slate-700">Live Map Tracking</h2>
+                    <p className="text-slate-700 text-xs sm:text-sm">Track your order in real-time</p>
                   </div>
                 </div>
               </div>
@@ -169,22 +169,22 @@ export default function OrderTrackingPage() {
 
             {}
             <div className="bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-              <div className="p-4 sm:p-5 md:p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-cyan-50">
+              <div className="p-4 sm:p-5 md:p-6 border-b border-gray-200 bg-linear-to-r from-blue-50 to-cyan-50">
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-linear-to-br from-blue-500 to-cyan-600 rounded-lg flex items-center justify-center">
                     <Package className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-900">Order Items</h2>
-                    <p className="text-gray-900 text-xs sm:text-sm">{order.items?.length || 0} items in this order</p>
+                    <h2 className="text-lg sm:text-xl font-bold text-slate-700">Order Items</h2>
+                    <p className="text-slate-700 text-xs sm:text-sm">{order.items?.length || 0} items in this order</p>
                   </div>
                 </div>
               </div>
               <div className="p-4 sm:p-5 md:p-6">
                 <div className="space-y-3 sm:space-y-4">
                   {order.items?.map((item) => (
-                    <div key={item.id} className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl hover:from-green-50 hover:to-emerald-50 transition-all border border-gray-100 hover:border-green-200 overflow-hidden">
-                      <div className="flex-shrink-0">
+                    <div key={item.id} className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 bg-linear-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl hover:from-green-50 hover:to-emerald-50 transition-all border border-gray-100 hover:border-green-200 overflow-hidden">
+                      <div className="shrink-0">
                         {(item.product?.images || item.crop_listing?.images) && (item.product?.images || item.crop_listing?.images)!.length > 0 ? (
                           <img
                             src={(item.product?.images || item.crop_listing?.images)?.[0]}
@@ -192,20 +192,20 @@ export default function OrderTrackingPage() {
                             className="h-12 w-12 sm:h-14 sm:w-14 rounded-md sm:rounded-lg object-cover shadow-sm"
                           />
                         ) : (
-                          <div className="h-12 w-12 sm:h-14 sm:w-14 bg-gradient-to-br from-gray-200 to-gray-300 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm">
-                            <Package className="w-5 h-5 sm:w-6 sm:h-6 text-gray-900" />
+                          <div className="h-12 w-12 sm:h-14 sm:w-14 bg-linear-to-br from-gray-200 to-gray-300 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm">
+                            <Package className="w-5 h-5 sm:w-6 sm:h-6 text-slate-700" />
                           </div>
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-sm sm:text-base text-gray-900 truncate">
+                        <h3 className="font-semibold text-sm sm:text-base text-slate-700 truncate">
                           {item.product?.name || item.crop_listing?.crop.name}
                         </h3>
-                        <p className="text-xs sm:text-sm text-gray-900">
+                        <p className="text-xs sm:text-sm text-slate-700">
                           <span className="font-medium">{item.quantity}</span> × <span className="font-medium">₹{item.unit_price.toLocaleString()}</span>
                         </p>
                       </div>
-                      <div className="text-right flex-shrink-0">
+                      <div className="text-right shrink-0">
                         <p className="font-bold text-sm sm:text-base text-green-600 whitespace-nowrap">₹{item.total_price.toLocaleString()}</p>
                       </div>
                     </div>
@@ -214,8 +214,8 @@ export default function OrderTrackingPage() {
                 {/* Total */}
                 <div className="mt-4 sm:mt-5 pt-4 sm:pt-5 border-t border-gray-200">
                   <div className="flex items-center justify-between">
-                    <span className="text-base sm:text-lg font-bold text-gray-900">Total Amount</span>
-                    <span className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                    <span className="text-base sm:text-lg font-bold text-slate-700">Total Amount</span>
+                    <span className="text-lg sm:text-xl md:text-2xl font-bold bg-linear-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                       ₹{order.total_amount.toLocaleString()}
                     </span>
                   </div>
@@ -227,18 +227,18 @@ export default function OrderTrackingPage() {
 
         {}
         <div className="mt-6 sm:mt-8 bg-white/80 backdrop-blur-xl rounded-xl sm:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5 md:p-6">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-5">Quick Actions</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-slate-700 mb-4 sm:mb-5">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             <button
               onClick={() => window.open('tel:support', '_self')}
-              className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-green-500 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all"
+              className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-green-500 hover:bg-linear-to-r hover:from-green-50 hover:to-emerald-50 transition-all"
             >
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-100 to-emerald-100 group-hover:from-green-500 group-hover:to-emerald-600 rounded-lg flex items-center justify-center transition-all">
+              <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-br from-green-100 to-emerald-100 group-hover:from-green-500 group-hover:to-emerald-600 rounded-lg flex items-center justify-center transition-all">
                 <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">📞</span>
               </div>
               <div className="text-left flex-1 min-w-0">
-                <p className="font-semibold text-sm sm:text-base text-gray-900 truncate">Contact Support</p>
-                <p className="text-xs sm:text-sm text-gray-900 truncate">Get help with your order</p>
+                <p className="font-semibold text-sm sm:text-base text-slate-700 truncate">Contact Support</p>
+                <p className="text-xs sm:text-sm text-slate-700 truncate">Get help with your order</p>
               </div>
             </button>
             <button
@@ -246,23 +246,23 @@ export default function OrderTrackingPage() {
                 const url = `/api/orders/${order.id}/invoice`
                 window.open(url, '_blank')
               }}
-              className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-blue-500 hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 transition-all"
+              className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-blue-500 hover:bg-linear-to-r hover:from-blue-50 hover:to-cyan-50 transition-all"
             >
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-cyan-100 group-hover:from-blue-500 group-hover:to-cyan-600 rounded-lg flex items-center justify-center transition-all">
+              <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-br from-blue-100 to-cyan-100 group-hover:from-blue-500 group-hover:to-cyan-600 rounded-lg flex items-center justify-center transition-all">
                 <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">📄</span>
               </div>
               <div className="text-left flex-1 min-w-0">
-                <p className="font-semibold text-sm sm:text-base text-gray-900 truncate">Download Invoice</p>
-                <p className="text-xs sm:text-sm text-gray-900 truncate">Get your order receipt</p>
+                <p className="font-semibold text-sm sm:text-base text-slate-700 truncate">Download Invoice</p>
+                <p className="text-xs sm:text-sm text-slate-700 truncate">Get your order receipt</p>
               </div>
             </button>
-            <button className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-500 hover:bg-gradient-to-r hover:from-purple-50 hover:to-pink-50 transition-all sm:col-span-2 lg:col-span-1">
-              <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-100 to-pink-100 group-hover:from-purple-500 group-hover:to-pink-600 rounded-lg flex items-center justify-center transition-all">
+            <button className="group flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-2 border-gray-200 rounded-lg sm:rounded-xl hover:border-purple-500 hover:bg-linear-to-r hover:from-purple-50 hover:to-pink-50 transition-all sm:col-span-2 lg:col-span-1">
+              <div className="shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-linear-to-br from-purple-100 to-pink-100 group-hover:from-purple-500 group-hover:to-pink-600 rounded-lg flex items-center justify-center transition-all">
                 <span className="text-xl sm:text-2xl group-hover:scale-110 transition-transform">🔄</span>
               </div>
               <div className="text-left flex-1 min-w-0">
-                <p className="font-semibold text-sm sm:text-base text-gray-900 truncate">Modify Order</p>
-                <p className="text-xs sm:text-sm text-gray-900 truncate">Update delivery details</p>
+                <p className="font-semibold text-sm sm:text-base text-slate-700 truncate">Modify Order</p>
+                <p className="text-xs sm:text-sm text-slate-700 truncate">Update delivery details</p>
               </div>
             </button>
           </div>

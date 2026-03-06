@@ -46,7 +46,7 @@ interface CurrentWeatherChartProps {
 
 export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) {
   if (!data) {
-    return <div className="p-4 text-gray-900">No chart data available</div>
+    return <div className="p-4 text-slate-700">No chart data available</div>
   }
 
   const radarData = {
@@ -180,7 +180,7 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {}
         <div className="lg:col-span-2">
-          <h4 className="text-lg font-semibold text-gray-900 mb-4">Weather Conditions Overview</h4>
+          <h4 className="text-lg font-semibold text-slate-700 mb-4">Weather Conditions Overview</h4>
           <div style={{ height: 350 }}>
             <Radar data={radarData} options={radarOptions} />
           </div>
@@ -189,14 +189,14 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
         {}
         <div className="space-y-6">
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">Humidity Level</h4>
+            <h4 className="text-sm font-semibold text-slate-700 mb-3">Humidity Level</h4>
             <div style={{ height: 150 }}>
               <Doughnut data={humidityData} options={doughnutOptions} />
             </div>
           </div>
 
           <div>
-            <h4 className="text-sm font-semibold text-gray-900 mb-3">Cloud Coverage</h4>
+            <h4 className="text-sm font-semibold text-slate-700 mb-3">Cloud Coverage</h4>
             <div style={{ height: 150 }}>
               <Doughnut data={cloudinessData} options={doughnutOptions} />
             </div>
@@ -207,29 +207,29 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
       {}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
         <div className="text-center p-3 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
-          <p className="text-xs text-gray-900 font-medium">Temperature</p>
+          <p className="text-xs text-slate-700 font-medium">Temperature</p>
           <p className="text-2xl font-bold text-orange-600">{data.temperature}°C</p>
-          <p className="text-xs text-gray-900">Feels {data.feelsLike}°C</p>
+          <p className="text-xs text-slate-700">Feels {data.feelsLike}°C</p>
         </div>
 
         <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg">
-          <p className="text-xs text-gray-900 font-medium">Humidity</p>
+          <p className="text-xs text-slate-700 font-medium">Humidity</p>
           <p className="text-2xl font-bold text-blue-600">{data.humidity}%</p>
-          <p className="text-xs text-gray-900">
+          <p className="text-xs text-slate-700">
             {data.humidity > 70 ? 'High' : data.humidity > 40 ? 'Normal' : 'Low'}
           </p>
         </div>
 
         <div className="text-center p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
-          <p className="text-xs text-gray-900 font-medium">Wind Speed</p>
+          <p className="text-xs text-slate-700 font-medium">Wind Speed</p>
           <p className="text-2xl font-bold text-green-600">{data.windSpeed}</p>
-          <p className="text-xs text-gray-900">km/h</p>
+          <p className="text-xs text-slate-700">km/h</p>
         </div>
 
         <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg">
-          <p className="text-xs text-gray-900 font-medium">Pressure</p>
+          <p className="text-xs text-slate-700 font-medium">Pressure</p>
           <p className="text-2xl font-bold text-purple-600">{data.pressure}</p>
-          <p className="text-xs text-gray-900">hPa</p>
+          <p className="text-xs text-slate-700">hPa</p>
         </div>
       </div>
     </div>

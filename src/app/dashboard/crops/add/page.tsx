@@ -128,7 +128,7 @@ export default function AddCropPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading...</p>
+          <p className="mt-4 text-slate-700">Loading...</p>
         </div>
       </div>
     )
@@ -138,8 +138,8 @@ export default function AddCropPage() {
     <div className="p-6">
       <div className="max-w-2xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Add New Crop</h1>
-          <p className="text-gray-900">Record a new crop in your farm management system</p>
+          <h1 className="text-2xl font-bold text-slate-700">Add New Crop</h1>
+          <p className="text-slate-700">Record a new crop in your farm management system</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
@@ -151,7 +151,7 @@ export default function AddCropPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="name" className="block text-sm font-medium text-slate-600">
                 Crop Name *
               </label>
               <input
@@ -167,7 +167,7 @@ export default function AddCropPage() {
             </div>
 
             <div>
-              <label htmlFor="variety" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="variety" className="block text-sm font-medium text-slate-600">
                 Variety
               </label>
               <input
@@ -182,7 +182,7 @@ export default function AddCropPage() {
             </div>
 
             <div>
-              <label htmlFor="planted_date" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="planted_date" className="block text-sm font-medium text-slate-600">
                 Planted Date *
               </label>
               <input
@@ -197,7 +197,7 @@ export default function AddCropPage() {
             </div>
 
             <div>
-              <label htmlFor="expected_harvest_date" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="expected_harvest_date" className="block text-sm font-medium text-slate-600">
                 Expected Harvest Date
               </label>
               <input
@@ -211,7 +211,7 @@ export default function AddCropPage() {
             </div>
 
             <div>
-              <label htmlFor="area" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="area" className="block text-sm font-medium text-slate-600">
                 Area (acres)
               </label>
               <input
@@ -228,7 +228,7 @@ export default function AddCropPage() {
             </div>
 
             <div>
-              <label htmlFor="estimated_yield" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="estimated_yield" className="block text-sm font-medium text-slate-600">
                 Estimated Yield
               </label>
               <input
@@ -245,7 +245,7 @@ export default function AddCropPage() {
             </div>
 
             <div>
-              <label htmlFor="unit" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="unit" className="block text-sm font-medium text-slate-600">
                 Unit
               </label>
               <select
@@ -273,7 +273,7 @@ export default function AddCropPage() {
                   onChange={handleInputChange}
                   className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                 />
-                <label htmlFor="organic_certified" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="organic_certified" className="ml-2 block text-sm text-slate-600">
                   Organic Certified
                 </label>
               </div>
@@ -281,7 +281,7 @@ export default function AddCropPage() {
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="description" className="block text-sm font-medium text-slate-600">
               Description
             </label>
             <textarea
@@ -307,7 +307,7 @@ export default function AddCropPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
             >
               Cancel
             </button>

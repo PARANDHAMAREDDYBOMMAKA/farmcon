@@ -175,8 +175,8 @@ jobs:
             BUILDCACHE_DIGEST=$(echo "$BUILDCACHE_INFO" | jq -r '.digest // "no-digest"')
             echo "Buildcache last updated: $BUILDCACHE_DATE"
 
-            # Calculate age in days
-            BUILDCACHE_TIMESTAMP=$(date -u -j -f "%Y-%m-%dT%H:%M:%S" "$(echo $BUILDCACHE_DATE | cut -d'.' -f1)" +%s 2>/dev/null || echo "0")
+            # Calculate age in days (using Linux-compatible date command)
+            BUILDCACHE_TIMESTAMP=$(date -u -d "$(echo $BUILDCACHE_DATE | cut -d'.' -f1 | sed 's/T/ /')" +%s 2>/dev/null || echo "0")
             CURRENT_TIMESTAMP=$(date -u +%s)
             AGE_SECONDS=$((CURRENT_TIMESTAMP - BUILDCACHE_TIMESTAMP))
             AGE_DAYS=$((AGE_SECONDS / 86400))

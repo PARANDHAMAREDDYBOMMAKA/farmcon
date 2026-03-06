@@ -218,7 +218,7 @@ function OrdersPageInternal() {
       case 'cancelled':
         return 'text-red-600 bg-red-100'
       default:
-        return 'text-gray-900 bg-gray-100'
+        return 'text-slate-700 bg-slate-100'
     }
   }
 
@@ -260,7 +260,7 @@ function OrdersPageInternal() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading orders...</p>
+          <p className="mt-4 text-slate-700">Loading orders...</p>
         </div>
       </div>
     )
@@ -321,7 +321,7 @@ function OrdersPageInternal() {
                 className={`flex-shrink-0 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-2.5 rounded-md sm:rounded-lg md:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 whitespace-nowrap touch-manipulation ${
                   filter === status
                     ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md sm:shadow-lg'
-                    : 'text-gray-900 bg-gray-50 hover:bg-gray-100 active:bg-gray-200'
+                    : 'text-slate-700 bg-emerald-50/30 hover:bg-slate-100 active:bg-emerald-100'
                 }`}
               >
                 <span className="hidden md:inline">
@@ -339,7 +339,7 @@ function OrdersPageInternal() {
                 <span className={`ml-1 sm:ml-1.5 md:ml-2 py-0.5 px-1.5 sm:px-2 rounded-full text-xs font-bold ${
                   filter === status
                     ? 'bg-white/20 text-white'
-                    : 'bg-gray-200 text-gray-700'
+                    : 'bg-emerald-100 text-slate-700'
                 }`}>
                   {status === 'all' ? orders.length : orders.filter(o => o.status === status).length}
                 </span>
@@ -355,7 +355,7 @@ function OrdersPageInternal() {
           {/* Search Bar */}
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-gray-900" />
+              <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
               <input
                 type="text"
                 placeholder="Search by order ID, seller, customer, or items..."
@@ -366,7 +366,7 @@ function OrdersPageInternal() {
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-900 hover:text-green-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-700 hover:text-green-600"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -386,7 +386,7 @@ function OrdersPageInternal() {
             </select>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="flex items-center justify-center gap-2 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 rounded-lg sm:rounded-xl font-medium text-sm sm:text-base transition-all shadow-sm hover:shadow"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-slate-700 rounded-lg sm:rounded-xl font-medium text-sm sm:text-base transition-all shadow-sm hover:shadow"
             >
               <ArrowUpDown className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
@@ -399,14 +399,14 @@ function OrdersPageInternal() {
           <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-green-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Total Orders</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-700 truncate">Total Orders</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-green-600 truncate">{orders.length}</p>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-blue-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-blue-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Total Value</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-700 truncate">Total Value</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-blue-600 truncate">
               ₹{orders.reduce((sum, order) => sum + Number(order.total_amount), 0).toLocaleString()}
@@ -415,7 +415,7 @@ function OrdersPageInternal() {
           <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-yellow-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-yellow-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Pending</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-700 truncate">Pending</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-yellow-600 truncate">
               {orders.filter(o => o.status === 'pending').length}
@@ -424,7 +424,7 @@ function OrdersPageInternal() {
           <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-purple-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
               <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-purple-600 flex-shrink-0" />
-              <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Completed</p>
+              <p className="text-xs sm:text-sm font-medium text-slate-700 truncate">Completed</p>
             </div>
             <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-purple-600 truncate">
               {orders.filter(o => o.status === 'delivered').length}
@@ -445,8 +445,8 @@ function OrdersPageInternal() {
             <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full mb-4 sm:mb-6">
               <Package className="w-10 h-10 sm:w-14 sm:h-14 text-green-600" />
             </div>
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">No orders found</h3>
-            <p className="text-sm sm:text-base text-gray-900 mb-6 sm:mb-8 max-w-md mx-auto px-4">
+            <h3 className="text-xl sm:text-2xl font-bold text-slate-700 mb-2 sm:mb-3">No orders found</h3>
+            <p className="text-sm sm:text-base text-slate-700 mb-6 sm:mb-8 max-w-md mx-auto px-4">
               {searchQuery
                 ? `No orders match "${searchQuery}". Try a different search term.`
                 : filter === 'all'
@@ -509,7 +509,7 @@ function OrdersPageInternal() {
             return (
             <div key={order.id} className="group relative bg-white/80 backdrop-blur-xl rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl shadow-md sm:shadow-lg hover:shadow-xl sm:hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
               {}
-              <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gray-100">
+              <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-slate-100">
                 <div
                   className={`h-full transition-all duration-500 ${
                     order.status === 'cancelled' ? 'bg-red-500' :
@@ -528,12 +528,12 @@ function OrdersPageInternal() {
                     <span className="text-sm sm:text-base md:text-lg font-bold">#{order.id.slice(-2)}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900 truncate">
+                    <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-slate-700 truncate">
                       Order #{order.id.slice(-8)}
                     </h3>
                     <div className="flex items-center gap-1 sm:gap-1.5 mt-0.5 sm:mt-1">
-                      <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gray-900 flex-shrink-0" />
-                      <span className="text-xs sm:text-sm text-gray-900 truncate">
+                      <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-700 flex-shrink-0" />
+                      <span className="text-xs sm:text-sm text-slate-700 truncate">
                         {new Date(order.created_at).toLocaleDateString('en-IN', {
                           year: 'numeric',
                           month: 'short',
@@ -560,7 +560,7 @@ function OrdersPageInternal() {
                     <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent whitespace-nowrap">
                       ₹{order.total_amount.toLocaleString()}
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-900">{order.items?.length || 0} {order.items?.length === 1 ? 'item' : 'items'}</p>
+                    <p className="text-xs sm:text-sm text-slate-700">{order.items?.length || 0} {order.items?.length === 1 ? 'item' : 'items'}</p>
                   </div>
                 </div>
               </div>
@@ -570,9 +570,9 @@ function OrdersPageInternal() {
                 {}
                 <div className="flex flex-col gap-2 sm:gap-2.5 mb-3 sm:mb-4 p-2.5 sm:p-3 md:p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl">
                   <div className="flex items-start gap-2">
-                    {user?.role === 'consumer' ? <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-gray-900" /> : <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-gray-900" />}
-                    <p className="text-xs sm:text-sm font-medium text-gray-700 break-words min-w-0 flex-1">
-                      <span className="font-semibold text-gray-900">
+                    {user?.role === 'consumer' ? <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-slate-700" /> : <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-slate-700" />}
+                    <p className="text-xs sm:text-sm font-medium text-slate-700 break-words min-w-0 flex-1">
+                      <span className="font-semibold text-slate-700">
                         {user?.role === 'consumer' ? 'Seller: ' : 'Customer: '}
                       </span>
                       {user?.role === 'consumer'
@@ -594,7 +594,7 @@ function OrdersPageInternal() {
                 {}
                 <div className="space-y-2 sm:space-y-2.5 mb-3 sm:mb-4 md:mb-5">
                   {order.items?.map((item: any) => (
-                    <div key={item.id} className="group flex items-center gap-2 sm:gap-2.5 md:gap-3 p-2 sm:p-2.5 md:p-3 rounded-md sm:rounded-lg md:rounded-xl bg-gray-50/50 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 border border-gray-100 touch-manipulation">
+                    <div key={item.id} className="group flex items-center gap-2 sm:gap-2.5 md:gap-3 p-2 sm:p-2.5 md:p-3 rounded-md sm:rounded-lg md:rounded-xl bg-emerald-50/30/50 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 border border-gray-100 touch-manipulation">
                       <div className="flex-shrink-0">
                         {item.product?.images && item.product.images.length > 0 ? (
                           <img
@@ -609,10 +609,10 @@ function OrdersPageInternal() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h4 className="text-xs sm:text-sm md:text-base font-bold text-gray-900 line-clamp-2 mb-0.5">
+                        <h4 className="text-xs sm:text-sm md:text-base font-bold text-slate-700 line-clamp-2 mb-0.5">
                           {item.product?.name || item.crop_listing?.crop.name}
                         </h4>
-                        <p className="text-xs sm:text-sm text-gray-900">
+                        <p className="text-xs sm:text-sm text-slate-700">
                           <span className="font-semibold">{item.quantity}</span> ×
                           <span className="font-semibold"> ₹{item.unit_price.toLocaleString()}</span> =
                           <span className="font-bold text-green-600"> ₹{item.total_price.toLocaleString()}</span>
@@ -723,7 +723,7 @@ export default function () {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-900">Loading...</p>
+          <p className="mt-2 text-sm text-slate-700">Loading...</p>
         </div>
       </div>
     }>

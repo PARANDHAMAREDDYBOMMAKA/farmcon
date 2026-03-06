@@ -249,18 +249,18 @@ export default function CartPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading cart...</p>
+          <p className="mt-4 text-slate-700">Loading cart...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-emerald-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-          <p className="mt-2 text-gray-900 text-lg">{totalItems} items in your cart</p>
+          <h1 className="text-3xl font-bold text-slate-700">Shopping Cart</h1>
+          <p className="mt-2 text-slate-700 text-lg">{totalItems} items in your cart</p>
         </div>
 
         {cartItems.length === 0 ? (
@@ -268,8 +268,8 @@ export default function CartPage() {
             <div className="w-24 h-24 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-6">
               <ShoppingCart className="w-12 h-12 text-green-600" />
             </div>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-3">Your cart is empty</h3>
-            <p className="text-gray-900 text-lg mb-8">Start shopping to add items to your cart.</p>
+            <h3 className="text-2xl font-semibold text-slate-700 mb-3">Your cart is empty</h3>
+            <p className="text-slate-700 text-lg mb-8">Start shopping to add items to your cart.</p>
             <Link
               href="/dashboard/supplies"
               className="inline-flex items-center px-8 py-4 border border-transparent rounded-xl shadow-sm text-lg font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105"
@@ -284,11 +284,11 @@ export default function CartPage() {
             <div className="lg:col-span-2 mb-8 lg:mb-0">
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
                 <div className="px-6 py-5 bg-gradient-to-r from-green-50 to-blue-50 border-b border-gray-200">
-                  <h2 className="text-xl font-semibold text-gray-900">Cart Items</h2>
+                  <h2 className="text-xl font-semibold text-slate-700">Cart Items</h2>
                 </div>
                 <div className="divide-y divide-gray-100">
                   {cartItems.map((item, index) => (
-                    <div key={item.id} className={`p-6 flex items-center space-x-4 hover:bg-gray-50 transition-colors ${index === 0 ? 'rounded-t-2xl' : ''}`}>
+                    <div key={item.id} className={`p-6 flex items-center space-x-4 hover:bg-emerald-50/30 transition-colors ${index === 0 ? 'rounded-t-2xl' : ''}`}>
                       <div className="flex-shrink-0">
                         {((item.product?.images || item.cropListing?.images) && (item.product?.images || item.cropListing?.images)!.length > 0) ? (
                           <img
@@ -304,13 +304,13 @@ export default function CartPage() {
                       </div>
                       
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-sm font-medium text-gray-900 line-clamp-2">
+                        <h3 className="text-sm font-medium text-slate-700 line-clamp-2">
                           {item.product?.name || item.cropListing?.crop.name}
                         </h3>
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-slate-700">
                           by {item.product?.supplier.fullName || item.cropListing?.farmer.fullName}
                         </p>
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-slate-700">
                           ₹{item.product?.price || item.cropListing?.pricePerUnit} per {item.product?.unit || item.cropListing?.unit}
                         </p>
                       </div>
@@ -320,7 +320,7 @@ export default function CartPage() {
                           <button
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             disabled={updating === item.id}
-                            className="p-2 rounded-lg text-gray-900 hover:text-green-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                            className="p-2 rounded-lg text-slate-700 hover:text-green-600 hover:bg-emerald-100/50 disabled:opacity-50 transition-colors"
                           >
                             {updating === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : '−'}
                           </button>
@@ -330,13 +330,13 @@ export default function CartPage() {
                           <button
                             onClick={() => updateQuantity(item.id, Number(item.quantity) + 1)}
                             disabled={updating === item.id || item.quantity >= (item.product?.stockQuantity || item.cropListing?.quantityAvailable || 0)}
-                            className="p-2 rounded-lg text-gray-900 hover:text-green-600 hover:bg-gray-100 disabled:opacity-50 transition-colors"
+                            className="p-2 rounded-lg text-slate-700 hover:text-green-600 hover:bg-emerald-100/50 disabled:opacity-50 transition-colors"
                           >
                             {updating === item.id ? <Loader2 className="w-4 h-4 animate-spin" /> : '+'}
                           </button>
                         </div>
 
-                        <div className="text-sm font-medium text-gray-900 w-20 text-right">
+                        <div className="text-sm font-medium text-slate-700 w-20 text-right">
                           ₹{((item.product?.price || item.cropListing?.pricePerUnit || 0) * item.quantity).toFixed(2)}
                         </div>
 
@@ -358,34 +358,34 @@ export default function CartPage() {
             <div>
               <div className="bg-white rounded-2xl shadow-lg overflow-hidden sticky top-8">
                 <div className="px-6 py-5 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
-                  <h2 className="text-xl font-semibold text-gray-900">Order Summary</h2>
+                  <h2 className="text-xl font-semibold text-slate-700">Order Summary</h2>
                 </div>
                 <div className="p-6">
                   <div className="space-y-3 mb-4">
                     <div className="flex justify-between">
-                      <span className="text-gray-900">Subtotal ({totalItems} items)</span>
+                      <span className="text-slate-700">Subtotal ({totalItems} items)</span>
                       <span className="font-medium">₹{totalAmount.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-900">Shipping</span>
+                      <span className="text-slate-700">Shipping</span>
                       <span className="text-green-600 font-medium flex items-center">
                         <Check className="w-4 h-4 text-green-500 mr-1" />
                         Free
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-900">Tax</span>
-                      <span className="text-gray-900">Included</span>
+                      <span className="text-slate-700">Tax</span>
+                      <span className="text-slate-700">Included</span>
                     </div>
                   </div>
                   <div className="border-t border-gray-200 pt-4">
                     <div className="flex justify-between mb-6">
-                      <span className="text-xl font-bold text-gray-900">Total</span>
+                      <span className="text-xl font-bold text-slate-700">Total</span>
                       <span className="text-xl font-bold text-green-600">₹{totalAmount.toFixed(2)}</span>
                     </div>
                     {}
                     <div className="mb-6">
-                      <p className="text-lg font-semibold text-gray-900 mb-4">Choose Payment Method</p>
+                      <p className="text-lg font-semibold text-slate-700 mb-4">Choose Payment Method</p>
                       <div className="space-y-3">
                         <button
                           onClick={() => checkout('stripe')}

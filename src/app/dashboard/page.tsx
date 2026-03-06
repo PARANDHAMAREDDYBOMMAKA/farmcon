@@ -154,8 +154,8 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading dashboard...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
+          <p className="mt-4 text-emerald-800 font-medium">Loading dashboard...</p>
         </div>
       </div>
     )
@@ -243,9 +243,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.totalRevenue || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.totalRevenue || 0).toLocaleString()}</p>
-              <p className="text-xs text-gray-900 truncate">vs last month</p>
+              <p className="text-xs text-slate-800 truncate">vs last month</p>
             </div>
           </div>
         </div>
@@ -268,9 +268,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
               <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.pendingOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.pendingOrders || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Needs attention</p>
+              <p className="text-xs text-slate-800 truncate">Needs attention</p>
             </div>
           </div>
         </div>
@@ -293,9 +293,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Equipment Listed</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Equipment Listed</p>
               <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.equipmentCount || 0).length * 0.15)}rem, 2rem)` }}>{stats.equipmentCount || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Active listings</p>
+              <p className="text-xs text-slate-800 truncate">Active listings</p>
             </div>
           </div>
         </div>
@@ -366,7 +366,7 @@ export default function Dashboard() {
           <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
             <Zap className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-slate-800">Quick Actions</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Link href="/dashboard/crops/add" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
@@ -478,9 +478,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Cart Items</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Cart Items</p>
               <p className="font-extrabold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.cartItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.cartItems || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Ready to checkout</p>
+              <p className="text-xs text-slate-800 truncate">Ready to checkout</p>
             </div>
           </div>
         </div>
@@ -504,9 +504,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Total Spent</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Total Spent</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.totalSpent || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.totalSpent || 0).toLocaleString()}</p>
-              <p className="text-xs text-gray-900 truncate">This month</p>
+              <p className="text-xs text-slate-800 truncate">This month</p>
             </div>
           </div>
         </div>
@@ -529,9 +529,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Favorites</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Favorites</p>
               <p className="font-extrabold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.favoriteItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.favoriteItems || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Saved items</p>
+              <p className="text-xs text-slate-800 truncate">Saved items</p>
             </div>
           </div>
         </div>
@@ -543,7 +543,7 @@ export default function Dashboard() {
           <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
             <Zap className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-slate-800">Quick Actions</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Link href="/dashboard/browse" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
@@ -586,14 +586,14 @@ export default function Dashboard() {
     return (
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-gray-900">Recent Activity</h3>
+          <h3 className="text-xl font-semibold text-slate-800">Recent Activity</h3>
           <Link href="/dashboard/orders" className="text-sm text-blue-600 hover:text-blue-800">
             View all →
           </Link>
         </div>
         <div className="space-y-4">
           {recentActivity.map((activity) => (
-            <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div key={activity.id} className="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg">
               <div className="flex items-center space-x-3">
                 <div className={`p-2 rounded-full ${
                   activity.type === 'purchase' ? 'bg-blue-100' : 'bg-green-100'
@@ -604,19 +604,19 @@ export default function Dashboard() {
                   }
                 </div>
                 <div>
-                  <p className="font-medium text-gray-900">{activity.title}</p>
-                  <p className="text-sm text-gray-900">{activity.description}</p>
-                  <p className="text-xs text-gray-900">
+                  <p className="font-medium text-slate-800">{activity.title}</p>
+                  <p className="text-sm text-slate-800">{activity.description}</p>
+                  <p className="text-xs text-slate-800">
                     {new Date(activity.date).toLocaleDateString()}
                   </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="font-semibold text-gray-900">₹{activity.amount.toLocaleString()}</p>
+                <p className="font-semibold text-slate-800">₹{activity.amount.toLocaleString()}</p>
                 <p className={`text-xs px-2 py-1 rounded-full ${
                   activity.status === 'delivered' ? 'bg-green-100 text-green-800' :
                   activity.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-gray-100 text-gray-800'
+                  'bg-slate-100 text-slate-700'
                 }`}>
                   {activity.status}
                 </p>
@@ -704,9 +704,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Monthly Revenue</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String((stats.monthlyRevenue || 0).toLocaleString()).length * 0.08)}rem, 2rem)` }}>₹{(stats.monthlyRevenue || 0).toLocaleString()}</p>
-              <p className="text-xs text-gray-900 truncate">vs last month</p>
+              <p className="text-xs text-slate-800 truncate">vs last month</p>
             </div>
           </div>
         </div>
@@ -729,9 +729,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Pending Orders</p>
               <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.pendingOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.pendingOrders || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Needs processing</p>
+              <p className="text-xs text-slate-800 truncate">Needs processing</p>
             </div>
           </div>
         </div>
@@ -754,9 +754,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Low Stock Items</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Low Stock Items</p>
               <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.lowStockItems || 0).length * 0.15)}rem, 2rem)` }}>{stats.lowStockItems || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Needs restocking</p>
+              <p className="text-xs text-slate-800 truncate">Needs restocking</p>
             </div>
           </div>
         </div>
@@ -768,7 +768,7 @@ export default function Dashboard() {
           <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-md">
             <Zap className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900">Quick Actions</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-slate-800">Quick Actions</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Link href="/dashboard/products/add" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
@@ -805,7 +805,7 @@ export default function Dashboard() {
       {}
       <div className="bg-white rounded-xl shadow-lg p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-semibold text-gray-900">Recent Orders</h3>
+          <h3 className="text-xl font-semibold text-slate-800">Recent Orders</h3>
           <Link href="/dashboard/orders" className="text-sm text-orange-600 hover:text-orange-800">
             View all →
           </Link>
@@ -813,25 +813,25 @@ export default function Dashboard() {
         <div className="space-y-3">
           {recentActivity.length > 0 ? (
             recentActivity.slice(0, 3).map((activity) => (
-              <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={activity.id} className="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="p-2 bg-orange-100 rounded-full">
                     <ClipboardList className="w-5 h-5 text-orange-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{activity.title}</p>
-                    <p className="text-sm text-gray-900">{activity.description}</p>
-                    <p className="text-xs text-gray-900">
+                    <p className="font-medium text-slate-800">{activity.title}</p>
+                    <p className="text-sm text-slate-800">{activity.description}</p>
+                    <p className="text-xs text-slate-800">
                       {new Date(activity.date).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900">₹{activity.amount?.toLocaleString()}</p>
+                  <p className="font-semibold text-slate-800">₹{activity.amount?.toLocaleString()}</p>
                   <p className={`text-xs px-2 py-1 rounded-full ${
                     activity.status === 'delivered' ? 'bg-green-100 text-green-800' :
                     activity.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
+                    'bg-slate-100 text-slate-700'
                   }`}>
                     {activity.status}
                   </p>
@@ -839,7 +839,7 @@ export default function Dashboard() {
               </div>
             ))
           ) : (
-            <div className="text-center py-8 text-gray-900">
+            <div className="text-center py-8 text-slate-800">
               <ClipboardList className="w-10 h-10 mx-auto mb-2" />
               <p>No recent orders found</p>
               <p className="text-sm">Orders will appear here once customers start placing orders</p>
@@ -851,20 +851,20 @@ export default function Dashboard() {
       {}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Top Products</h3>
+          <h3 className="text-xl font-semibold text-slate-800 mb-4">Top Products</h3>
           <div className="space-y-3">
             {[
               { name: 'Organic Seeds', sales: 45, revenue: 12500 },
               { name: 'Fertilizers', sales: 32, revenue: 8900 },
               { name: 'Pesticides', sales: 28, revenue: 7600 }
             ].map((product, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900">{product.name}</p>
-                  <p className="text-sm text-gray-900">{product.sales} units sold</p>
+                  <p className="font-medium text-slate-800">{product.name}</p>
+                  <p className="text-sm text-slate-800">{product.sales} units sold</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-gray-900">₹{product.revenue.toLocaleString()}</p>
+                  <p className="font-semibold text-slate-800">₹{product.revenue.toLocaleString()}</p>
                   <p className="text-xs text-green-600">Revenue</p>
                 </div>
               </div>
@@ -873,17 +873,17 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Stock Alerts</h3>
+          <h3 className="text-xl font-semibold text-slate-800 mb-4">Stock Alerts</h3>
           <div className="space-y-3">
             {[
               { name: 'Premium Seeds', stock: 5, status: 'low' },
               { name: 'Organic Fertilizer', stock: 0, status: 'out' },
               { name: 'Plant Protection', stock: 15, status: 'medium' }
             ].map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg">
                 <div>
-                  <p className="font-medium text-gray-900">{item.name}</p>
-                  <p className="text-sm text-gray-900">{item.stock} units remaining</p>
+                  <p className="font-medium text-slate-800">{item.name}</p>
+                  <p className="text-sm text-slate-800">{item.stock} units remaining</p>
                 </div>
                 <div className="text-right">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -982,9 +982,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Farmers</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Farmers</p>
               <p className="font-extrabold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.farmers || 0).length * 0.15)}rem, 2rem)` }}>{stats.farmers || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Active farmers</p>
+              <p className="text-xs text-slate-800 truncate">Active farmers</p>
             </div>
           </div>
         </div>
@@ -1007,9 +1007,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Total Products</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Total Products</p>
               <p className="font-extrabold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalProducts || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalProducts || 0}</p>
-              <p className="text-xs text-gray-900 truncate">Platform-wide</p>
+              <p className="text-xs text-slate-800 truncate">Platform-wide</p>
             </div>
           </div>
         </div>
@@ -1032,9 +1032,9 @@ export default function Dashboard() {
             </div>
 
             <div>
-              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-2 truncate">Total Orders</p>
+              <p className="text-xs font-semibold text-slate-800 uppercase tracking-wider mb-2 truncate">Total Orders</p>
               <p className="font-extrabold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2 break-words leading-tight" style={{ fontSize: `clamp(1rem, ${Math.max(1, 2 - String(stats.totalOrders || 0).length * 0.15)}rem, 2rem)` }}>{stats.totalOrders || 0}</p>
-              <p className="text-xs text-gray-900 truncate">All transactions</p>
+              <p className="text-xs text-slate-800 truncate">All transactions</p>
             </div>
           </div>
         </div>
@@ -1046,7 +1046,7 @@ export default function Dashboard() {
           <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-md">
             <Zap className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900">Admin Tools</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-slate-800">Admin Tools</h3>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           <Link href="/dashboard/admin/users" className="group relative flex flex-col items-center p-5 md:p-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 overflow-hidden">
@@ -1083,7 +1083,7 @@ export default function Dashboard() {
       {}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
             Platform Health
           </h3>
@@ -1093,8 +1093,8 @@ export default function Dashboard() {
               { label: 'Active Sessions', value: '1,247', status: 'success' },
               { label: 'Server Load', value: '45%', status: 'warning' }
             ].map((item, index) => (
-              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <span className="font-medium text-gray-700">{item.label}</span>
+              <div key={index} className="flex items-center justify-between p-3 bg-emerald-50/50 rounded-lg">
+                <span className="font-medium text-slate-700">{item.label}</span>
                 <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                   item.status === 'success' ? 'bg-green-100 text-green-800' :
                   item.status === 'warning' ? 'bg-yellow-100 text-yellow-800' :
@@ -1108,7 +1108,7 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <h3 className="text-xl font-semibold text-slate-800 mb-4 flex items-center gap-2">
             <AlertTriangle className="w-5 h-5" />
             Recent Alerts
           </h3>
@@ -1118,15 +1118,15 @@ export default function Dashboard() {
               { message: 'Low stock alert for 5 items', time: '4 hours ago', type: 'warning' },
               { message: 'Database backup completed', time: '6 hours ago', type: 'success' }
             ].map((alert, index) => (
-              <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div key={index} className="flex items-start gap-3 p-3 bg-emerald-50/50 rounded-lg">
                 <div className={`w-2 h-2 rounded-full mt-2 ${
                   alert.type === 'success' ? 'bg-green-500' :
                   alert.type === 'warning' ? 'bg-yellow-500' :
                   'bg-blue-500'
                 }`}></div>
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900 text-sm">{alert.message}</p>
-                  <p className="text-xs text-gray-900 mt-1">{alert.time}</p>
+                  <p className="font-medium text-slate-800 text-sm">{alert.message}</p>
+                  <p className="text-xs text-slate-800 mt-1">{alert.time}</p>
                 </div>
               </div>
             ))}

@@ -1,26 +1,29 @@
 'use client'
 
 import { useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { profileAPI } from '@/lib/api-client'
 import NotificationBell, { NotificationBellRef } from '@/components/notifications/NotificationBell'
 import ToastProvider from '@/components/providers/ToastProvider'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { ElevenLabsSidebarWidget } from '@/components/ElevenLabsWidget'
 import type { User } from '@/types'
 import {
   Home, Sprout, ShoppingCart, Tractor, Package,
-  CloudSun, TrendingUp, GraduationCap, Carrot,
+  CloudSun, TrendingUp, Carrot,
   ClipboardList, BarChart3, Search, Settings,
-  Users, X, Menu, LogOut, Wheat, Store, Scan
+  Users, X, Menu, LogOut, Wheat, Store,
+  ChevronRight, Sparkles
 } from 'lucide-react'
 
 const iconMap: Record<string, any> = {
   Home, Sprout, ShoppingCart, Tractor, Package,
-  CloudSun, TrendingUp, GraduationCap, Carrot,
+  CloudSun, TrendingUp, Carrot,
   ClipboardList, BarChart3, Search, Settings,
-  Users, Wheat, Store, Scan
+  Users, Wheat, Store
 }
 
 const getIcon = (iconName: string, className: string = "w-5 h-5") => {
@@ -32,14 +35,11 @@ const navigation = {
   farmer: [
     { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
     { name: 'My Crops', href: '/dashboard/crops', icon: 'Sprout' },
-
     { name: 'Buy Supplies', href: '/dashboard/supplies', icon: 'ShoppingCart' },
     { name: 'Equipment Rental', href: '/dashboard/equipment', icon: 'Tractor' },
     { name: 'Orders', href: '/dashboard/orders', icon: 'Package' },
     { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
-    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
-    { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ],
   consumer: [
     { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
@@ -48,8 +48,6 @@ const navigation = {
     { name: 'Cart', href: '/dashboard/cart', icon: 'ShoppingCart' },
     { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
-    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
-    { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ],
   supplier: [
     { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
@@ -60,8 +58,6 @@ const navigation = {
     { name: 'Weather', href: '/dashboard/weather', icon: 'CloudSun' },
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
     { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: 'Search' },
-    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
-    { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ],
   admin: [
     { name: 'Dashboard', href: '/dashboard', icon: 'Home' },
@@ -73,8 +69,6 @@ const navigation = {
     { name: 'Market Prices', href: '/dashboard/market-prices', icon: 'TrendingUp' },
     { name: 'Competitor Analysis', href: '/dashboard/competitor-analysis', icon: 'Search' },
     { name: 'Settings', href: '/dashboard/settings', icon: 'Settings' },
-    // { name: 'Expert Consultations', href: '/dashboard/consultations', icon: 'GraduationCap' },
-    { name: 'AR/VR Demo', href: '/dashboard/ar-vr', icon: 'Scan' },
   ]
 }
 
@@ -86,6 +80,7 @@ export default function DashboardLayout({
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const pathname = usePathname()
   const notificationBellRef = useRef<NotificationBellRef>(null)
   const router = useRouter()
 
@@ -93,7 +88,7 @@ export default function DashboardLayout({
     const getProfile = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
-        
+
         if (!session) {
           router.push('/auth/signin')
           return
@@ -102,14 +97,12 @@ export default function DashboardLayout({
         try {
           const profile = await profileAPI.getProfile(session.user.id)
           if (!profile) {
-            
             router.push('/auth/signin?message=Profile not found. Please sign in again.')
             return
           }
           setUser(profile)
         } catch (error) {
           console.error('Profile fetch error:', error)
-          
           router.push('/auth/signin?message=Error loading profile. Please sign in again.')
           return
         }
@@ -138,10 +131,14 @@ export default function DashboardLayout({
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading...</p>
+          <div className="relative w-14 h-14 mx-auto">
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-200"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin"></div>
+            <Sprout className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-emerald-600" />
+          </div>
+          <p className="mt-4 text-emerald-700 font-medium">Loading your dashboard...</p>
         </div>
       </div>
     )
@@ -153,170 +150,184 @@ export default function DashboardLayout({
 
   const userNavigation = navigation[user.role] || navigation.consumer
 
+  const isActive = (href: string) => {
+    if (href === '/dashboard') {
+      return pathname === '/dashboard'
+    }
+    return pathname.startsWith(href)
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex flex-col lg:flex-row">
-      {}
-      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} fixed inset-y-0 left-0 z-50 w-64 sm:w-72 bg-white shadow-2xl transform transition-all duration-300 ease-in-out lg:translate-x-0 lg:fixed lg:shadow-xl overflow-y-auto flex flex-col`}>
-        {}
-        <div className="flex-shrink-0 relative h-20 px-6 bg-gradient-to-br from-green-600 via-green-700 to-emerald-700 overflow-hidden">
-          {}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
-            <div className="absolute bottom-0 right-0 w-24 h-24 bg-white rounded-full translate-x-12 translate-y-12"></div>
-          </div>
-
-          <div className="relative flex items-center justify-between h-full">
-            <Link href="/" className="group flex items-center space-x-3 text-white hover:text-green-100 transition-all duration-200">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <Sprout className="w-5 h-5" />
-              </div>
-              <div>
-                <div className="text-xl font-bold">FarmCon</div>
-                <div className="text-xs opacity-80">Agricultural Platform</div>
-              </div>
-            </Link>
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-2 text-white hover:text-green-100 hover:bg-white/10 rounded-lg transition-all duration-200"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {}
-        <div className="flex-shrink-0 px-6 py-4">
-          <div className="relative overflow-hidden bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-3">
-            <div className="absolute top-0 right-0 w-16 h-16 bg-green-100 rounded-full -translate-y-8 translate-x-8 opacity-50"></div>
-            <div className="relative flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
-                {user.role === 'farmer' ? <Wheat className="w-4 h-4 text-white" /> :
-                 user.role === 'consumer' ? <ShoppingCart className="w-4 h-4 text-white" /> :
-                 user.role === 'supplier' ? <Store className="w-4 h-4 text-white" /> :
-                 <Settings className="w-4 h-4 text-white" />}
-              </div>
-              <div>
-                <div className="text-sm font-bold text-green-700 capitalize">{user.role}</div>
-                <div className="text-xs text-green-600">Dashboard</div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/40">
+      <aside className={`
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        fixed inset-y-0 left-0 z-50 w-[280px]
+        bg-gradient-to-b from-emerald-900 via-emerald-950 to-teal-950
+        transform transition-transform duration-300 ease-out
+        lg:translate-x-0 flex flex-col shadow-2xl shadow-emerald-900/30
+      `}>
+        <div className="h-16 px-5 flex items-center justify-between border-b border-emerald-800/50">
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/40 group-hover:shadow-emerald-400/60 transition-all duration-300 group-hover:scale-105">
+              <Sprout className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <span className="font-bold text-xl text-white">FarmCon</span>
+              <div className="flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span className="text-[10px] text-amber-400 font-semibold uppercase tracking-wider">Premium</span>
               </div>
             </div>
+          </Link>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="lg:hidden p-2 rounded-lg hover:bg-white/10 text-white/80 hover:text-white transition-all"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="px-4 py-4">
+          <div className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-400/30 backdrop-blur-sm">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-2xl shadow-lg shadow-emerald-500/30">
+              {user.role === 'farmer' ? '🌾' :
+               user.role === 'consumer' ? '🛒' :
+               user.role === 'supplier' ? '📦' : '⚙️'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-base font-bold text-white capitalize">{user.role}</p>
+              <p className="text-sm text-emerald-300">Active Account</p>
+            </div>
+            <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-lg shadow-emerald-400/60"></div>
           </div>
         </div>
 
-        {}
-        <nav className="flex-1 px-4 pb-4 overflow-y-auto">
+        <div className="px-4 mb-4">
+          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-400/40 transition-all text-white/60 hover:text-white group">
+            <Search className="w-5 h-5 text-emerald-400 group-hover:text-emerald-300" />
+            <span className="text-sm font-medium">Quick search...</span>
+            <kbd className="ml-auto px-2 py-1 text-[10px] font-semibold bg-emerald-500/20 rounded-md border border-emerald-500/30 text-emerald-300">⌘K</kbd>
+          </button>
+        </div>
+
+        <nav className="flex-1 px-3 overflow-y-auto scrollbar-thin scrollbar-thumb-emerald-700">
           <div className="space-y-1">
-            {userNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => {
-                  setSidebarOpen(false)
-                  notificationBellRef.current?.closeDropdown()
-                }}
-                className="group flex items-center px-4 py-3 text-gray-700 hover:text-green-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 rounded-xl transition-all duration-200 hover:shadow-sm hover:scale-[1.02] transform"
-              >
-                <div className="flex items-center justify-center w-10 h-10 bg-gray-100 group-hover:bg-green-100 rounded-lg transition-all duration-200 group-hover:scale-110">
-                  {getIcon(item.icon, "w-5 h-5 group-hover:scale-110 transition-transform duration-200")}
-                </div>
-                <span className="ml-4 font-medium group-hover:font-semibold transition-all duration-200">{item.name}</span>
-                <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <span className="text-green-500">→</span>
-                </div>
-              </Link>
-            ))}
+            {userNavigation.map((item) => {
+              const active = isActive(item.href)
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => {
+                    setSidebarOpen(false)
+                    notificationBellRef.current?.closeDropdown()
+                  }}
+                  className={`
+                    group flex items-center gap-3 px-4 py-3 rounded-xl
+                    transition-all duration-200 relative overflow-hidden
+                    ${active
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/40'
+                      : 'text-emerald-100/80 hover:text-white hover:bg-white/10'
+                    }
+                  `}
+                >
+                  {active && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
+                  )}
+                  <span className={`relative ${active ? 'text-white' : 'text-emerald-400 group-hover:text-emerald-300'} transition-colors`}>
+                    {getIcon(item.icon)}
+                  </span>
+                  <span className="relative text-sm font-semibold">{item.name}</span>
+                  {active && (
+                    <ChevronRight className="w-4 h-4 ml-auto relative" />
+                  )}
+                </Link>
+              )
+            })}
           </div>
         </nav>
 
-        {}
-        <div className="flex-shrink-0 p-4 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-slate-50">
-          <div className="relative overflow-hidden bg-white rounded-xl p-4 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-            {}
-            <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full -translate-y-10 translate-x-10 opacity-30"></div>
-
-            <div className="relative flex items-center space-x-3 mb-3">
-              <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 via-green-600 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white text-lg font-bold">
-                    {user.fullName?.charAt(0).toUpperCase() || 'U'}
-                  </span>
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-gray-900 truncate">
-                  {user.fullName?.split(' ').map(name =>
-                    name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-                  ).join(' ') || 'User'}
-                </p>
-                <p className="text-xs text-gray-900 truncate">{user.email}</p>
-                <div className="flex items-center mt-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                  <span className="text-xs text-green-600 font-medium">Online</span>
-                </div>
-              </div>
-            </div>
-
-            <button
-              onClick={handleSignOut}
-              className="w-full flex items-center justify-center space-x-2 text-sm text-gray-900 hover:text-red-600 font-medium transition-all duration-200 px-3 py-2 rounded-lg hover:bg-red-50 group"
-            >
-              <LogOut className="w-4 h-4 group-hover:scale-110 transition-transform duration-200" />
-              <span>Sign out</span>
-            </button>
-          </div>
+        <div className="px-4 py-4 border-t border-emerald-800/50">
+          <ElevenLabsSidebarWidget />
         </div>
-      </div>
 
-      {}
-      <div className="flex-1 flex flex-col w-full lg:ml-72 overflow-x-hidden">
-        {}
-        <div className="sticky top-0 z-40 shadow-lg border-b border-gray-200 backdrop-blur-sm bg-white/95">
-          <div className="flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6">
+        <div className="p-4 border-t border-emerald-800/50 bg-black/20">
+          <Link
+            href="/dashboard/profile"
+            className="flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all group"
+          >
+            <div className="relative">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-emerald-500/30">
+                {user.fullName?.charAt(0).toUpperCase() || 'U'}
+              </div>
+              <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-emerald-950 shadow-lg shadow-emerald-400/50"></span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-white truncate group-hover:text-emerald-300 transition-colors">
+                {user.fullName?.split(' ').map(name =>
+                  name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
+                ).join(' ') || 'User'}
+              </p>
+              <p className="text-xs text-emerald-400/80 truncate">{user.email}</p>
+            </div>
+          </Link>
+
+          <button
+            onClick={handleSignOut}
+            className="mt-3 w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold text-rose-300 hover:text-rose-200 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/30 transition-all"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Sign out</span>
+          </button>
+        </div>
+      </aside>
+
+      <div className="lg:pl-[280px]">
+        <header className="sticky top-0 z-40 h-16 bg-white/90 backdrop-blur-xl border-b border-emerald-100 shadow-sm">
+          <div className="h-full px-4 sm:px-6 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden text-gray-900 hover:text-gray-900 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="lg:hidden p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-600 transition-colors"
               >
                 <Menu className="w-5 h-5" />
               </button>
 
-              <div className="hidden sm:block text-xs sm:text-sm text-gray-900 font-medium">
-                Welcome back, <span className="text-green-600 font-semibold">
-                  {user.fullName?.split(' ').map(name =>
-                    name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-                  ).join(' ') || 'User'}
-                </span>!
+              <div className="hidden sm:flex items-center gap-2">
+                <span className="text-emerald-600 font-medium">Welcome back,</span>
+                <span className="font-bold text-emerald-900">
+                  {user.fullName?.split(' ')[0] || 'User'}
+                </span>
+                <span className="text-2xl">👋</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <LanguageSwitcher />
               <NotificationBell ref={notificationBellRef} />
             </div>
           </div>
-        </div>
+        </header>
 
-        {}
         <main
-          className="flex-1 p-4 sm:p-6 overflow-x-hidden overflow-y-auto"
+          className="p-4 sm:p-6 lg:p-8"
           onClick={() => notificationBellRef.current?.closeDropdown()}
         >
-          <div className="max-w-7xl mx-auto w-full">
-            {children}
+          <div className="max-w-7xl mx-auto">
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </div>
         </main>
       </div>
 
-      {}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {}
       <ToastProvider />
     </div>
   )

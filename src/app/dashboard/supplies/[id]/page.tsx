@@ -94,7 +94,7 @@ export default function ProductDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading product...</p>
+          <p className="mt-4 text-slate-700">Loading product...</p>
         </div>
       </div>
     )
@@ -105,7 +105,7 @@ export default function ProductDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <span className="text-6xl">❌</span>
-          <h3 className="mt-4 text-lg font-medium text-gray-900">Product not found</h3>
+          <h3 className="mt-4 text-lg font-medium text-slate-700">Product not found</h3>
           <Link
             href="/dashboard/supplies"
             className="mt-4 inline-block text-green-600 hover:text-green-500"
@@ -127,14 +127,14 @@ export default function ProductDetailPage() {
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
-            <Link href="/dashboard/supplies" className="text-gray-900 hover:text-gray-700">
+            <Link href="/dashboard/supplies" className="text-slate-700 hover:text-slate-600">
               Supplies
             </Link>
           </li>
           <li>
             <div className="flex items-center">
-              <span className="mx-2 text-gray-900">/</span>
-              <span className="text-gray-900">{product.name}</span>
+              <span className="mx-2 text-slate-700">/</span>
+              <span className="text-slate-700">{product.name}</span>
             </div>
           </li>
         </ol>
@@ -143,7 +143,7 @@ export default function ProductDetailPage() {
       <div className="lg:grid lg:grid-cols-2 lg:gap-8">
         {}
         <div>
-          <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+          <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-emerald-100/50">
             {product.images && product.images.length > 0 ? (
               <img
                 src={product.images[selectedImageIndex]}
@@ -151,7 +151,7 @@ export default function ProductDetailPage() {
                 className="h-96 w-full object-cover object-center"
               />
             ) : (
-              <div className="h-96 w-full bg-gray-200 flex items-center justify-center">
+              <div className="h-96 w-full bg-emerald-100/50 flex items-center justify-center">
                 <span className="text-8xl">📦</span>
               </div>
             )}
@@ -179,7 +179,7 @@ export default function ProductDetailPage() {
 
         {}
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
+          <h1 className="text-2xl font-bold text-slate-700">{product.name}</h1>
           
           <div className="mt-2 flex items-center space-x-4">
             <div className="flex items-center">
@@ -191,45 +191,45 @@ export default function ProductDetailPage() {
                   ⭐
                 </span>
               ))}
-              <span className="ml-2 text-sm text-gray-900">
+              <span className="ml-2 text-sm text-slate-700">
                 ({reviews.length} reviews)
               </span>
             </div>
           </div>
 
           <div className="mt-4">
-            <p className="text-3xl font-bold text-gray-900">₹{product.price}</p>
-            <p className="text-sm text-gray-900">per {product.unit}</p>
+            <p className="text-3xl font-bold text-slate-700">₹{product.price}</p>
+            <p className="text-sm text-slate-700">per {product.unit}</p>
           </div>
 
           {product.brand && (
             <div className="mt-4">
-              <p className="text-sm text-gray-900">Brand: <span className="font-medium">{product.brand}</span></p>
+              <p className="text-sm text-slate-700">Brand: <span className="font-medium">{product.brand}</span></p>
             </div>
           )}
 
           <div className="mt-4">
-            <p className="text-sm text-gray-900">
+            <p className="text-sm text-slate-700">
               Sold by: <span className="font-medium">{(product as any).profiles?.full_name}</span>
             </p>
-            <p className="text-sm text-gray-900">
+            <p className="text-sm text-slate-700">
               {(product as any).profiles?.city}, {(product as any).profiles?.state}
             </p>
           </div>
 
           <div className="mt-6">
-            <h3 className="text-sm font-medium text-gray-900">Description</h3>
-            <p className="mt-2 text-sm text-gray-900">{product.description}</p>
+            <h3 className="text-sm font-medium text-slate-700">Description</h3>
+            <p className="mt-2 text-sm text-slate-700">{product.description}</p>
           </div>
 
           {product.specifications && Object.keys(product.specifications).length > 0 && (
             <div className="mt-6">
-              <h3 className="text-sm font-medium text-gray-900">Specifications</h3>
+              <h3 className="text-sm font-medium text-slate-700">Specifications</h3>
               <dl className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {Object.entries(product.specifications).map(([key, value]) => (
                   <div key={key}>
-                    <dt className="text-sm font-medium text-gray-900">{key}</dt>
-                    <dd className="text-sm text-gray-900">{String(value)}</dd>
+                    <dt className="text-sm font-medium text-slate-700">{key}</dt>
+                    <dd className="text-sm text-slate-700">{String(value)}</dd>
                   </div>
                 ))}
               </dl>
@@ -238,7 +238,7 @@ export default function ProductDetailPage() {
 
           <div className="mt-6">
             <div className="flex items-center space-x-4">
-              <label htmlFor="quantity" className="text-sm font-medium text-gray-900">
+              <label htmlFor="quantity" className="text-sm font-medium text-slate-700">
                 Quantity:
               </label>
               <select
@@ -253,7 +253,7 @@ export default function ProductDetailPage() {
                   </option>
                 ))}
               </select>
-              <span className="text-sm text-gray-900">
+              <span className="text-sm text-slate-700">
                 ({product.stockQuantity} in stock)
               </span>
             </div>
@@ -284,7 +284,7 @@ export default function ProductDetailPage() {
 
       {}
       <div className="mt-12">
-        <h3 className="text-lg font-medium text-gray-900">Customer Reviews</h3>
+        <h3 className="text-lg font-medium text-slate-700">Customer Reviews</h3>
         {reviews.length > 0 ? (
           <div className="mt-6 space-y-6">
             {reviews.map((review) => (
@@ -301,22 +301,22 @@ export default function ProductDetailPage() {
                     ))}
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-900">
+                    <p className="text-sm font-medium text-slate-700">
                       {(review as any).profiles?.full_name || 'Anonymous'}
                     </p>
-                    <p className="text-sm text-gray-900">
+                    <p className="text-sm text-slate-700">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
                 {review.comment && (
-                  <p className="mt-3 text-sm text-gray-900">{review.comment}</p>
+                  <p className="mt-3 text-sm text-slate-700">{review.comment}</p>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <p className="mt-4 text-sm text-gray-900">No reviews yet. Be the first to review this product!</p>
+          <p className="mt-4 text-sm text-slate-700">No reviews yet. Be the first to review this product!</p>
         )}
       </div>
     </div>

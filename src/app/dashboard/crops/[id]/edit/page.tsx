@@ -128,7 +128,7 @@ export default function EditCropPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading crop details...</p>
+          <p className="mt-4 text-slate-700">Loading crop details...</p>
         </div>
       </div>
     )
@@ -139,8 +139,8 @@ export default function EditCropPage() {
       <div className="p-6">
         <div className="text-center">
           <XCircle className="w-24 h-24 text-red-500 mx-auto" />
-          <h2 className="mt-4 text-xl font-semibold text-gray-900">Error Loading Crop</h2>
-          <p className="mt-2 text-gray-900">{error}</p>
+          <h2 className="mt-4 text-xl font-semibold text-slate-700">Error Loading Crop</h2>
+          <p className="mt-2 text-slate-700">{error}</p>
           <Link
             href="/dashboard/crops"
             className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
@@ -156,18 +156,18 @@ export default function EditCropPage() {
     <div className="max-w-4xl mx-auto p-6">
       {}
       <div className="mb-6">
-        <nav className="flex items-center space-x-2 text-sm text-gray-900 mb-4">
+        <nav className="flex items-center space-x-2 text-sm text-slate-700 mb-4">
           <Link href="/dashboard" className="hover:text-green-600">Dashboard</Link>
           <span>/</span>
           <Link href="/dashboard/crops" className="hover:text-green-600">Crops</Link>
           <span>/</span>
           <Link href={`/dashboard/crops/${params.id}`} className="hover:text-green-600">{formData.name || 'Crop'}</Link>
           <span>/</span>
-          <span className="text-gray-900">Edit</span>
+          <span className="text-slate-700">Edit</span>
         </nav>
 
-        <h1 className="text-3xl font-bold text-gray-900">✏️ Edit Crop</h1>
-        <p className="text-gray-900 mt-2">Update your crop information and track its progress</p>
+        <h1 className="text-3xl font-bold text-slate-700">✏️ Edit Crop</h1>
+        <p className="text-slate-700 mt-2">Update your crop information and track its progress</p>
       </div>
 
       {error && (
@@ -179,10 +179,10 @@ export default function EditCropPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">📋 Basic Information</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">📋 Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-slate-600 mb-2">
                 Crop Name *
               </label>
               <input
@@ -198,7 +198,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="variety" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="variety" className="block text-sm font-medium text-slate-600 mb-2">
                 Variety
               </label>
               <input
@@ -213,7 +213,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="status" className="block text-sm font-medium text-slate-600 mb-2">
                 Current Status *
               </label>
               <select
@@ -233,7 +233,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="area" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="area" className="block text-sm font-medium text-slate-600 mb-2">
                 Area (acres)
               </label>
               <input
@@ -250,7 +250,7 @@ export default function EditCropPage() {
             </div>
 
             <div className="md:col-span-2">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-slate-600 mb-2">
                 Description
               </label>
               <textarea
@@ -273,7 +273,7 @@ export default function EditCropPage() {
                 onChange={handleChange}
                 className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
               />
-              <label htmlFor="organicCertified" className="ml-2 block text-sm text-gray-900">
+              <label htmlFor="organicCertified" className="ml-2 block text-sm text-slate-700">
                 🌿 Organic Certified
               </label>
             </div>
@@ -282,10 +282,10 @@ export default function EditCropPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">📅 Timeline</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">📅 Timeline</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label htmlFor="plantedDate" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="plantedDate" className="block text-sm font-medium text-slate-600 mb-2">
                 Planted Date
               </label>
               <input
@@ -299,7 +299,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="expectedHarvestDate" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="expectedHarvestDate" className="block text-sm font-medium text-slate-600 mb-2">
                 Expected Harvest Date
               </label>
               <input
@@ -313,7 +313,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="actualHarvestDate" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="actualHarvestDate" className="block text-sm font-medium text-slate-600 mb-2">
                 Actual Harvest Date
               </label>
               <input
@@ -330,7 +330,7 @@ export default function EditCropPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">📷 Crop Images</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">📷 Crop Images</h2>
           <ImageUpload
             images={formData.images}
             onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
@@ -340,10 +340,10 @@ export default function EditCropPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">💰 Yield & Pricing</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">💰 Yield & Pricing</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div>
-              <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="unit" className="block text-sm font-medium text-slate-600 mb-2">
                 Unit *
               </label>
               <select
@@ -363,7 +363,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="estimatedYield" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="estimatedYield" className="block text-sm font-medium text-slate-600 mb-2">
                 Estimated Yield
               </label>
               <input
@@ -380,7 +380,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="actualYield" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="actualYield" className="block text-sm font-medium text-slate-600 mb-2">
                 Actual Yield
               </label>
               <input
@@ -397,7 +397,7 @@ export default function EditCropPage() {
             </div>
 
             <div>
-              <label htmlFor="pricePerUnit" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="pricePerUnit" className="block text-sm font-medium text-slate-600 mb-2">
                 Price per {formData.unit} (₹)
               </label>
               <input
@@ -432,7 +432,7 @@ export default function EditCropPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-end">
           <Link
             href={`/dashboard/crops/${params.id}`}
-            className="px-6 py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-center"
+            className="px-6 py-3 border border-gray-300 text-slate-600 rounded-md hover:bg-emerald-50/30 text-center"
           >
             Cancel
           </Link>

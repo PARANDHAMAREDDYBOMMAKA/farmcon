@@ -168,7 +168,7 @@ export default function AddEquipmentPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading...</p>
+          <p className="mt-4 text-slate-700">Loading...</p>
         </div>
       </div>
     )
@@ -178,8 +178,8 @@ export default function AddEquipmentPage() {
     <div className="p-6">
       <div className="max-w-3xl mx-auto">
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">List Your Equipment</h1>
-          <p className="text-gray-900">Share your farming equipment with other farmers in your area</p>
+          <h1 className="text-2xl font-bold text-slate-700">List Your Equipment</h1>
+          <p className="text-slate-700">Share your farming equipment with other farmers in your area</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6 space-y-6">
@@ -191,10 +191,10 @@ export default function AddEquipmentPage() {
 
           {}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+            <h2 className="text-lg font-semibold text-slate-700 mb-4">Basic Information</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="name" className="block text-sm font-medium text-slate-600">
                   Equipment Name *
                 </label>
                 <input
@@ -210,7 +210,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="category" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="category" className="block text-sm font-medium text-slate-600">
                   Category *
                 </label>
                 <select
@@ -230,7 +230,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="brand" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="brand" className="block text-sm font-medium text-slate-600">
                   Brand
                 </label>
                 <input
@@ -245,7 +245,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="model" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="model" className="block text-sm font-medium text-slate-600">
                   Model
                 </label>
                 <input
@@ -260,7 +260,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="year_manufactured" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="year_manufactured" className="block text-sm font-medium text-slate-600">
                   Year Manufactured
                 </label>
                 <input
@@ -277,7 +277,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="status" className="block text-sm font-medium text-slate-600">
                   Availability Status
                 </label>
                 <select
@@ -298,10 +298,10 @@ export default function AddEquipmentPage() {
 
           {}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Rental Pricing</h2>
+            <h2 className="text-lg font-semibold text-slate-700 mb-4">Rental Pricing</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="hourly_rate" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="hourly_rate" className="block text-sm font-medium text-slate-600">
                   Hourly Rate (₹)
                 </label>
                 <input
@@ -315,11 +315,11 @@ export default function AddEquipmentPage() {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                   placeholder="500.00"
                 />
-                <p className="mt-1 text-sm text-gray-900">Leave empty if not available for hourly rental</p>
+                <p className="mt-1 text-sm text-slate-700">Leave empty if not available for hourly rental</p>
               </div>
 
               <div>
-                <label htmlFor="daily_rate" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="daily_rate" className="block text-sm font-medium text-slate-600">
                   Daily Rate (₹)
                 </label>
                 <input
@@ -333,7 +333,7 @@ export default function AddEquipmentPage() {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
                   placeholder="2000.00"
                 />
-                <p className="mt-1 text-sm text-gray-900">Leave empty if not available for daily rental</p>
+                <p className="mt-1 text-sm text-slate-700">Leave empty if not available for daily rental</p>
               </div>
             </div>
             {!formData.hourly_rate && !formData.daily_rate && (
@@ -343,7 +343,7 @@ export default function AddEquipmentPage() {
 
           {}
           <div>
-            <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="location" className="block text-sm font-medium text-slate-600">
               Location
             </label>
             <input
@@ -359,10 +359,10 @@ export default function AddEquipmentPage() {
 
           {}
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Technical Specifications</h2>
+            <h2 className="text-lg font-semibold text-slate-700 mb-4">Technical Specifications</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="power" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="power" className="block text-sm font-medium text-slate-600">
                   Power (HP)
                 </label>
                 <input
@@ -377,7 +377,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="fuel_type" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="fuel_type" className="block text-sm font-medium text-slate-600">
                   Fuel Type
                 </label>
                 <select
@@ -397,7 +397,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="condition" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="condition" className="block text-sm font-medium text-slate-600">
                   Condition
                 </label>
                 <select
@@ -416,7 +416,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div>
-                <label htmlFor="capacity" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="capacity" className="block text-sm font-medium text-slate-600">
                   Capacity/Size
                 </label>
                 <input
@@ -431,7 +431,7 @@ export default function AddEquipmentPage() {
               </div>
 
               <div className="md:col-span-2">
-                <label htmlFor="maintenance_date" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="maintenance_date" className="block text-sm font-medium text-slate-600">
                   Last Maintenance Date
                 </label>
                 <input
@@ -448,7 +448,7 @@ export default function AddEquipmentPage() {
 
           {}
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="description" className="block text-sm font-medium text-slate-600">
               Description
             </label>
             <textarea
@@ -467,7 +467,7 @@ export default function AddEquipmentPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
             >
               Cancel
             </button>

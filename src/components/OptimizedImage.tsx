@@ -34,7 +34,7 @@ export default function OptimizedImage({
         className={`bg-gray-200 flex items-center justify-center ${className}`}
         style={{ width, height }}
       >
-        <span className="text-gray-900 text-4xl">📷</span>
+        <span className="text-slate-700 text-4xl">📷</span>
       </div>
     )
   }

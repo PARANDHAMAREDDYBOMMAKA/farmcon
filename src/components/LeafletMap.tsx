@@ -84,7 +84,7 @@ export default function LeafletMap({
         className="flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-lg"
         style={{ height }}
       >
-        <p className="text-gray-900 dark:text-gray-900">Loading map...</p>
+        <p className="text-slate-700 dark:text-slate-700">Loading map...</p>
       </div>
     )
   }
@@ -144,7 +144,7 @@ export function SatelliteMap({
         className="flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-lg"
         style={{ height }}
       >
-        <p className="text-gray-900 dark:text-gray-900">Loading satellite map...</p>
+        <p className="text-slate-700 dark:text-slate-700">Loading satellite map...</p>
       </div>
     )
   }

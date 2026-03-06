@@ -66,10 +66,10 @@ export default function GlobalSearch() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
           onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-          className="w-full px-4 py-2 pl-10 pr-4 text-gray-900 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full px-4 py-2 pl-10 pr-4 text-slate-700 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
         />
         <svg
-          className="absolute left-3 top-2.5 w-5 h-5 text-gray-900"
+          className="absolute left-3 top-2.5 w-5 h-5 text-slate-700"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -92,14 +92,14 @@ export default function GlobalSearch() {
       {isOpen && query && (
         <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-96 overflow-y-auto">
           {isSearching ? (
-            <div className="p-4 text-center text-gray-900">Searching...</div>
+            <div className="p-4 text-center text-slate-700">Searching...</div>
           ) : results.length > 0 ? (
             <div className="py-2">
               {results.map((result) => (
                 <div
                   key={result.id}
                   onClick={() => handleResultClick(result)}
-                  className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                  className="px-4 py-3 hover:bg-emerald-50/30 cursor-pointer border-b border-gray-100 last:border-b-0"
                 >
                   <div className="flex items-start space-x-3">
                     {result.images && result.images[0] ? (
@@ -114,11 +114,11 @@ export default function GlobalSearch() {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
+                      <p className="text-sm font-medium text-slate-700 truncate">
                         {result.name}
                       </p>
                       {result.category && (
-                        <p className="text-xs text-gray-900">{result.category}</p>
+                        <p className="text-xs text-slate-700">{result.category}</p>
                       )}
                       {result.price && (
                         <p className="text-sm font-semibold text-green-600">
@@ -139,7 +139,7 @@ export default function GlobalSearch() {
               </div>
             </div>
           ) : (
-            <div className="p-4 text-center text-gray-900">
+            <div className="p-4 text-center text-slate-700">
               No results found for "{query}"
             </div>
           )}

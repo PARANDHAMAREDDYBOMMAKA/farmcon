@@ -180,8 +180,8 @@ export default function LeafletDeliveryMap({
 
   if (!isMounted || loading) {
     return (
-      <div className={`${className} flex items-center justify-center bg-gray-100`}>
-        <p className="text-gray-900">Loading map...</p>
+      <div className={`${className} flex items-center justify-center bg-slate-100`}>
+        <p className="text-slate-700">Loading map...</p>
       </div>
     )
   }
@@ -196,10 +196,10 @@ export default function LeafletDeliveryMap({
 
   if (!deliveryData && !['shipped', 'delivered'].includes(order.status)) {
     return (
-      <div className={`${className} flex items-center justify-center bg-gray-100`}>
+      <div className={`${className} flex items-center justify-center bg-slate-100`}>
         <div className="text-center p-4">
-          <p className="text-gray-900">Delivery tracking will be available once your order is shipped</p>
-          <p className="text-sm text-gray-900 mt-2">Order Status: {order.status}</p>
+          <p className="text-slate-700">Delivery tracking will be available once your order is shipped</p>
+          <p className="text-sm text-slate-700 mt-2">Order Status: {order.status}</p>
         </div>
       </div>
     )
@@ -270,7 +270,7 @@ export default function LeafletDeliveryMap({
             <Popup>
               <div className="p-2 min-w-[200px]">
                 <h3 className="font-semibold text-green-600">Pickup Location</h3>
-                <p className="text-sm text-gray-900">
+                <p className="text-sm text-slate-700">
                   {deliveryData?.pickupAddress || `${order.seller?.city}, ${order.seller?.state}`}
                 </p>
                 <p className="text-xs text-green-600 mt-1">📦 Origin</p>
@@ -291,7 +291,7 @@ export default function LeafletDeliveryMap({
             <Popup>
               <div className="p-2 min-w-[200px]">
                 <h3 className="font-semibold text-blue-600">Delivery Location</h3>
-                <p className="text-sm text-gray-900">
+                <p className="text-sm text-slate-700">
                   {deliveryData?.deliveryAddress || parseDeliveryAddress()}
                 </p>
                 <p className="text-xs text-blue-600 mt-1">📍 Destination</p>
@@ -315,17 +315,17 @@ export default function LeafletDeliveryMap({
                   <h3 className="font-semibold text-red-600">
                     {deliveryData?.driver?.fullName || 'Delivery Driver'}
                   </h3>
-                  <p className="text-sm text-gray-900">Your order is on the way!</p>
+                  <p className="text-sm text-slate-700">Your order is on the way!</p>
                   <div className="mt-2 space-y-1 text-xs">
                     {deliveryData?.driver?.vehicleType && (
-                      <p className="text-gray-900">🚛 {deliveryData.driver.vehicleType} - {deliveryData.driver.vehicleNumber}</p>
+                      <p className="text-slate-700">🚛 {deliveryData.driver.vehicleType} - {deliveryData.driver.vehicleNumber}</p>
                     )}
                     {deliveryData?.driver?.phone && (
                       <p className="text-blue-600">📞 {deliveryData.driver.phone}</p>
                     )}
                     <p className="text-green-600">📦 Order #{order.id.slice(-8)}</p>
                     {deliveryData?.driver?.lastLocationUpdate && (
-                      <p className="text-gray-900">
+                      <p className="text-slate-700">
                         ⏱️ Updated: {new Date(deliveryData.driver.lastLocationUpdate).toLocaleTimeString()}
                       </p>
                     )}

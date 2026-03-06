@@ -148,12 +148,12 @@ export default function AddProductPage() {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Add New Product</h1>
-            <p className="text-gray-900 mt-1">Create a new product for your catalog</p>
+            <h1 className="text-2xl font-bold text-slate-700">Add New Product</h1>
+            <p className="text-slate-700 mt-1">Create a new product for your catalog</p>
           </div>
           <button
             onClick={() => router.back()}
-            className="text-gray-900 hover:text-gray-900"
+            className="text-slate-700 hover:text-slate-700"
           >
             ← Back
           </button>
@@ -164,10 +164,10 @@ export default function AddProductPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Product Name *
               </label>
               <input
@@ -182,7 +182,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Brand
               </label>
               <input
@@ -196,7 +196,7 @@ export default function AddProductPage() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Description *
               </label>
               <textarea
@@ -211,7 +211,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Category *
               </label>
               <select
@@ -234,10 +234,10 @@ export default function AddProductPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Pricing & Inventory</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Price (₹) *
               </label>
               <input
@@ -254,7 +254,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Stock Quantity *
               </label>
               <input
@@ -270,7 +270,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Unit *
               </label>
               <select
@@ -296,10 +296,10 @@ export default function AddProductPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Specifications (Optional)</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Specifications (Optional)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Weight
               </label>
               <input
@@ -313,7 +313,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Dimensions
               </label>
               <input
@@ -327,7 +327,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Material
               </label>
               <input
@@ -341,7 +341,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Manufacturer
               </label>
               <input
@@ -355,7 +355,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Country of Origin
               </label>
               <input
@@ -369,7 +369,7 @@ export default function AddProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Shelf Life
               </label>
               <input
@@ -386,10 +386,10 @@ export default function AddProductPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Images</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Product Images</h2>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-600 mb-2">
               Upload Images
             </label>
             <input
@@ -399,7 +399,7 @@ export default function AddProductPage() {
               onChange={handleImageUpload}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             />
-            <p className="text-xs text-gray-900 mt-1">You can upload multiple images. First image will be the main product image.</p>
+            <p className="text-xs text-slate-700 mt-1">You can upload multiple images. First image will be the main product image.</p>
           </div>
 
           {formData.images.length > 0 && (
@@ -435,7 +435,7 @@ export default function AddProductPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+              className="px-6 py-2 border border-gray-300 rounded-lg text-slate-600 hover:bg-emerald-50/30 font-medium"
             >
               Cancel
             </button>

@@ -106,7 +106,7 @@ export default function EquipmentDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading equipment details...</p>
+          <p className="mt-4 text-slate-700">Loading equipment details...</p>
         </div>
       </div>
     )
@@ -117,7 +117,7 @@ export default function EquipmentDetailPage() {
       <div className="p-6">
         <div className="text-center">
           <XCircle className="w-24 h-24 text-red-500 mx-auto" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">Equipment not found</h3>
+          <h3 className="mt-4 text-lg font-medium text-slate-700">Equipment not found</h3>
           <Link
             href="/dashboard/equipment"
             className="mt-4 inline-block text-green-600 hover:text-green-500"
@@ -135,14 +135,14 @@ export default function EquipmentDetailPage() {
       <nav className="flex mb-6" aria-label="Breadcrumb">
         <ol className="inline-flex items-center space-x-1 md:space-x-3">
           <li>
-            <Link href="/dashboard/equipment" className="text-gray-900 hover:text-gray-700">
+            <Link href="/dashboard/equipment" className="text-slate-700 hover:text-slate-600">
               Equipment Rental
             </Link>
           </li>
           <li>
             <div className="flex items-center">
-              <span className="mx-2 text-gray-900">/</span>
-              <span className="text-gray-900">{equipment.name}</span>
+              <span className="mx-2 text-slate-700">/</span>
+              <span className="text-slate-700">{equipment.name}</span>
             </div>
           </li>
         </ol>
@@ -151,7 +151,7 @@ export default function EquipmentDetailPage() {
       <div className="lg:grid lg:grid-cols-2 lg:gap-8">
         {}
         <div>
-          <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-200">
+          <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-emerald-100/50">
             {equipment.images && equipment.images.length > 0 ? (
               <img
                 src={equipment.images[selectedImageIndex]}
@@ -159,8 +159,8 @@ export default function EquipmentDetailPage() {
                 className="h-96 w-full object-cover object-center"
               />
             ) : (
-              <div className="h-96 w-full bg-gray-200 flex items-center justify-center">
-                <Truck className="w-32 h-32 text-gray-900" />
+              <div className="h-96 w-full bg-emerald-100/50 flex items-center justify-center">
+                <Truck className="w-32 h-32 text-slate-700" />
               </div>
             )}
           </div>
@@ -189,13 +189,13 @@ export default function EquipmentDetailPage() {
         <div>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">{equipment.name}</h1>
+              <h1 className="text-3xl font-bold text-slate-700">{equipment.name}</h1>
               {equipment.brand && (
-                <p className="text-lg text-gray-900">
+                <p className="text-lg text-slate-700">
                   {equipment.brand} {equipment.model && `${equipment.model}`}
                 </p>
               )}
-              <p className="text-sm text-gray-900">{equipment.category}</p>
+              <p className="text-sm text-slate-700">{equipment.category}</p>
             </div>
             <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
               equipment.status === 'available' 
@@ -213,14 +213,14 @@ export default function EquipmentDetailPage() {
             <div className="flex flex-wrap gap-4">
               {equipment.hourly_rate && (
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">₹{equipment.hourly_rate}</p>
-                  <p className="text-sm text-gray-900">per hour</p>
+                  <p className="text-2xl font-bold text-slate-700">₹{equipment.hourly_rate}</p>
+                  <p className="text-sm text-slate-700">per hour</p>
                 </div>
               )}
               {equipment.daily_rate && (
                 <div>
-                  <p className="text-2xl font-bold text-gray-900">₹{equipment.daily_rate}</p>
-                  <p className="text-sm text-gray-900">per day</p>
+                  <p className="text-2xl font-bold text-slate-700">₹{equipment.daily_rate}</p>
+                  <p className="text-sm text-slate-700">per day</p>
                 </div>
               )}
             </div>
@@ -231,12 +231,12 @@ export default function EquipmentDetailPage() {
             <div className="grid grid-cols-2 gap-4">
               {equipment.year_manufactured && (
                 <div>
-                  <span className="text-gray-900">Year:</span>
+                  <span className="text-slate-700">Year:</span>
                   <span className="ml-2 font-medium">{equipment.year_manufactured}</span>
                 </div>
               )}
               <div className="flex items-center gap-1">
-                <span className="text-gray-900">Location:</span>
+                <span className="text-slate-700">Location:</span>
                 <span className="ml-2 font-medium flex items-center gap-1">
                   <MapPin className="w-4 h-4" />
                   {equipment.location || `${equipment.owner.city}, ${equipment.owner.state}`}
@@ -246,15 +246,15 @@ export default function EquipmentDetailPage() {
           </div>
 
           {}
-          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Owner Information</h3>
+          <div className="mt-6 p-4 bg-emerald-50/30 rounded-lg">
+            <h3 className="text-lg font-semibold text-slate-700 mb-2">Owner Information</h3>
             <div className="space-y-2">
               <div>
-                <span className="text-gray-900">Name:</span>
+                <span className="text-slate-700">Name:</span>
                 <span className="ml-2 font-medium">{equipment.owner.full_name}</span>
               </div>
               <div>
-                <span className="text-gray-900">Location:</span>
+                <span className="text-slate-700">Location:</span>
                 <span className="ml-2 font-medium">{equipment.owner.city}, {equipment.owner.state}</span>
               </div>
             </div>
@@ -262,20 +262,20 @@ export default function EquipmentDetailPage() {
 
           {equipment.description && (
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
-              <p className="text-gray-900">{equipment.description}</p>
+              <h3 className="text-lg font-semibold text-slate-700 mb-2">Description</h3>
+              <p className="text-slate-700">{equipment.description}</p>
             </div>
           )}
 
           {}
           {equipment.specifications && Object.keys(equipment.specifications).length > 0 && (
             <div className="mt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Specifications</h3>
+              <h3 className="text-lg font-semibold text-slate-700 mb-3">Specifications</h3>
               <div className="grid grid-cols-1 gap-2">
                 {Object.entries(equipment.specifications).map(([key, value]) => (
                   <div key={key} className="flex justify-between py-2 border-b border-gray-100">
-                    <span className="text-gray-900 capitalize">{key.replace(/_/g, ' ')}:</span>
-                    <span className="font-medium text-gray-900">{String(value)}</span>
+                    <span className="text-slate-700 capitalize">{key.replace(/_/g, ' ')}:</span>
+                    <span className="font-medium text-slate-700">{String(value)}</span>
                   </div>
                 ))}
               </div>
@@ -285,13 +285,13 @@ export default function EquipmentDetailPage() {
           {}
           {equipment.status === 'available' && (equipment.hourly_rate || equipment.daily_rate) && (
             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Calculate Rental Cost</h3>
+              <h3 className="text-lg font-semibold text-slate-700 mb-3">Calculate Rental Cost</h3>
               
               <div className="space-y-4">
                 {}
                 {equipment.hourly_rate && equipment.daily_rate && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="block text-sm font-medium text-slate-600 mb-2">
                       Rental Type
                     </label>
                     <div className="flex space-x-4">
@@ -304,7 +304,7 @@ export default function EquipmentDetailPage() {
                           onChange={(e) => setRentalType(e.target.value as 'hourly')}
                           className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
                         />
-                        <span className="ml-2 text-sm text-gray-700">
+                        <span className="ml-2 text-sm text-slate-600">
                           Hourly (₹{equipment.hourly_rate}/hr)
                         </span>
                       </label>
@@ -317,7 +317,7 @@ export default function EquipmentDetailPage() {
                           onChange={(e) => setRentalType(e.target.value as 'daily')}
                           className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
                         />
-                        <span className="ml-2 text-sm text-gray-700">
+                        <span className="ml-2 text-sm text-slate-600">
                           Daily (₹{equipment.daily_rate}/day)
                         </span>
                       </label>
@@ -327,7 +327,7 @@ export default function EquipmentDetailPage() {
 
                 {}
                 <div>
-                  <label htmlFor="duration" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="duration" className="block text-sm font-medium text-slate-600 mb-2">
                     Duration ({rentalType === 'hourly' ? 'hours' : 'days'})
                   </label>
                   <input
@@ -344,7 +344,7 @@ export default function EquipmentDetailPage() {
                 {}
                 <div className="pt-2 border-t border-gray-200">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-medium text-gray-900">Total Cost:</span>
+                    <span className="text-lg font-medium text-slate-700">Total Cost:</span>
                     <span className="text-2xl font-bold text-green-600">₹{calculateTotal()}</span>
                   </div>
                 </div>
@@ -374,7 +374,7 @@ export default function EquipmentDetailPage() {
             </div>
             
             <div className="text-center">
-              <p className="text-sm text-gray-900">
+              <p className="text-sm text-slate-700">
                 Contact the owner directly to arrange rental terms and schedule pickup/delivery
               </p>
             </div>

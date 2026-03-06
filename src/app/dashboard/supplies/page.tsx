@@ -95,7 +95,7 @@ export default function SuppliesPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading supplies...</p>
+          <p className="mt-4 text-slate-700">Loading supplies...</p>
         </div>
       </div>
     )
@@ -106,13 +106,13 @@ export default function SuppliesPage() {
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Agricultural Supplies</h1>
-            <p className="text-gray-900">Buy seeds, fertilizers, pesticides and farming equipment</p>
+            <h1 className="text-2xl font-bold text-slate-700">Agricultural Supplies</h1>
+            <p className="text-slate-700">Buy seeds, fertilizers, pesticides and farming equipment</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <Link
               href="/dashboard/cart"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-900 bg-white hover:bg-gray-50"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-emerald-50/30"
             >
               <ShoppingCart className="h-4 w-4 mr-2" />
               View Cart
@@ -152,7 +152,7 @@ export default function SuppliesPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.map((product) => (
           <div key={product.id} className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
-            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
+            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-emerald-100/50">
               {product.images && product.images.length > 0 ? (
                 <img
                   src={product.images[0]}
@@ -160,32 +160,32 @@ export default function SuppliesPage() {
                   className="h-48 w-full object-cover object-center group-hover:opacity-75"
                 />
               ) : (
-                <div className="h-48 w-full bg-gray-200 flex items-center justify-center">
-                  <Package className="h-16 w-16 text-gray-900" />
+                <div className="h-48 w-full bg-emerald-100/50 flex items-center justify-center">
+                  <Package className="h-16 w-16 text-slate-700" />
                 </div>
               )}
             </div>
             <div className="p-4">
-              <h3 className="text-sm font-medium text-gray-900 line-clamp-2">
+              <h3 className="text-sm font-medium text-slate-700 line-clamp-2">
                 {product.name}
               </h3>
-              <p className="text-xs text-gray-900 mt-1 font-medium">
+              <p className="text-xs text-slate-700 mt-1 font-medium">
                 by {(product as any).profiles?.fullName || 'Unknown'}
               </p>
               {product.brand && (
-                <p className="text-xs text-gray-900">Brand: {product.brand}</p>
+                <p className="text-xs text-slate-700">Brand: {product.brand}</p>
               )}
-              <p className="text-sm text-gray-900 mt-2 line-clamp-2">
+              <p className="text-sm text-slate-700 mt-2 line-clamp-2">
                 {product.description}
               </p>
               <div className="mt-3 flex items-center justify-between">
                 <div>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-lg font-semibold text-slate-700">
                     ₹{product.price}
                   </p>
-                  <p className="text-xs text-gray-900">per {product.unit}</p>
+                  <p className="text-xs text-slate-700">per {product.unit}</p>
                 </div>
-                <div className="text-xs text-gray-900 font-semibold">
+                <div className="text-xs text-slate-700 font-semibold">
                   Stock: {product.stockQuantity}
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default function SuppliesPage() {
                 </button>
                 <Link
                   href={`/dashboard/supplies/${product.id}`}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-900 hover:bg-gray-50"
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-slate-700 hover:bg-emerald-50/30"
                 >
                   View
                 </Link>
@@ -213,8 +213,8 @@ export default function SuppliesPage() {
       {filteredProducts.length === 0 && (
         <div className="text-center py-12">
           <Package className="h-24 w-24 text-green-600 mx-auto" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">No products found</h3>
-          <p className="mt-2 text-gray-900">Try adjusting your search or category filter.</p>
+          <h3 className="mt-4 text-lg font-medium text-slate-700">No products found</h3>
+          <p className="mt-2 text-slate-700">Try adjusting your search or category filter.</p>
         </div>
       )}
     </div>

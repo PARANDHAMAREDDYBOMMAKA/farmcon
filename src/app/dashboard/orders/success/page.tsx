@@ -85,15 +85,15 @@ function OrderSuccessPageInternal() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {}
         <div className="text-center mb-8">
           {orderConfirmed ? (
             
             <div className="w-24 h-24 mx-auto mb-6 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-green-400 to-green-600 rounded-full animate-ping opacity-75"></div>
-              <div className="relative w-24 h-24 bg-gradient-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center transform transition-all duration-500 scale-100 hover:scale-110 shadow-2xl">
+              <div className="absolute inset-0 bg-linear-to-r from-green-400 to-green-600 rounded-full animate-ping opacity-75"></div>
+              <div className="relative w-24 h-24 bg-linear-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center transform transition-all duration-500 scale-100 hover:scale-110 shadow-2xl">
                 <svg className="w-12 h-12 text-white animate-[checkmark_0.6s_ease-in-out]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
@@ -102,9 +102,9 @@ function OrderSuccessPageInternal() {
           ) : (
             
             <div className="w-24 h-24 mx-auto mb-6 relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-pulse opacity-60"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full animate-ping opacity-40"></div>
-              <div className="relative w-24 h-24 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
+              <div className="absolute inset-0 bg-linear-to-r from-blue-400 to-blue-600 rounded-full animate-pulse opacity-60"></div>
+              <div className="absolute inset-0 bg-linear-to-r from-blue-400 to-blue-600 rounded-full animate-ping opacity-40"></div>
+              <div className="relative w-24 h-24 bg-linear-to-r from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
                 <div className="flex space-x-1">
                   <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                   <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -122,7 +122,7 @@ function OrderSuccessPageInternal() {
             {orderConfirmed ? 'Order Confirmed!' : 'Processing Payment...'}
           </h1>
 
-          <p className="text-gray-900 text-lg animate-[fadeIn_0.8s_ease-in]">
+          <p className="text-slate-700 text-lg animate-[fadeIn_0.8s_ease-in]">
             {orderConfirmed
               ? 'Thank you for your purchase! Your order has been successfully placed.'
               : 'Please wait while we confirm your payment and create your order...'
@@ -132,30 +132,30 @@ function OrderSuccessPageInternal() {
 
         {}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">What happens next?</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4">What happens next?</h2>
           
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
               <span className="text-2xl">📧</span>
               <div>
-                <h3 className="font-medium text-gray-900">Order Confirmation</h3>
-                <p className="text-sm text-gray-900">You'll receive an email confirmation with order details</p>
+                <h3 className="font-medium text-slate-700">Order Confirmation</h3>
+                <p className="text-sm text-slate-700">You'll receive an email confirmation with order details</p>
               </div>
             </div>
             
             <div className="flex items-start space-x-3">
               <span className="text-2xl">📦</span>
               <div>
-                <h3 className="font-medium text-gray-900">Processing</h3>
-                <p className="text-sm text-gray-900">Your order will be prepared and shipped by the seller</p>
+                <h3 className="font-medium text-slate-700">Processing</h3>
+                <p className="text-sm text-slate-700">Your order will be prepared and shipped by the seller</p>
               </div>
             </div>
             
             <div className="flex items-start space-x-3">
               <span className="text-2xl">🚚</span>
               <div>
-                <h3 className="font-medium text-gray-900">Delivery Tracking</h3>
-                <p className="text-sm text-gray-900">Track your order status in real-time on the orders page</p>
+                <h3 className="font-medium text-slate-700">Delivery Tracking</h3>
+                <p className="text-sm text-slate-700">Track your order status in real-time on the orders page</p>
               </div>
             </div>
           </div>
@@ -165,7 +165,7 @@ function OrderSuccessPageInternal() {
         <div className="space-y-3">
           <Link
             href="/dashboard/orders"
-            className="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+            className="w-full flex items-center justify-center px-6 py-4 bg-linear-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
             <span className="mr-2">📋</span>
             View My Orders
@@ -181,7 +181,7 @@ function OrderSuccessPageInternal() {
           
           <Link
             href="/dashboard"
-            className="w-full flex items-center justify-center px-6 py-4 bg-gray-100 text-gray-900 rounded-xl font-medium hover:bg-gray-200 transition-all duration-200"
+            className="w-full flex items-center justify-center px-6 py-4 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-emerald-100/50 transition-all duration-200"
           >
             <span className="mr-2">🏠</span>
             Go to Dashboard
@@ -190,7 +190,7 @@ function OrderSuccessPageInternal() {
 
         {}
         {sessionId && process.env.NODE_ENV === 'development' && (
-          <div className="mt-6 text-center text-xs text-gray-900">
+          <div className="mt-6 text-center text-xs text-slate-700">
             Session ID: {sessionId.slice(-8)}
           </div>
         )}
@@ -204,7 +204,7 @@ export default function () {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-900">Loading...</p>
+          <p className="mt-2 text-sm text-slate-700">Loading...</p>
         </div>
       </div>
     }>

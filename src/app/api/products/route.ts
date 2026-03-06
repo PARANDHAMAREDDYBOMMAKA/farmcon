@@ -1,21 +1,42 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
+import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { cache, CacheKeys } from '@/lib/redis'
+import { apiSuccess, handleApiError, parseJsonBody, parseQueryParams } from '@/lib/api-utils'
+import { logger } from '@/lib/logger'
+
+const getProductsSchema = z.object({
+  supplierId: z.string().uuid().optional(),
+  category: z.string().optional(),
+})
+
+const createProductSchema = z.object({
+  name: z.string().min(2).max(200),
+  description: z.string().max(2000).optional(),
+  price: z.union([z.string(), z.number()]).transform(Number).pipe(z.number().positive()),
+  stockQuantity: z.union([z.string(), z.number()]).transform(Number).pipe(z.number().int().nonnegative()),
+  unit: z.string().min(1).max(50),
+  brand: z.string().max(100).optional(),
+  images: z.array(z.string().url()).optional().default([]),
+  categoryId: z.string().uuid(),
+  supplierId: z.string().uuid(),
+  isActive: z.boolean().optional().default(true),
+  specifications: z.record(z.unknown()).optional(),
+})
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const supplierId = searchParams.get('supplierId')
-    const category = searchParams.get('category')
+    const { supplierId, category } = parseQueryParams(searchParams, getProductsSchema)
 
-    const cacheKey = CacheKeys.products(supplierId || undefined, category || undefined)
+    const cacheKey = CacheKeys.products(supplierId, category)
     const cached = await cache.get(cacheKey)
 
     if (cached) {
-      return NextResponse.json({ products: cached })
+      return apiSuccess({ products: cached })
     }
 
-    const whereClause: any = {}
+    const whereClause: Record<string, unknown> = {}
 
     if (supplierId) {
       whereClause.supplierId = supplierId
@@ -59,53 +80,31 @@ export async function GET(request: NextRequest) {
 
     await cache.set(cacheKey, productsWithRatings, 300)
 
-    return NextResponse.json({ products: productsWithRatings })
+    return apiSuccess({ products: productsWithRatings })
   } catch (error) {
-    console.error('Products fetch error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch products' },
-      { status: 500 }
-    )
+    return handleApiError(error, 'GET /api/products')
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const {
-      name,
-      description,
-      price,
-      stockQuantity,
-      unit,
-      brand,
-      images,
-      categoryId,
-      supplierId,
-      isActive = true
-    } = body
+    const data = await parseJsonBody(request, createProductSchema)
 
-    if (!name || !price || !stockQuantity || !unit || !categoryId || !supplierId) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
-    const validImages = Array.isArray(images) ? images.filter(img => img !== null && img !== undefined && img !== '') : []
+    const validImages = data.images.filter(img => img !== null && img !== undefined && img !== '')
 
     const product = await prisma.product.create({
       data: {
-        name,
-        description,
-        price: parseFloat(price),
-        stockQuantity: parseInt(stockQuantity),
-        unit,
-        brand,
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        stockQuantity: data.stockQuantity,
+        unit: data.unit,
+        brand: data.brand,
         images: validImages,
-        categoryId,
-        supplierId,
-        isActive
+        categoryId: data.categoryId,
+        supplierId: data.supplierId,
+        isActive: data.isActive,
+        specifications: data.specifications,
       },
       include: {
         supplier: {
@@ -120,14 +119,12 @@ export async function POST(request: NextRequest) {
     })
 
     await cache.invalidatePattern('farmcon:products:*')
-    await cache.del(CacheKeys.productsList(supplierId))
+    await cache.del(CacheKeys.productsList(data.supplierId))
 
-    return NextResponse.json({ product })
+    logger.info('Product created', { productId: product.id, supplierId: data.supplierId })
+
+    return apiSuccess({ product }, 201)
   } catch (error) {
-    console.error('Product creation error:', error)
-    return NextResponse.json(
-      { error: 'Failed to create product' },
-      { status: 500 }
-    )
+    return handleApiError(error, 'POST /api/products')
   }
 }

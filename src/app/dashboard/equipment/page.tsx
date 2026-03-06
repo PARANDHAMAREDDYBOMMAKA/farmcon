@@ -106,7 +106,7 @@ export default function EquipmentRentalPage() {
       <div className="p-6">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading equipment...</p>
+          <p className="mt-4 text-slate-700">Loading equipment...</p>
         </div>
       </div>
     )
@@ -117,8 +117,8 @@ export default function EquipmentRentalPage() {
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Equipment Rental</h1>
-            <p className="text-gray-900">Rent farming equipment from fellow farmers</p>
+            <h1 className="text-2xl font-bold text-slate-700">Equipment Rental</h1>
+            <p className="text-slate-700">Rent farming equipment from fellow farmers</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <Link
@@ -171,7 +171,7 @@ export default function EquipmentRentalPage() {
           </select>
         </div>
 
-        <div className="text-sm text-gray-900 flex items-center">
+        <div className="text-sm text-slate-700 flex items-center">
           {filteredEquipment.length} equipment available
         </div>
       </div>
@@ -180,7 +180,7 @@ export default function EquipmentRentalPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredEquipment.map((item) => (
           <div key={item.id} className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
-            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-gray-200">
+            <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-t-lg bg-emerald-100/50">
               {item.images && item.images.length > 0 ? (
                 <img
                   src={item.images[0]}
@@ -188,8 +188,8 @@ export default function EquipmentRentalPage() {
                   className="h-48 w-full object-cover object-center"
                 />
               ) : (
-                <div className="h-48 w-full bg-gray-200 flex items-center justify-center">
-                  <Truck className="w-16 h-16 text-gray-900" />
+                <div className="h-48 w-full bg-emerald-100/50 flex items-center justify-center">
+                  <Truck className="w-16 h-16 text-slate-700" />
                 </div>
               )}
             </div>
@@ -197,10 +197,10 @@ export default function EquipmentRentalPage() {
             <div className="p-4">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
-                  <p className="text-sm text-gray-900">{item.category}</p>
+                  <h3 className="text-lg font-semibold text-slate-700">{item.name}</h3>
+                  <p className="text-sm text-slate-700">{item.category}</p>
                   {item.brand && (
-                    <p className="text-sm text-gray-900">{item.brand} {item.model}</p>
+                    <p className="text-sm text-slate-700">{item.brand} {item.model}</p>
                   )}
                 </div>
                 <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
@@ -209,17 +209,17 @@ export default function EquipmentRentalPage() {
               </div>
 
               <div className="mt-3">
-                <p className="text-sm text-gray-900">
+                <p className="text-sm text-slate-700">
                   Owner: <span className="font-medium">{item.owner.full_name}</span>
                 </p>
-                <p className="text-sm text-gray-900 flex items-center gap-1">
+                <p className="text-sm text-slate-700 flex items-center gap-1">
                   <MapPin className="w-3 h-3" />
                   {item.location || `${item.owner.city}, ${item.owner.state}`}
                 </p>
               </div>
 
               {item.year_manufactured && (
-                <p className="text-sm text-gray-900 mt-1">
+                <p className="text-sm text-slate-700 mt-1">
                   Year: {item.year_manufactured}
                 </p>
               )}
@@ -228,21 +228,21 @@ export default function EquipmentRentalPage() {
                 <div className="flex justify-between items-center">
                   {item.hourly_rate && (
                     <div>
-                      <p className="text-lg font-bold text-gray-900">₹{item.hourly_rate}</p>
-                      <p className="text-xs text-gray-900">per hour</p>
+                      <p className="text-lg font-bold text-slate-700">₹{item.hourly_rate}</p>
+                      <p className="text-xs text-slate-700">per hour</p>
                     </div>
                   )}
                   {item.daily_rate && (
                     <div>
-                      <p className="text-lg font-bold text-gray-900">₹{item.daily_rate}</p>
-                      <p className="text-xs text-gray-900">per day</p>
+                      <p className="text-lg font-bold text-slate-700">₹{item.daily_rate}</p>
+                      <p className="text-xs text-slate-700">per day</p>
                     </div>
                   )}
                 </div>
               </div>
 
               {item.description && (
-                <p className="text-sm text-gray-900 mt-3 line-clamp-2">
+                <p className="text-sm text-slate-700 mt-3 line-clamp-2">
                   {item.description}
                 </p>
               )}
@@ -257,7 +257,7 @@ export default function EquipmentRentalPage() {
                 </button>
                 <Link
                   href={`/dashboard/equipment/${item.id}`}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
                 >
                   Details
                 </Link>
@@ -265,14 +265,14 @@ export default function EquipmentRentalPage() {
 
               {item.specifications && Object.keys(item.specifications).length > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-200">
-                  <h4 className="text-xs font-medium text-gray-900 uppercase tracking-wide">
+                  <h4 className="text-xs font-medium text-slate-700 uppercase tracking-wide">
                     Key Specs
                   </h4>
                   <div className="mt-1 space-y-1">
                     {Object.entries(item.specifications).slice(0, 2).map(([key, value]) => (
                       <div key={key} className="flex justify-between text-xs">
-                        <span className="text-gray-900">{key}:</span>
-                        <span className="text-gray-900">{String(value)}</span>
+                        <span className="text-slate-700">{key}:</span>
+                        <span className="text-slate-700">{String(value)}</span>
                       </div>
                     ))}
                   </div>
@@ -285,9 +285,9 @@ export default function EquipmentRentalPage() {
 
       {filteredEquipment.length === 0 && (
         <div className="text-center py-12">
-          <Truck className="w-24 h-24 text-gray-900 mx-auto" />
-          <h3 className="mt-4 text-lg font-medium text-gray-900">No equipment found</h3>
-          <p className="mt-2 text-gray-900">
+          <Truck className="w-24 h-24 text-slate-700 mx-auto" />
+          <h3 className="mt-4 text-lg font-medium text-slate-700">No equipment found</h3>
+          <p className="mt-2 text-slate-700">
             Try adjusting your search or filters. Be the first to list equipment for rent!
           </p>
           <Link

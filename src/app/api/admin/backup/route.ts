@@ -1,8 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { getAuthenticatedSupabaseClient } from '@/lib/supabase-server';
+import { dbOperations } from '@/lib/prisma';
+import { logger } from '@/lib/logger';
 
 const execAsync = promisify(exec);
+
+async function verifyAdminAccess(request: NextRequest): Promise<{ authorized: boolean; error?: string }> {
+  const { user, error } = await getAuthenticatedSupabaseClient(request);
+
+  if (error || !user) {
+    return { authorized: false, error: 'Authentication required' };
+  }
+
+  const profile = await dbOperations.profile.findById(user.id);
+
+  if (!profile || profile.role !== 'admin') {
+    return { authorized: false, error: 'Admin access required' };
+  }
+
+  return { authorized: true };
+}
 
 /**
  * @swagger
@@ -52,17 +71,16 @@ const execAsync = promisify(exec);
  */
 export async function POST(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check
-    // const user = await getAuthenticatedUser(request);
-    // if (user.role !== 'admin') {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    const { authorized, error: authError } = await verifyAdminAccess(request);
 
-    console.log('📊 Manual backup triggered');
+    if (!authorized) {
+      return NextResponse.json({ error: authError }, { status: 401 });
+    }
 
-    // Trigger backup script
+    logger.info('Manual backup triggered by admin');
+
     execAsync('npm run backup:db').catch(error => {
-      console.error('Backup script error:', error);
+      logger.error('Backup script error', { error });
     });
 
     return NextResponse.json({
@@ -71,7 +89,7 @@ export async function POST(request: NextRequest) {
       note: 'Backup is running in the background. Check logs for progress.',
     });
   } catch (error) {
-    console.error('Backup trigger error:', error);
+    logger.error('Backup trigger error', { error });
     return NextResponse.json(
       { error: 'Failed to initiate backup' },
       { status: 500 }
@@ -81,7 +99,11 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    // TODO: Add admin authentication check
+    const { authorized, error: authError } = await verifyAdminAccess(request);
+
+    if (!authorized) {
+      return NextResponse.json({ error: authError }, { status: 401 });
+    }
 
     const fs = await import('fs');
     const path = await import('path');
@@ -130,7 +152,7 @@ export async function GET(request: NextRequest) {
       })),
     });
   } catch (error) {
-    console.error('Backup status error:', error);
+    logger.error('Backup status error', { error });
     return NextResponse.json(
       { error: 'Failed to get backup status' },
       { status: 500 }

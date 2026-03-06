@@ -117,7 +117,7 @@ export default function ViewProductPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading product...</p>
+          <p className="mt-4 text-slate-700">Loading product...</p>
         </div>
       </div>
     )
@@ -127,8 +127,8 @@ export default function ViewProductPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-900 mb-4">The product you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-bold text-slate-700 mb-2">Product Not Found</h2>
+          <p className="text-slate-700 mb-4">The product you're looking for doesn't exist.</p>
           <Link
             href="/dashboard/products"
             className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg"
@@ -148,8 +148,8 @@ export default function ViewProductPage() {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">{product.name}</h1>
-            <p className="text-gray-900 mt-1">Product Details</p>
+            <h1 className="text-2xl font-bold text-slate-700">{product.name}</h1>
+            <p className="text-slate-700 mt-1">Product Details</p>
           </div>
           <div className="flex space-x-3">
             <Link
@@ -160,7 +160,7 @@ export default function ViewProductPage() {
             </Link>
             <Link
               href="/dashboard/products"
-              className="px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded-lg font-medium"
+              className="px-4 py-2 border border-gray-300 text-slate-600 hover:bg-emerald-50/30 rounded-lg font-medium"
             >
               Back to Products
             </Link>
@@ -171,12 +171,12 @@ export default function ViewProductPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Images</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Product Images</h2>
 
           {product.images && product.images.length > 0 ? (
             <div className="space-y-4">
               {}
-              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+              <div className="aspect-square bg-slate-100 rounded-lg overflow-hidden">
                 <img
                   src={selectedImage || product.images[0]}
                   alt={product.name}
@@ -191,7 +191,7 @@ export default function ViewProductPage() {
                     <button
                       key={index}
                       onClick={() => setSelectedImage(image)}
-                      className={`aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 ${
+                      className={`aspect-square bg-slate-100 rounded-lg overflow-hidden border-2 ${
                         selectedImage === image ? 'border-orange-500' : 'border-transparent'
                       }`}
                     >
@@ -206,10 +206,10 @@ export default function ViewProductPage() {
               )}
             </div>
           ) : (
-            <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
+            <div className="aspect-square bg-slate-100 rounded-lg flex items-center justify-center">
               <div className="text-center">
-                <Package className="h-16 w-16 mx-auto text-gray-900" />
-                <p className="text-gray-900 mt-2">No images available</p>
+                <Package className="h-16 w-16 mx-auto text-slate-700" />
+                <p className="text-slate-700 mt-2">No images available</p>
               </div>
             </div>
           )}
@@ -219,47 +219,47 @@ export default function ViewProductPage() {
         <div className="space-y-6">
           {}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+            <h2 className="text-lg font-semibold text-slate-700 mb-4">Basic Information</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-900">Name:</span>
+                <span className="text-slate-700">Name:</span>
                 <span className="font-medium">{product.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-900">Brand:</span>
+                <span className="text-slate-700">Brand:</span>
                 <span className="font-medium">{product.brand || 'No brand'}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-900">Category:</span>
+                <span className="text-slate-700">Category:</span>
                 <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                   {product.category.name}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-900">Status:</span>
+                <span className="text-slate-700">Status:</span>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  product.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                  product.isActive ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-700'
                 }`}>
                   {product.isActive ? 'Active' : 'Inactive'}
                 </span>
               </div>
               <div className="pt-2">
-                <span className="text-gray-900">Description:</span>
-                <p className="mt-1 text-gray-900">{product.description}</p>
+                <span className="text-slate-700">Description:</span>
+                <p className="mt-1 text-slate-700">{product.description}</p>
               </div>
             </div>
           </div>
 
           {}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
+            <h2 className="text-lg font-semibold text-slate-700 mb-4">Pricing & Inventory</h2>
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-gray-900">Price:</span>
+                <span className="text-slate-700">Price:</span>
                 <span className="font-medium text-lg">₹{product.price.toLocaleString()} / {product.unit}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-900">Stock:</span>
+                <span className="text-slate-700">Stock:</span>
                 <div className="flex items-center space-x-2">
                   <span className="font-medium">{product.stockQuantity} {product.unit}</span>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${stockInfo.color}`}>
@@ -268,7 +268,7 @@ export default function ViewProductPage() {
                 </div>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-900">Unit:</span>
+                <span className="text-slate-700">Unit:</span>
                 <span className="font-medium">{product.unit}</span>
               </div>
             </div>
@@ -276,13 +276,13 @@ export default function ViewProductPage() {
 
           {}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
+            <h2 className="text-lg font-semibold text-slate-700 mb-4">Quick Actions</h2>
             <div className="space-y-3">
               <button
                 onClick={handleToggleStatus}
                 className={`w-full px-4 py-2 rounded-lg font-medium ${
                   product.isActive
-                    ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-slate-100 text-slate-600 hover:bg-emerald-100/50'
                     : 'bg-green-100 text-green-700 hover:bg-green-200'
                 }`}
               >
@@ -302,14 +302,14 @@ export default function ViewProductPage() {
       {}
       {product.specifications && Object.keys(product.specifications).length > 0 && (
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Specifications</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Specifications</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(product.specifications).map(([key, value]) => {
               if (!value) return null
               const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')
               return (
-                <div key={key} className="flex justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-gray-900">{label}:</span>
+                <div key={key} className="flex justify-between p-3 bg-emerald-50/30 rounded-lg">
+                  <span className="text-slate-700">{label}:</span>
                   <span className="font-medium">{value}</span>
                 </div>
               )
@@ -320,22 +320,22 @@ export default function ViewProductPage() {
 
       {}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Supplier Information</h2>
+        <h2 className="text-lg font-semibold text-slate-700 mb-4">Supplier Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex justify-between">
-            <span className="text-gray-900">Supplier:</span>
+            <span className="text-slate-700">Supplier:</span>
             <span className="font-medium">{product.supplier.fullName}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-900">Business:</span>
+            <span className="text-slate-700">Business:</span>
             <span className="font-medium">{product.supplier.businessName || 'N/A'}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-900">Location:</span>
+            <span className="text-slate-700">Location:</span>
             <span className="font-medium">{product.supplier.city}, {product.supplier.state}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-900">Contact:</span>
+            <span className="text-slate-700">Contact:</span>
             <span className="font-medium">{product.supplier.phone}</span>
           </div>
         </div>
@@ -343,14 +343,14 @@ export default function ViewProductPage() {
 
       {}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Product History</h2>
+        <h2 className="text-lg font-semibold text-slate-700 mb-4">Product History</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex justify-between">
-            <span className="text-gray-900">Created:</span>
+            <span className="text-slate-700">Created:</span>
             <span className="font-medium">{new Date(product.createdAt).toLocaleDateString()}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-900">Last Updated:</span>
+            <span className="text-slate-700">Last Updated:</span>
             <span className="font-medium">{new Date(product.updatedAt).toLocaleDateString()}</span>
           </div>
         </div>

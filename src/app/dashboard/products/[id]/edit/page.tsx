@@ -216,7 +216,7 @@ export default function EditProductPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading product...</p>
+          <p className="mt-4 text-slate-700">Loading product...</p>
         </div>
       </div>
     )
@@ -226,8 +226,8 @@ export default function EditProductPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-900 mb-4">The product you're looking for doesn't exist.</p>
+          <h2 className="text-2xl font-bold text-slate-700 mb-2">Product Not Found</h2>
+          <p className="text-slate-700 mb-4">The product you're looking for doesn't exist.</p>
           <button
             onClick={() => router.push('/dashboard/products')}
             className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg"
@@ -245,12 +245,12 @@ export default function EditProductPage() {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Edit Product</h1>
-            <p className="text-gray-900 mt-1">Update your product information</p>
+            <h1 className="text-2xl font-bold text-slate-700">Edit Product</h1>
+            <p className="text-slate-700 mt-1">Update your product information</p>
           </div>
           <button
             onClick={() => router.back()}
-            className="text-gray-900 hover:text-gray-900"
+            className="text-slate-700 hover:text-slate-700"
           >
             ← Back
           </button>
@@ -261,10 +261,10 @@ export default function EditProductPage() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Product Name *
               </label>
               <input
@@ -279,7 +279,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Brand
               </label>
               <input
@@ -293,7 +293,7 @@ export default function EditProductPage() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Description *
               </label>
               <textarea
@@ -308,7 +308,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Category *
               </label>
               <select
@@ -328,7 +328,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Status
               </label>
               <select
@@ -346,10 +346,10 @@ export default function EditProductPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Pricing & Inventory</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Pricing & Inventory</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Price (₹) *
               </label>
               <input
@@ -366,7 +366,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Stock Quantity *
               </label>
               <input
@@ -382,7 +382,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Unit *
               </label>
               <select
@@ -408,10 +408,10 @@ export default function EditProductPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Specifications (Optional)</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Specifications (Optional)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Weight
               </label>
               <input
@@ -425,7 +425,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Dimensions
               </label>
               <input
@@ -439,7 +439,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Material
               </label>
               <input
@@ -453,7 +453,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Manufacturer
               </label>
               <input
@@ -467,7 +467,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Country of Origin
               </label>
               <input
@@ -481,7 +481,7 @@ export default function EditProductPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-slate-600 mb-2">
                 Shelf Life
               </label>
               <input
@@ -498,10 +498,10 @@ export default function EditProductPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Product Images</h2>
+          <h2 className="text-lg font-semibold text-slate-700 mb-4">Product Images</h2>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-slate-600 mb-2">
               Upload Additional Images
             </label>
             <input
@@ -511,7 +511,7 @@ export default function EditProductPage() {
               onChange={handleImageUpload}
               className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             />
-            <p className="text-xs text-gray-900 mt-1">You can upload multiple images. First image will be the main product image.</p>
+            <p className="text-xs text-slate-700 mt-1">You can upload multiple images. First image will be the main product image.</p>
           </div>
 
           {formData.images.length > 0 && (
@@ -547,7 +547,7 @@ export default function EditProductPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+              className="px-6 py-2 border border-gray-300 rounded-lg text-slate-600 hover:bg-emerald-50/30 font-medium"
             >
               Cancel
             </button>

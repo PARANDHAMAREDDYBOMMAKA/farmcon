@@ -104,11 +104,11 @@ interface ForecastData {
 
 const getIconComponent = (emoji: string) => {
   const iconMap: { [key: string]: JSX.Element } = {
-    '🚜': <Tractor className="w-10 h-10 text-gray-700" />,
+    '🚜': <Tractor className="w-10 h-10 text-slate-600" />,
     '🌧️': <CloudRain className="w-10 h-10 text-blue-600" />,
     '☀️': <Sun className="w-10 h-10 text-yellow-500" />,
     '🌤️': <CloudSun className="w-10 h-10 text-blue-500" />,
-    '☁️': <Cloud className="w-10 h-10 text-gray-900" />,
+    '☁️': <Cloud className="w-10 h-10 text-slate-700" />,
     '💧': <Droplets className="w-10 h-10 text-cyan-600" />,
     '🌾': <Wheat className="w-10 h-10 text-amber-600" />,
     '🌱': <Sprout className="w-10 h-10 text-green-600" />,
@@ -120,11 +120,11 @@ const getIconComponent = (emoji: string) => {
     '🛡️': <Shield className="w-10 h-10 text-green-700" />,
     '📅': <Calendar className="w-10 h-10 text-blue-600" />,
     '🌿': <Leaf className="w-10 h-10 text-green-500" />,
-    '💨': <Wind className="w-10 h-10 text-gray-900" />,
+    '💨': <Wind className="w-10 h-10 text-slate-700" />,
     '🌡️': <Thermometer className="w-10 h-10 text-orange-600" />,
   }
 
-  return iconMap[emoji] || <Info className="w-10 h-10 text-gray-900" />
+  return iconMap[emoji] || <Info className="w-10 h-10 text-slate-700" />
 }
 
 export default function WeatherPage() {
@@ -225,7 +225,7 @@ export default function WeatherPage() {
       case 'yellow': return 'text-yellow-600 bg-yellow-100'
       case 'green': return 'text-green-600 bg-green-100'
       case 'blue': return 'text-blue-600 bg-blue-100'
-      default: return 'text-gray-900 bg-gray-100'
+      default: return 'text-slate-700 bg-slate-100'
     }
   }
 
@@ -234,7 +234,7 @@ export default function WeatherPage() {
       case 'high': return 'text-red-600 bg-red-100 border-red-200'
       case 'medium': return 'text-yellow-600 bg-yellow-100 border-yellow-200'
       case 'low': return 'text-blue-600 bg-blue-100 border-blue-200'
-      default: return 'text-gray-900 bg-gray-100 border-gray-200'
+      default: return 'text-slate-700 bg-slate-100 border-gray-200'
     }
   }
 
@@ -308,13 +308,13 @@ export default function WeatherPage() {
           <div className="p-6 space-y-6">
             {}
             <div className="flex justify-end mb-4">
-              <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
+              <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-emerald-50/30">
                 <button
                   onClick={() => setCurrentView('details')}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     currentView === 'details'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-900 hover:text-gray-900'
+                      : 'text-slate-700 hover:text-slate-700'
                   }`}
                 >
                   <BarChart3 className="w-4 h-4" /> Details
@@ -324,7 +324,7 @@ export default function WeatherPage() {
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     currentView === 'charts'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-900 hover:text-gray-900'
+                      : 'text-slate-700 hover:text-slate-700'
                   }`}
                 >
                   <TrendingUp className="w-4 h-4" /> Charts
@@ -374,17 +374,17 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-3">
                       <Droplets className="w-8 h-8 text-cyan-600" />
                       <div>
-                        <p className="text-xs text-gray-900 font-medium">Humidity</p>
+                        <p className="text-xs text-slate-700 font-medium">Humidity</p>
                         <p className="text-2xl font-bold text-cyan-700">{currentWeather.current.humidity}%</p>
                       </div>
                     </div>
                   </div>
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-4 shadow-md hover:shadow-lg transition-shadow border border-gray-200">
                     <div className="flex items-center space-x-3">
-                      <Wind className="w-8 h-8 text-gray-900" />
+                      <Wind className="w-8 h-8 text-slate-700" />
                       <div>
-                        <p className="text-xs text-gray-900 font-medium">Wind Speed</p>
-                        <p className="text-2xl font-bold text-gray-700">{currentWeather.current.windSpeed} km/h</p>
+                        <p className="text-xs text-slate-700 font-medium">Wind Speed</p>
+                        <p className="text-2xl font-bold text-slate-600">{currentWeather.current.windSpeed} km/h</p>
                       </div>
                     </div>
                   </div>
@@ -392,7 +392,7 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-3">
                       <Thermometer className="w-8 h-8 text-orange-600" />
                       <div>
-                        <p className="text-xs text-gray-900 font-medium">Pressure</p>
+                        <p className="text-xs text-slate-700 font-medium">Pressure</p>
                         <p className="text-2xl font-bold text-orange-700">{currentWeather.current.pressure} hPa</p>
                       </div>
                     </div>
@@ -401,7 +401,7 @@ export default function WeatherPage() {
                     <div className="flex items-center space-x-3">
                       <Eye className="w-8 h-8 text-purple-600" />
                       <div>
-                        <p className="text-xs text-gray-900 font-medium">Visibility</p>
+                        <p className="text-xs text-slate-700 font-medium">Visibility</p>
                         <p className="text-2xl font-bold text-purple-700">{currentWeather.current.visibility} km</p>
                       </div>
                     </div>
@@ -432,7 +432,7 @@ export default function WeatherPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {}
               <div className="border-2 border-blue-200 rounded-xl p-5 bg-gradient-to-br from-blue-50 to-white shadow-lg hover:shadow-xl transition-all">
-                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                <h4 className="font-bold text-slate-800 mb-4 flex items-center text-lg">
                   <Droplets className="w-7 h-7 mr-3 text-blue-600" />
                   Irrigation Advice
                 </h4>
@@ -444,7 +444,7 @@ export default function WeatherPage() {
 
               {}
               <div className="border-2 border-green-200 rounded-xl p-5 bg-gradient-to-br from-green-50 to-white shadow-lg hover:shadow-xl transition-all">
-                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                <h4 className="font-bold text-slate-800 mb-4 flex items-center text-lg">
                   <Sprout className="w-7 h-7 mr-3 text-green-600" />
                   Planting Conditions
                 </h4>
@@ -460,7 +460,7 @@ export default function WeatherPage() {
 
               {}
               <div className="border-2 border-amber-200 rounded-xl p-5 bg-gradient-to-br from-amber-50 to-white shadow-lg hover:shadow-xl transition-all">
-                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                <h4 className="font-bold text-slate-800 mb-4 flex items-center text-lg">
                   <Bug className="w-7 h-7 mr-3 text-amber-600" />
                   Pest Risk
                 </h4>
@@ -476,7 +476,7 @@ export default function WeatherPage() {
 
               {}
               <div className="border-2 border-yellow-200 rounded-xl p-5 bg-gradient-to-br from-yellow-50 to-white shadow-lg hover:shadow-xl transition-all">
-                <h4 className="font-bold text-gray-800 mb-4 flex items-center text-lg">
+                <h4 className="font-bold text-slate-800 mb-4 flex items-center text-lg">
                   <Wheat className="w-7 h-7 mr-3 text-yellow-600" />
                   Harvesting Conditions
                 </h4>
@@ -500,13 +500,13 @@ export default function WeatherPage() {
           <div className="p-6 space-y-6">
             {}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-              <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-gray-50">
+              <div className="inline-flex rounded-lg border border-gray-200 p-1 bg-emerald-50/30">
                 <button
                   onClick={() => setForecastView('list')}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     forecastView === 'list'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-900 hover:text-gray-900'
+                      : 'text-slate-700 hover:text-slate-700'
                   }`}
                 >
                   <ClipboardList className="w-4 h-4" /> List View
@@ -516,7 +516,7 @@ export default function WeatherPage() {
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center gap-2 ${
                     forecastView === 'charts'
                       ? 'bg-white text-green-600 shadow-sm'
-                      : 'text-gray-900 hover:text-gray-900'
+                      : 'text-slate-700 hover:text-slate-700'
                   }`}
                 >
                   <TrendingUp className="w-4 h-4" /> Chart View
@@ -524,7 +524,7 @@ export default function WeatherPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">Days:</label>
+                <label className="text-sm font-medium text-slate-600">Days:</label>
                 <select
                   value={forecastDays}
                   onChange={(e) => {
@@ -545,7 +545,7 @@ export default function WeatherPage() {
             {}
             {forecast.farmingInsights && forecast.farmingInsights.length > 0 && (
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-gray-800 flex items-center">
+                <h3 className="text-2xl font-bold text-slate-800 flex items-center">
                   <Wheat className="w-8 h-8 mr-3 text-green-600" />
                   Weekly Farming Insights
                 </h3>
@@ -559,7 +559,7 @@ export default function WeatherPage() {
                       <div className="flex items-start space-x-4">
                         {getIconComponent(insight.icon)}
                         <div>
-                          <p className="font-bold text-gray-800 text-base">{insight.message}</p>
+                          <p className="font-bold text-slate-800 text-base">{insight.message}</p>
                           <p className={`text-xs font-bold mt-2 inline-block px-2 py-1 rounded ${
                             insight.priority === 'high' ? 'bg-red-200 text-red-800' :
                             insight.priority === 'medium' ? 'bg-yellow-200 text-yellow-800' :
@@ -586,14 +586,14 @@ export default function WeatherPage() {
             {}
             {forecastView === 'list' && (
             <div className="space-y-6">
-              <h3 className="text-2xl font-bold text-gray-800">{forecastDays}-Day Forecast</h3>
+              <h3 className="text-2xl font-bold text-slate-800">{forecastDays}-Day Forecast</h3>
               <div className="space-y-5">
                 {forecast.forecasts.map((day, index) => (
                   <div key={index} className="border-2 border-gray-200 rounded-xl p-6 bg-gradient-to-r from-white to-gray-50 shadow-lg hover:shadow-xl transition-all hover:scale-[1.01]">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                       {}
                       <div className="bg-gradient-to-br from-blue-100 to-blue-50 rounded-lg p-4 shadow-md">
-                        <h4 className="font-bold text-gray-800 text-lg">
+                        <h4 className="font-bold text-slate-800 text-lg">
                           {new Date(day.date).toLocaleDateString('en-IN', {
                             weekday: 'long',
                             month: 'short',
@@ -604,7 +604,7 @@ export default function WeatherPage() {
                           <CloudSun className="w-10 h-10 text-blue-600" />
                           <div>
                             <p className="font-bold text-xl text-blue-700">{day.temperature.max}°C / {day.temperature.min}°C</p>
-                            <p className="text-sm text-gray-900 capitalize font-medium">{day.weather.description}</p>
+                            <p className="text-sm text-slate-700 capitalize font-medium">{day.weather.description}</p>
                           </div>
                         </div>
                         {day.rain > 0 && (
@@ -614,7 +614,7 @@ export default function WeatherPage() {
 
                       {}
                       <div className="bg-gradient-to-br from-cyan-50 to-white rounded-lg p-4 shadow-md">
-                        <h5 className="font-bold text-gray-800 mb-3 flex items-center">
+                        <h5 className="font-bold text-slate-800 mb-3 flex items-center">
                           <Droplets className="w-5 h-5 mr-2 text-cyan-600" /> Irrigation
                         </h5>
                         <div className={`px-3 py-3 rounded-lg text-sm shadow-sm ${getAdviceColor(day.farming.irrigationRecommendation.color)}`}>
@@ -628,7 +628,7 @@ export default function WeatherPage() {
 
                       {}
                       <div className="bg-gradient-to-br from-green-50 to-white rounded-lg p-4 shadow-md">
-                        <h5 className="font-bold text-gray-800 mb-3 flex items-center">
+                        <h5 className="font-bold text-slate-800 mb-3 flex items-center">
                           <Tractor className="w-5 h-5 mr-2 text-green-600" /> Field Work
                         </h5>
                         <div className={`px-3 py-3 rounded-lg text-sm shadow-sm ${getAdviceColor(day.farming.fieldWorkSuitability.color)}`}>
@@ -644,7 +644,7 @@ export default function WeatherPage() {
 
                       {}
                       <div className="bg-gradient-to-br from-amber-50 to-white rounded-lg p-4 shadow-md">
-                        <h5 className="font-bold text-gray-800 mb-3 flex items-center">
+                        <h5 className="font-bold text-slate-800 mb-3 flex items-center">
                           <Leaf className="w-5 h-5 mr-2 text-amber-600" /> Crop Stress
                         </h5>
                         <div className={`px-3 py-3 rounded-lg text-sm shadow-sm ${getAdviceColor(day.farming.cropStressLevel.color)}`}>

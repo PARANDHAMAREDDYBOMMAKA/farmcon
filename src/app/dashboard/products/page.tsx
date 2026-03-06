@@ -110,7 +110,7 @@ export default function ProductsPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
-          <p className="mt-4 text-gray-900">Loading products...</p>
+          <p className="mt-4 text-slate-700">Loading products...</p>
         </div>
       </div>
     )
@@ -122,8 +122,8 @@ export default function ProductsPage() {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">My Products</h1>
-            <p className="text-gray-900 mt-1">Manage your product catalog and inventory</p>
+            <h1 className="text-2xl font-bold text-slate-700">My Products</h1>
+            <p className="text-slate-700 mt-1">Manage your product catalog and inventory</p>
           </div>
           <div className="mt-4 sm:mt-0">
             <Link
@@ -145,8 +145,8 @@ export default function ProductsPage() {
               <Package className="h-8 w-8 text-blue-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-900">Total Products</p>
-              <p className="text-2xl font-bold text-gray-900">{products.length}</p>
+              <p className="text-sm font-medium text-slate-700">Total Products</p>
+              <p className="text-2xl font-bold text-slate-700">{products.length}</p>
             </div>
           </div>
         </div>
@@ -156,8 +156,8 @@ export default function ProductsPage() {
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-900">Active Products</p>
-              <p className="text-2xl font-bold text-gray-900">{products.filter(p => p.isActive).length}</p>
+              <p className="text-sm font-medium text-slate-700">Active Products</p>
+              <p className="text-2xl font-bold text-slate-700">{products.filter(p => p.isActive).length}</p>
             </div>
           </div>
         </div>
@@ -167,8 +167,8 @@ export default function ProductsPage() {
               <AlertTriangle className="h-8 w-8 text-yellow-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-900">Low Stock</p>
-              <p className="text-2xl font-bold text-gray-900">{products.filter(p => p.stockQuantity < 10).length}</p>
+              <p className="text-sm font-medium text-slate-700">Low Stock</p>
+              <p className="text-2xl font-bold text-slate-700">{products.filter(p => p.stockQuantity < 10).length}</p>
             </div>
           </div>
         </div>
@@ -178,8 +178,8 @@ export default function ProductsPage() {
               <XCircle className="h-8 w-8 text-red-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-900">Out of Stock</p>
-              <p className="text-2xl font-bold text-gray-900">{products.filter(p => p.stockQuantity === 0).length}</p>
+              <p className="text-sm font-medium text-slate-700">Out of Stock</p>
+              <p className="text-2xl font-bold text-slate-700">{products.filter(p => p.stockQuantity === 0).length}</p>
             </div>
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function ProductsPage() {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Search Products</label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">Search Products</label>
             <input
               type="text"
               placeholder="Search by name or description..."
@@ -199,7 +199,7 @@ export default function ProductsPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">Category</label>
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
@@ -212,7 +212,7 @@ export default function ProductsPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+            <label className="block text-sm font-medium text-slate-600 mb-2">Status</label>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
@@ -232,8 +232,8 @@ export default function ProductsPage() {
         {filteredProducts.length === 0 ? (
           <div className="text-center py-12">
             <Package className="h-16 w-16 mx-auto mb-4 text-orange-600" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No products found</h3>
-            <p className="text-gray-900 mb-6">
+            <h3 className="text-lg font-medium text-slate-700 mb-2">No products found</h3>
+            <p className="text-slate-700 mb-6">
               {products.length === 0
                 ? "Start building your product catalog by adding your first product"
                 : "No products match your current filters"
@@ -252,31 +252,31 @@ export default function ProductsPage() {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+              <thead className="bg-emerald-50/30">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
                     Product
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
                     Category
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
                     Price
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
                     Stock
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredProducts.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50">
+                  <tr key={product.id} className="hover:bg-emerald-50/30">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="h-12 w-12 flex-shrink-0">
@@ -293,8 +293,8 @@ export default function ProductsPage() {
                           )}
                         </div>
                         <div className="ml-4">
-                          <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                          <div className="text-sm text-gray-900">{product.brand}</div>
+                          <div className="text-sm font-medium text-slate-700">{product.name}</div>
+                          <div className="text-sm text-slate-700">{product.brand}</div>
                         </div>
                       </div>
                     </td>
@@ -303,7 +303,7 @@ export default function ProductsPage() {
                         {product.category.name}
                       </span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-700">
                       ₹{product.price.toLocaleString()} / {product.unit}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -317,7 +317,7 @@ export default function ProductsPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        product.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        product.isActive ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-700'
                       }`}>
                         {product.isActive ? 'Active' : 'Inactive'}
                       </span>

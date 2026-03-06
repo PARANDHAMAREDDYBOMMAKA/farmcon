@@ -61,7 +61,7 @@ export default function CookieConsent() {
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-lg sm:text-xl font-bold text-slate-700 mb-2">
                   We value your privacy
                 </h3>
                 <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
@@ -82,7 +82,7 @@ export default function CookieConsent() {
               <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto sm:flex-shrink-0">
                 <button
                   onClick={handleDecline}
-                  className="px-6 py-3 rounded-full border-2 border-gray-300 bg-white text-gray-700 font-semibold hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 text-sm sm:text-base whitespace-nowrap"
+                  className="px-6 py-3 rounded-full border-2 border-gray-300 bg-white text-slate-600 font-semibold hover:bg-emerald-50/30 hover:border-gray-400 transition-all duration-200 text-sm sm:text-base whitespace-nowrap"
                 >
                   Decline
                 </button>
@@ -97,7 +97,7 @@ export default function CookieConsent() {
               {/* Close button (mobile) */}
               <button
                 onClick={handleDecline}
-                className="absolute top-4 right-4 sm:hidden p-2 rounded-full hover:bg-gray-100 transition-colors"
+                className="absolute top-4 right-4 sm:hidden p-2 rounded-full hover:bg-slate-100 transition-colors"
                 aria-label="Close"
               >
                 <X className="w-5 h-5 text-gray-500" />

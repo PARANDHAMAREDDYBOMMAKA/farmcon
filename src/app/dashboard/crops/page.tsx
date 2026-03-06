@@ -69,9 +69,9 @@ export default function CropsManagementPage() {
       case 'harvested':
         return 'text-purple-600 bg-purple-100'
       case 'sold':
-        return 'text-gray-900 bg-gray-100'
+        return 'text-slate-700 bg-emerald-100/50'
       default:
-        return 'text-gray-900 bg-gray-100'
+        return 'text-slate-700 bg-emerald-100/50'
     }
   }
 
@@ -93,8 +93,8 @@ export default function CropsManagementPage() {
         <div className="text-center py-20">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
           <div className="mt-6">
-            <h3 className="text-lg font-semibold text-gray-900">Loading your crops...</h3>
-            <p className="text-gray-900 mt-2">Please wait while we fetch your crop data</p>
+            <h3 className="text-lg font-semibold text-slate-700">Loading your crops...</h3>
+            <p className="text-slate-700 mt-2">Please wait while we fetch your crop data</p>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@ export default function CropsManagementPage() {
                 <Wheat className="w-8 h-8 text-green-600" />
                 My Crops
               </h1>
-              <p className="text-gray-900 mt-2 text-lg">Manage your crop lifecycle from planting to harvest</p>
+              <p className="text-slate-700 mt-2 text-lg">Manage your crop lifecycle from planting to harvest</p>
             </div>
             <div className="flex gap-3">
               <button
@@ -152,7 +152,7 @@ export default function CropsManagementPage() {
                   className={`flex-1 min-w-fit px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 ${
                     filter === item.key
                       ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
-                      : 'text-gray-900 hover:bg-gray-100'
+                      : 'text-slate-700 hover:bg-emerald-100/50'
                   }`}
                 >
                   <span className="flex items-center justify-center gap-2">
@@ -161,7 +161,7 @@ export default function CropsManagementPage() {
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                       filter === item.key
                         ? 'bg-white text-green-600'
-                        : 'bg-gray-200 text-gray-900'
+                        : 'bg-emerald-100 text-slate-700'
                     }`}>
                       {item.key === 'all' ? crops.length : crops.filter(c => c.status === item.key).length}
                     </span>
@@ -177,10 +177,10 @@ export default function CropsManagementPage() {
         <div className="text-center py-20">
           <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md mx-auto">
             <Sprout className="w-24 h-24 text-green-500 mx-auto" />
-            <h3 className="mt-6 text-2xl font-bold text-gray-900">
+            <h3 className="mt-6 text-2xl font-bold text-slate-700">
               {filter === 'all' ? 'No crops yet' : `No ${filter.replace('_', ' ')} crops`}
             </h3>
-            <p className="mt-4 text-gray-900 text-lg">
+            <p className="mt-4 text-slate-700 text-lg">
               {filter === 'all'
                 ? 'Start your farming journey by adding your first crop!'
                 : `No crops in ${filter.replace('_', ' ')} status.`
@@ -228,13 +228,13 @@ export default function CropsManagementPage() {
 
               <div className="p-6">
                 <div className="mb-4">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">{crop.name}</h3>
+                  <h3 className="text-xl font-bold text-slate-700 mb-1">{crop.name}</h3>
                   {crop.variety && (
-                    <p className="text-sm text-gray-900 font-medium">{crop.variety}</p>
+                    <p className="text-sm text-slate-700 font-medium">{crop.variety}</p>
                   )}
                 </div>
 
-                <div className="mt-3 space-y-2 text-sm text-gray-900">
+                <div className="mt-3 space-y-2 text-sm text-slate-700">
                   {crop.area && (
                     <div className="flex justify-between">
                       <span>Area:</span>
@@ -279,7 +279,7 @@ export default function CropsManagementPage() {
                 </div>
 
                 {crop.description && (
-                  <p className="mt-3 text-sm text-gray-900 line-clamp-2">
+                  <p className="mt-3 text-sm text-slate-700 line-clamp-2">
                     {crop.description}
                   </p>
                 )}
@@ -288,7 +288,7 @@ export default function CropsManagementPage() {
                   <div className="flex gap-2">
                     <Link
                       href={`/dashboard/crops/${crop.id}`}
-                      className="flex-1 text-center inline-flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-200 transform hover:scale-105"
+                      className="flex-1 text-center inline-flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-slate-600 rounded-lg text-sm font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-200 transform hover:scale-105"
                     >
                       <Eye className="w-4 h-4" />
                       View

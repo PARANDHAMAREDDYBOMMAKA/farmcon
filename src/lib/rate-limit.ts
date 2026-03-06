@@ -10,6 +10,7 @@ export interface RateLimitResult {
   limit: number
   remaining: number
   reset: number
+  error?: string
 }
 
 export class RateLimiter {
@@ -59,13 +60,12 @@ export class RateLimiter {
         reset: Date.now() + (this.config.interval * 1000)
       }
     } catch (error) {
-      console.error('Rate limit check error:', error)
-      
       return {
-        success: true,
+        success: false,
         limit: this.config.maxRequests,
-        remaining: this.config.maxRequests,
-        reset: Date.now() + (this.config.interval * 1000)
+        remaining: 0,
+        reset: Date.now() + (this.config.interval * 1000),
+        error: 'Rate limit service unavailable'
       }
     }
   }

@@ -1,8 +1,11 @@
 import { PrismaClient, UserRole, OrderStatus, CropStatus, EquipmentStatus } from '@prisma/client'
+import { encryptSensitiveFields, decryptSensitiveFields } from './encryption'
 
 declare global {
   var prisma: PrismaClient | undefined
 }
+
+const FARMER_SENSITIVE_FIELDS = ['bankAccount', 'panNumber', 'aadharNumber'] as const
 
 export const prisma =
   globalThis.prisma ||
@@ -65,23 +68,17 @@ export const dbOperations = {
 
     async findById(id: string) {
       try {
-        console.log('[Prisma findById] Searching for id:', id)
         const profile = await prisma.profile.findUnique({
           where: { id },
           include: {
             farmerProfile: true
           }
         })
-        console.log('[Prisma findById] Result:', profile ? `Found profile for ${profile.email}` : 'Not found')
+        if (profile?.farmerProfile) {
+          profile.farmerProfile = decryptSensitiveFields(profile.farmerProfile, [...FARMER_SENSITIVE_FIELDS])
+        }
         return profile
       } catch (error: any) {
-        console.error('[Prisma findById] ERROR:', error)
-        console.error('[Prisma findById] Error details:', {
-          message: error.message,
-          code: error.code,
-          meta: error.meta,
-          name: error.name
-        })
         throw new PrismaError(
           `Failed to find profile: ${error.message}`,
           error.code,
@@ -92,12 +89,16 @@ export const dbOperations = {
 
     async findByEmail(email: string) {
       try {
-        return await prisma.profile.findUnique({
+        const profile = await prisma.profile.findUnique({
           where: { email },
           include: {
             farmerProfile: true
           }
         })
+        if (profile?.farmerProfile) {
+          profile.farmerProfile = decryptSensitiveFields(profile.farmerProfile, [...FARMER_SENSITIVE_FIELDS])
+        }
+        return profile
       } catch (error: any) {
         throw new PrismaError(
           `Failed to find profile by email: ${error.message}`,
@@ -149,57 +150,70 @@ export const dbOperations = {
       gstNumber?: string
     }) {
       try {
-        console.log('Prisma upsert - data:', { id: data.id, email: data.email, role: data.role })
+        const profile = await prisma.$transaction(async (tx) => {
+          const existingById = await tx.profile.findUnique({
+            where: { id: data.id }
+          })
 
-        const existingProfileByEmail = await prisma.profile.findUnique({
-          where: { email: data.email }
-        })
+          if (existingById) {
+            return await tx.profile.update({
+              where: { id: data.id },
+              data: {
+                email: data.email,
+                fullName: data.fullName,
+                phone: data.phone,
+                role: data.role,
+                city: data.city,
+                state: data.state,
+                address: data.address,
+                pincode: data.pincode,
+                businessName: data.businessName,
+                gstNumber: data.gstNumber
+              },
+              include: {
+                farmerProfile: true
+              }
+            })
+          }
 
-        if (existingProfileByEmail && existingProfileByEmail.id !== data.id) {
-          
-          console.log('Deleting old profile with different ID and creating new one with current user ID')
-          console.log('Old profile ID:', existingProfileByEmail.id, 'New user ID:', data.id)
-          await prisma.profile.delete({
+          const existingByEmail = await tx.profile.findUnique({
             where: { email: data.email }
           })
-        }
 
-        const profile = await prisma.profile.upsert({
-          where: { id: data.id },
-          update: {
-            email: data.email, 
-            fullName: data.fullName,
-            phone: data.phone,
-            role: data.role,
-            city: data.city,
-            state: data.state,
-            address: data.address,
-            pincode: data.pincode,
-            businessName: data.businessName,
-            gstNumber: data.gstNumber
-          },
-          create: {
-            id: data.id,
-            email: data.email,
-            fullName: data.fullName,
-            phone: data.phone,
-            role: data.role,
-            city: data.city,
-            state: data.state,
-            address: data.address,
-            pincode: data.pincode,
-            businessName: data.businessName,
-            gstNumber: data.gstNumber
-          },
-          include: {
-            farmerProfile: true
+          if (existingByEmail) {
+            throw new PrismaError(
+              'A profile with this email already exists',
+              'P2002',
+              { target: ['email'] }
+            )
           }
+
+          return await tx.profile.create({
+            data: {
+              id: data.id,
+              email: data.email,
+              fullName: data.fullName,
+              phone: data.phone,
+              role: data.role,
+              city: data.city,
+              state: data.state,
+              address: data.address,
+              pincode: data.pincode,
+              businessName: data.businessName,
+              gstNumber: data.gstNumber
+            },
+            include: {
+              farmerProfile: true
+            }
+          })
+        }, {
+          isolationLevel: 'Serializable',
+          maxWait: 5000,
+          timeout: 10000
         })
 
-        console.log('Prisma upsert - profile saved with id:', profile.id)
         return profile
       } catch (error: any) {
-        console.error('Prisma upsert error:', error)
         throw new PrismaError(
           `Failed to upsert profile: ${error.message}`,
           error.code,
@@ -226,20 +240,21 @@ export const dbOperations = {
       waterSource?: string[]
     }) {
       try {
+        const encryptedData = encryptSensitiveFields(data, [...FARMER_SENSITIVE_FIELDS])
         return await prisma.farmerProfile.create({
           data: {
-            id: data.id,
-            farmName: data.farmName,
-            farmLocation: data.farmLocation,
-            farmSize: data.farmSize,
-            farmingExperience: data.farmingExperience,
-            farmingType: data.farmingType || [],
-            bankAccount: data.bankAccount,
-            ifscCode: data.ifscCode,
-            panNumber: data.panNumber,
-            aadharNumber: data.aadharNumber,
-            soilType: data.soilType,
-            waterSource: data.waterSource || []
+            id: encryptedData.id,
+            farmName: encryptedData.farmName,
+            farmLocation: encryptedData.farmLocation,
+            farmSize: encryptedData.farmSize,
+            farmingExperience: encryptedData.farmingExperience,
+            farmingType: encryptedData.farmingType || [],
+            bankAccount: encryptedData.bankAccount,
+            ifscCode: encryptedData.ifscCode,
+            panNumber: encryptedData.panNumber,
+            aadharNumber: encryptedData.aadharNumber,
+            soilType: encryptedData.soilType,
+            waterSource: encryptedData.waterSource || []
           }
         })
       } catch (error: any) {
@@ -253,12 +268,16 @@ export const dbOperations = {
 
     async findById(id: string) {
       try {
-        return await prisma.farmerProfile.findUnique({
+        const profile = await prisma.farmerProfile.findUnique({
           where: { id },
           include: {
             profile: true
           }
         })
+        if (profile) {
+          return decryptSensitiveFields(profile, [...FARMER_SENSITIVE_FIELDS])
+        }
+        return profile
       } catch (error: any) {
         throw new PrismaError(
           `Failed to find farmer profile: ${error.message}`,
@@ -282,9 +301,10 @@ export const dbOperations = {
       waterSource: string[]
     }>) {
       try {
+        const encryptedData = encryptSensitiveFields(data, [...FARMER_SENSITIVE_FIELDS])
         return await prisma.farmerProfile.update({
           where: { id },
-          data
+          data: encryptedData
         })
       } catch (error: any) {
         throw new PrismaError(
@@ -310,34 +330,35 @@ export const dbOperations = {
       waterSource?: string[]
     }) {
       try {
+        const encryptedData = encryptSensitiveFields(data, [...FARMER_SENSITIVE_FIELDS])
         return await prisma.farmerProfile.upsert({
-          where: { id: data.id },
+          where: { id: encryptedData.id },
           update: {
-            farmName: data.farmName,
-            farmLocation: data.farmLocation,
-            farmSize: data.farmSize,
-            farmingExperience: data.farmingExperience,
-            farmingType: data.farmingType || [],
-            bankAccount: data.bankAccount,
-            ifscCode: data.ifscCode,
-            panNumber: data.panNumber,
-            aadharNumber: data.aadharNumber,
-            soilType: data.soilType,
-            waterSource: data.waterSource || []
+            farmName: encryptedData.farmName,
+            farmLocation: encryptedData.farmLocation,
+            farmSize: encryptedData.farmSize,
+            farmingExperience: encryptedData.farmingExperience,
+            farmingType: encryptedData.farmingType || [],
+            bankAccount: encryptedData.bankAccount,
+            ifscCode: encryptedData.ifscCode,
+            panNumber: encryptedData.panNumber,
+            aadharNumber: encryptedData.aadharNumber,
+            soilType: encryptedData.soilType,
+            waterSource: encryptedData.waterSource || []
           },
           create: {
-            id: data.id,
-            farmName: data.farmName,
-            farmLocation: data.farmLocation,
-            farmSize: data.farmSize,
-            farmingExperience: data.farmingExperience,
-            farmingType: data.farmingType || [],
-            bankAccount: data.bankAccount,
-            ifscCode: data.ifscCode,
-            panNumber: data.panNumber,
-            aadharNumber: data.aadharNumber,
-            soilType: data.soilType,
-            waterSource: data.waterSource || []
+            id: encryptedData.id,
+            farmName: encryptedData.farmName,
+            farmLocation: encryptedData.farmLocation,
+            farmSize: encryptedData.farmSize,
+            farmingExperience: encryptedData.farmingExperience,
+            farmingType: encryptedData.farmingType || [],
+            bankAccount: encryptedData.bankAccount,
+            ifscCode: encryptedData.ifscCode,
+            panNumber: encryptedData.panNumber,
+            aadharNumber: encryptedData.aadharNumber,
+            soilType: encryptedData.soilType,
+            waterSource: encryptedData.waterSource || []
           }
         })
       } catch (error: any) {

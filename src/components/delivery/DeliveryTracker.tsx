@@ -295,7 +295,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
 
       {}
       <div className="p-6">
-        <h3 className="text-xl font-semibold text-gray-900 mb-6">Delivery Timeline</h3>
+        <h3 className="text-xl font-semibold text-slate-700 mb-6">Delivery Timeline</h3>
 
         <div className="space-y-6">
           {milestones.map((milestone, index) => (
@@ -306,7 +306,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                   w-10 h-10 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300
                   ${milestone.status === 'completed' ? 'bg-green-500 border-green-500 text-white' :
                     milestone.status === 'current' ? 'bg-blue-500 border-blue-500 text-white animate-pulse' :
-                    'bg-gray-100 border-gray-300 text-gray-900'}
+                    'bg-slate-100 border-gray-300 text-slate-700'}
                 `}>
                   {milestone.status === 'completed' ? '✓' : milestone.icon}
                 </div>
@@ -323,21 +323,21 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                 <div className="flex items-center justify-between">
                   <h4 className={`
                     text-lg font-semibold transition-all duration-300
-                    ${milestone.status === 'completed' ? 'text-gray-900' :
-                      milestone.status === 'current' ? 'text-blue-600' : 'text-gray-900'}
+                    ${milestone.status === 'completed' ? 'text-slate-700' :
+                      milestone.status === 'current' ? 'text-blue-600' : 'text-slate-700'}
                   `}>
                     {milestone.title}
                   </h4>
                   {milestone.timestamp && (
-                    <span className="text-sm text-gray-900">
+                    <span className="text-sm text-slate-700">
                       {format(parseISO(milestone.timestamp), 'MMM dd, h:mm a')}
                     </span>
                   )}
                 </div>
                 <p className={`
                   text-sm mt-1 transition-all duration-300
-                  ${milestone.status === 'completed' ? 'text-gray-900' :
-                    milestone.status === 'current' ? 'text-blue-600' : 'text-gray-900'}
+                  ${milestone.status === 'completed' ? 'text-slate-700' :
+                    milestone.status === 'current' ? 'text-blue-600' : 'text-slate-700'}
                 `}>
                   {milestone.description}
                 </p>
@@ -353,7 +353,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
       </div>
 
       {}
-      <div className="bg-gray-50 px-6 py-4 border-t">
+      <div className="bg-emerald-50/30 px-6 py-4 border-t">
         <div className="flex flex-wrap gap-3">
           <button className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
             📞 Contact Delivery Partner

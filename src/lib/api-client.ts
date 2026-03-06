@@ -22,7 +22,8 @@ async function apiCall(endpoint: string, options: RequestInit = {}) {
     throw new APIError(errorData.error || 'API request failed', response.status)
   }
 
-  return response.json()
+  const json = await response.json()
+  return json.data || json
 }
 
 export const profileAPI = {
