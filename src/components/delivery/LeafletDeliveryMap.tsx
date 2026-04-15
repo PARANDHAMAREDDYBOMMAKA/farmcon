@@ -93,7 +93,7 @@ const driverIcon = L.divIcon({
       font-size: 32px;
       animation: bounce 1s infinite;
     ">
-      🚚
+      
     </div>
     <style>
       @keyframes bounce {
@@ -269,11 +269,11 @@ export default function LeafletDeliveryMap({
           {selectedMarker === 'pickup' && (
             <Popup>
               <div className="p-2 min-w-[200px]">
-                <h3 className="font-semibold text-green-600">Pickup Location</h3>
+                <h3 className="font-semibold text-emerald-600">Pickup Location</h3>
                 <p className="text-sm text-slate-700">
                   {deliveryData?.pickupAddress || `${order.seller?.city}, ${order.seller?.state}`}
                 </p>
-                <p className="text-xs text-green-600 mt-1">📦 Origin</p>
+                <p className="text-xs text-emerald-600 mt-1"> Origin</p>
               </div>
             </Popup>
           )}
@@ -294,7 +294,7 @@ export default function LeafletDeliveryMap({
                 <p className="text-sm text-slate-700">
                   {deliveryData?.deliveryAddress || parseDeliveryAddress()}
                 </p>
-                <p className="text-xs text-blue-600 mt-1">📍 Destination</p>
+                <p className="text-xs text-blue-600 mt-1"> Destination</p>
               </div>
             </Popup>
           )}
@@ -318,15 +318,15 @@ export default function LeafletDeliveryMap({
                   <p className="text-sm text-slate-700">Your order is on the way!</p>
                   <div className="mt-2 space-y-1 text-xs">
                     {deliveryData?.driver?.vehicleType && (
-                      <p className="text-slate-700">🚛 {deliveryData.driver.vehicleType} - {deliveryData.driver.vehicleNumber}</p>
+                      <p className="text-slate-700"> {deliveryData.driver.vehicleType} - {deliveryData.driver.vehicleNumber}</p>
                     )}
                     {deliveryData?.driver?.phone && (
-                      <p className="text-blue-600">📞 {deliveryData.driver.phone}</p>
+                      <p className="text-blue-600"> {deliveryData.driver.phone}</p>
                     )}
-                    <p className="text-green-600">📦 Order #{order.id.slice(-8)}</p>
+                    <p className="text-emerald-600"> Order #{order.id.slice(-8)}</p>
                     {deliveryData?.driver?.lastLocationUpdate && (
                       <p className="text-slate-700">
-                        ⏱️ Updated: {new Date(deliveryData.driver.lastLocationUpdate).toLocaleTimeString()}
+                         Updated: {new Date(deliveryData.driver.lastLocationUpdate).toLocaleTimeString()}
                       </p>
                     )}
                   </div>

@@ -88,10 +88,14 @@ export default function AdminDashboard() {
       setUser(profile)
 
       const cacheKey = 'admin_stats'
-      const cachedStats = await redis.get(cacheKey)
-      
+      const cachedStats = redis ? await redis.get(cacheKey) : null
+
       if (cachedStats) {
-        setStats(JSON.parse(cachedStats))
+        try {
+          setStats(typeof cachedStats === 'string' ? JSON.parse(cachedStats) : cachedStats)
+        } catch {
+          await loadStats()
+        }
       } else {
         await loadStats()
       }
@@ -191,7 +195,9 @@ export default function AdminDashboard() {
 
       setStats(adminStats)
 
-      await redis.set('admin_stats', JSON.stringify(adminStats), { ex: 600 })
+      if (redis) {
+        await redis.set('admin_stats', JSON.stringify(adminStats), { ex: 600 })
+      }
 
     } catch (error) {
       console.error('Error loading stats:', error)
@@ -240,11 +246,11 @@ export default function AdminDashboard() {
 
   const getActivityIcon = (type: RecentActivity['type']) => {
     switch (type) {
-      case 'user_signup': return '👤'
-      case 'crop_listed': return '🌾'
-      case 'order_placed': return '🛒'
-      case 'equipment_added': return '🚜'
-      default: return '📝'
+      case 'user_signup': return ''
+      case 'crop_listed': return ''
+      case 'order_placed': return ''
+      case 'equipment_added': return ''
+      default: return ''
     }
   }
 
@@ -260,7 +266,7 @@ export default function AdminDashboard() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading admin dashboard...</p>
         </div>
       </div>
@@ -271,11 +277,11 @@ export default function AdminDashboard() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <span className="text-6xl">⚠️</span>
+          <span className="text-6xl"></span>
           <h3 className="mt-4 text-lg font-medium text-slate-700">Failed to load dashboard data</h3>
           <button 
             onClick={loadAdminData}
-            className="mt-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+            className="mt-4 px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700"
           >
             Retry
           </button>
@@ -293,7 +299,7 @@ export default function AdminDashboard() {
 
       {}
       <div className="mb-6">
-        <div className="border-b border-gray-200">
+        <div className="border-b border-slate-200">
           <nav className="-mb-px flex space-x-8">
             {[
               { key: 'overview', label: 'Overview' },
@@ -307,8 +313,8 @@ export default function AdminDashboard() {
                 onClick={() => setActiveTab(tab.key)}
                 className={`py-2 px-1 border-b-2 font-medium text-sm ${
                   activeTab === tab.key
-                    ? 'border-green-500 text-green-600'
-                    : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-gray-300'
+                    ? 'border-emerald-500 text-emerald-600'
+                    : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-slate-200'
                 }`}
               >
                 {tab.label}
@@ -326,7 +332,7 @@ export default function AdminDashboard() {
               <h3 className="text-sm font-medium text-slate-700">Total Users</h3>
               <p className="text-3xl font-bold text-slate-700">{stats.users.total}</p>
               <div className="mt-2 text-sm">
-                <span className="text-green-600">↗ {stats.users.verified} verified</span>
+                <span className="text-emerald-600"> {stats.users.verified} verified</span>
               </div>
             </div>
 
@@ -350,7 +356,7 @@ export default function AdminDashboard() {
               <h3 className="text-sm font-medium text-slate-700">Monthly GMV</h3>
               <p className="text-3xl font-bold text-slate-700">{formatCurrency(stats.revenue.monthly_gmv)}</p>
               <div className="mt-2 text-sm">
-                <span className="text-green-600">Total: {formatCurrency(stats.revenue.total_gmv)}</span>
+                <span className="text-emerald-600">Total: {formatCurrency(stats.revenue.total_gmv)}</span>
               </div>
             </div>
           </div>
@@ -390,7 +396,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-700">Growing</span>
-                  <span className="font-medium text-green-600">{stats.crops.growing}</span>
+                  <span className="font-medium text-emerald-600">{stats.crops.growing}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-700">Harvested</span>
@@ -435,14 +441,14 @@ export default function AdminDashboard() {
           <div className="space-y-4">
             <Link 
               href="/dashboard/admin/users"
-              className="block p-4 border border-gray-200 rounded-lg hover:bg-emerald-50/30"
+              className="block p-4 border border-slate-200 rounded-lg hover:bg-emerald-50/30"
             >
               <h4 className="font-medium text-slate-700">Manage Users</h4>
               <p className="text-sm text-slate-700">View, edit, and manage user accounts and permissions</p>
             </Link>
             <Link 
               href="/dashboard/admin/verifications"
-              className="block p-4 border border-gray-200 rounded-lg hover:bg-emerald-50/30"
+              className="block p-4 border border-slate-200 rounded-lg hover:bg-emerald-50/30"
             >
               <h4 className="font-medium text-slate-700">Pending Verifications</h4>
               <p className="text-sm text-slate-700">Review and approve user verification requests</p>
@@ -457,26 +463,26 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Link 
               href="/dashboard/admin/products"
-              className="block p-4 border border-gray-200 rounded-lg hover:bg-emerald-50/30"
+              className="block p-4 border border-slate-200 rounded-lg hover:bg-emerald-50/30"
             >
               <h4 className="font-medium text-slate-700">Products ({stats.products.total})</h4>
               <p className="text-sm text-slate-700">Manage pesticides and supplies listings</p>
             </Link>
             <Link 
               href="/dashboard/admin/crops"
-              className="block p-4 border border-gray-200 rounded-lg hover:bg-emerald-50/30"
+              className="block p-4 border border-slate-200 rounded-lg hover:bg-emerald-50/30"
             >
               <h4 className="font-medium text-slate-700">Crop Listings ({stats.crops.listed_for_sale})</h4>
               <p className="text-sm text-slate-700">Oversee farmer crop marketplace</p>
             </Link>
             <Link 
               href="/dashboard/admin/equipment"
-              className="block p-4 border border-gray-200 rounded-lg hover:bg-emerald-50/30"
+              className="block p-4 border border-slate-200 rounded-lg hover:bg-emerald-50/30"
             >
               <h4 className="font-medium text-slate-700">Equipment ({stats.equipment.total})</h4>
               <p className="text-sm text-slate-700">Monitor equipment rental listings</p>
             </Link>
-            <div className="p-4 border border-gray-200 rounded-lg bg-emerald-50/30">
+            <div className="p-4 border border-slate-200 rounded-lg bg-emerald-50/30">
               <h4 className="font-medium text-slate-700">Content Moderation</h4>
               <p className="text-sm text-slate-700">Review reported content and enforce policies</p>
             </div>
@@ -492,9 +498,9 @@ export default function AdminDashboard() {
               <p className="text-2xl font-bold text-yellow-600">{stats.orders.pending}</p>
               <p className="text-sm text-yellow-800">Pending Orders</p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <p className="text-2xl font-bold text-green-600">{stats.orders.completed}</p>
-              <p className="text-sm text-green-800">Completed Orders</p>
+            <div className="text-center p-4 bg-emerald-50 rounded-lg">
+              <p className="text-2xl font-bold text-emerald-600">{stats.orders.completed}</p>
+              <p className="text-sm text-emerald-800">Completed Orders</p>
             </div>
             <div className="text-center p-4 bg-red-50 rounded-lg">
               <p className="text-2xl font-bold text-red-600">{stats.orders.cancelled}</p>
@@ -503,7 +509,7 @@ export default function AdminDashboard() {
           </div>
           <Link 
             href="/dashboard/admin/orders"
-            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700"
           >
             View All Orders
           </Link>
@@ -512,10 +518,10 @@ export default function AdminDashboard() {
 
       {activeTab === 'reports' && (
         <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold text-slate-700 mb-4">Reports & Analytics</h3>
+          <h3 className="text-lg font-semibold text-slate-700 mb-4">Reports</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border border-gray-200 rounded-lg p-4">
-              <h4 className="font-medium text-slate-700 mb-2">Revenue Analytics</h4>
+            <div className="border border-slate-200 rounded-lg p-4">
+              <h4 className="font-medium text-slate-700 mb-2">Revenue overview</h4>
               <p className="text-sm text-slate-700 mb-4">Track platform revenue and growth metrics</p>
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -529,7 +535,7 @@ export default function AdminDashboard() {
               </div>
             </div>
             
-            <div className="border border-gray-200 rounded-lg p-4">
+            <div className="border border-slate-200 rounded-lg p-4">
               <h4 className="font-medium text-slate-700 mb-2">Platform Activity</h4>
               <p className="text-sm text-slate-700 mb-4">Monitor user engagement and platform usage</p>
               <div className="space-y-2">

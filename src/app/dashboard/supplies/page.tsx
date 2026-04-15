@@ -94,7 +94,7 @@ export default function SuppliesPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading supplies...</p>
         </div>
       </div>
@@ -112,7 +112,7 @@ export default function SuppliesPage() {
           <div className="mt-4 sm:mt-0">
             <Link
               href="/dashboard/cart"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-emerald-50/30"
+              className="inline-flex items-center px-4 py-2 border border-slate-200 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-emerald-50/30"
             >
               <ShoppingCart className="h-4 w-4 mr-2" />
               View Cart
@@ -129,14 +129,14 @@ export default function SuppliesPage() {
             placeholder="Search products..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-4 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           />
         </div>
         <div className="sm:w-48">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-4 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           >
             <option value="">All Categories</option>
             {categories.map((category) => (
@@ -193,14 +193,14 @@ export default function SuppliesPage() {
                 <button
                   onClick={() => addToCart(product.id)}
                   disabled={cartLoading === product.id || product.stockQuantity === 0}
-                  className="flex-1 bg-green-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-emerald-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {cartLoading === product.id ? 'Adding...' :
                    product.stockQuantity === 0 ? 'Out of Stock' : 'Add to Cart'}
                 </button>
                 <Link
                   href={`/dashboard/supplies/${product.id}`}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-slate-700 hover:bg-emerald-50/30"
+                  className="px-3 py-2 border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-emerald-50/30"
                 >
                   View
                 </Link>
@@ -212,7 +212,7 @@ export default function SuppliesPage() {
 
       {filteredProducts.length === 0 && (
         <div className="text-center py-12">
-          <Package className="h-24 w-24 text-green-600 mx-auto" />
+          <Package className="h-24 w-24 text-emerald-600 mx-auto" />
           <h3 className="mt-4 text-lg font-medium text-slate-700">No products found</h3>
           <p className="mt-2 text-slate-700">Try adjusting your search or category filter.</p>
         </div>

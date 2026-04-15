@@ -14,16 +14,16 @@ export const getApiDocs = () => {
 A comprehensive B2B/B2C marketplace platform API for Indian farmers, connecting them with suppliers, buyers, and service providers.
 
 ## Features
-- 🤖 AI-Powered Chatbot & Price Predictions
-- 🔐 Multi-factor Authentication (Email OTP, Phone OTP, Social Login)
-- 🔔 Real-time Notifications
-- 🔍 Advanced Search (MeiliSearch)
-- 📦 Order Management & Tracking
-- 💳 Payment Processing (Stripe)
-- 🌾 Crop & Equipment Management
-- 📊 Market Price Analytics
-- 🌤️ Weather Integration
-- 🚚 Delivery Tracking with GPS
+-  AI-Powered Chatbot & Price Predictions
+-  Multi-factor Authentication (Email OTP, Phone OTP, Social Login)
+-  Real-time Notifications
+-  Advanced Search (Meilisearch)
+-  Order Management & Tracking
+-  Payment Processing (Stripe)
+-  Crop & Equipment Management
+-  Market Price Analytics
+-  Weather Integration
+-  Delivery Tracking with GPS
 
 ## Authentication
 

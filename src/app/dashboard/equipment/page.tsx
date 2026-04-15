@@ -105,7 +105,7 @@ export default function EquipmentRentalPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading equipment...</p>
         </div>
       </div>
@@ -123,7 +123,7 @@ export default function EquipmentRentalPage() {
           <div className="mt-4 sm:mt-0">
             <Link
               href="/dashboard/equipment/add"
-              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700"
+              className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700"
             >
               + List Your Equipment
             </Link>
@@ -139,7 +139,7 @@ export default function EquipmentRentalPage() {
             placeholder="Search equipment, owner..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-4 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           />
         </div>
         
@@ -147,7 +147,7 @@ export default function EquipmentRentalPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-4 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           >
             <option value="">All Categories</option>
             {categories.map((category) => (
@@ -162,7 +162,7 @@ export default function EquipmentRentalPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full px-4 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
           >
             <option value="created_at">Latest First</option>
             <option value="price_low">Price: Low to High</option>
@@ -203,7 +203,7 @@ export default function EquipmentRentalPage() {
                     <p className="text-sm text-slate-700">{item.brand} {item.model}</p>
                   )}
                 </div>
-                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
                   Available
                 </span>
               </div>
@@ -250,21 +250,21 @@ export default function EquipmentRentalPage() {
               <div className="mt-4 flex space-x-2">
                 <button
                   onClick={() => contactOwner(item.owner.phone || '', item.name)}
-                  className="flex-1 bg-green-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 flex items-center justify-center gap-2"
+                  className="flex-1 bg-emerald-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700 flex items-center justify-center gap-2"
                 >
                   <Phone className="w-4 h-4" />
                   Contact
                 </button>
                 <Link
                   href={`/dashboard/equipment/${item.id}`}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
+                  className="px-3 py-2 border border-slate-200 rounded-md text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
                 >
                   Details
                 </Link>
               </div>
 
               {item.specifications && Object.keys(item.specifications).length > 0 && (
-                <div className="mt-3 pt-3 border-t border-gray-200">
+                <div className="mt-3 pt-3 border-t border-slate-200">
                   <h4 className="text-xs font-medium text-slate-700 uppercase tracking-wide">
                     Key Specs
                   </h4>
@@ -292,7 +292,7 @@ export default function EquipmentRentalPage() {
           </p>
           <Link
             href="/dashboard/equipment/add"
-            className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+            className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-emerald-600 hover:bg-emerald-700"
           >
             List Your Equipment
           </Link>

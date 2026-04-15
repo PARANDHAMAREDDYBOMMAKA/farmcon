@@ -81,7 +81,7 @@ export default function LeafletMap({
   if (!isMounted) {
     return (
       <div
-        className="flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-lg"
+        className="flex items-center justify-center bg-slate-200 dark:bg-emerald-950 rounded-lg"
         style={{ height }}
       >
         <p className="text-slate-700 dark:text-slate-700">Loading map...</p>
@@ -141,7 +141,7 @@ export function SatelliteMap({
   if (!isMounted) {
     return (
       <div
-        className="flex items-center justify-center bg-gray-200 dark:bg-gray-800 rounded-lg"
+        className="flex items-center justify-center bg-slate-200 dark:bg-emerald-950 rounded-lg"
         style={{ height }}
       >
         <p className="text-slate-700 dark:text-slate-700">Loading satellite map...</p>

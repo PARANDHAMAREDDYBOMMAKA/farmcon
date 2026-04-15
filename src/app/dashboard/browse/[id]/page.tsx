@@ -120,7 +120,7 @@ export default function CropDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading crop details...</p>
         </div>
       </div>
@@ -131,13 +131,13 @@ export default function CropDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <span className="text-6xl">❌</span>
+          <span className="text-6xl"></span>
           <h3 className="mt-4 text-lg font-medium text-slate-700">Crop listing not found</h3>
           <Link
             href="/dashboard/browse"
-            className="mt-4 inline-block text-green-600 hover:text-green-500"
+            className="mt-4 inline-block text-emerald-600 hover:text-emerald-500"
           >
-            ← Back to marketplace
+             Back to marketplace
           </Link>
         </div>
       </div>
@@ -175,7 +175,7 @@ export default function CropDetailPage() {
               />
             ) : (
               <div className="h-96 w-full bg-emerald-100/50 flex items-center justify-center">
-                <span className="text-8xl">🌾</span>
+                <span className="text-8xl"></span>
               </div>
             )}
           </div>
@@ -186,7 +186,7 @@ export default function CropDetailPage() {
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
                   className={`aspect-w-1 aspect-h-1 overflow-hidden rounded-lg ${
-                    selectedImageIndex === index ? 'ring-2 ring-green-500' : ''
+                    selectedImageIndex === index ? 'ring-2 ring-emerald-500' : ''
                   }`}
                 >
                   <img
@@ -211,13 +211,13 @@ export default function CropDetailPage() {
             </div>
             <div className="flex flex-col gap-2">
               {listing.crop.organicCertified && (
-                <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">
-                  🌿 Organic Certified
+                <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                   Organic Certified
                 </span>
               )}
               {listing.harvestDate && isDaysFresh(listing.harvestDate) && (
                 <span className="inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-blue-100 text-blue-800">
-                  ✨ Fresh Harvest
+                   Fresh Harvest
                 </span>
               )}
             </div>
@@ -250,8 +250,8 @@ export default function CropDetailPage() {
 
             <div className="flex items-center justify-between">
               <span className="text-slate-700">Delivery:</span>
-              <span className={`font-medium ${listing.deliveryAvailable ? 'text-green-600' : 'text-slate-700'}`}>
-                {listing.deliveryAvailable ? '✅ Available' : '❌ Pickup Only'}
+              <span className={`font-medium ${listing.deliveryAvailable ? 'text-emerald-600' : 'text-slate-700'}`}>
+                {listing.deliveryAvailable ? ' Available' : ' Pickup Only'}
               </span>
             </div>
           </div>
@@ -293,7 +293,7 @@ export default function CropDetailPage() {
           {listing.pickupLocation && (
             <div className="mt-6">
               <h3 className="text-lg font-semibold text-slate-700 mb-2">Pickup Location</h3>
-              <p className="text-slate-700">📍 {listing.pickupLocation}</p>
+              <p className="text-slate-700"> {listing.pickupLocation}</p>
             </div>
           )}
 
@@ -307,7 +307,7 @@ export default function CropDetailPage() {
                 id="quantity"
                 value={quantity}
                 onChange={(e) => setQuantity(parseInt(e.target.value))}
-                className="rounded-md border border-gray-300 py-1.5 px-3 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="rounded-md border border-slate-200 py-1.5 px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
               >
                 {[...Array(Math.min(20, Math.max(1, Math.floor(Number(listing.quantityAvailable) || 1))))].map((_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -326,14 +326,14 @@ export default function CropDetailPage() {
             <button
               onClick={addToCart}
               disabled={cartLoading}
-              className="flex-1 bg-green-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+              className="flex-1 bg-emerald-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-emerald-700 disabled:opacity-50"
             >
               {cartLoading ? 'Adding to Cart...' : 'Add to Cart'}
             </button>
             <button
               onClick={buyNow}
               disabled={cartLoading}
-              className="flex-1 bg-green-800 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-900 disabled:opacity-50"
+              className="flex-1 bg-emerald-800 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-emerald-900 disabled:opacity-50"
             >
               Buy Now
             </button>
@@ -344,7 +344,7 @@ export default function CropDetailPage() {
             <p className="text-sm text-slate-700 text-center">
               Have questions? Contact the farmer directly at{' '}
               {listing.farmer.phone ? (
-                <a href={`tel:${listing.farmer.phone}`} className="text-green-600 hover:text-green-700 font-medium">
+                <a href={`tel:${listing.farmer.phone}`} className="text-emerald-600 hover:text-emerald-700 font-medium">
                   {listing.farmer.phone}
                 </a>
               ) : (

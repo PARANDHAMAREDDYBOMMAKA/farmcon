@@ -3,218 +3,102 @@
 
 @theme {
   --color-background: #ffffff;
-  --color-foreground: #171717;
-  --font-family-sans: var(--font-geist-sans);
-  --font-family-mono: var(--font-geist-mono);
+  --color-foreground: #0f172a;
+  --font-family-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-family-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  @theme {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-  }
-}
-
-/* Reset any problematic styles */
 * {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
   background-color: var(--color-background);
   color: var(--color-foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-family-sans);
 }
 
-/* Ensure input text is always visible */
 input, textarea, select {
-  color: #1f2937 !important;
-  background-color: #ffffff !important;
+  color: #052e16;
+  background-color: #ffffff;
 }
 
 input::placeholder, textarea::placeholder {
-  color: #9ca3af !important;
+  color: #94a3b8;
 }
 
-/* Specific text color fixes for light mode */
-html:not([data-theme="dark"]) {
-  .text-gray-900 {
-    color: #111827 !important;
-  }
-
-  .text-gray-800 {
-    color: #1f2937 !important;
-  }
-
-  .text-gray-700 {
-    color: #374151 !important;
-  }
-
-  .text-gray-600 {
-    color: #4b5563 !important;
-  }
-
-  .text-gray-500 {
-    color: #6b7280 !important;
-  }
-
-  .text-white {
-    color: #ffffff !important;
-  }
-
-  .text-green-600 {
-    color: #059669 !important;
-  }
-
-  .text-blue-600 {
-    color: #2563eb !important;
-  }
-
-  .text-yellow-600 {
-    color: #d97706 !important;
-  }
-
-  .text-purple-600 {
-    color: #9333ea !important;
-  }
-
-  .text-red-600 {
-    color: #dc2626 !important;
-  }
+::selection {
+  background-color: #a7f3d0;
+  color: #064e3b;
 }
 
-/* Dark mode text colors */
-@media (prefers-color-scheme: dark) {
-  .text-gray-900 {
-    color: #f9fafb !important;
-  }
-
-  .text-gray-800 {
-    color: #f3f4f6 !important;
-  }
-
-  .text-gray-700 {
-    color: #e5e7eb !important;
-  }
-
-  .text-gray-600 {
-    color: #d1d5db !important;
-  }
-
-  .text-gray-500 {
-    color: #9ca3af !important;
-  }
-
-  body {
-    color: #ededed !important;
-  }
-}
-
-/* Custom Animations for Order Success Page */
-@keyframes checkmark {
-  0% {
-    transform: scale(0) rotate(-45deg);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2) rotate(0deg);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-@keyframes slideUp {
-  0% {
-    transform: translateY(20px);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-/* Leaflet Map Styles */
-.leaflet-container {
-  z-index: 0;
+@keyframes fc-blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(24px, -20px) scale(1.08); }
+  66% { transform: translate(-20px, 18px) scale(0.94); }
 }
 
-.leaflet-pane {
-  z-index: 400;
+.fc-blob {
+  animation: fc-blob 12s ease-in-out infinite;
 }
 
-.leaflet-tile-pane {
-  z-index: 200;
+@keyframes fc-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
-.leaflet-overlay-pane {
-  z-index: 400;
+.fc-float {
+  animation: fc-float 6s ease-in-out infinite;
 }
 
-.leaflet-shadow-pane {
-  z-index: 500;
+@keyframes fc-shine {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
 }
 
-.leaflet-marker-pane {
-  z-index: 600;
+.fc-shine {
+  background-size: 200% auto;
+  animation: fc-shine 3s linear infinite;
 }
 
-.leaflet-tooltip-pane {
-  z-index: 650;
+@keyframes fc-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.leaflet-popup-pane {
-  z-index: 700;
+.fc-fade-up {
+  animation: fc-fade-up 0.6s ease-out both;
 }
 
-.leaflet-map-pane canvas {
-  z-index: 100;
-}
+.leaflet-container { z-index: 0; }
+.leaflet-pane { z-index: 400; }
+.leaflet-tile-pane { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane { z-index: 500; }
+.leaflet-marker-pane { z-index: 600; }
+.leaflet-tooltip-pane { z-index: 650; }
+.leaflet-popup-pane { z-index: 700; }
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-control { z-index: 800; }
+.leaflet-marker-icon, .leaflet-marker-shadow { z-index: 600; }
 
-.leaflet-control {
-  z-index: 800;
-}
-
-/* Fix for Leaflet marker icons */
-.leaflet-marker-icon,
-.leaflet-marker-shadow {
-  z-index: 600;
-}
-
-/* Custom marker styles */
-.custom-marker {
-  background: transparent;
-  border: none;
-}
-
-.driver-marker {
-  background: transparent;
-  border: none;
-}
-
+.custom-marker,
+.driver-marker,
 .waypoint-marker {
   background: transparent;
   border: none;

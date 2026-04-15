@@ -16,7 +16,7 @@ async function handleSync(request: NextRequest) {
     
     if (!process.env.MEILISEARCH_HOST || !process.env.MEILISEARCH_API_KEY) {
       return NextResponse.json(
-        { error: 'Search sync is not available. MeiliSearch is not configured.' },
+        { error: 'Search sync is not available. Meilisearch is not configured.' },
         { status: 503 }
       )
     }
@@ -98,7 +98,7 @@ async function syncProducts(addDocuments: any, INDEXES: any) {
   }))
 
   await addDocuments(INDEXES.products, documents)
-  console.log(`✅ Synced ${documents.length} products`)
+  console.log(` Synced ${documents.length} products`)
 }
 
 async function syncCrops(addDocuments: any, INDEXES: any) {
@@ -120,7 +120,7 @@ async function syncCrops(addDocuments: any, INDEXES: any) {
   }))
 
   await addDocuments(INDEXES.crops, documents)
-  console.log(`✅ Synced ${documents.length} crops`)
+  console.log(` Synced ${documents.length} crops`)
 }
 
 async function syncEquipment(addDocuments: any, INDEXES: any) {
@@ -146,7 +146,7 @@ async function syncEquipment(addDocuments: any, INDEXES: any) {
   }))
 
   await addDocuments(INDEXES.equipment, documents)
-  console.log(`✅ Synced ${documents.length} equipment items`)
+  console.log(` Synced ${documents.length} equipment items`)
 }
 
 async function syncSuppliers(addDocuments: any, INDEXES: any) {
@@ -165,7 +165,7 @@ async function syncSuppliers(addDocuments: any, INDEXES: any) {
   }))
 
   await addDocuments(INDEXES.suppliers, documents)
-  console.log(`✅ Synced ${documents.length} suppliers`)
+  console.log(` Synced ${documents.length} suppliers`)
 }
 
 async function syncFarmers(addDocuments: any, INDEXES: any) {
@@ -183,5 +183,5 @@ async function syncFarmers(addDocuments: any, INDEXES: any) {
   }))
 
   await addDocuments(INDEXES.farmers, documents)
-  console.log(`✅ Synced ${documents.length} farmers`)
+  console.log(` Synced ${documents.length} farmers`)
 }

@@ -5,19 +5,19 @@ import { deleteMultipleFromCloudinary } from '@/lib/cloudinary'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    
-    const cacheKey = CacheKeys.crop(params.id)
+    const { id } = await params
+    const cacheKey = CacheKeys.crop(id)
     const cached = await cache.get(cacheKey)
-    
+
     if (cached) {
       return NextResponse.json({ crop: cached })
     }
 
     const crop = await prisma.crop.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         farmer: {
           select: {
@@ -26,13 +26,13 @@ export async function GET(
             phone: true,
             city: true,
             state: true,
-          }
+          },
         },
         listings: {
           where: { isActive: true },
-          orderBy: { createdAt: 'desc' }
-        }
-      }
+          orderBy: { createdAt: 'desc' },
+        },
+      },
     })
 
     if (!crop) {
@@ -46,16 +46,17 @@ export async function GET(
     console.error('Crop fetch error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch crop', details: error.message },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
 
     const cropData = {
@@ -66,11 +67,11 @@ export async function PUT(
     }
 
     const crop = await prisma.crop.update({
-      where: { id: params.id },
-      data: cropData
+      where: { id },
+      data: cropData,
     })
 
-    await cache.del(CacheKeys.crop(params.id))
+    await cache.del(CacheKeys.crop(id))
     if (body.farmerId) {
       await cache.del(CacheKeys.cropsList(body.farmerId))
     }
@@ -80,20 +81,20 @@ export async function PUT(
     console.error('Crop update error:', error)
     return NextResponse.json(
       { error: 'Failed to update crop', details: error.message },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    
+    const { id } = await params
     const crop = await prisma.crop.findUnique({
-      where: { id: params.id },
-      select: { farmerId: true, images: true }
+      where: { id },
+      select: { farmerId: true, images: true },
     })
 
     if (!crop) {
@@ -105,10 +106,10 @@ export async function DELETE(
     }
 
     await prisma.crop.delete({
-      where: { id: params.id }
+      where: { id },
     })
 
-    await cache.del(CacheKeys.crop(params.id))
+    await cache.del(CacheKeys.crop(id))
     await cache.del(CacheKeys.cropsList(crop.farmerId))
 
     return NextResponse.json({ success: true })
@@ -116,7 +117,7 @@ export async function DELETE(
     console.error('Crop deletion error:', error)
     return NextResponse.json(
       { error: 'Failed to delete crop', details: error.message },
-      { status: 500 }
+      { status: 500 },
     )
   }
 }

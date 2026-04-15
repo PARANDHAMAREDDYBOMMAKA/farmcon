@@ -48,8 +48,24 @@ interface HistoricalData {
   bestSellingMonth: string
 }
 
+interface VarietySummary {
+  variety: string
+  commodity: string
+  marketCount: number
+  stateCount: number
+  states: string[]
+  avgPrice: number
+  minPrice: number
+  maxPrice: number
+  modalPrice: number
+  latestDate: string
+  topMarkets: { market: string; state: string; price: number }[]
+  unit: string
+}
+
 interface MarketData {
   prices: MarketPrice[]
+  varieties: VarietySummary[]
   insights: MarketInsights
   historical: HistoricalData
   commodity: string
@@ -58,6 +74,44 @@ interface MarketData {
   totalRecords: number
   lastUpdated: string
   source: string
+}
+
+function aggregateByVariety(prices: MarketPrice[]): VarietySummary[] {
+  if (!prices || prices.length === 0) return []
+  const buckets = new Map<string, MarketPrice[]>()
+  for (const p of prices) {
+    const key = (p.variety || 'Common').trim() || 'Common'
+    if (!buckets.has(key)) buckets.set(key, [])
+    buckets.get(key)!.push(p)
+  }
+  const out: VarietySummary[] = []
+  for (const [variety, records] of buckets) {
+    const states = Array.from(new Set(records.map((r) => r.state).filter(Boolean)))
+    const avg = Math.round(records.reduce((s, r) => s + r.modalPrice, 0) / records.length)
+    const minP = Math.min(...records.map((r) => r.minPrice))
+    const maxP = Math.max(...records.map((r) => r.maxPrice))
+    const latest = records.map((r) => r.date).sort().at(-1) || records[0].date
+    const top = [...records]
+      .sort((a, b) => b.modalPrice - a.modalPrice)
+      .slice(0, 5)
+      .map((r) => ({ market: r.market, state: r.state, price: r.modalPrice }))
+    out.push({
+      variety,
+      commodity: records[0].commodity,
+      marketCount: records.length,
+      stateCount: states.length,
+      states,
+      avgPrice: avg,
+      minPrice: Math.round(minP),
+      maxPrice: Math.round(maxP),
+      modalPrice: avg,
+      latestDate: latest,
+      topMarkets: top,
+      unit: records[0].unit || 'Quintal',
+    })
+  }
+  out.sort((a, b) => b.marketCount - a.marketCount)
+  return out
 }
 
 export default function MarketPricesPage() {
@@ -154,7 +208,7 @@ export default function MarketPricesPage() {
 
   const getTrendColor = (trend?: string) => {
     switch (trend) {
-      case 'up': return 'text-green-600 bg-green-100'
+      case 'up': return 'text-emerald-600 bg-emerald-100'
       case 'down': return 'text-red-600 bg-red-100'
       default: return 'text-slate-700 bg-slate-100'
     }
@@ -162,7 +216,7 @@ export default function MarketPricesPage() {
 
   const getSeasonalTrendColor = (trend: string) => {
     switch (trend) {
-      case 'rising': return 'text-green-600 bg-green-100'
+      case 'rising': return 'text-emerald-600 bg-emerald-100'
       case 'falling': return 'text-red-600 bg-red-100'
       default: return 'text-blue-600 bg-blue-100'
     }
@@ -172,7 +226,7 @@ export default function MarketPricesPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading market data...</p>
         </div>
       </div>
@@ -189,7 +243,7 @@ export default function MarketPricesPage() {
             <p className="text-slate-700 mt-1">Real-time agricultural commodity prices from Indian markets</p>
           </div>
           <div className="mt-4 sm:mt-0 flex items-center space-x-2">
-            <span className="px-3 py-1 bg-green-100 text-green-800 text-sm rounded-full flex items-center gap-1">
+            <span className="px-3 py-1 bg-emerald-100 text-emerald-800 text-sm rounded-full flex items-center gap-1">
               <BadgeCheck className="w-4 h-4" /> Government Data Source
             </span>
             {dataCache.size > 0 && (
@@ -213,7 +267,7 @@ export default function MarketPricesPage() {
             <select
               value={commodity}
               onChange={(e) => handleCommodityChange(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
             >
               {commodities.map(crop => (
                 <option key={crop} value={crop}>{crop}</option>
@@ -225,7 +279,7 @@ export default function MarketPricesPage() {
             <select
               value={state}
               onChange={(e) => handleStateChange(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
             >
               <option value="">All States</option>
               {states.map(stateName => (
@@ -241,14 +295,14 @@ export default function MarketPricesPage() {
               onChange={(e) => handleDistrictChange(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
               placeholder="Enter district name"
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-green-500 focus:border-green-500 text-sm"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm"
             />
           </div>
           <div className="flex items-end">
             <button
               onClick={handleSearch}
               disabled={loading}
-              className="w-full px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 disabled:from-gray-400 disabled:to-gray-500 transition-all duration-200 text-sm font-medium"
+              className="w-full px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-lg hover:from-emerald-700 hover:to-emerald-800 disabled:from-slate-400 disabled:to-slate-500 transition-all duration-200 text-sm font-medium"
             >
               {loading ? (
                 <div className="flex items-center justify-center space-x-2">
@@ -272,8 +326,8 @@ export default function MarketPricesPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <div className="flex items-center">
-                <div className="p-2 bg-green-100 rounded-lg flex-shrink-0">
-                  <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-600" />
+                <div className="p-2 bg-emerald-100 rounded-lg flex-shrink-0">
+                  <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-600" />
                 </div>
                 <div className="ml-3 sm:ml-4 min-w-0">
                   <p className="text-xs sm:text-sm font-medium text-slate-700">Average Price</p>
@@ -328,24 +382,24 @@ export default function MarketPricesPage() {
 
           {}
           <div className="bg-white rounded-lg shadow">
-            <div className="border-b border-gray-200 overflow-x-auto">
+            <div className="border-b border-slate-200 overflow-x-auto">
               <nav className="-mb-px flex space-x-4 sm:space-x-8 px-4 sm:px-6 min-w-max sm:min-w-0">
                 <button
                   onClick={() => setActiveTab('current')}
                   className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                     activeTab === 'current'
-                      ? 'border-green-500 text-green-600'
-                      : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-gray-300'
+                      ? 'border-emerald-500 text-emerald-600'
+                      : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-slate-200'
                   }`}
                 >
-                  Current Prices ({marketData.prices.length})
+                  Varieties ({marketData.varieties?.length || 0})
                 </button>
                 <button
                   onClick={() => setActiveTab('historical')}
                   className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                     activeTab === 'historical'
-                      ? 'border-green-500 text-green-600'
-                      : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-gray-300'
+                      ? 'border-emerald-500 text-emerald-600'
+                      : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-slate-200'
                   }`}
                 >
                   Historical Trends
@@ -354,8 +408,8 @@ export default function MarketPricesPage() {
                   onClick={() => setActiveTab('insights')}
                   className={`py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm whitespace-nowrap ${
                     activeTab === 'insights'
-                      ? 'border-green-500 text-green-600'
-                      : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-gray-300'
+                      ? 'border-emerald-500 text-emerald-600'
+                      : 'border-transparent text-slate-700 hover:text-slate-600 hover:border-slate-200'
                   }`}
                 >
                   Market Insights
@@ -365,123 +419,117 @@ export default function MarketPricesPage() {
 
             {}
             {activeTab === 'current' && (
-              <div className="p-3 sm:p-6">
-                {}
-                <div className="block lg:hidden space-y-4">
-                  {marketData.prices.map((price) => (
-                    <div key={price.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                      <div className="flex justify-between items-start mb-3">
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-medium text-slate-700 truncate">{price.market}</h4>
-                          <p className="text-sm text-slate-700">{price.state}, {price.district}</p>
-                          <p className="text-xs text-slate-700">{price.source}</p>
-                        </div>
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTrendColor(price.trend)}`}>
-                          {getTrendIcon(price.trend)} {price.trend || 'stable'}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4 mb-3">
-                        <div>
-                          <p className="text-xs text-slate-700">Modal Price</p>
-                          <p className="text-lg font-bold text-slate-700">₹{price.modalPrice.toLocaleString()}</p>
-                          {price.priceChange && (
-                            <p className={`text-xs ${price.priceChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                              {price.priceChange > 0 ? '+' : ''}₹{price.priceChange}
-                            </p>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-xs text-slate-700">Price Range</p>
-                          <p className="text-sm text-slate-700">₹{price.minPrice} - ₹{price.maxPrice}</p>
-                          <p className="text-xs text-slate-700">per {price.unit}</p>
-                        </div>
-                      </div>
-
-                      <div className="flex justify-between items-center text-xs text-slate-700">
-                        <span>Variety: {price.variety || 'Common'}</span>
-                        <span>{new Date(price.date).toLocaleDateString('en-IN')}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {}
-                <div className="hidden lg:block">
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-emerald-50/30">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                            Market
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                            Location
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                            Variety
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                            Price Range
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                            Modal Price
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                            Trend
-                          </th>
-                          <th className="px-4 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                            Date
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="bg-white divide-y divide-gray-200">
-                        {marketData.prices.map((price) => (
-                          <tr key={price.id} className="hover:bg-emerald-50/30">
-                            <td className="px-4 py-4">
-                              <div className="font-medium text-slate-700 text-sm">{price.market}</div>
-                              <div className="text-xs text-slate-700">{price.source}</div>
-                            </td>
-                            <td className="px-4 py-4">
-                              <div className="text-sm text-slate-700">{price.state}</div>
-                              <div className="text-xs text-slate-700">{price.district}</div>
-                            </td>
-                            <td className="px-4 py-4 text-sm text-slate-700">
-                              {price.variety || 'Common'}
-                            </td>
-                            <td className="px-4 py-4">
-                              <div className="text-sm text-slate-700">₹{price.minPrice.toLocaleString()} - ₹{price.maxPrice.toLocaleString()}</div>
-                              <div className="text-xs text-slate-700">per {price.unit}</div>
-                            </td>
-                            <td className="px-4 py-4">
-                              <div className="text-lg font-semibold text-slate-700">₹{price.modalPrice.toLocaleString()}</div>
-                              {price.priceChange && (
-                                <div className={`text-xs ${price.priceChange > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                  {price.priceChange > 0 ? '+' : ''}₹{price.priceChange}
-                                </div>
-                              )}
-                            </td>
-                            <td className="px-4 py-4">
-                              <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getTrendColor(price.trend)}`}>
-                                {getTrendIcon(price.trend)} {price.trend || 'stable'}
-                              </span>
-                            </td>
-                            <td className="px-4 py-4 text-sm text-slate-700">
-                              {new Date(price.date).toLocaleDateString('en-IN')}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                {}
-                {marketData.prices.length === 0 && (
+              <div className="p-3 sm:p-6 space-y-4">
+                {(() => {
+                  const varieties: VarietySummary[] =
+                    marketData.varieties && marketData.varieties.length > 0
+                      ? marketData.varieties
+                      : aggregateByVariety(marketData.prices)
+                  return varieties
+                })().length === 0 ? (
                   <div className="text-center py-12">
-                    <BarChart3 className="w-24 h-24 text-slate-700 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-slate-700 mb-2">No market data found</h3>
-                    <p className="text-slate-700">Try selecting a different commodity or location.</p>
+                    <BarChart3 className="w-20 h-20 text-emerald-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-bold text-emerald-950 mb-1">No varieties found</h3>
+                    <p className="text-sm text-slate-600">Try a different commodity or change filters.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {(marketData.varieties && marketData.varieties.length > 0
+                      ? marketData.varieties
+                      : aggregateByVariety(marketData.prices)
+                    ).map((v) => (
+                      <div
+                        key={v.variety}
+                        className="group relative rounded-2xl bg-white ring-1 ring-emerald-100 shadow-sm hover:shadow-xl hover:-translate-y-0.5 transition-all overflow-hidden"
+                      >
+                        <div className="h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
+                        <div className="p-5">
+                          <div className="flex items-start justify-between gap-3 mb-4">
+                            <div className="min-w-0">
+                              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-emerald-600 mb-1">
+                                Variety
+                              </p>
+                              <h3 className="text-xl font-extrabold text-emerald-950 truncate">
+                                {v.variety}
+                              </h3>
+                              <p className="text-xs text-slate-500 mt-0.5">
+                                {v.commodity} · per {v.unit}
+                              </p>
+                            </div>
+                            <div className="text-right flex-shrink-0">
+                              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Modal price
+                              </p>
+                              <p className="text-2xl font-extrabold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                                ₹{v.avgPrice.toLocaleString('en-IN')}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-3 gap-2 mb-4">
+                            <div className="rounded-xl bg-emerald-50 ring-1 ring-emerald-100 p-2.5">
+                              <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-600">
+                                Markets
+                              </p>
+                              <p className="text-lg font-extrabold text-emerald-950 mt-0.5">
+                                {v.marketCount}
+                              </p>
+                            </div>
+                            <div className="rounded-xl bg-sky-50 ring-1 ring-sky-100 p-2.5">
+                              <p className="text-[10px] font-bold uppercase tracking-wider text-sky-700">
+                                States
+                              </p>
+                              <p className="text-lg font-extrabold text-emerald-950 mt-0.5">
+                                {v.stateCount}
+                              </p>
+                            </div>
+                            <div className="rounded-xl bg-amber-50 ring-1 ring-amber-100 p-2.5">
+                              <p className="text-[10px] font-bold uppercase tracking-wider text-amber-700">
+                                Range
+                              </p>
+                              <p className="text-[11px] font-bold text-emerald-950 mt-1 leading-tight">
+                                ₹{v.minPrice.toLocaleString('en-IN')} – ₹{v.maxPrice.toLocaleString('en-IN')}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                                Top paying markets
+                              </p>
+                              <p className="text-[11px] text-slate-500">
+                                {new Date(v.latestDate).toLocaleDateString('en-IN', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                })}
+                              </p>
+                            </div>
+                            <ul className="space-y-1.5">
+                              {v.topMarkets.slice(0, 3).map((m, i) => (
+                                <li
+                                  key={`${m.market}-${m.state}-${i}`}
+                                  className="flex items-center justify-between text-sm"
+                                >
+                                  <span className="flex items-center gap-2 min-w-0">
+                                    <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-[10px] font-extrabold">
+                                      {i + 1}
+                                    </span>
+                                    <span className="truncate font-semibold text-emerald-900">
+                                      {m.market}
+                                    </span>
+                                    <span className="text-xs text-slate-500 truncate">· {m.state}</span>
+                                  </span>
+                                  <span className="font-bold text-emerald-800 flex-shrink-0">
+                                    ₹{m.price.toLocaleString('en-IN')}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -491,7 +539,7 @@ export default function MarketPricesPage() {
             {activeTab === 'historical' && (
               <div className="p-3 sm:p-6 space-y-6">
                 {}
-                <div className="bg-white rounded-lg p-3 sm:p-6 border border-gray-200 overflow-hidden">
+                <div className="bg-white rounded-lg p-3 sm:p-6 border border-slate-200 overflow-hidden">
                   <div className="w-full h-80 sm:h-96">
                     <PriceChart
                       data={marketData.historical.months}
@@ -531,13 +579,13 @@ export default function MarketPricesPage() {
                     <p className="text-xl sm:text-2xl font-bold text-yellow-600">{marketData.historical.priceVolatility}</p>
                     <p className="text-sm text-yellow-600">Market stability</p>
                   </div>
-                  <div className="bg-green-50 rounded-lg p-4 text-center">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
-                      <Trophy className="w-6 h-6 text-green-600" />
+                  <div className="bg-emerald-50 rounded-lg p-4 text-center">
+                    <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                      <Trophy className="w-6 h-6 text-emerald-600" />
                     </div>
-                    <h4 className="font-medium text-green-900">Best Month</h4>
-                    <p className="text-lg sm:text-lg font-bold text-green-600">{marketData.historical.bestSellingMonth}</p>
-                    <p className="text-sm text-green-600">Highest prices</p>
+                    <h4 className="font-medium text-emerald-900">Best Month</h4>
+                    <p className="text-lg sm:text-lg font-bold text-emerald-600">{marketData.historical.bestSellingMonth}</p>
+                    <p className="text-sm text-emerald-600">Highest prices</p>
                   </div>
                   <div className="bg-purple-50 rounded-lg p-4 text-center">
                     <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2">
@@ -582,9 +630,9 @@ export default function MarketPricesPage() {
                     </div>
                     <div className="mt-4 space-y-2">
                       {marketData.insights.bestMarkets.map((market, index) => (
-                        <div key={index} className="flex items-center justify-between p-2 bg-green-50 rounded text-xs sm:text-sm">
-                          <span className="font-medium text-green-900 truncate mr-2">{market.market}</span>
-                          <span className="font-bold text-green-600 whitespace-nowrap">₹{market.price.toLocaleString()}</span>
+                        <div key={index} className="flex items-center justify-between p-2 bg-emerald-50 rounded text-xs sm:text-sm">
+                          <span className="font-medium text-emerald-900 truncate mr-2">{market.market}</span>
+                          <span className="font-bold text-emerald-600 whitespace-nowrap">₹{market.price.toLocaleString()}</span>
                         </div>
                       ))}
                     </div>
@@ -619,9 +667,9 @@ export default function MarketPricesPage() {
 
                 {}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                  <div className="text-center p-4 sm:p-6 border rounded-lg bg-gradient-to-br from-green-50 to-green-100">
-                    <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-green-200 rounded-full flex items-center justify-center mb-3">
-                      <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-green-700" />
+                  <div className="text-center p-4 sm:p-6 border rounded-lg bg-gradient-to-br from-emerald-50 to-emerald-100">
+                    <div className="mx-auto w-12 h-12 sm:w-16 sm:h-16 bg-emerald-200 rounded-full flex items-center justify-center mb-3">
+                      <DollarSign className="w-6 h-6 sm:w-8 sm:h-8 text-emerald-700" />
                     </div>
                     <p className="text-xl sm:text-2xl font-bold text-slate-700">₹{marketData.insights.avgPrice.toLocaleString()}</p>
                     <p className="text-sm text-slate-700">National Average</p>

@@ -65,7 +65,7 @@ const driverIcon = L.divIcon({
       font-size: 32px;
       animation: bounce 1s infinite;
     ">
-      🚚
+      
     </div>
     <style>
       @keyframes bounce {
@@ -177,7 +177,7 @@ export default function LeafletLocationTracker({
             {selectedMarker === 'pickup' && (
               <Popup onClose={() => setSelectedMarker(null)}>
                 <div className="p-2">
-                  <h3 className="font-semibold text-green-600">Pickup Location</h3>
+                  <h3 className="font-semibold text-emerald-600">Pickup Location</h3>
                   <p className="text-sm text-slate-700">{pickupLocation.address}</p>
                 </div>
               </Popup>

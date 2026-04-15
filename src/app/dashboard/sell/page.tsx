@@ -182,7 +182,7 @@ function SellCropsPageInternal() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading crops...</p>
         </div>
       </div>
@@ -204,21 +204,21 @@ function SellCropsPageInternal() {
         )}
 
         {success && (
-          <div className="mb-6 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md">
+          <div className="mb-6 bg-emerald-50 border border-emerald-200 text-emerald-600 px-4 py-3 rounded-md">
             {success}
           </div>
         )}
 
         {crops.length === 0 ? (
           <div className="text-center py-12">
-            <span className="text-6xl">🌾</span>
+            <span className="text-6xl"></span>
             <h3 className="mt-4 text-lg font-medium text-slate-700">No harvested crops</h3>
             <p className="mt-2 text-slate-700">
               You need to have harvested crops before you can list them for sale.
             </p>
             <Link
               href="/dashboard/crops"
-              className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+              className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-emerald-600 hover:bg-emerald-700"
             >
               Manage Your Crops
             </Link>
@@ -235,8 +235,8 @@ function SellCropsPageInternal() {
                     onClick={() => handleCropSelect(crop)}
                     className={`w-full text-left p-4 rounded-lg border ${
                       selectedCrop?.id === crop.id
-                        ? 'border-green-500 bg-green-50'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-emerald-500 bg-emerald-50'
+                        : 'border-slate-200 hover:border-slate-200'
                     }`}
                   >
                     <div className="flex items-center space-x-3">
@@ -248,7 +248,7 @@ function SellCropsPageInternal() {
                         />
                       ) : (
                         <div className="h-12 w-12 bg-emerald-100/50 rounded-lg flex items-center justify-center">
-                          <span className="text-xl">🌾</span>
+                          <span className="text-xl"></span>
                         </div>
                       )}
                       <div className="flex-1 min-w-0">
@@ -295,7 +295,7 @@ function SellCropsPageInternal() {
                         step="0.1"
                         value={listingData.quantity_available}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                        className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                         placeholder={`Enter quantity in ${selectedCrop.unit}`}
                       />
                       {selectedCrop.actualYield && (
@@ -320,7 +320,7 @@ function SellCropsPageInternal() {
                           step="0.01"
                           value={listingData.price_per_unit}
                           onChange={handleInputChange}
-                          className="pl-8 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                          className="pl-8 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                           placeholder="0.00"
                         />
                       </div>
@@ -336,7 +336,7 @@ function SellCropsPageInternal() {
                         name="harvest_date"
                         value={listingData.harvest_date}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                        className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                       />
                     </div>
 
@@ -350,7 +350,7 @@ function SellCropsPageInternal() {
                         name="expiry_date"
                         value={listingData.expiry_date}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                        className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                       />
                     </div>
                   </div>
@@ -365,7 +365,7 @@ function SellCropsPageInternal() {
                       name="pickup_location"
                       value={listingData.pickup_location}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Address where buyers can pickup"
                     />
                   </div>
@@ -378,7 +378,7 @@ function SellCropsPageInternal() {
                         name="delivery_available"
                         checked={listingData.delivery_available}
                         onChange={handleInputChange}
-                        className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                        className="h-4 w-4 text-emerald-600 border-slate-200 rounded focus:ring-emerald-500"
                       />
                       <label htmlFor="delivery_available" className="ml-2 block text-sm text-slate-600">
                         Delivery Available
@@ -399,7 +399,7 @@ function SellCropsPageInternal() {
                       rows={4}
                       value={listingData.description}
                       onChange={handleInputChange}
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Additional details about your crop..."
                     />
                   </div>
@@ -420,14 +420,14 @@ function SellCropsPageInternal() {
                     <button
                       type="button"
                       onClick={() => setSelectedCrop(null)}
-                      className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
+                      className="px-4 py-2 border border-slate-200 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={saving}
-                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
+                      className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
                     >
                       {saving ? 'Creating Listing...' : 'List for Sale'}
                     </button>
@@ -435,7 +435,7 @@ function SellCropsPageInternal() {
                 </form>
               ) : (
                 <div className="bg-emerald-50/30 rounded-lg p-8 text-center">
-                  <span className="text-4xl">👈</span>
+                  <span className="text-4xl"></span>
                   <h3 className="mt-4 text-lg font-medium text-slate-700">Select a crop to sell</h3>
                   <p className="mt-2 text-slate-700">
                     Choose a harvested crop from the list to create a marketplace listing.
@@ -454,7 +454,7 @@ export default function () {
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-2 text-sm text-slate-700">Loading...</p>
         </div>
       </div>

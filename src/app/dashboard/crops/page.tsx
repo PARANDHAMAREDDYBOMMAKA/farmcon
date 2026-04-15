@@ -63,7 +63,7 @@ export default function CropsManagementPage() {
       case 'planted':
         return 'text-blue-600 bg-blue-100'
       case 'growing':
-        return 'text-green-600 bg-green-100'
+        return 'text-emerald-600 bg-emerald-100'
       case 'ready_to_harvest':
         return 'text-yellow-600 bg-yellow-100'
       case 'harvested':
@@ -89,9 +89,9 @@ export default function CropsManagementPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen p-6 bg-gradient-to-br from-green-50 to-emerald-100">
+      <div className="min-h-screen p-6 bg-gradient-to-br from-emerald-50 to-emerald-100">
         <div className="text-center py-20">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-emerald-600 mx-auto"></div>
           <div className="mt-6">
             <h3 className="text-lg font-semibold text-slate-700">Loading your crops...</h3>
             <p className="text-slate-700 mt-2">Please wait while we fetch your crop data</p>
@@ -102,13 +102,13 @@ export default function CropsManagementPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-emerald-100">
       <div className="p-6">
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div className="mb-4 sm:mb-0">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent flex items-center gap-2">
-                <Wheat className="w-8 h-8 text-green-600" />
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-600 bg-clip-text text-transparent flex items-center gap-2">
+                <Wheat className="w-8 h-8 text-emerald-600" />
                 My Crops
               </h1>
               <p className="text-slate-700 mt-2 text-lg">Manage your crop lifecycle from planting to harvest</p>
@@ -116,14 +116,14 @@ export default function CropsManagementPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => loadCrops()}
-                className="inline-flex items-center gap-2 px-4 py-2 border border-green-600 text-green-600 rounded-lg shadow-sm text-sm font-medium hover:bg-green-50 transition-colors duration-200"
+                className="inline-flex items-center gap-2 px-4 py-2 border border-emerald-600 text-emerald-600 rounded-lg shadow-sm text-sm font-medium hover:bg-emerald-50 transition-colors duration-200"
               >
                 <RefreshCw className="w-4 h-4" />
                 Refresh
               </button>
               <Link
                 href="/dashboard/crops/add"
-                className="inline-flex items-center gap-2 px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-emerald-600 to-emerald-600 hover:from-emerald-700 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
               >
                 <Sparkles className="w-4 h-4" />
                 Add New Crop
@@ -151,7 +151,7 @@ export default function CropsManagementPage() {
                   onClick={() => setFilter(item.key)}
                   className={`flex-1 min-w-fit px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 ${
                     filter === item.key
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-emerald-500 to-emerald-500 text-white shadow-lg'
                       : 'text-slate-700 hover:bg-emerald-100/50'
                   }`}
                 >
@@ -160,7 +160,7 @@ export default function CropsManagementPage() {
                     <span className="hidden sm:inline">{item.label}</span>
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${
                       filter === item.key
-                        ? 'bg-white text-green-600'
+                        ? 'bg-white text-emerald-600'
                         : 'bg-emerald-100 text-slate-700'
                     }`}>
                       {item.key === 'all' ? crops.length : crops.filter(c => c.status === item.key).length}
@@ -176,7 +176,7 @@ export default function CropsManagementPage() {
       {filteredCrops.length === 0 ? (
         <div className="text-center py-20">
           <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md mx-auto">
-            <Sprout className="w-24 h-24 text-green-500 mx-auto" />
+            <Sprout className="w-24 h-24 text-emerald-500 mx-auto" />
             <h3 className="mt-6 text-2xl font-bold text-slate-700">
               {filter === 'all' ? 'No crops yet' : `No ${filter.replace('_', ' ')} crops`}
             </h3>
@@ -189,7 +189,7 @@ export default function CropsManagementPage() {
             {filter === 'all' && (
               <Link
                 href="/dashboard/crops/add"
-                className="mt-8 inline-flex items-center gap-2 px-8 py-4 border border-transparent rounded-2xl shadow-lg text-lg font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105"
+                className="mt-8 inline-flex items-center gap-2 px-8 py-4 border border-transparent rounded-2xl shadow-lg text-lg font-semibold text-white bg-gradient-to-r from-emerald-600 to-emerald-600 hover:from-emerald-700 hover:to-emerald-700 transition-all duration-300 transform hover:scale-105"
               >
                 <Wheat className="w-6 h-6" />
                 Add Your First Crop
@@ -200,8 +200,8 @@ export default function CropsManagementPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredCrops.map((crop) => (
-            <div key={crop.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden border border-gray-100">
-              <div className="relative w-full h-48 bg-gradient-to-br from-green-100 to-emerald-200">
+            <div key={crop.id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105 overflow-hidden border border-slate-100">
+              <div className="relative w-full h-48 bg-gradient-to-br from-emerald-100 to-emerald-200">
                 {crop.images && crop.images.length > 0 ? (
                   <img
                     src={crop.images[0]}
@@ -210,7 +210,7 @@ export default function CropsManagementPage() {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
-                    <Wheat className="w-16 h-16 text-green-600" />
+                    <Wheat className="w-16 h-16 text-emerald-600" />
                   </div>
                 )}
                 <div className="absolute top-3 right-3 flex gap-2">
@@ -218,7 +218,7 @@ export default function CropsManagementPage() {
                     {crop.status.replace('_', ' ').charAt(0).toUpperCase() + crop.status.replace('_', ' ').slice(1)}
                   </span>
                   {crop.organicCertified && (
-                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-full bg-green-500 text-white shadow-sm">
+                    <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-full bg-emerald-500 text-white shadow-sm">
                       <Leaf className="w-3 h-3" />
                       Organic
                     </span>
@@ -288,7 +288,7 @@ export default function CropsManagementPage() {
                   <div className="flex gap-2">
                     <Link
                       href={`/dashboard/crops/${crop.id}`}
-                      className="flex-1 text-center inline-flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-gray-100 to-gray-200 text-slate-600 rounded-lg text-sm font-semibold hover:from-gray-200 hover:to-gray-300 transition-all duration-200 transform hover:scale-105"
+                      className="flex-1 text-center inline-flex items-center justify-center gap-1 px-4 py-2 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-600 rounded-lg text-sm font-semibold hover:from-slate-200 hover:to-slate-200 transition-all duration-200 transform hover:scale-105"
                     >
                       <Eye className="w-4 h-4" />
                       View
@@ -307,7 +307,7 @@ export default function CropsManagementPage() {
                     {crop.status === 'planted' && (
                       <button
                         onClick={() => updateCropStatus(crop.id, 'growing')}
-                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-semibold rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105"
+                        className="flex-1 inline-flex items-center justify-center gap-1 px-3 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold rounded-lg hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
                       >
                         <Sprout className="w-4 h-4" />
                         Growing

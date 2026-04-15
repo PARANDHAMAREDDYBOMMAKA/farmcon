@@ -2,10 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import FarmConChatbot from "@/components/chatbot/FarmConChatbot";
 import PostHogProvider from "@/components/providers/PostHogProvider";
 import FingerprintProvider from "@/components/providers/FingerprintProvider";
 import CookieConsent from "@/components/CookieConsent";
+import AIAssistantMount from "@/components/assistant/AIAssistantMount";
 
 
 const geistSans = Geist({
@@ -18,14 +18,64 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://farmcon.in";
+
 export const metadata: Metadata = {
-  title: "FarmCon - Farm Connect Platform",
-  description: "Connect farmers, suppliers, and buyers on one platform",
+  metadataBase: new URL(APP_URL),
+  title: {
+    default: "FarmCon — Smart Agri OS for Indian Farmers",
+    template: "%s · FarmCon",
+  },
+  description:
+    "Live mandi prices, AI crop advisory, hyperlocal weather, equipment rentals, and direct-to-buyer sales — all in one platform trusted by 10,000+ farmers across India.",
+  applicationName: "FarmCon",
+  keywords: [
+    "mandi prices",
+    "farmers India",
+    "crop advisory",
+    "agri-tech",
+    "agricultural marketplace",
+    "farming app",
+    "equipment rental",
+    "AGMARKNET",
+  ],
+  authors: [{ name: "FarmCon" }],
+  creator: "FarmCon",
   manifest: "/manifest.json",
   icons: {
     icon: "/farmcon.jpg",
     shortcut: "/farmcon.jpg",
     apple: "/farmcon.jpg",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_IN",
+    url: APP_URL,
+    siteName: "FarmCon",
+    title: "FarmCon — Smart Agri OS for Indian Farmers",
+    description:
+      "Live mandi prices, AI crop advisory, hyperlocal weather, equipment rentals, and direct-to-buyer sales — in one platform.",
+    images: [{ url: "/farmcon.jpg", width: 1200, height: 630, alt: "FarmCon" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FarmCon — Smart Agri OS for Indian Farmers",
+    description:
+      "Live mandi prices, AI crop advisory, hyperlocal weather, equipment rentals, and direct-to-buyer sales.",
+    images: ["/farmcon.jpg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  alternates: {
+    canonical: APP_URL,
   },
   appleWebApp: {
     capable: true,
@@ -50,21 +100,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" translate="no" className="notranslate">
       <head>
         {/* Critical Resource Hints */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://js.stripe.com" />
-        <link rel="dns-prefetch" href="https://translate.google.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
         <link rel="dns-prefetch" href="https://embed.tawk.to" />
         <link rel="dns-prefetch" href="https://cdn.onesignal.com" />
 
-        {/* Favicon / manifest for browser tab */}
         <link rel="icon" href="/farmcon.jpg" />
         <link rel="apple-touch-icon" href="/farmcon.jpg" />
         <link rel="manifest" href="/manifest.json" />
+        <meta name="google" content="notranslate" />
+        <meta httpEquiv="Content-Language" content="en" />
 
         {/* Hide Google Translate Banner and Branding */}
         <style
@@ -141,175 +191,39 @@ export default function RootLayout({
           />
         )}
 
-        {/* Tawk.to Live Chat */}
         {process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID && (
-          <>
-            <Script
-              id="tawk-init"
-              strategy="lazyOnload"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-                  (function(){
-                    var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-                    s1.async=true;
-                    s1.src='https://embed.tawk.to/${process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID}/${process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || 'default'}';
-                    s1.charset='UTF-8';
-                    s1.setAttribute('crossorigin','*');
-                    s0.parentNode.insertBefore(s1,s0);
-                  })();
-                `,
-              }}
-            />
-            <Script
-              id="tawk-config"
-              strategy="lazyOnload"
-              dangerouslySetInnerHTML={{
-                __html: `
-                  const checkTawk = setInterval(() => {
-                    if (window.Tawk_API && window.Tawk_API.hideWidget) {
-                      window.Tawk_API.customStyle = {
-                        visibility: {
-                          desktop: { position: 'br', xOffset: 20, yOffset: 20 },
-                          mobile: { position: 'br', xOffset: 10, yOffset: 80 }
-                        }
+          <Script
+            id="tawk-init"
+            strategy="lazyOnload"
+            dangerouslySetInnerHTML={{
+              __html: `
+                var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+                (function(){
+                  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+                  s1.async=true;
+                  s1.src='https://embed.tawk.to/${process.env.NEXT_PUBLIC_TAWK_PROPERTY_ID}/${process.env.NEXT_PUBLIC_TAWK_WIDGET_ID || 'default'}';
+                  s1.charset='UTF-8';
+                  s1.setAttribute('crossorigin','*');
+                  s0.parentNode.insertBefore(s1,s0);
+                })();
+                var tawkReady = setInterval(function () {
+                  if (window.Tawk_API && typeof window.Tawk_API.hideWidget === 'function') {
+                    try {
+                      window.Tawk_API.hideWidget();
+                      window.Tawk_API.onChatMinimized = function () {
+                        try { window.Tawk_API.hideWidget(); } catch (e) {}
                       };
-                      window.Tawk_API.onLoad = function() {
-                        console.log('✅ Tawk.to Live Support loaded');
-                        try {
-                          window.Tawk_API.setAttributes({ name: 'FarmCon User' });
-                          // Show Tawk.to by default
-                          if (typeof window.Tawk_API.showWidget === 'function') {
-                            window.Tawk_API.showWidget();
-                          }
-                          // Dispatch event to hide AI chatbot
-                          window.dispatchEvent(new CustomEvent('tawk-opened'));
-                        } catch (error) {
-                          console.warn('Tawk.to API error:', error);
-                        }
+                      window.Tawk_API.onChatEnded = function () {
+                        try { window.Tawk_API.hideWidget(); } catch (e) {}
                       };
-                      window.Tawk_API.onChatStarted = function() {
-                        try {
-                          // Add event to show option to return to AI chat
-                          console.log('Chat started with human agent');
-                        } catch (error) {
-                          console.warn('Tawk.to API error:', error);
-                        }
-                      };
-                      window.Tawk_API.onPrechatSubmit = function(data) {
-                        try {
-                          // Set custom attributes when pre-chat form is submitted
-                          window.Tawk_API.setAttributes({
-                            'ai_available': 'true',
-                            'return_option': 'Type "AI" to return to FarmCon AI assistant'
-                          });
-                        } catch (error) {
-                          console.warn('Tawk.to API error:', error);
-                        }
-                      };
-                      // Add CSS to customize Tawk.to widget
-                      const tawkStyle = document.createElement('style');
-                      tawkStyle.innerHTML = \`
-                        #tawk-return-to-ai {
-                          position: fixed;
-                          bottom: 90px;
-                          right: 20px;
-                          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-                          color: white;
-                          padding: 8px 14px;
-                          border-radius: 50px;
-                          font-size: 12px;
-                          font-weight: 600;
-                          cursor: pointer;
-                          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-                          z-index: 99999999;
-                          display: flex;
-                          align-items: center;
-                          gap: 6px;
-                          transition: all 0.3s ease;
-                          border: 2px solid white;
-                          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-                        }
-                        #tawk-return-to-ai.hidden {
-                          display: none !important;
-                        }
-                        #tawk-return-to-ai:hover {
-                          transform: translateY(-2px) scale(1.05);
-                          box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
-                          background: linear-gradient(135deg, #059669 0%, #047857 100%);
-                        }
-                        #tawk-return-to-ai:active {
-                          transform: translateY(0) scale(0.98);
-                        }
-                        @media (max-width: 640px) {
-                          #tawk-return-to-ai {
-                            bottom: 80px;
-                            right: 10px;
-                            padding: 7px 12px;
-                            font-size: 11px;
-                          }
-                        }
-                      \`;
-                      document.head.appendChild(tawkStyle);
-                      // Create return to AI button - always visible
-                      const returnButton = document.createElement('button');
-                      returnButton.id = 'tawk-return-to-ai';
-                      returnButton.innerHTML = \`
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M9 11l-6 6v-6a9 9 0 0 1 9-9 9 9 0 0 1 9 9 9 9 0 0 1-9 9"></path>
-                        </svg>
-                        <span>AI Chat</span>
-                      \`;
-                      returnButton.onclick = function() {
-                        try {
-                          if (typeof window.Tawk_API.minimize === 'function') {
-                            window.Tawk_API.minimize();
-                          }
-                          if (typeof window.Tawk_API.hideWidget === 'function') {
-                            window.Tawk_API.hideWidget();
-                          }
-                          window.dispatchEvent(new CustomEvent('tawk-closed'));
-                        } catch (error) {
-                          console.warn('Tawk.to API error:', error);
-                        }
-                      };
-                      document.body.appendChild(returnButton);
-                      // Event handlers for Tawk.to
-                      window.Tawk_API.onChatMaximized = function() {
-                        try {
-                          window.dispatchEvent(new CustomEvent('tawk-opened'));
-                        } catch (error) {
-                          console.warn('Tawk.to API error:', error);
-                        }
-                      };
-                      window.Tawk_API.onChatMinimized = function() {
-                        try {
-                          if (typeof window.Tawk_API.hideWidget === 'function') {
-                            window.Tawk_API.hideWidget();
-                          }
-                          window.dispatchEvent(new CustomEvent('tawk-closed'));
-                        } catch (error) {
-                          console.warn('Tawk.to API error:', error);
-                        }
-                      };
-                      window.Tawk_API.onChatEnded = function() {
-                        try {
-                          if (typeof window.Tawk_API.hideWidget === 'function') {
-                            window.Tawk_API.hideWidget();
-                          }
-                          window.dispatchEvent(new CustomEvent('tawk-closed'));
-                        } catch (error) {
-                          console.warn('Tawk.to API error:', error);
-                        }
-                      };
-                      clearInterval(checkTawk);
-                    }
-                  }, 100);
-                  setTimeout(() => clearInterval(checkTawk), 10000);
-                `,
-              }}
-            />
-          </>
+                    } catch (e) {}
+                    clearInterval(tawkReady);
+                  }
+                }, 200);
+                setTimeout(function () { clearInterval(tawkReady); }, 10000);
+              `,
+            }}
+          />
         )}
 
         {/* OneSignal Push Notifications */}
@@ -377,7 +291,7 @@ export default function RootLayout({
                           }
                         }
                       });
-                      console.log('✅ OneSignal initialized successfully');
+                      console.log(' OneSignal initialized successfully');
                       const isPushSupported = await OneSignal.Notifications.isPushSupported();
                       const permission = await OneSignal.Notifications.permissionNative;
                       console.log('Push supported:', isPushSupported);
@@ -385,22 +299,22 @@ export default function RootLayout({
                       OneSignal.User.PushSubscription.addEventListener('change', function(event) {
                         console.log('Subscription changed:', event);
                         if (event.current.optedIn) {
-                          console.log('✅ User is subscribed to push notifications');
+                          console.log(' User is subscribed to push notifications');
                         } else {
-                          console.log('❌ User is not subscribed to push notifications');
+                          console.log(' User is not subscribed to push notifications');
                         }
                       });
                       try {
                         if ('setAppBadge' in navigator) {
-                          console.log('✅ Badge API supported');
+                          console.log(' Badge API supported');
                         } else {
-                          console.log('ℹ️ Badge API not supported in this browser');
+                          console.log('ℹ Badge API not supported in this browser');
                         }
                       } catch (badgeError) {
                         console.warn('Badge API error (non-critical):', badgeError);
                       }
                     } catch (error) {
-                      console.error('❌ OneSignal initialization error:', error);
+                      console.error(' OneSignal initialization error:', error);
                       if (error.message && error.message.includes('badge')) {
                         console.warn('Badge API not supported, continuing without badges');
                       }
@@ -418,7 +332,7 @@ export default function RootLayout({
               {children}
             </main>
 
-            <FarmConChatbot />
+            <AIAssistantMount />
             <CookieConsent />
           </FingerprintProvider>
         </PostHogProvider>

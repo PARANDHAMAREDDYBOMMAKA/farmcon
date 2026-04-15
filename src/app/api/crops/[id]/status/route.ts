@@ -4,9 +4,10 @@ import { cache, CacheKeys } from '@/lib/redis'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { status } = await request.json()
 
     const validStatuses = ['planted', 'growing', 'ready_to_harvest', 'harvested', 'sold']
@@ -15,7 +16,7 @@ export async function PUT(
     }
 
     const currentCrop = await prisma.crop.findUnique({
-      where: { id: params.id },
+      where: { id: id },
       select: { status: true, farmerId: true, actualHarvestDate: true }
     })
 
@@ -30,11 +31,11 @@ export async function PUT(
     }
 
     const crop = await prisma.crop.update({
-      where: { id: params.id },
+      where: { id: id },
       data: updateData
     })
 
-    await cache.del(CacheKeys.crop(params.id))
+    await cache.del(CacheKeys.crop(id))
     await cache.del(CacheKeys.cropsList(currentCrop.farmerId))
 
     return NextResponse.json({ crop })

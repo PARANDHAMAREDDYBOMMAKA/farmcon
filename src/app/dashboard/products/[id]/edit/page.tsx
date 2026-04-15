@@ -252,7 +252,7 @@ export default function EditProductPage() {
             onClick={() => router.back()}
             className="text-slate-700 hover:text-slate-700"
           >
-            ← Back
+             Back
           </button>
         </div>
       </div>
@@ -273,7 +273,7 @@ export default function EditProductPage() {
                 required
                 value={formData.name}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="Enter product name"
               />
             </div>
@@ -287,7 +287,7 @@ export default function EditProductPage() {
                 name="brand"
                 value={formData.brand}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="Enter brand name"
               />
             </div>
@@ -302,7 +302,7 @@ export default function EditProductPage() {
                 rows={4}
                 value={formData.description}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="Describe your product"
               />
             </div>
@@ -316,7 +316,7 @@ export default function EditProductPage() {
                 required
                 value={formData.categoryId}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
               >
                 <option value="">Select a category</option>
                 {categories.map(category => (
@@ -335,7 +335,7 @@ export default function EditProductPage() {
                 name="isActive"
                 value={formData.isActive.toString()}
                 onChange={(e) => setFormData(prev => ({ ...prev, isActive: e.target.value === 'true' }))}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
               >
                 <option value="true">Active</option>
                 <option value="false">Inactive</option>
@@ -360,7 +360,7 @@ export default function EditProductPage() {
                 step="0.01"
                 value={formData.price}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="0.00"
               />
             </div>
@@ -376,7 +376,7 @@ export default function EditProductPage() {
                 min="0"
                 value={formData.stockQuantity}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="0"
               />
             </div>
@@ -390,7 +390,7 @@ export default function EditProductPage() {
                 required
                 value={formData.unit}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
               >
                 <option value="">Select unit</option>
                 <option value="kg">Kilogram (kg)</option>
@@ -419,7 +419,7 @@ export default function EditProductPage() {
                 name="specifications.weight"
                 value={formData.specifications.weight}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="e.g., 1kg, 500g"
               />
             </div>
@@ -433,7 +433,7 @@ export default function EditProductPage() {
                 name="specifications.dimensions"
                 value={formData.specifications.dimensions}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="e.g., 10x5x3 cm"
               />
             </div>
@@ -447,7 +447,7 @@ export default function EditProductPage() {
                 name="specifications.material"
                 value={formData.specifications.material}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="e.g., Organic, Synthetic"
               />
             </div>
@@ -461,7 +461,7 @@ export default function EditProductPage() {
                 name="specifications.manufacturer"
                 value={formData.specifications.manufacturer}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="Manufacturer name"
               />
             </div>
@@ -475,7 +475,7 @@ export default function EditProductPage() {
                 name="specifications.countryOfOrigin"
                 value={formData.specifications.countryOfOrigin}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="e.g., India"
               />
             </div>
@@ -489,7 +489,7 @@ export default function EditProductPage() {
                 name="specifications.shelfLife"
                 value={formData.specifications.shelfLife}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="e.g., 2 years, 6 months"
               />
             </div>
@@ -509,7 +509,7 @@ export default function EditProductPage() {
               accept="image/*"
               multiple
               onChange={handleImageUpload}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             />
             <p className="text-xs text-slate-700 mt-1">You can upload multiple images. First image will be the main product image.</p>
           </div>
@@ -547,7 +547,7 @@ export default function EditProductPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-slate-600 hover:bg-emerald-50/30 font-medium"
+              className="px-6 py-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-emerald-50/30 font-medium"
             >
               Cancel
             </button>

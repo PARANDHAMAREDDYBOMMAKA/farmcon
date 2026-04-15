@@ -93,7 +93,7 @@ export default function ProductDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading product...</p>
         </div>
       </div>
@@ -104,13 +104,13 @@ export default function ProductDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <span className="text-6xl">❌</span>
+          <span className="text-6xl"></span>
           <h3 className="mt-4 text-lg font-medium text-slate-700">Product not found</h3>
           <Link
             href="/dashboard/supplies"
-            className="mt-4 inline-block text-green-600 hover:text-green-500"
+            className="mt-4 inline-block text-emerald-600 hover:text-emerald-500"
           >
-            ← Back to supplies
+             Back to supplies
           </Link>
         </div>
       </div>
@@ -152,7 +152,7 @@ export default function ProductDetailPage() {
               />
             ) : (
               <div className="h-96 w-full bg-emerald-100/50 flex items-center justify-center">
-                <span className="text-8xl">📦</span>
+                <span className="text-8xl"></span>
               </div>
             )}
           </div>
@@ -163,7 +163,7 @@ export default function ProductDetailPage() {
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
                   className={`aspect-w-1 aspect-h-1 overflow-hidden rounded-lg ${
-                    selectedImageIndex === index ? 'ring-2 ring-green-500' : ''
+                    selectedImageIndex === index ? 'ring-2 ring-emerald-500' : ''
                   }`}
                 >
                   <img
@@ -186,9 +186,9 @@ export default function ProductDetailPage() {
               {[0, 1, 2, 3, 4].map((rating) => (
                 <span
                   key={rating}
-                  className={`text-sm ${rating < averageRating ? 'text-yellow-400' : 'text-gray-300'}`}
+                  className={`text-sm ${rating < averageRating ? 'text-yellow-400' : 'text-slate-200'}`}
                 >
-                  ⭐
+                  
                 </span>
               ))}
               <span className="ml-2 text-sm text-slate-700">
@@ -245,7 +245,7 @@ export default function ProductDetailPage() {
                 id="quantity"
                 value={quantity}
                 onChange={(e) => setQuantity(parseInt(e.target.value))}
-                className="rounded-md border border-gray-300 py-1.5 px-3 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500"
+                className="rounded-md border border-slate-200 py-1.5 px-3 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
               >
                 {[...Array(Math.min(10, product.stockQuantity))].map((_, i) => (
                   <option key={i + 1} value={i + 1}>
@@ -263,14 +263,14 @@ export default function ProductDetailPage() {
             <button
               onClick={addToCart}
               disabled={cartLoading || product.stockQuantity === 0}
-              className="flex-1 bg-green-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-emerald-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cartLoading ? 'Adding...' : 'Add to Cart'}
             </button>
             <button
               onClick={buyNow}
               disabled={cartLoading || product.stockQuantity === 0}
-              className="flex-1 bg-green-800 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-emerald-800 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-emerald-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Buy Now
             </button>
@@ -288,15 +288,15 @@ export default function ProductDetailPage() {
         {reviews.length > 0 ? (
           <div className="mt-6 space-y-6">
             {reviews.map((review) => (
-              <div key={review.id} className="border-b border-gray-200 pb-6">
+              <div key={review.id} className="border-b border-slate-200 pb-6">
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center">
                     {[0, 1, 2, 3, 4].map((rating) => (
                       <span
                         key={rating}
-                        className={`text-sm ${rating < review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                        className={`text-sm ${rating < review.rating ? 'text-yellow-400' : 'text-slate-200'}`}
                       >
-                        ⭐
+                        
                       </span>
                     ))}
                   </div>

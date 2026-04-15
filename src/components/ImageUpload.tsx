@@ -104,7 +104,7 @@ export default function ImageUpload({
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading || images.length >= maxImages}
-          className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium bg-white hover:bg-emerald-50/30 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+          className={`inline-flex items-center px-4 py-2 border border-slate-200 rounded-md shadow-sm text-sm font-medium bg-white hover:bg-emerald-50/30 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 ${
             uploading || images.length >= maxImages 
               ? 'opacity-50 cursor-not-allowed' 
               : 'text-slate-600'
@@ -132,7 +132,7 @@ export default function ImageUpload({
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
           {images.map((image, index) => (
             <div key={index} className="relative group">
-              <div className="aspect-square rounded-lg overflow-hidden border-2 border-gray-200">
+              <div className="aspect-square rounded-lg overflow-hidden border-2 border-slate-200">
                 <img
                   src={image}
                   alt={`Crop image ${index + 1}`}
@@ -152,7 +152,7 @@ export default function ImageUpload({
       )}
 
       {images.length === 0 && (
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+        <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center">
           <Camera className="w-16 h-16 text-slate-700 mx-auto mb-2" />
           <p className="text-slate-700">No images uploaded yet</p>
           <p className="text-slate-700 text-sm">Click "Add Images" to upload crop photos</p>

@@ -38,7 +38,7 @@ export default function MarketPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading market data...</p>
         </div>
       </div>
@@ -54,7 +54,7 @@ export default function MarketPage() {
         </div>
 
         <div className="text-center py-12">
-          <span className="text-6xl">📊</span>
+          <span className="text-6xl"></span>
           <h3 className="mt-4 text-lg font-medium text-slate-700">Market Data Coming Soon</h3>
           <p className="mt-2 text-slate-700">
             We're working on bringing you real-time market prices and trends.

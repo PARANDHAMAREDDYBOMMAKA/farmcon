@@ -132,7 +132,7 @@ export default function NotificationsPage() {
       case 'order':
         return <Package {...iconProps} className="w-6 h-6 text-blue-600" />
       case 'payment':
-        return <CreditCard {...iconProps} className="w-6 h-6 text-green-600" />
+        return <CreditCard {...iconProps} className="w-6 h-6 text-emerald-600" />
       case 'delivery':
         return <Truck {...iconProps} className="w-6 h-6 text-orange-600" />
       case 'review':
@@ -173,7 +173,7 @@ export default function NotificationsPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading notifications...</p>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function NotificationsPage() {
       <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg p-6 border border-white/40">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
+            <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-md">
               <Bell className="w-6 h-6 text-white" />
             </div>
             <div>
@@ -199,7 +199,7 @@ export default function NotificationsPage() {
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all duration-300 font-medium shadow-md"
+              className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-500 text-white rounded-lg hover:from-emerald-600 hover:to-emerald-600 transition-all duration-300 font-medium shadow-md"
             >
               Mark all as read
             </button>
@@ -209,12 +209,12 @@ export default function NotificationsPage() {
 
       {}
       <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/40 overflow-hidden">
-        <div className="flex border-b border-gray-200">
+        <div className="flex border-b border-slate-200">
           <button
             onClick={() => setFilter('all')}
             className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
               filter === 'all'
-                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                ? 'bg-gradient-to-r from-emerald-500 to-emerald-500 text-white'
                 : 'text-slate-700 hover:bg-emerald-50/30'
             }`}
           >
@@ -224,7 +224,7 @@ export default function NotificationsPage() {
             onClick={() => setFilter('unread')}
             className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
               filter === 'unread'
-                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                ? 'bg-gradient-to-r from-emerald-500 to-emerald-500 text-white'
                 : 'text-slate-700 hover:bg-emerald-50/30'
             }`}
           >
@@ -234,7 +234,7 @@ export default function NotificationsPage() {
             onClick={() => setFilter('read')}
             className={`flex-1 px-4 py-3 text-sm font-medium transition-all duration-200 ${
               filter === 'read'
-                ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white'
+                ? 'bg-gradient-to-r from-emerald-500 to-emerald-500 text-white'
                 : 'text-slate-700 hover:bg-emerald-50/30'
             }`}
           >
@@ -256,11 +256,11 @@ export default function NotificationsPage() {
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-slate-100">
             {filteredNotifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`p-4 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-200 ${
+                className={`p-4 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-50 transition-all duration-200 ${
                   !notification.is_read ? 'bg-blue-50/30' : ''
                 }`}
               >
@@ -276,7 +276,7 @@ export default function NotificationsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2 mb-1">
                       <h3
-                        className={`text-base font-semibold cursor-pointer hover:text-green-600 ${
+                        className={`text-base font-semibold cursor-pointer hover:text-emerald-600 ${
                           !notification.is_read ? 'text-slate-700' : 'text-slate-600'
                         }`}
                         onClick={() => handleNotificationClick(notification)}
@@ -297,7 +297,7 @@ export default function NotificationsPage() {
                         {!notification.is_read && (
                           <button
                             onClick={() => markAsRead(notification.id)}
-                            className="text-xs text-green-600 hover:text-green-700 font-medium hover:underline"
+                            className="text-xs text-emerald-600 hover:text-emerald-700 font-medium hover:underline"
                           >
                             Mark as read
                           </button>
@@ -307,7 +307,7 @@ export default function NotificationsPage() {
                             onClick={() => handleNotificationClick(notification)}
                             className="text-xs text-blue-600 hover:text-blue-700 font-medium hover:underline"
                           >
-                            View details →
+                            View details 
                           </button>
                         )}
                         <button

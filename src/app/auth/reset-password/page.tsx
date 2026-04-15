@@ -1,9 +1,29 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { ArrowLeft, ArrowRight, CheckCircle2, Loader2, Lock, Sprout } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { AuthShell } from '@/components/auth/AuthShell'
+import { Button } from '@/components/ui/button'
+import { Input, Label, FieldHint } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-950">
+      <div className="text-center">
+        <div className="relative w-14 h-14 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-700" />
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-300 border-t-transparent animate-spin" />
+          <Sprout className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="mt-3 text-sm font-semibold text-emerald-200">Loading…</p>
+      </div>
+    </div>
+  )
+}
 
 function ResetPasswordForm() {
   const [password, setPassword] = useState('')
@@ -12,53 +32,39 @@ function ResetPasswordForm() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
 
   useEffect(() => {
-    
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        router.push('/auth/signin')
-      }
+      if (!session) router.push('/auth/signin')
     }
     checkSession()
   }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
     setError('')
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
+      setError('Passwords do not match.')
       return
     }
-
     if (password.length < 6) {
-      setError('Password must be at least 6 characters long')
-      setLoading(false)
+      setError('Password must be at least 6 characters long.')
       return
     }
 
+    setLoading(true)
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: password
-      })
-
-      if (error) {
-        setError(error.message)
+      const { error: authError } = await supabase.auth.updateUser({ password })
+      if (authError) {
+        setError(authError.message)
       } else {
         setSuccess(true)
-        
-        setTimeout(() => {
-          router.push('/auth/signin?message=Password updated successfully')
-        }, 2000)
+        setTimeout(() => router.push('/auth/signin?message=Password updated successfully'), 1800)
       }
-    } catch (err) {
-      console.error('Password update error:', err)
-      setError('An unexpected error occurred')
+    } catch {
+      setError('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
@@ -66,122 +72,98 @@ function ResetPasswordForm() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="text-center">
-            <div className="text-6xl mb-4">✅</div>
-            <h2 className="text-3xl font-extrabold text-gray-900">
-              Password Updated!
-            </h2>
-            <p className="mt-2 text-sm text-gray-900">
-              Your password has been successfully updated. Redirecting to sign in...
-            </p>
+      <AuthShell title="Password updated" subtitle="Redirecting you to sign in…" compact>
+        <div className="flex flex-col items-center gap-4 py-6 text-center">
+          <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+            <CheckCircle2 className="w-9 h-9 text-emerald-600" />
           </div>
+          <p className="text-base font-semibold text-emerald-900">
+            Your password has been updated successfully.
+          </p>
+          <Link
+            href="/auth/signin"
+            className="text-sm font-bold text-emerald-700 hover:text-emerald-900"
+          >
+            Go to sign in 
+          </Link>
         </div>
-      </div>
+      </AuthShell>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <AuthShell
+      title="Set a new password"
+      subtitle="Pick something strong you haven’t used before."
+      compact
+    >
+      <form className="space-y-5" onSubmit={handleSubmit}>
+        {error && <Alert tone="error">{error}</Alert>}
+
+        <div>
+          <Label htmlFor="password" required>
+            <Lock className="w-3.5 h-3.5 text-emerald-600" />
+            New password
+          </Label>
+          <Input
+            id="password"
+            type="password"
+            required
+            minLength={6}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="At least 6 characters"
+          />
+          <FieldHint>Use 8+ characters with a mix of letters, numbers, and symbols.</FieldHint>
+        </div>
+
+        <div>
+          <Label htmlFor="confirmPassword" required>
+            <Lock className="w-3.5 h-3.5 text-emerald-600" />
+            Confirm password
+          </Label>
+          <Input
+            id="confirmPassword"
+            type="password"
+            required
+            minLength={6}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Re-enter your new password"
+          />
+        </div>
+
+        <Button type="submit" size="lg" className="w-full" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Updating…</span>
+            </>
+          ) : (
+            <>
+              <span>Update password</span>
+              <ArrowRight className="w-5 h-5" />
+            </>
+          )}
+        </Button>
+
         <div className="text-center">
-          <Link href="/" className="text-3xl font-bold text-green-600">
-            FarmCon
+          <Link
+            href="/auth/signin"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-900"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to sign in
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Set new password
-          </h2>
-          <p className="mt-2 text-sm text-gray-900">
-            Please enter your new password below.
-          </p>
         </div>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
-                {error}
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                New Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                  placeholder="Enter your new password"
-                  minLength={6}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm New Password
-              </label>
-              <div className="mt-1">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                  placeholder="Confirm your new password"
-                  minLength={6}
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
-              >
-                {loading ? 'Updating...' : 'Update Password'}
-              </button>
-            </div>
-
-            <div className="text-center">
-              <Link
-                href="/auth/signin"
-                className="text-sm text-green-600 hover:text-green-500"
-              >
-                ← Back to sign in
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+      </form>
+    </AuthShell>
   )
 }
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-900">Loading...</p>
-          </div>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<LoadingScreen />}>
       <ResetPasswordForm />
     </Suspense>
   )

@@ -105,7 +105,7 @@ export default function EquipmentDetailPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading equipment details...</p>
         </div>
       </div>
@@ -120,9 +120,9 @@ export default function EquipmentDetailPage() {
           <h3 className="mt-4 text-lg font-medium text-slate-700">Equipment not found</h3>
           <Link
             href="/dashboard/equipment"
-            className="mt-4 inline-block text-green-600 hover:text-green-500"
+            className="mt-4 inline-block text-emerald-600 hover:text-emerald-500"
           >
-            ← Back to equipment listings
+             Back to equipment listings
           </Link>
         </div>
       </div>
@@ -171,7 +171,7 @@ export default function EquipmentDetailPage() {
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
                   className={`aspect-w-1 aspect-h-1 overflow-hidden rounded-lg ${
-                    selectedImageIndex === index ? 'ring-2 ring-green-500' : ''
+                    selectedImageIndex === index ? 'ring-2 ring-emerald-500' : ''
                   }`}
                 >
                   <img
@@ -199,7 +199,7 @@ export default function EquipmentDetailPage() {
             </div>
             <span className={`inline-flex px-3 py-1 text-sm font-semibold rounded-full ${
               equipment.status === 'available' 
-                ? 'bg-green-100 text-green-800' 
+                ? 'bg-emerald-100 text-emerald-800' 
                 : equipment.status === 'rented'
                 ? 'bg-yellow-100 text-yellow-800'
                 : 'bg-red-100 text-red-800'
@@ -273,7 +273,7 @@ export default function EquipmentDetailPage() {
               <h3 className="text-lg font-semibold text-slate-700 mb-3">Specifications</h3>
               <div className="grid grid-cols-1 gap-2">
                 {Object.entries(equipment.specifications).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-2 border-b border-gray-100">
+                  <div key={key} className="flex justify-between py-2 border-b border-slate-100">
                     <span className="text-slate-700 capitalize">{key.replace(/_/g, ' ')}:</span>
                     <span className="font-medium text-slate-700">{String(value)}</span>
                   </div>
@@ -302,7 +302,7 @@ export default function EquipmentDetailPage() {
                           value="hourly"
                           checked={rentalType === 'hourly'}
                           onChange={(e) => setRentalType(e.target.value as 'hourly')}
-                          className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                          className="h-4 w-4 text-emerald-600 border-slate-200 focus:ring-emerald-500"
                         />
                         <span className="ml-2 text-sm text-slate-600">
                           Hourly (₹{equipment.hourly_rate}/hr)
@@ -315,7 +315,7 @@ export default function EquipmentDetailPage() {
                           value="daily"
                           checked={rentalType === 'daily'}
                           onChange={(e) => setRentalType(e.target.value as 'daily')}
-                          className="h-4 w-4 text-green-600 border-gray-300 focus:ring-green-500"
+                          className="h-4 w-4 text-emerald-600 border-slate-200 focus:ring-emerald-500"
                         />
                         <span className="ml-2 text-sm text-slate-600">
                           Daily (₹{equipment.daily_rate}/day)
@@ -337,15 +337,15 @@ export default function EquipmentDetailPage() {
                     max={rentalType === 'hourly' ? "24" : "30"}
                     value={rentalDuration}
                     onChange={(e) => setRentalDuration(parseInt(e.target.value) || 1)}
-                    className="w-32 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                    className="w-32 px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                   />
                 </div>
 
                 {}
-                <div className="pt-2 border-t border-gray-200">
+                <div className="pt-2 border-t border-slate-200">
                   <div className="flex justify-between items-center">
                     <span className="text-lg font-medium text-slate-700">Total Cost:</span>
-                    <span className="text-2xl font-bold text-green-600">₹{calculateTotal()}</span>
+                    <span className="text-2xl font-bold text-emerald-600">₹{calculateTotal()}</span>
                   </div>
                 </div>
               </div>
@@ -357,7 +357,7 @@ export default function EquipmentDetailPage() {
             <div className="flex space-x-4">
               <button
                 onClick={() => contactOwner('phone')}
-                className="flex-1 bg-green-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-green-700 flex items-center justify-center gap-2"
+                className="flex-1 bg-emerald-600 text-white px-6 py-3 rounded-md text-sm font-medium hover:bg-emerald-700 flex items-center justify-center gap-2"
                 disabled={!equipment.owner.phone}
               >
                 <Phone className="w-5 h-5" />

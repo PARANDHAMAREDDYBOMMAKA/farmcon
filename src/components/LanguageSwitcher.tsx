@@ -53,7 +53,7 @@ export default function LanguageSwitcher() {
       <select
         value={currentLang}
         onChange={(e) => changeLanguage(e.target.value)}
-        className="appearance-none bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+        className="appearance-none bg-white dark:bg-emerald-950 border border-slate-200 dark:border-emerald-900 rounded-lg px-4 py-2 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
       >
         {languages.map((lang) => (
           <option key={lang.code} value={lang.code}>
@@ -61,7 +61,7 @@ export default function LanguageSwitcher() {
           </option>
         ))}
       </select>
-      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-600 dark:text-gray-300">
+      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-600 dark:text-slate-200">
         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
           <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
         </svg>

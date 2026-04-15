@@ -202,7 +202,7 @@ export default function CategoriesPage() {
                   required
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="Enter category name"
                 />
               </div>
@@ -215,7 +215,7 @@ export default function CategoriesPage() {
                   name="imageUrl"
                   value={formData.imageUrl}
                   onChange={handleInputChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                  className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                   placeholder="Enter emoji or image URL"
                 />
               </div>
@@ -229,7 +229,7 @@ export default function CategoriesPage() {
                 rows={3}
                 value={formData.description}
                 onChange={handleInputChange}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+                className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
                 placeholder="Describe this category"
               />
             </div>
@@ -243,7 +243,7 @@ export default function CategoriesPage() {
               <button
                 type="button"
                 onClick={cancelEdit}
-                className="px-6 py-2 border border-gray-300 rounded-lg text-slate-600 hover:bg-emerald-50/30 font-medium"
+                className="px-6 py-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-emerald-50/30 font-medium"
               >
                 Cancel
               </button>
@@ -269,7 +269,7 @@ export default function CategoriesPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-slate-200">
               <thead className="bg-emerald-50/30">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
@@ -289,7 +289,7 @@ export default function CategoriesPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-slate-200">
                 {categories.map((category) => (
                   <tr key={category.id} className="hover:bg-emerald-50/30">
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -318,7 +318,7 @@ export default function CategoriesPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        category.isActive ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-700'
+                        category.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'
                       }`}>
                         {category.isActive ? 'Active' : 'Inactive'}
                       </span>

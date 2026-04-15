@@ -21,7 +21,7 @@ const createProductSchema = z.object({
   categoryId: z.string().uuid(),
   supplierId: z.string().uuid(),
   isActive: z.boolean().optional().default(true),
-  specifications: z.record(z.unknown()).optional(),
+  specifications: z.record(z.string(), z.any()).optional(),
 })
 
 export async function GET(request: NextRequest) {

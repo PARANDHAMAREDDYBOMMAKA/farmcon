@@ -26,7 +26,7 @@ const EXPERT_SERVICES: ExpertService[] = [
     specialty: 'Crop Management & Pest Control',
     description: 'Expert in sustainable farming practices, crop rotation, and integrated pest management. 20+ years of experience helping farmers maximize yields.',
     calLink: 'farmcon/crop-expert', 
-    image: '👨‍🌾',
+    image: '',
     experience: '20+ years',
     languages: ['English', 'Hindi', 'Telugu'],
     rating: 4.9,
@@ -39,7 +39,7 @@ const EXPERT_SERVICES: ExpertService[] = [
     specialty: 'Soil Health & Fertilization',
     description: 'Specialized in soil testing, nutrient management, and organic farming. Helping farmers improve soil quality and reduce chemical dependency.',
     calLink: 'farmcon/soil-expert', 
-    image: '👩‍🌾',
+    image: '',
     experience: '15+ years',
     languages: ['English', 'Hindi', 'Marathi'],
     rating: 4.8,
@@ -52,7 +52,7 @@ const EXPERT_SERVICES: ExpertService[] = [
     specialty: 'Market Analysis & Business Strategy',
     description: 'Expert in agricultural economics, market trends, and farm business planning. Helping farmers maximize profitability.',
     calLink: 'farmcon/business-consultant', 
-    image: '👨‍💼',
+    image: '',
     experience: '12+ years',
     languages: ['English', 'Hindi', 'Gujarati'],
     rating: 4.7,
@@ -81,9 +81,9 @@ export default function ConsultationsPage() {
             </div>
             <Link
               href="/dashboard"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-slate-600 bg-white hover:bg-emerald-50/30 transition-colors"
+              className="inline-flex items-center px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 bg-white hover:bg-emerald-50/30 transition-colors"
             >
-              ← Back to Dashboard
+               Back to Dashboard
             </Link>
           </div>
         </div>
@@ -91,21 +91,21 @@ export default function ConsultationsPage() {
         {!showBooking ? (
           <>
             {}
-            <div className="bg-green-50 border-l-4 border-green-400 p-6 mb-8 rounded-lg">
+            <div className="bg-emerald-50 border-l-4 border-emerald-400 p-6 mb-8 rounded-lg">
               <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <span className="text-3xl">🎓</span>
+                  <span className="text-3xl"></span>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-lg font-semibold text-green-900">100% FREE Expert Consultation</h3>
-                  <p className="text-green-700 mt-1">
+                  <h3 className="text-lg font-semibold text-emerald-900">100% FREE Expert Consultation</h3>
+                  <p className="text-emerald-700 mt-1">
                     Book a free 30-minute video consultation with our agricultural experts. Get personalized advice on crop management, soil health, pest control, and more.
                   </p>
-                  <ul className="mt-3 space-y-1 text-green-600 text-sm">
-                    <li>✓ No hidden charges - Completely free</li>
-                    <li>✓ Choose your convenient time slot</li>
-                    <li>✓ Video or phone consultation</li>
-                    <li>✓ Get personalized recommendations</li>
+                  <ul className="mt-3 space-y-1 text-emerald-600 text-sm">
+                    <li> No hidden charges - Completely free</li>
+                    <li> Choose your convenient time slot</li>
+                    <li> Video or phone consultation</li>
+                    <li> Get personalized recommendations</li>
                   </ul>
                 </div>
               </div>
@@ -116,12 +116,12 @@ export default function ConsultationsPage() {
               {EXPERT_SERVICES.map((expert) => (
                 <div key={expert.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   {}
-                  <div className="bg-gradient-to-r from-green-500 to-blue-600 p-6 text-white">
+                  <div className="bg-gradient-to-r from-emerald-500 to-blue-600 p-6 text-white">
                     <div className="flex items-center space-x-4">
                       <div className="text-6xl">{expert.image}</div>
                       <div className="flex-1">
                         <h3 className="text-xl font-bold">{expert.name}</h3>
-                        <p className="text-green-100 text-sm">{expert.title}</p>
+                        <p className="text-emerald-100 text-sm">{expert.title}</p>
                       </div>
                     </div>
                   </div>
@@ -139,7 +139,7 @@ export default function ConsultationsPage() {
                     </p>
 
                     {}
-                    <div className="grid grid-cols-3 gap-4 mb-4 py-4 border-t border-b border-gray-100">
+                    <div className="grid grid-cols-3 gap-4 mb-4 py-4 border-t border-b border-slate-100">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-slate-700">{expert.rating}</div>
                         <div className="text-xs text-slate-700">Rating</div>
@@ -169,9 +169,9 @@ export default function ConsultationsPage() {
                     {}
                     <button
                       onClick={() => handleBookConsultation(expert)}
-                      className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                      className="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors flex items-center justify-center space-x-2"
                     >
-                      <span>📅</span>
+                      <span></span>
                       <span>Book Free Consultation</span>
                     </button>
                   </div>
@@ -184,22 +184,22 @@ export default function ConsultationsPage() {
               <h2 className="text-2xl font-bold text-slate-700 mb-6 text-center">How It Works</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="text-center">
-                  <div className="text-4xl mb-3">👆</div>
+                  <div className="text-4xl mb-3"></div>
                   <h3 className="font-semibold text-slate-700 mb-2">1. Choose Expert</h3>
                   <p className="text-sm text-slate-700">Select the expert based on your needs</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl mb-3">📅</div>
+                  <div className="text-4xl mb-3"></div>
                   <h3 className="font-semibold text-slate-700 mb-2">2. Pick Time Slot</h3>
                   <p className="text-sm text-slate-700">Choose a convenient date and time</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl mb-3">📝</div>
+                  <div className="text-4xl mb-3"></div>
                   <h3 className="font-semibold text-slate-700 mb-2">3. Share Details</h3>
                   <p className="text-sm text-slate-700">Provide your contact info and query</p>
                 </div>
                 <div className="text-center">
-                  <div className="text-4xl mb-3">💬</div>
+                  <div className="text-4xl mb-3"></div>
                   <h3 className="font-semibold text-slate-700 mb-2">4. Get Expert Advice</h3>
                   <p className="text-sm text-slate-700">Join the video call at scheduled time</p>
                 </div>
@@ -223,9 +223,9 @@ export default function ConsultationsPage() {
                     setShowBooking(false)
                     setSelectedExpert(null)
                   }}
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-slate-600 hover:bg-emerald-50/30 transition-colors"
+                  className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-emerald-50/30 transition-colors"
                 >
-                  ← Back to Experts
+                   Back to Experts
                 </button>
               </div>
 
@@ -233,7 +233,7 @@ export default function ConsultationsPage() {
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6 rounded">
                 <div className="flex">
                   <div className="flex-shrink-0">
-                    <span className="text-2xl">⚠️</span>
+                    <span className="text-2xl"></span>
                   </div>
                   <div className="ml-3">
                     <h3 className="text-sm font-medium text-yellow-800">Demo Booking Widget</h3>
@@ -256,7 +256,7 @@ export default function ConsultationsPage() {
                   theme: 'auto',
                   layout: 'month_view'
                 }}
-                className="w-full h-[700px] rounded-lg border border-gray-200 overflow-hidden"
+                className="w-full h-[700px] rounded-lg border border-slate-200 overflow-hidden"
               />
             </div>
           </>

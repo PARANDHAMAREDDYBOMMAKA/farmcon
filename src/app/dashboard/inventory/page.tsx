@@ -140,7 +140,7 @@ export default function InventoryPage() {
     if (stock === 0) return { status: 'out', color: 'bg-red-100 text-red-800', label: 'Out of Stock' }
     if (stock < 10) return { status: 'low', color: 'bg-yellow-100 text-yellow-800', label: 'Low Stock' }
     if (stock < 50) return { status: 'medium', color: 'bg-blue-100 text-blue-800', label: 'Medium Stock' }
-    return { status: 'good', color: 'bg-green-100 text-green-800', label: 'Good Stock' }
+    return { status: 'good', color: 'bg-emerald-100 text-emerald-800', label: 'Good Stock' }
   }
 
   const filteredProducts = products.filter(product => {
@@ -180,33 +180,33 @@ export default function InventoryPage() {
   return (
     <div className="space-y-6">
       {}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-2xl ring-1 ring-emerald-100 shadow-sm p-4 md:p-5 min-w-0">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-slate-700">Inventory Management</h1>
+            <h1 className="text-xl md:text-2xl font-extrabold text-emerald-950 truncate">Inventory Management</h1>
             <p className="text-slate-700 mt-1">Track and manage your product inventory</p>
           </div>
         </div>
       </div>
 
       {}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3 md:gap-4">
+        <div className="bg-white rounded-2xl ring-1 ring-emerald-100 shadow-sm p-4 md:p-5 min-w-0">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <Package className="h-8 w-8 text-blue-600" />
+              <Package className="h-6 w-6 md:h-7 md:w-7 text-blue-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-slate-700">Total Products</p>
-              <p className="text-2xl font-bold text-slate-700">{stockSummary.total}</p>
+              <p className="text-xl md:text-2xl font-extrabold text-emerald-950 truncate">{stockSummary.total}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-2xl ring-1 ring-emerald-100 shadow-sm p-4 md:p-5 min-w-0">
           <div className="flex items-center">
             <div className="p-2 bg-red-100 rounded-lg">
-              <XCircle className="h-8 w-8 text-red-600" />
+              <XCircle className="h-6 w-6 md:h-7 md:w-7 text-red-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-slate-700">Out of Stock</p>
@@ -215,10 +215,10 @@ export default function InventoryPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-2xl ring-1 ring-emerald-100 shadow-sm p-4 md:p-5 min-w-0">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
-              <AlertTriangle className="h-8 w-8 text-yellow-600" />
+              <AlertTriangle className="h-6 w-6 md:h-7 md:w-7 text-amber-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-slate-700">Low Stock</p>
@@ -227,22 +227,22 @@ export default function InventoryPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-2xl ring-1 ring-emerald-100 shadow-sm p-4 md:p-5 min-w-0">
           <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="p-2 bg-emerald-100 rounded-lg">
+              <CheckCircle className="h-6 w-6 md:h-7 md:w-7 text-emerald-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-slate-700">Good Stock</p>
-              <p className="text-2xl font-bold text-green-600">{stockSummary.goodStock}</p>
+              <p className="text-2xl font-bold text-emerald-600">{stockSummary.goodStock}</p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className="bg-white rounded-2xl ring-1 ring-emerald-100 shadow-sm p-4 md:p-5 min-w-0">
           <div className="flex items-center">
             <div className="p-2 bg-purple-100 rounded-lg">
-              <DollarSign className="h-8 w-8 text-purple-600" />
+              <DollarSign className="h-6 w-6 md:h-7 md:w-7 text-violet-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-slate-700">Stock Value</p>
@@ -253,7 +253,7 @@ export default function InventoryPage() {
       </div>
 
       {}
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-2xl ring-1 ring-emerald-100 shadow-sm p-4 md:p-5 min-w-0">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-slate-600 mb-2">Search Inventory</label>
@@ -262,7 +262,7 @@ export default function InventoryPage() {
               placeholder="Search by name or category..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
           <div>
@@ -270,7 +270,7 @@ export default function InventoryPage() {
             <select
               value={stockFilter}
               onChange={(e) => setStockFilter(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             >
               <option value="all">All Status</option>
               <option value="good">Good Stock</option>
@@ -289,7 +289,7 @@ export default function InventoryPage() {
       {}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-emerald-50/30">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
@@ -315,7 +315,7 @@ export default function InventoryPage() {
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white divide-y divide-slate-200">
               {filteredProducts.map((product) => {
                 const stockInfo = getStockStatus(product.stockQuantity)
                 const isEditing = editingStock && editingStock.id === product.id
@@ -342,13 +342,13 @@ export default function InventoryPage() {
                             value={editingStock.value}
                             onChange={(e) => setEditingStock({...editingStock, value: e.target.value})}
                             onKeyDown={(e) => handleKeyPress(e, product.id)}
-                            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm focus:ring-orange-500 focus:border-orange-500"
+                            className="w-20 px-2 py-1 border border-slate-200 rounded text-sm focus:ring-orange-500 focus:border-orange-500"
                             min="0"
                           />
                           <div className="flex space-x-1">
                             <button
                               onClick={() => handleStockSave(product.id)}
-                              className="text-green-600 hover:text-green-800 text-xs"
+                              className="text-emerald-600 hover:text-emerald-800 text-xs"
                               disabled={updating === product.id}
                             >
                               <Check className="h-4 w-4" />
@@ -427,7 +427,7 @@ export default function InventoryPage() {
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowDeleteModal(null)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-slate-600 hover:bg-emerald-50/30"
+                className="flex-1 px-4 py-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-emerald-50/30"
               >
                 Cancel
               </button>

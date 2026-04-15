@@ -109,7 +109,7 @@ export default function ViewProductPage() {
     if (stock === 0) return { status: 'out', color: 'bg-red-100 text-red-800', label: 'Out of Stock' }
     if (stock < 10) return { status: 'low', color: 'bg-yellow-100 text-yellow-800', label: 'Low Stock' }
     if (stock < 50) return { status: 'medium', color: 'bg-blue-100 text-blue-800', label: 'Medium Stock' }
-    return { status: 'good', color: 'bg-green-100 text-green-800', label: 'Good Stock' }
+    return { status: 'good', color: 'bg-emerald-100 text-emerald-800', label: 'Good Stock' }
   }
 
   if (loading) {
@@ -160,7 +160,7 @@ export default function ViewProductPage() {
             </Link>
             <Link
               href="/dashboard/products"
-              className="px-4 py-2 border border-gray-300 text-slate-600 hover:bg-emerald-50/30 rounded-lg font-medium"
+              className="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-emerald-50/30 rounded-lg font-medium"
             >
               Back to Products
             </Link>
@@ -238,7 +238,7 @@ export default function ViewProductPage() {
               <div className="flex justify-between">
                 <span className="text-slate-700">Status:</span>
                 <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                  product.isActive ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-700'
+                  product.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'
                 }`}>
                   {product.isActive ? 'Active' : 'Inactive'}
                 </span>
@@ -283,7 +283,7 @@ export default function ViewProductPage() {
                 className={`w-full px-4 py-2 rounded-lg font-medium ${
                   product.isActive
                     ? 'bg-slate-100 text-slate-600 hover:bg-emerald-100/50'
-                    : 'bg-green-100 text-green-700 hover:bg-green-200'
+                    : 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
                 }`}
               >
                 {product.isActive ? 'Deactivate Product' : 'Activate Product'}

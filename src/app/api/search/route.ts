@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   
   if (!process.env.MEILISEARCH_HOST || !process.env.MEILISEARCH_API_KEY) {
     return NextResponse.json(
-      { error: 'Search feature is not available. MeiliSearch is not configured.' },
+      { error: 'Search feature is not available. Meilisearch is not configured.' },
       { status: 503 }
     )
   }

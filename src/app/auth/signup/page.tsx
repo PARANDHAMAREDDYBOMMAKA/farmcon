@@ -1,26 +1,115 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import {
+  ArrowLeft,
+  ArrowRight,
+  Building2,
+  CheckCircle2,
+  Clock,
+  Loader2,
+  Lock,
+  Mail,
+  MapPin,
+  Phone,
+  ShoppingCart,
+  Sprout,
+  Store,
+  TreeDeciduous,
+  User,
+  Wheat,
+} from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { profileAPI, farmerAPI } from '@/lib/api-client'
 import type { UserRole } from '@/types'
-import {
-  Sprout, Mail, Lock, User, Phone, MapPin, Building2,
-  ArrowRight, Sparkles, Loader2, AlertCircle, Wheat, ShoppingCart, Store,
-  TreeDeciduous, Clock
-} from 'lucide-react'
+import { AuthShell } from '@/components/auth/AuthShell'
+import { Button } from '@/components/ui/button'
+import { Input, Label, FieldHint } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
+import { cn } from '@/lib/cn'
 
-export default function SignUp() {
-  const [formData, setFormData] = useState({
+type Role = UserRole
+
+const roles: { value: Role; label: string; desc: string; icon: React.ElementType }[] = [
+  { value: 'consumer', label: 'Buyer', desc: 'Buy fresh produce', icon: ShoppingCart },
+  { value: 'farmer', label: 'Farmer', desc: 'Sell your crops', icon: Wheat },
+  { value: 'supplier', label: 'Supplier', desc: 'Sell farm supplies', icon: Store },
+]
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-950">
+      <div className="text-center">
+        <div className="relative w-14 h-14 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-700" />
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-300 border-t-transparent animate-spin" />
+          <Sprout className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="mt-3 text-sm font-semibold text-emerald-200">Loading…</p>
+      </div>
+    </div>
+  )
+}
+
+function Stepper({ step }: { step: number }) {
+  const items = ['Account', 'Location', 'Password']
+  return (
+    <div className="flex items-center justify-between gap-2 mb-6">
+      {items.map((label, i) => {
+        const idx = i + 1
+        const active = idx === step
+        const done = idx < step
+        return (
+          <div key={label} className="flex items-center gap-2 flex-1">
+            <div
+              className={cn(
+                'flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold transition-all',
+                done && 'bg-emerald-500 text-white',
+                active && 'bg-emerald-100 text-emerald-700 ring-4 ring-emerald-200',
+                !done && !active && 'bg-emerald-50 text-emerald-400',
+              )}
+            >
+              {done ? <CheckCircle2 className="w-4 h-4" /> : idx}
+            </div>
+            <span
+              className={cn(
+                'text-xs font-semibold hidden sm:inline',
+                active ? 'text-emerald-900' : done ? 'text-emerald-700' : 'text-slate-400',
+              )}
+            >
+              {label}
+            </span>
+            {i < items.length - 1 && (
+              <div
+                className={cn(
+                  'flex-1 h-0.5 rounded-full ml-1',
+                  done ? 'bg-emerald-400' : 'bg-emerald-100',
+                )}
+              />
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function SignUpForm() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [checkingAuth, setCheckingAuth] = useState(true)
+  const [step, setStep] = useState(1)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [form, setForm] = useState({
     email: '',
     phone: '',
     password: '',
     confirmPassword: '',
     fullName: '',
-    role: 'consumer' as UserRole,
+    role: 'consumer' as Role,
     address: '',
     city: '',
     state: '',
@@ -31,589 +120,551 @@ export default function SignUp() {
     farmLocation: '',
     farmSize: '',
     farmingExperience: '',
-    farmingType: [] as string[],
-    soilType: '',
-    waterSource: [] as string[]
   })
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [checkingAuth, setCheckingAuth] = useState(true)
-  const router = useRouter()
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const roleParam = searchParams?.get('role') as Role | null
+    if (roleParam && roles.some((r) => r.value === roleParam)) {
+      setForm((f) => ({ ...f, role: roleParam }))
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    const run = async () => {
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (session) {
           router.push('/dashboard')
           return
         }
-      } catch (error) {
-        console.error('Error checking auth:', error)
+      } catch (err) {
+        console.error('Auth check failed:', err)
       } finally {
         setCheckingAuth(false)
       }
     }
-
-    checkAuth()
+    run()
   }, [router])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+  const update = <K extends keyof typeof form>(key: K, value: (typeof form)[K]) => {
+    setForm((f) => ({ ...f, [key]: value }))
+  }
+  const on = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    update(key, e.target.value as any)
+
+  const validateStep1 = () => {
+    if (!form.fullName.trim()) return 'Please enter your full name.'
+    if (!form.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) return 'Please enter a valid email.'
+    if (!form.phone.trim()) return 'Please enter your phone number.'
+    return null
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setLoading(true)
+  const validateStep2 = () => {
+    if (!form.address.trim()) return 'Please enter your address.'
+    if (!form.city.trim()) return 'Please enter your city.'
+    if (!form.state.trim()) return 'Please enter your state.'
+    if (!form.pincode.trim()) return 'Please enter your pincode.'
+    return null
+  }
+
+  const validateStep3 = () => {
+    if (form.password.length < 6) return 'Password must be at least 6 characters.'
+    if (form.password !== form.confirmPassword) return 'Passwords do not match.'
+    return null
+  }
+
+  const next = () => {
     setError('')
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
+    const err = step === 1 ? validateStep1() : step === 2 ? validateStep2() : null
+    if (err) {
+      setError(err)
       return
     }
+    setStep((s) => Math.min(3, s + 1))
+  }
+  const back = () => {
+    setError('')
+    setStep((s) => Math.max(1, s - 1))
+  }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long')
-      setLoading(false)
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    const v = validateStep3()
+    if (v) {
+      setError(v)
       return
     }
+    setLoading(true)
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: form.email,
+        password: form.password,
         options: {
           data: {
-            full_name: formData.fullName,
-            phone: formData.phone,
-            role: formData.role,
-            address: formData.address,
-            city: formData.city,
-            state: formData.state,
-            pincode: formData.pincode
-          }
-        }
+            full_name: form.fullName,
+            phone: form.phone,
+            role: form.role,
+            address: form.address,
+            city: form.city,
+            state: form.state,
+            pincode: form.pincode,
+          },
+        },
       })
 
-      if (error) {
-        setError(error.message)
+      if (authError) {
+        setError(authError.message)
         setLoading(false)
         return
-      } else if (data.user) {
-        try {
-          await profileAPI.upsertProfile({
-            id: data.user.id,
-            email: formData.email,
-            fullName: formData.fullName,
-            phone: formData.phone,
-            role: formData.role as UserRole,
-            address: formData.address,
-            city: formData.city,
-            state: formData.state,
-            pincode: formData.pincode,
-            businessName: formData.businessName || undefined,
-            gstNumber: formData.gstNumber || undefined
-          })
-
-          if (formData.role === 'farmer' && (formData.farmName || formData.farmSize)) {
-            await farmerAPI.upsertFarmerProfile({
-              id: data.user.id,
-              farmName: formData.farmName || undefined,
-              farmLocation: formData.farmLocation || undefined,
-              farmSize: formData.farmSize ? parseFloat(formData.farmSize) : undefined,
-              farmingExperience: formData.farmingExperience ? parseInt(formData.farmingExperience) : undefined,
-              farmingType: formData.farmingType.length > 0 ? formData.farmingType : undefined,
-              soilType: formData.soilType || undefined,
-              waterSource: formData.waterSource.length > 0 ? formData.waterSource : undefined
-            })
-          }
-
-          await supabase.auth.updateUser({
-            data: {
-              full_name: formData.fullName,
-              phone: formData.phone,
-              role: formData.role,
-              city: formData.city,
-              state: formData.state
-            }
-          })
-
-          router.push('/dashboard?welcome=true')
-        } catch (profileError: any) {
-          setError(`Failed to create profile: ${profileError.message || 'Unknown error'}`)
-        }
       }
-    } catch (err) {
-      setError('An unexpected error occurred')
+
+      if (!data.user) {
+        setError('Signup failed. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      try {
+        await profileAPI.upsertProfile({
+          id: data.user.id,
+          email: form.email,
+          fullName: form.fullName,
+          phone: form.phone,
+          role: form.role,
+          address: form.address,
+          city: form.city,
+          state: form.state,
+          pincode: form.pincode,
+          businessName: form.businessName || undefined,
+          gstNumber: form.gstNumber || undefined,
+        })
+
+        if (form.role === 'farmer' && (form.farmName || form.farmSize)) {
+          await farmerAPI.upsertFarmerProfile({
+            id: data.user.id,
+            farmName: form.farmName || undefined,
+            farmLocation: form.farmLocation || undefined,
+            farmSize: form.farmSize ? parseFloat(form.farmSize) : undefined,
+            farmingExperience: form.farmingExperience
+              ? parseInt(form.farmingExperience)
+              : undefined,
+          })
+        }
+
+        await supabase.auth.updateUser({
+          data: {
+            full_name: form.fullName,
+            phone: form.phone,
+            role: form.role,
+            city: form.city,
+            state: form.state,
+          },
+        })
+
+        router.push('/dashboard?welcome=true')
+      } catch (profileErr: any) {
+        setError(`Failed to create profile: ${profileErr?.message || 'Unknown error'}`)
+      }
+    } catch {
+      setError('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  if (checkingAuth) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
-        <div className="text-center">
-          <div className="relative w-16 h-16 mx-auto">
-            <div className="absolute inset-0 rounded-full border-4 border-emerald-700"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-emerald-400 border-t-transparent animate-spin"></div>
-            <Sprout className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-emerald-400" />
-          </div>
-          <p className="mt-4 text-emerald-300 font-medium">Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
-  const roleOptions = [
-    { value: 'consumer', label: 'Consumer', icon: <ShoppingCart className="w-5 h-5" />, desc: 'Buy crops and products' },
-    { value: 'farmer', label: 'Farmer', icon: <Wheat className="w-5 h-5" />, desc: 'Sell crops and buy supplies' },
-    { value: 'supplier', label: 'Supplier', icon: <Store className="w-5 h-5" />, desc: 'Sell agricultural supplies' }
-  ]
+  if (checkingAuth) return <LoadingScreen />
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-teal-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-600/10 rounded-full blur-3xl"></div>
-      </div>
+    <AuthShell
+      title="Create your account"
+      subtitle={
+        <>
+          Already have an account?{' '}
+          <Link href="/auth/signin" className="font-bold text-emerald-300 hover:text-white">
+            Sign in
+          </Link>
+        </>
+      }
+      heroTitle={
+        <>
+          Join the{' '}
+          <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
+            revolution.
+          </span>
+        </>
+      }
+      heroSubtitle="Connect with thousands of farmers, suppliers, and buyers across India — on a single platform."
+      heroImage="https://images.unsplash.com/photo-1560493676-04071c5f467b?q=80&w=1400&auto=format&fit=crop"
+      heroBullets={[
+        { icon: <Sprout className="w-5 h-5 text-white" />, text: 'Free to join, always' },
+        { icon: <Wheat className="w-5 h-5 text-white" />, text: '10,000+ active users' },
+        { icon: <Store className="w-5 h-5 text-white" />, text: 'Farmers · Buyers · Suppliers' },
+      ]}
+    >
+      <Stepper step={step} />
 
-      <Link href="/" className="absolute top-6 left-6 z-50 flex items-center gap-3 group">
-        <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-500/30 group-hover:scale-110 transition-transform duration-300">
-          <Sprout className="w-6 h-6 text-white" />
-        </div>
-        <div>
-          <span className="text-2xl font-bold text-white">FarmCon</span>
-          <div className="flex items-center gap-1">
-            <Sparkles className="w-3 h-3 text-amber-400" />
-            <span className="text-xs text-amber-400 font-medium">Premium</span>
-          </div>
-        </div>
-      </Link>
+      <form onSubmit={step === 3 ? submit : (e) => e.preventDefault()} className="space-y-5">
+        {error && <Alert tone="error">{error}</Alert>}
 
-      <div className="hidden lg:flex lg:w-1/2 relative">
-        <Image
-          src="https://images.unsplash.com/photo-1560493676-04071c5f467b?w=1200&h=1600&fit=crop"
-          alt="Agriculture"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/90 via-emerald-800/80 to-teal-900/90"></div>
-
-        <div className="relative z-10 flex flex-col justify-center px-16 text-white">
-          <div className="max-w-lg">
-            <h2 className="text-5xl font-bold mb-6 leading-tight">
-              Join the
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-teal-300">
-                Revolution
-              </span>
-            </h2>
-            <p className="text-xl text-emerald-100/90 mb-10 leading-relaxed">
-              Connect with thousands of farmers across India. Manage crops, track prices, and grow your business.
-            </p>
-
-            <div className="grid grid-cols-2 gap-4 mb-10">
-              {[
-                { value: '10K+', label: 'Active Farmers' },
-                { value: '₹500Cr+', label: 'Crops Sold' },
-                { value: '40%', label: 'Yield Increase' },
-                { value: '24/7', label: 'Support' }
-              ].map((stat, idx) => (
-                <div key={idx} className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 text-center">
-                  <p className="text-3xl font-bold text-white mb-1">{stat.value}</p>
-                  <p className="text-sm text-emerald-200">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-3">
-                {['🌾', '🛒', '📦', '⚙️'].map((emoji, i) => (
-                  <div key={i} className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center text-lg border-2 border-emerald-900">
-                    {emoji}
-                  </div>
-                ))}
-              </div>
-              <div>
-                <p className="text-white font-semibold">All User Types</p>
-                <p className="text-emerald-200 text-sm">Farmers, Consumers, Suppliers</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 overflow-y-auto relative z-10">
-        <div className="w-full max-w-lg">
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold text-white mb-2">
-              Create your account
-            </h2>
-            <p className="text-emerald-200">
-              Already have an account?{' '}
-              <Link href="/auth/signin" className="font-semibold text-emerald-300 hover:text-white transition-colors">
-                Sign in
-              </Link>
-            </p>
-          </div>
-
-          <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/20">
-            <form className="space-y-5" onSubmit={handleSubmit}>
-              {error && (
-                <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                  <span className="text-sm font-medium">{error}</span>
-                </div>
-              )}
-
-              <div>
-                <label className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-3">
-                  <User className="w-4 h-4 text-emerald-600" />
-                  I am a
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {roleOptions.map((option) => (
+        {step === 1 && (
+          <>
+            <div>
+              <Label>
+                <User className="w-3.5 h-3.5 text-emerald-600" />I am a
+              </Label>
+              <div className="grid grid-cols-3 gap-2.5">
+                {roles.map((r) => {
+                  const Icon = r.icon
+                  const active = form.role === r.value
+                  return (
                     <button
-                      key={option.value}
+                      key={r.value}
                       type="button"
-                      onClick={() => setFormData({ ...formData, role: option.value as UserRole })}
-                      className={`relative p-4 rounded-xl border-2 transition-all duration-200 text-center ${
-                        formData.role === option.value
-                          ? 'border-emerald-500 bg-emerald-50 shadow-lg shadow-emerald-500/20'
-                          : 'border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50/50'
-                      }`}
+                      onClick={() => update('role', r.value)}
+                      className={cn(
+                        'relative p-3 rounded-xl border-2 text-center transition-all',
+                        active
+                          ? 'border-emerald-500 bg-emerald-50 shadow-md shadow-emerald-500/15'
+                          : 'border-emerald-100 hover:border-emerald-300 hover:bg-emerald-50/50',
+                      )}
                     >
-                      <div className={`w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-2 ${
-                        formData.role === option.value
-                          ? 'bg-gradient-to-br from-emerald-500 to-teal-500 text-white'
-                          : 'bg-emerald-100 text-emerald-600'
-                      }`}>
-                        {option.icon}
+                      <div
+                        className={cn(
+                          'w-10 h-10 mx-auto rounded-xl flex items-center justify-center mb-1.5',
+                          active
+                            ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white'
+                            : 'bg-emerald-100 text-emerald-600',
+                        )}
+                      >
+                        <Icon className="w-5 h-5" />
                       </div>
-                      <p className={`text-sm font-semibold ${formData.role === option.value ? 'text-emerald-700' : 'text-emerald-900'}`}>
-                        {option.label}
+                      <p
+                        className={cn(
+                          'text-sm font-bold',
+                          active ? 'text-emerald-800' : 'text-emerald-900',
+                        )}
+                      >
+                        {r.label}
                       </p>
-                      <p className="text-[10px] text-emerald-500 mt-0.5">{option.desc}</p>
+                      <p className="text-[11px] text-slate-500 mt-0.5">{r.desc}</p>
                     </button>
-                  ))}
-                </div>
+                  )
+                })}
               </div>
+            </div>
 
+            <div>
+              <Label htmlFor="fullName" required>
+                <User className="w-3.5 h-3.5 text-emerald-600" />
+                Full name
+              </Label>
+              <Input
+                id="fullName"
+                required
+                value={form.fullName}
+                onChange={on('fullName')}
+                placeholder="Your full name"
+                autoComplete="name"
+              />
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="fullName" className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-2">
-                  <User className="w-4 h-4 text-emerald-600" />
-                  Full Name
-                </label>
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
+                <Label htmlFor="email" required>
+                  <Mail className="w-3.5 h-3.5 text-emerald-600" />
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
                   required
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                  placeholder="Enter your full name"
+                  value={form.email}
+                  onChange={on('email')}
+                  placeholder="you@example.com"
+                  autoComplete="email"
                 />
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="email" className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-2">
-                    <Mail className="w-4 h-4 text-emerald-600" />
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                    placeholder="you@example.com"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-2">
-                    <Phone className="w-4 h-4 text-emerald-600" />
-                    Phone
-                  </label>
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                    placeholder="+91 9876543210"
-                  />
-                </div>
+              <div>
+                <Label htmlFor="phone" required>
+                  <Phone className="w-3.5 h-3.5 text-emerald-600" />
+                  Phone
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  required
+                  value={form.phone}
+                  onChange={on('phone')}
+                  placeholder="+91 9876543210"
+                  autoComplete="tel"
+                />
               </div>
+            </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="city" className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-2">
-                    <MapPin className="w-4 h-4 text-emerald-600" />
-                    City
-                  </label>
-                  <input
-                    id="city"
-                    name="city"
-                    type="text"
-                    required
-                    value={formData.city}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                    placeholder="City"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="state" className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-2">
-                    <MapPin className="w-4 h-4 text-emerald-600" />
-                    State
-                  </label>
-                  <input
-                    id="state"
-                    name="state"
-                    type="text"
-                    required
-                    value={formData.state}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                    placeholder="State"
-                  />
-                </div>
+            <Button type="button" size="lg" className="w-full" onClick={next}>
+              <span>Continue</span>
+              <ArrowRight className="w-5 h-5" />
+            </Button>
+          </>
+        )}
+
+        {step === 2 && (
+          <>
+            <div>
+              <Label htmlFor="address" required>
+                <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+                Address
+              </Label>
+              <Input
+                id="address"
+                required
+                value={form.address}
+                onChange={on('address')}
+                placeholder="House / street / landmark"
+                autoComplete="street-address"
+              />
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="city" required>
+                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  City
+                </Label>
+                <Input
+                  id="city"
+                  required
+                  value={form.city}
+                  onChange={on('city')}
+                  placeholder="City"
+                  autoComplete="address-level2"
+                />
               </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="address" className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-2">
-                    <Building2 className="w-4 h-4 text-emerald-600" />
-                    Address
-                  </label>
-                  <input
-                    id="address"
-                    name="address"
-                    type="text"
-                    required
-                    value={formData.address}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                    placeholder="Address"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="pincode" className="flex items-center gap-2 text-sm font-semibold text-emerald-900 mb-2">
-                    <MapPin className="w-4 h-4 text-emerald-600" />
-                    Pincode
-                  </label>
-                  <input
-                    id="pincode"
-                    name="pincode"
-                    type="text"
-                    required
-                    value={formData.pincode}
-                    onChange={handleChange}
-                    className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                    placeholder="000000"
-                  />
-                </div>
+              <div>
+                <Label htmlFor="state" required>
+                  <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                  State
+                </Label>
+                <Input
+                  id="state"
+                  required
+                  value={form.state}
+                  onChange={on('state')}
+                  placeholder="State"
+                  autoComplete="address-level1"
+                />
               </div>
+            </div>
 
-              {formData.role === 'supplier' && (
-                <div className="pt-4 border-t-2 border-emerald-100 space-y-4">
-                  <h3 className="text-sm font-bold text-emerald-900 flex items-center gap-2">
-                    <Store className="w-4 h-4 text-emerald-600" />
-                    Business Details
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="businessName" className="text-sm font-medium text-emerald-700 mb-2 block">
-                        Business Name
-                      </label>
-                      <input
-                        id="businessName"
-                        name="businessName"
-                        type="text"
-                        value={formData.businessName}
-                        onChange={handleChange}
-                        className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                        placeholder="Business name"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="gstNumber" className="text-sm font-medium text-emerald-700 mb-2 block">
-                        GST Number
-                      </label>
-                      <input
-                        id="gstNumber"
-                        name="gstNumber"
-                        type="text"
-                        value={formData.gstNumber}
-                        onChange={handleChange}
-                        className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                        placeholder="GST number"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
+            <div>
+              <Label htmlFor="pincode" required>
+                <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                Pincode
+              </Label>
+              <Input
+                id="pincode"
+                required
+                value={form.pincode}
+                onChange={on('pincode')}
+                placeholder="000000"
+                autoComplete="postal-code"
+                inputMode="numeric"
+              />
+            </div>
 
-              {formData.role === 'farmer' && (
-                <div className="pt-4 border-t-2 border-emerald-100 space-y-4">
-                  <h3 className="text-sm font-bold text-emerald-900 flex items-center gap-2">
-                    <Wheat className="w-4 h-4 text-emerald-600" />
-                    Farm Details
-                  </h3>
-                  <div>
-                    <label htmlFor="farmName" className="text-sm font-medium text-emerald-700 mb-2 block">
-                      Farm Name
-                    </label>
-                    <input
-                      id="farmName"
-                      name="farmName"
-                      type="text"
-                      value={formData.farmName}
-                      onChange={handleChange}
-                      className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                      placeholder="Your farm name"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="farmSize" className="flex items-center gap-2 text-sm font-medium text-emerald-700 mb-2">
-                        <TreeDeciduous className="w-4 h-4 text-emerald-500" />
-                        Farm Size (acres)
-                      </label>
-                      <input
-                        id="farmSize"
-                        name="farmSize"
-                        type="number"
-                        min="0"
-                        step="0.1"
-                        value={formData.farmSize}
-                        onChange={handleChange}
-                        className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                        placeholder="Size"
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="farmingExperience" className="flex items-center gap-2 text-sm font-medium text-emerald-700 mb-2">
-                        <Clock className="w-4 h-4 text-emerald-500" />
-                        Experience (years)
-                      </label>
-                      <input
-                        id="farmingExperience"
-                        name="farmingExperience"
-                        type="number"
-                        min="0"
-                        value={formData.farmingExperience}
-                        onChange={handleChange}
-                        className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                        placeholder="Years"
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-
+            {form.role === 'supplier' && (
               <div className="pt-4 border-t-2 border-emerald-100 space-y-4">
                 <h3 className="text-sm font-bold text-emerald-900 flex items-center gap-2">
-                  <Lock className="w-4 h-4 text-emerald-600" />
-                  Set Password
+                  <Store className="w-4 h-4 text-emerald-600" />
+                  Business details
                 </h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid sm:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="password" className="text-sm font-medium text-emerald-700 mb-2 block">
-                      Password
-                    </label>
-                    <input
-                      id="password"
-                      name="password"
-                      type="password"
-                      required
-                      value={formData.password}
-                      onChange={handleChange}
-                      className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                      placeholder="Password"
+                    <Label htmlFor="businessName">Business name</Label>
+                    <Input
+                      id="businessName"
+                      value={form.businessName}
+                      onChange={on('businessName')}
+                      placeholder="Business name"
                     />
                   </div>
                   <div>
-                    <label htmlFor="confirmPassword" className="text-sm font-medium text-emerald-700 mb-2 block">
-                      Confirm
-                    </label>
-                    <input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type="password"
-                      required
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      className="block w-full px-4 py-3 border-2 border-emerald-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all bg-emerald-50/50 hover:bg-white text-emerald-900 placeholder-emerald-400"
-                      placeholder="Confirm"
+                    <Label htmlFor="gstNumber">GST number</Label>
+                    <Input
+                      id="gstNumber"
+                      value={form.gstNumber}
+                      onChange={on('gstNumber')}
+                      placeholder="GSTIN"
                     />
                   </div>
                 </div>
               </div>
+            )}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex items-center justify-center gap-2 py-4 px-6 rounded-xl text-base font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-emerald-500/30 hover:shadow-2xl hover:shadow-emerald-500/40 transition-all duration-300 transform hover:scale-[1.02] disabled:hover:scale-100"
-              >
+            {form.role === 'farmer' && (
+              <div className="pt-4 border-t-2 border-emerald-100 space-y-4">
+                <h3 className="text-sm font-bold text-emerald-900 flex items-center gap-2">
+                  <Wheat className="w-4 h-4 text-emerald-600" />
+                  Farm details{' '}
+                  <span className="text-xs font-medium text-slate-500 ml-1">(optional)</span>
+                </h3>
+                <div>
+                  <Label htmlFor="farmName">Farm name</Label>
+                  <Input
+                    id="farmName"
+                    value={form.farmName}
+                    onChange={on('farmName')}
+                    placeholder="Your farm name"
+                  />
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="farmSize">
+                      <TreeDeciduous className="w-3.5 h-3.5 text-emerald-500" />
+                      Size (acres)
+                    </Label>
+                    <Input
+                      id="farmSize"
+                      type="number"
+                      min="0"
+                      step="0.1"
+                      value={form.farmSize}
+                      onChange={on('farmSize')}
+                      placeholder="0.0"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="farmingExperience">
+                      <Clock className="w-3.5 h-3.5 text-emerald-500" />
+                      Experience (yrs)
+                    </Label>
+                    <Input
+                      id="farmingExperience"
+                      type="number"
+                      min="0"
+                      value={form.farmingExperience}
+                      onChange={on('farmingExperience')}
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="flex gap-3 pt-2">
+              <Button type="button" variant="outline" size="lg" onClick={back}>
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+              <Button type="button" size="lg" className="flex-1" onClick={next}>
+                <span>Continue</span>
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </div>
+          </>
+        )}
+
+        {step === 3 && (
+          <>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="password" required>
+                  <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  minLength={6}
+                  value={form.password}
+                  onChange={on('password')}
+                  placeholder="At least 6 chars"
+                  autoComplete="new-password"
+                />
+              </div>
+              <div>
+                <Label htmlFor="confirmPassword" required>
+                  <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                  Confirm
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  required
+                  minLength={6}
+                  value={form.confirmPassword}
+                  onChange={on('confirmPassword')}
+                  placeholder="Re-enter"
+                  autoComplete="new-password"
+                />
+              </div>
+            </div>
+            <FieldHint>Mix letters, numbers, and symbols for a stronger password.</FieldHint>
+
+            <div className="flex gap-3">
+              <Button type="button" variant="outline" size="lg" onClick={back}>
+                <ArrowLeft className="w-4 h-4" />
+                Back
+              </Button>
+              <Button type="submit" size="lg" className="flex-1" disabled={loading}>
                 {loading ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Creating Account...</span>
+                    <span>Creating account…</span>
                   </>
                 ) : (
                   <>
-                    <span>Create Account</span>
+                    <span>Create account</span>
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
-              </button>
+              </Button>
+            </div>
 
-              <div className="relative my-4">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t-2 border-emerald-100" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-white text-emerald-600 font-medium">Or</span>
-                </div>
-              </div>
-
-              <Link
-                href="/auth/email-otp"
-                className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border-2 border-emerald-200 rounded-xl text-sm font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 hover:border-emerald-300 transition-all duration-200"
-              >
-                <Mail className="w-5 h-5" />
-                <span>Sign up with Email OTP</span>
+            <p className="text-xs text-center text-slate-500 pt-2">
+              By creating an account, you agree to our{' '}
+              <Link href="/terms-of-service" className="font-semibold text-emerald-700 hover:text-emerald-900">
+                Terms
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy-policy" className="font-semibold text-emerald-700 hover:text-emerald-900">
+                Privacy Policy
               </Link>
+              .
+            </p>
+          </>
+        )}
+      </form>
 
-              <p className="text-xs text-emerald-600 text-center">
-                By creating an account, you agree to our{' '}
-                <Link href="/terms-of-service" className="text-emerald-700 hover:text-emerald-900 font-semibold">
-                  Terms of Service
-                </Link>{' '}
-                and{' '}
-                <Link href="/privacy-policy" className="text-emerald-700 hover:text-emerald-900 font-semibold">
-                  Privacy Policy
-                </Link>
-              </p>
-            </form>
+      {step === 1 && (
+        <>
+          <div className="relative my-5">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-emerald-100" />
+            </div>
+            <div className="relative flex justify-center">
+              <span className="px-3 bg-white text-xs font-semibold uppercase tracking-wider text-emerald-600">
+                Or
+              </span>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
+          <Button href="/auth/email-otp" variant="outline" size="lg" className="w-full">
+            <Mail className="w-4 h-4" />
+            <span>Sign up with Email OTP</span>
+          </Button>
+        </>
+      )}
+    </AuthShell>
+  )
+}
+
+export default function SignUp() {
+  return (
+    <Suspense fallback={<LoadingScreen />}>
+      <SignUpForm />
+    </Suspense>
   )
 }

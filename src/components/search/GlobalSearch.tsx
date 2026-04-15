@@ -66,7 +66,7 @@ export default function GlobalSearch() {
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsOpen(true)}
           onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-          className="w-full px-4 py-2 pl-10 pr-4 text-slate-700 placeholder-gray-500 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full px-4 py-2 pl-10 pr-4 text-slate-700 placeholder-slate-500 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
         />
         <svg
           className="absolute left-3 top-2.5 w-5 h-5 text-slate-700"
@@ -83,14 +83,14 @@ export default function GlobalSearch() {
         </svg>
         {isSearching && (
           <div className="absolute right-3 top-2.5">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-600"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-emerald-600"></div>
           </div>
         )}
       </div>
 
       {}
       {isOpen && query && (
-        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl border border-gray-200 max-h-96 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-2 bg-white rounded-lg shadow-xl border border-slate-200 max-h-96 overflow-y-auto">
           {isSearching ? (
             <div className="p-4 text-center text-slate-700">Searching...</div>
           ) : results.length > 0 ? (
@@ -99,7 +99,7 @@ export default function GlobalSearch() {
                 <div
                   key={result.id}
                   onClick={() => handleResultClick(result)}
-                  className="px-4 py-3 hover:bg-emerald-50/30 cursor-pointer border-b border-gray-100 last:border-b-0"
+                  className="px-4 py-3 hover:bg-emerald-50/30 cursor-pointer border-b border-slate-100 last:border-b-0"
                 >
                   <div className="flex items-start space-x-3">
                     {result.images && result.images[0] ? (
@@ -109,8 +109,8 @@ export default function GlobalSearch() {
                         className="w-12 h-12 object-cover rounded"
                       />
                     ) : (
-                      <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
-                        <span className="text-2xl">📦</span>
+                      <div className="w-12 h-12 bg-slate-200 rounded flex items-center justify-center">
+                        <span className="text-2xl"></span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -121,7 +121,7 @@ export default function GlobalSearch() {
                         <p className="text-xs text-slate-700">{result.category}</p>
                       )}
                       {result.price && (
-                        <p className="text-sm font-semibold text-green-600">
+                        <p className="text-sm font-semibold text-emerald-600">
                           ₹{result.price}
                         </p>
                       )}
@@ -129,12 +129,12 @@ export default function GlobalSearch() {
                   </div>
                 </div>
               ))}
-              <div className="px-4 py-2 text-center border-t border-gray-200">
+              <div className="px-4 py-2 text-center border-t border-slate-200">
                 <button
                   onClick={() => router.push(`/dashboard/supplies?q=${query}`)}
-                  className="text-sm text-green-600 hover:text-green-700 font-medium"
+                  className="text-sm text-emerald-600 hover:text-emerald-700 font-medium"
                 >
-                  View all results →
+                  View all results 
                 </button>
               </div>
             </div>

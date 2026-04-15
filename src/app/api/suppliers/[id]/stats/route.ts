@@ -3,10 +3,11 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supplierId = params.id
+    const { id } = await params
+    const supplierId = id
 
     const productStats = await prisma.product.aggregate({
       where: { supplierId },
@@ -71,7 +72,7 @@ export async function GET(
             }
           }
         },
-        status: 'PENDING'
+        status: 'pending'
       }
     })
 
@@ -84,7 +85,7 @@ export async function GET(
             }
           }
         },
-        status: 'DELIVERED'
+        status: 'delivered'
       }
     })
 

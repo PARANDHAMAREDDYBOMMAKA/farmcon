@@ -1,75 +1,162 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { ArrowLeft, Loader2, ShieldCheck, Sprout, Clock } from 'lucide-react'
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { supabase } from '@/lib/supabase'
+import { AuthShell } from '@/components/auth/AuthShell'
+import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
+import { cn } from '@/lib/cn'
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-950">
+      <div className="text-center">
+        <div className="relative w-14 h-14 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-700" />
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-300 border-t-transparent animate-spin" />
+          <Sprout className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="mt-3 text-sm font-semibold text-emerald-200">Loading…</p>
+      </div>
+    </div>
+  )
+}
+
+function OtpInput({
+  value,
+  onChange,
+  length = 6,
+  autoFocus,
+}: {
+  value: string
+  onChange: (v: string) => void
+  length?: number
+  autoFocus?: boolean
+}) {
+  const refs = useRef<(HTMLInputElement | null)[]>([])
+
+  useEffect(() => {
+    if (autoFocus) refs.current[0]?.focus()
+  }, [autoFocus])
+
+  const handleChange = (i: number, next: string) => {
+    const digit = next.replace(/\D/g, '').slice(-1)
+    const arr = value.split('')
+    while (arr.length < length) arr.push('')
+    arr[i] = digit
+    const joined = arr.join('').slice(0, length)
+    onChange(joined)
+    if (digit && i < length - 1) refs.current[i + 1]?.focus()
+  }
+
+  const handleKey = (i: number, e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Backspace' && !value[i] && i > 0) {
+      refs.current[i - 1]?.focus()
+    } else if (e.key === 'ArrowLeft' && i > 0) {
+      refs.current[i - 1]?.focus()
+    } else if (e.key === 'ArrowRight' && i < length - 1) {
+      refs.current[i + 1]?.focus()
+    }
+  }
+
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, length)
+    if (!pasted) return
+    onChange(pasted.padEnd(length, ''))
+    const last = Math.min(pasted.length, length - 1)
+    refs.current[last]?.focus()
+  }
+
+  return (
+    <div className="flex justify-center gap-2 sm:gap-3" onPaste={handlePaste}>
+      {Array.from({ length }).map((_, i) => (
+        <input
+          key={i}
+          ref={(el) => {
+            refs.current[i] = el
+          }}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={value[i] ?? ''}
+          onChange={(e) => handleChange(i, e.target.value)}
+          onKeyDown={(e) => handleKey(i, e)}
+          className={cn(
+            'w-11 h-14 sm:w-12 sm:h-16 text-center text-2xl font-extrabold rounded-xl border-2 transition-all',
+            'border-emerald-100 bg-emerald-50/40 text-emerald-950',
+            'focus:outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/15 focus:bg-white',
+            value[i] && 'border-emerald-400 bg-white',
+          )}
+          aria-label={`Digit ${i + 1}`}
+        />
+      ))}
+    </div>
+  )
+}
 
 function VerifyOTPForm() {
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
+  const [resending, setResending] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [cooldown, setCooldown] = useState(0)
   const router = useRouter()
   const searchParams = useSearchParams()
   const { executeRecaptcha } = useGoogleReCaptcha()
 
   useEffect(() => {
-    
     const emailParam = searchParams?.get('email')
     const passwordParam = searchParams?.get('password')
 
     if (!emailParam) {
-      setError('No email provided. Please sign in again.')
-      setTimeout(() => router.push('/auth/signin'), 2000)
+      setError('No email provided. Redirecting…')
+      setTimeout(() => router.push('/auth/signin'), 1600)
       return
     }
-
     setEmail(decodeURIComponent(emailParam))
-    if (passwordParam) {
-      setPassword(decodeURIComponent(passwordParam))
-    }
+    if (passwordParam) setPassword(decodeURIComponent(passwordParam))
   }, [searchParams, router])
 
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault()
+  useEffect(() => {
+    if (cooldown <= 0) return
+    const t = setTimeout(() => setCooldown((s) => s - 1), 1000)
+    return () => clearTimeout(t)
+  }, [cooldown])
+
+  const verify = async (e?: React.FormEvent) => {
+    e?.preventDefault()
+    if (otp.length !== 6) {
+      setError('Please enter all 6 digits.')
+      return
+    }
     setLoading(true)
     setError('')
     setSuccess('')
 
-    if (otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP')
-      setLoading(false)
-      return
-    }
-
     try {
-      
-      const response = await fetch('/api/auth/verify-otp', {
+      const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
       })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Invalid OTP')
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Invalid OTP')
-      }
-
-      setSuccess('OTP verified! Signing you in...')
+      setSuccess('Verified! Signing you in…')
 
       if (password) {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
-          password
+          password,
         })
-
         if (signInError) {
           setError(signInError.message)
           setLoading(false)
@@ -77,160 +164,106 @@ function VerifyOTPForm() {
         }
       }
 
-      setTimeout(() => {
-        router.push('/dashboard')
-      }, 1000)
+      setTimeout(() => router.push('/dashboard'), 900)
     } catch (err: any) {
-      console.error('Error verifying OTP:', err)
-      setError(err.message || 'Invalid OTP. Please try again.')
+      setError(err?.message || 'Invalid OTP. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleResendOTP = async () => {
-    setLoading(true)
+  const resend = async () => {
+    if (cooldown > 0) return
+    setResending(true)
     setError('')
     setSuccess('')
-
     try {
-      if (!executeRecaptcha) {
-        setError('reCAPTCHA not ready. Please try again.')
-        setLoading(false)
-        return
+      let recaptchaToken = 'skip'
+      if (executeRecaptcha) {
+        try {
+          recaptchaToken = await executeRecaptcha('resend_otp')
+        } catch {
+          recaptchaToken = 'skip'
+        }
       }
-
-      const recaptchaToken = await executeRecaptcha('resend_otp')
-
-      const response = await fetch('/api/auth/send-otp', {
+      const res = await fetch('/api/auth/send-otp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          recaptchaToken
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, recaptchaToken }),
       })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to resend OTP')
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to resend OTP')
-      }
-
-      setSuccess('OTP resent successfully! Check your email.')
+      setSuccess('OTP resent. Check your inbox.')
+      setCooldown(30)
     } catch (err: any) {
-      setError(err.message || 'Failed to resend OTP')
+      setError(err?.message || 'Failed to resend OTP')
     } finally {
-      setLoading(false)
+      setResending(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex">
-      {}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-400 to-green-600 relative">
-        <div className="flex flex-col justify-center px-12 text-white">
-          <h2 className="text-4xl font-bold mb-6">Verify Your Email</h2>
-          <p className="text-xl mb-8 opacity-90">
-            We've sent a 6-digit verification code to your email. Enter it below to continue.
+    <AuthShell
+      title="Enter verification code"
+      subtitle={<>We sent a 6-digit code to <strong className="text-emerald-300">{email || 'your email'}</strong></>}
+      heroTitle={
+        <>
+          Just one more{' '}
+          <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
+            step.
+          </span>
+        </>
+      }
+      heroSubtitle="Two-factor verification keeps your FarmCon account — and your farm data — secure."
+      heroBullets={[
+        { icon: <ShieldCheck className="w-5 h-5 text-white" />, text: 'Encrypted end-to-end' },
+        { icon: <Clock className="w-5 h-5 text-white" />, text: 'Code expires in 5 minutes' },
+        { icon: <Sprout className="w-5 h-5 text-white" />, text: 'Used by 10,000+ farmers' },
+      ]}
+      compact
+    >
+      <form onSubmit={verify} className="space-y-6">
+        {error && <Alert tone="error">{error}</Alert>}
+        {success && <Alert tone="success">{success}</Alert>}
+
+        <div className="space-y-3">
+          <OtpInput value={otp} onChange={setOtp} autoFocus />
+          <p className="text-center text-xs font-medium text-slate-500">
+            Paste the code from your email — we’ll auto-split the digits.
           </p>
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-              <span>Secure email verification</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-              <span>Code expires in 5 minutes</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-              <span>Protected access</span>
-            </div>
-          </div>
         </div>
-      </div>
 
-      {}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <Link href="/" className="text-3xl font-bold text-green-600">
-              FarmCon
-            </Link>
-            <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
-              Verify Your Email
-            </h2>
-            <p className="mt-2 text-sm text-gray-900">
-              Enter the 6-digit code sent to
-            </p>
-            <p className="text-sm font-medium text-gray-900">{email}</p>
-          </div>
+        <Button type="submit" size="lg" className="w-full" disabled={loading || otp.length !== 6}>
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Verifying…</span>
+            </>
+          ) : (
+            <span>Verify & continue</span>
+          )}
+        </Button>
 
-          <form className="mt-8 space-y-6" onSubmit={handleVerifyOTP}>
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
-                {error}
-              </div>
-            )}
-
-            {success && (
-              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md">
-                {success}
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="otp" className="block text-sm font-medium text-gray-700 text-center">
-                Verification Code
-              </label>
-              <input
-                id="otp"
-                name="otp"
-                type="text"
-                maxLength={6}
-                required
-                value={otp}
-                onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                className="mt-1 block w-full px-3 py-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-center text-3xl tracking-[1rem] font-bold"
-                placeholder="000000"
-                autoFocus
-              />
-              <p className="mt-2 text-xs text-gray-900 text-center">
-                Enter the 6-digit code from your email
-              </p>
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading || otp.length !== 6}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Verifying...' : 'Verify & Continue'}
-            </button>
-
-            <div className="flex flex-col space-y-2 text-sm text-center">
-              <button
-                type="button"
-                onClick={handleResendOTP}
-                disabled={loading}
-                className="text-green-600 hover:text-green-500 disabled:opacity-50"
-              >
-                Didn't receive code? Resend
-              </button>
-              <Link
-                href="/auth/signin"
-                className="text-gray-900 hover:text-gray-900"
-              >
-                ← Back to sign in
-              </Link>
-            </div>
-          </form>
+        <div className="flex items-center justify-between text-sm">
+          <Link
+            href="/auth/signin"
+            className="inline-flex items-center gap-1.5 font-semibold text-emerald-700 hover:text-emerald-900"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Link>
+          <button
+            type="button"
+            onClick={resend}
+            disabled={resending || cooldown > 0}
+            className="font-semibold text-emerald-700 hover:text-emerald-900 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {resending ? 'Resending…' : cooldown > 0 ? `Resend in ${cooldown}s` : 'Resend code'}
+          </button>
         </div>
-      </div>
-    </div>
+      </form>
+    </AuthShell>
   )
 }
 
@@ -238,20 +271,9 @@ export default function VerifyOTP() {
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-      scriptProps={{
-        async: true,
-        defer: true,
-        appendTo: 'head',
-      }}
+      scriptProps={{ async: true, defer: true, appendTo: 'head' }}
     >
-      <Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-            <p className="mt-2 text-sm text-gray-900">Loading...</p>
-          </div>
-        </div>
-      }>
+      <Suspense fallback={<LoadingScreen />}>
         <VerifyOTPForm />
       </Suspense>
     </GoogleReCaptchaProvider>

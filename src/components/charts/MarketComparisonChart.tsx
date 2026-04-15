@@ -102,7 +102,7 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
           <div><strong>${d.market}</strong></div>
           <div>${d.state}</div>
           <div>₹${d.price.toLocaleString()}/quintal</div>
-          ${d.trend ? `<div>Trend: ${d.trend === 'up' ? '📈' : d.trend === 'down' ? '📉' : '➡️'} ${d.trend}</div>` : ''}
+          ${d.trend ? `<div>Trend: ${d.trend === 'up' ? '' : d.trend === 'down' ? '' : ''} ${d.trend}</div>` : ''}
         `)
           .style('left', (event.pageX + 10) + 'px')
           .style('top', (event.pageY - 10) + 'px')
@@ -187,7 +187,7 @@ export default function MarketComparisonChart({ data, title, type = 'best' }: Ma
           .attr('x', x)
           .attr('y', y)
           .attr('font-size', '14px')
-          .text(d.trend === 'up' ? '📈' : '📉')
+          .text(d.trend === 'up' ? '' : '')
           .style('opacity', 0)
           .transition()
           .duration(500)

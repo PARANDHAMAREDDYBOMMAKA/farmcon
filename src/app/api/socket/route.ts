@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     })
 
     io.on('connection', (socket) => {
-      console.log('✅ New socket connection:', socket.id)
+      console.log(' New socket connection:', socket.id)
 
       socket.on('join', ({ userId }) => {
         socket.join(`user:${userId}`)
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
       })
 
       socket.on('disconnect', () => {
-        console.log('❌ Socket disconnected:', socket.id)
+        console.log(' Socket disconnected:', socket.id)
       })
     })
   }

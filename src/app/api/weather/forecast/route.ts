@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
 
     const daily = data.daily
 
-    console.log('🔍 Open-Meteo forecast data for', locationName, ':', {
+    console.log(' Open-Meteo forecast data for', locationName, ':', {
       days: daily.time.length,
       firstDay: daily.time[0],
       temp: daily.temperature_2m_mean?.[0]
@@ -294,28 +294,28 @@ function getFieldWorkSuitability(day: any) {
 
   if (day.rainfall === 0) {
     score += 3
-    factors.push('✓ No rain expected')
+    factors.push(' No rain expected')
   } else if (day.rainfall < 2) {
     score += 1
-    factors.push('⚠ Light rain possible')
+    factors.push(' Light rain possible')
   } else {
-    factors.push('❌ Rain expected - avoid field work')
+    factors.push(' Rain expected - avoid field work')
   }
 
   if (day.tempMax >= 15 && day.tempMax <= 30) {
     score += 2
-    factors.push('✓ Comfortable working temperature')
+    factors.push(' Comfortable working temperature')
   } else if (day.tempMax > 35) {
-    factors.push('⚠ Very hot - work during cooler hours')
+    factors.push(' Very hot - work during cooler hours')
   } else if (day.tempMax < 10) {
-    factors.push('⚠ Cold conditions')
+    factors.push(' Cold conditions')
   }
 
   if (day.windSpeed < 5) {
     score += 1
-    factors.push('✓ Light winds')
+    factors.push(' Light winds')
   } else if (day.windSpeed > 10) {
-    factors.push('⚠ Strong winds - secure equipment')
+    factors.push(' Strong winds - secure equipment')
   }
 
   return {
@@ -376,14 +376,14 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
     insights.push({
       type: 'water-management',
       message: `Heavy rainfall recorded (${Math.round(totalRain)}mm). Ensure proper drainage.`,
-      icon: '🌧️',
+      icon: '',
       priority: 'high'
     })
   } else if (totalRain < 5) {
     insights.push({
       type: 'irrigation',
       message: 'Dry period recorded. Plan irrigation schedule carefully.',
-      icon: '💧',
+      icon: '',
       priority: 'medium'
     })
   }
@@ -395,7 +395,7 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
     insights.push({
       type: 'heat-protection',
       message: `${hotDays} hot days recorded. Protect crops and increase irrigation.`,
-      icon: '🌡️',
+      icon: '',
       priority: 'high'
     })
   }
@@ -404,7 +404,7 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
     insights.push({
       type: 'frost-protection',
       message: `${coldDays} cold days recorded. Prepare frost protection measures.`,
-      icon: '❄️',
+      icon: '',
       priority: 'medium'
     })
   }
@@ -416,7 +416,7 @@ function generateWeeklyFarmingInsights(forecasts: any[]) {
   insights.push({
     type: 'field-work',
     message: `${goodWorkDays} optimal days recorded for field operations.`,
-    icon: '🚜',
+    icon: '',
     priority: 'low'
   })
 

@@ -152,8 +152,8 @@ export default function ProductsPage() {
         </div>
         <div className="bg-white rounded-lg shadow p-6">
           <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <CheckCircle className="h-8 w-8 text-green-600" />
+            <div className="p-2 bg-emerald-100 rounded-lg">
+              <CheckCircle className="h-8 w-8 text-emerald-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-slate-700">Active Products</p>
@@ -195,7 +195,7 @@ export default function ProductsPage() {
               placeholder="Search by name or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
           <div>
@@ -203,7 +203,7 @@ export default function ProductsPage() {
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             >
               <option value="all">All Categories</option>
               {categories.map(category => (
@@ -216,7 +216,7 @@ export default function ProductsPage() {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full border border-slate-200 rounded-lg px-3 py-2 focus:ring-orange-500 focus:border-orange-500"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -251,7 +251,7 @@ export default function ProductsPage() {
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full divide-y divide-slate-200">
               <thead className="bg-emerald-50/30">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
@@ -274,7 +274,7 @@ export default function ProductsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-slate-200">
                 {filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-emerald-50/30">
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -310,14 +310,14 @@ export default function ProductsPage() {
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                         product.stockQuantity === 0 ? 'bg-red-100 text-red-800' :
                         product.stockQuantity < 10 ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-green-100 text-green-800'
+                        'bg-emerald-100 text-emerald-800'
                       }`}>
                         {product.stockQuantity} {product.unit}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        product.isActive ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-700'
+                        product.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'
                       }`}>
                         {product.isActive ? 'Active' : 'Inactive'}
                       </span>
@@ -337,7 +337,7 @@ export default function ProductsPage() {
                       </Link>
                       <button
                         onClick={() => handleToggleStatus(product.id, product.isActive)}
-                        className="text-green-600 hover:text-green-900"
+                        className="text-emerald-600 hover:text-emerald-900"
                       >
                         {product.isActive ? 'Deactivate' : 'Activate'}
                       </button>

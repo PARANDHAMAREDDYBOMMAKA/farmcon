@@ -39,7 +39,7 @@ function OrderSuccessPageInternal() {
           
           await processOrder(session_id)
           setOrderConfirmed(true)
-          toast.success('🎉 Payment successful! Your order has been confirmed.')
+          toast.success(' Payment successful! Your order has been confirmed.')
 
           setTimeout(() => {
             window.location.href = '/dashboard/cart?payment_success=true'
@@ -49,7 +49,7 @@ function OrderSuccessPageInternal() {
         
         await processOrder(session_id)
         setOrderConfirmed(true)
-        toast.success('🎉 Payment successful! Your order has been confirmed.')
+        toast.success(' Payment successful! Your order has been confirmed.')
 
         setTimeout(() => {
           window.location.href = '/dashboard/cart?payment_success=true'
@@ -85,15 +85,15 @@ function OrderSuccessPageInternal() {
   }
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-green-50 to-blue-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-linear-to-br from-emerald-50 to-blue-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         {}
         <div className="text-center mb-8">
           {orderConfirmed ? (
             
             <div className="w-24 h-24 mx-auto mb-6 relative">
-              <div className="absolute inset-0 bg-linear-to-r from-green-400 to-green-600 rounded-full animate-ping opacity-75"></div>
-              <div className="relative w-24 h-24 bg-linear-to-r from-green-400 to-green-600 rounded-full flex items-center justify-center transform transition-all duration-500 scale-100 hover:scale-110 shadow-2xl">
+              <div className="absolute inset-0 bg-linear-to-r from-emerald-400 to-emerald-600 rounded-full animate-ping opacity-75"></div>
+              <div className="relative w-24 h-24 bg-linear-to-r from-emerald-400 to-emerald-600 rounded-full flex items-center justify-center transform transition-all duration-500 scale-100 hover:scale-110 shadow-2xl">
                 <svg className="w-12 h-12 text-white animate-[checkmark_0.6s_ease-in-out]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                 </svg>
@@ -116,7 +116,7 @@ function OrderSuccessPageInternal() {
 
           <h1 className={`text-3xl font-bold mb-3 transition-all duration-500 ${
             orderConfirmed
-              ? 'text-green-600 animate-[slideUp_0.5s_ease-out]'
+              ? 'text-emerald-600 animate-[slideUp_0.5s_ease-out]'
               : 'text-blue-600 animate-pulse'
           }`}>
             {orderConfirmed ? 'Order Confirmed!' : 'Processing Payment...'}
@@ -136,7 +136,7 @@ function OrderSuccessPageInternal() {
           
           <div className="space-y-4">
             <div className="flex items-start space-x-3">
-              <span className="text-2xl">📧</span>
+              <span className="text-2xl"></span>
               <div>
                 <h3 className="font-medium text-slate-700">Order Confirmation</h3>
                 <p className="text-sm text-slate-700">You'll receive an email confirmation with order details</p>
@@ -144,7 +144,7 @@ function OrderSuccessPageInternal() {
             </div>
             
             <div className="flex items-start space-x-3">
-              <span className="text-2xl">📦</span>
+              <span className="text-2xl"></span>
               <div>
                 <h3 className="font-medium text-slate-700">Processing</h3>
                 <p className="text-sm text-slate-700">Your order will be prepared and shipped by the seller</p>
@@ -152,7 +152,7 @@ function OrderSuccessPageInternal() {
             </div>
             
             <div className="flex items-start space-x-3">
-              <span className="text-2xl">🚚</span>
+              <span className="text-2xl"></span>
               <div>
                 <h3 className="font-medium text-slate-700">Delivery Tracking</h3>
                 <p className="text-sm text-slate-700">Track your order status in real-time on the orders page</p>
@@ -165,17 +165,17 @@ function OrderSuccessPageInternal() {
         <div className="space-y-3">
           <Link
             href="/dashboard/orders"
-            className="w-full flex items-center justify-center px-6 py-4 bg-linear-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
+            className="w-full flex items-center justify-center px-6 py-4 bg-linear-to-r from-emerald-500 to-emerald-600 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105 shadow-lg"
           >
-            <span className="mr-2">📋</span>
+            <span className="mr-2"></span>
             View My Orders
           </Link>
           
           <Link
             href="/dashboard/supplies"
-            className="w-full flex items-center justify-center px-6 py-4 bg-white text-green-600 rounded-xl font-semibold hover:bg-green-50 transition-all duration-200 border-2 border-green-200"
+            className="w-full flex items-center justify-center px-6 py-4 bg-white text-emerald-600 rounded-xl font-semibold hover:bg-emerald-50 transition-all duration-200 border-2 border-emerald-200"
           >
-            <span className="mr-2">🛒</span>
+            <span className="mr-2"></span>
             Continue Shopping
           </Link>
           
@@ -183,7 +183,7 @@ function OrderSuccessPageInternal() {
             href="/dashboard"
             className="w-full flex items-center justify-center px-6 py-4 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-emerald-100/50 transition-all duration-200"
           >
-            <span className="mr-2">🏠</span>
+            <span className="mr-2"></span>
             Go to Dashboard
           </Link>
         </div>
@@ -203,7 +203,7 @@ export default function () {
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-2 text-sm text-slate-700">Loading...</p>
         </div>
       </div>

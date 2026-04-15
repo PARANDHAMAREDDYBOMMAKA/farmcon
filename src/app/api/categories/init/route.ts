@@ -17,52 +17,52 @@ export async function POST() {
       {
         name: 'Seeds',
         description: 'Seeds for various crops including vegetables, fruits, and grains',
-        imageUrl: '🌱'
+        imageUrl: ''
       },
       {
         name: 'Fertilizers',
         description: 'Chemical and organic fertilizers to boost crop growth',
-        imageUrl: '🧪'
+        imageUrl: ''
       },
       {
         name: 'Pesticides',
         description: 'Pest control solutions and insecticides',
-        imageUrl: '🛡️'
+        imageUrl: ''
       },
       {
         name: 'Tools',
         description: 'Hand tools and farming implements',
-        imageUrl: '🔧'
+        imageUrl: ''
       },
       {
         name: 'Irrigation',
         description: 'Irrigation systems, pipes, and water management equipment',
-        imageUrl: '💧'
+        imageUrl: ''
       },
       {
         name: 'Storage',
         description: 'Storage containers, bags, and preservation solutions',
-        imageUrl: '📦'
+        imageUrl: ''
       },
       {
         name: 'Organic Products',
         description: 'Certified organic farming products and solutions',
-        imageUrl: '🌿'
+        imageUrl: ''
       },
       {
         name: 'Machinery',
         description: 'Heavy farming machinery and equipment',
-        imageUrl: '🚜'
+        imageUrl: ''
       },
       {
         name: 'Animal Feed',
         description: 'Feed and nutrition for livestock and poultry',
-        imageUrl: '🐄'
+        imageUrl: ''
       },
       {
         name: 'Greenhouse Equipment',
         description: 'Equipment for controlled environment agriculture',
-        imageUrl: '🏠'
+        imageUrl: ''
       }
     ]
 

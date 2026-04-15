@@ -1,287 +1,393 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
 
-export const dynamic = 'force-dynamic';
-
-/**
- * ElevenLabs Tool API Endpoint
- * This endpoint handles tool calls from the ElevenLabs conversational AI agent
- * It provides access to FarmCon application data based on the tool being called
- */
+export const dynamic = 'force-dynamic'
 
 interface ToolRequest {
-  tool_name: string;
-  parameters: {
-    query?: string;
-    category?: string;
-    limit?: number;
-    page_context?: string;
-  };
+  tool_name: string
+  parameters?: {
+    query?: string
+    category?: string
+    limit?: number
+    page_context?: string
+    user_id?: string
+    commodity?: string
+    state?: string
+    district?: string
+    location?: string
+    status?: string
+  }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json() as ToolRequest;
-    const { tool_name, parameters } = body;
+    const body = (await request.json()) as ToolRequest
+    const { tool_name, parameters = {} } = body
 
-    console.log('🔧 ElevenLabs tool called:', tool_name, parameters);
-
-    // Route to appropriate handler based on tool name
     switch (tool_name) {
       case 'search_products':
-        return await searchProducts(parameters);
-
+        return searchIndex('products', parameters, (hit) => ({
+          name: hit.name,
+          description: hit.description,
+          price: hit.price ? `₹${hit.price}` : 'N/A',
+          category: hit.category,
+          stock: hit.stock,
+          status: hit.status,
+        }))
       case 'search_crops':
-        return await searchCrops(parameters);
-
+        return searchIndex('crops', parameters, (hit) => ({
+          name: hit.name,
+          description: hit.description,
+          status: hit.status,
+          planting_date: hit.plantingDate,
+          expected_harvest: hit.expectedHarvest,
+          area: hit.area,
+        }))
       case 'search_equipment':
-        return await searchEquipment(parameters);
-
+        return searchIndex('equipment', parameters, (hit) => ({
+          name: hit.name,
+          description: hit.description,
+          type: hit.type,
+          hourly_rate: hit.hourlyRate ? `₹${hit.hourlyRate}/hr` : 'N/A',
+          daily_rate: hit.dailyRate ? `₹${hit.dailyRate}/day` : 'N/A',
+          status: hit.status,
+        }))
+      case 'get_weather':
+        return await getWeather(parameters, request)
+      case 'get_market_price':
+        return await getMarketPrice(parameters, request)
+      case 'get_user_orders':
+        return await getUserOrders(parameters)
+      case 'get_user_crops':
+        return await getUserCrops(parameters)
+      case 'get_user_profile':
+        return await getUserProfile(parameters)
       case 'get_application_context':
-        return await getApplicationContext(parameters);
-
-      case 'get_market_info':
-        return await getMarketInfo(parameters);
-
+        return getAppContext(parameters)
       default:
-        return NextResponse.json(
-          { error: `Unknown tool: ${tool_name}` },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: `Unknown tool: ${tool_name}` }, { status: 400 })
     }
   } catch (error) {
-    console.error('❌ ElevenLabs tool API error:', error);
+    console.error('ElevenLabs tool error:', error)
     return NextResponse.json(
-      { error: 'An error occurred while processing the tool request' },
-      { status: 500 }
-    );
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
   }
 }
 
-/**
- * Search for agricultural products (seeds, fertilizers, pesticides, tools)
- */
-async function searchProducts(parameters: ToolRequest['parameters']) {
+async function searchIndex(
+  index: 'products' | 'crops' | 'equipment',
+  params: ToolRequest['parameters'] = {},
+  shape: (hit: any) => any,
+) {
   try {
-    const { search } = await import('@/lib/meilisearch');
-    const query = parameters.query || '';
-    const limit = parameters.limit || 10;
+    const { search } = await import('@/lib/meilisearch')
+    const query = params.query || ''
+    const limit = Math.min(params.limit || 8, 20)
+    const results = await search(index, query, { limit })
+    const items = (results.hits || []).map(shape)
+    return NextResponse.json({
+      success: true,
+      tool: `search_${index}`,
+      data: { query, results_count: items.length, items },
+      message:
+        items.length > 0
+          ? `Found ${items.length} ${index} matching "${query}".`
+          : `No ${index} found for "${query}".`,
+    })
+  } catch (error) {
+    return NextResponse.json({
+      success: false,
+      tool: `search_${index}`,
+      error: error instanceof Error ? error.message : 'Search failed',
+      data: { items: [] },
+    })
+  }
+}
 
-    console.log('🔍 Searching products:', query);
-    const results = await search('products', query, { limit });
+async function getWeather(params: ToolRequest['parameters'] = {}, request: NextRequest) {
+  const location = params.location || 'New Delhi, India'
+  try {
+    const res = await fetch(
+      `${request.nextUrl.origin}/api/weather?location=${encodeURIComponent(location)}`,
+    )
+    const data = await res.json()
+    if (!res.ok || !data.weather) {
+      return NextResponse.json({
+        success: false,
+        tool: 'get_weather',
+        error: data.error || 'Weather unavailable',
+      })
+    }
+    const w = data.weather
+    const summary = `${w.location}: currently ${w.temperature}°C, ${w.condition}. Humidity ${w.humidity}%, wind ${w.windSpeed} km/h. Next day ${w.forecast?.[1]?.high}°/${w.forecast?.[1]?.low}° ${w.forecast?.[1]?.condition || ''}.`
+    return NextResponse.json({
+      success: true,
+      tool: 'get_weather',
+      data: w,
+      message: summary,
+    })
+  } catch (error) {
+    return NextResponse.json({
+      success: false,
+      tool: 'get_weather',
+      error: error instanceof Error ? error.message : 'Weather fetch failed',
+    })
+  }
+}
 
-    const products = results.hits?.map((hit: any) => ({
-      name: hit.name,
-      description: hit.description,
-      price: hit.price ? `₹${hit.price}` : 'N/A',
-      category: hit.category,
-      status: hit.status,
-      stock: hit.stock
-    })) || [];
+async function getMarketPrice(params: ToolRequest['parameters'] = {}, request: NextRequest) {
+  const commodity = params.commodity || 'Rice'
+  const state = params.state
+  const district = params.district
+  const url = new URL(`${request.nextUrl.origin}/api/market-prices`)
+  url.searchParams.set('commodity', commodity)
+  if (state) url.searchParams.set('state', state)
+  if (district) url.searchParams.set('district', district)
+
+  try {
+    const res = await fetch(url.toString())
+    const data = await res.json()
+    if (!res.ok) {
+      return NextResponse.json({
+        success: false,
+        tool: 'get_market_price',
+        error: data.error || 'No market data',
+      })
+    }
+    const insights = data.insights || {}
+    const topMarkets = (insights.bestMarkets || []).slice(0, 3)
+    const summary = `${commodity}: average ₹${insights.avgPrice || 'N/A'}/quintal, range ₹${insights.priceRange?.min || 'N/A'}–₹${insights.priceRange?.max || 'N/A'}. Trend: ${insights.seasonalTrend || 'stable'}. Best markets: ${topMarkets.map((m: any) => `${m.market} (${m.state}) at ₹${m.price}`).join(', ') || 'N/A'}.`
+    return NextResponse.json({
+      success: true,
+      tool: 'get_market_price',
+      data: {
+        commodity,
+        avgPrice: insights.avgPrice,
+        priceRange: insights.priceRange,
+        trend: insights.seasonalTrend,
+        recommendation: insights.recommendation,
+        bestMarkets: topMarkets,
+        topRecords: (data.prices || []).slice(0, 5),
+      },
+      message: summary,
+    })
+  } catch (error) {
+    return NextResponse.json({
+      success: false,
+      tool: 'get_market_price',
+      error: error instanceof Error ? error.message : 'Market price fetch failed',
+    })
+  }
+}
+
+async function getUserOrders(params: ToolRequest['parameters'] = {}) {
+  const userId = params.user_id
+  if (!userId) {
+    return NextResponse.json({
+      success: false,
+      tool: 'get_user_orders',
+      error: 'user_id is required',
+    })
+  }
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        OR: [{ customerId: userId }, { sellerId: userId }],
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+      select: {
+        id: true,
+        status: true,
+        totalAmount: true,
+        createdAt: true,
+        customerId: true,
+        sellerId: true,
+      },
+    })
+
+    const summary =
+      orders.length === 0
+        ? 'No orders found yet.'
+        : orders
+            .slice(0, 5)
+            .map(
+              (o) =>
+                `#${o.id.slice(-6)} • ${o.status} • ₹${o.totalAmount} • ${new Date(o.createdAt).toLocaleDateString('en-IN')}`,
+            )
+            .join('\n')
 
     return NextResponse.json({
       success: true,
-      tool: 'search_products',
-      data: {
-        query,
-        results_count: products.length,
-        products
-      },
-      message: products.length > 0
-        ? `Found ${products.length} products matching "${query}"`
-        : `No products found for "${query}"`
-    });
+      tool: 'get_user_orders',
+      data: { orders, count: orders.length },
+      message: summary,
+    })
   } catch (error) {
-    console.error('❌ Search products error:', error);
     return NextResponse.json({
       success: false,
-      error: 'Failed to search products',
-      data: { products: [] }
-    });
+      tool: 'get_user_orders',
+      error: error instanceof Error ? error.message : 'Order fetch failed',
+    })
   }
 }
 
-/**
- * Search for crop information
- */
-async function searchCrops(parameters: ToolRequest['parameters']) {
+async function getUserCrops(params: ToolRequest['parameters'] = {}) {
+  const userId = params.user_id
+  if (!userId) {
+    return NextResponse.json({
+      success: false,
+      tool: 'get_user_crops',
+      error: 'user_id is required',
+    })
+  }
   try {
-    const { search } = await import('@/lib/meilisearch');
-    const query = parameters.query || '';
-    const limit = parameters.limit || 10;
-
-    console.log('🔍 Searching crops:', query);
-    const results = await search('crops', query, { limit });
-
-    const crops = results.hits?.map((hit: any) => ({
-      name: hit.name,
-      description: hit.description,
-      status: hit.status,
-      planting_date: hit.plantingDate,
-      expected_harvest: hit.expectedHarvest,
-      area: hit.area
-    })) || [];
-
+    const crops = await prisma.crop.findMany({
+      where: { farmerId: userId },
+      orderBy: { updatedAt: 'desc' },
+      take: 10,
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        plantingDate: true,
+        expectedHarvestDate: true,
+      },
+    })
+    const summary =
+      crops.length === 0
+        ? 'No crops tracked yet.'
+        : crops
+            .map(
+              (c) =>
+                `${c.name} • ${c.status}${c.expectedHarvestDate ? ` • harvest ${new Date(c.expectedHarvestDate).toLocaleDateString('en-IN')}` : ''}`,
+            )
+            .join('\n')
     return NextResponse.json({
       success: true,
-      tool: 'search_crops',
-      data: {
-        query,
-        results_count: crops.length,
-        crops
-      },
-      message: crops.length > 0
-        ? `Found ${crops.length} crops matching "${query}"`
-        : `No crops found for "${query}"`
-    });
+      tool: 'get_user_crops',
+      data: { crops, count: crops.length },
+      message: summary,
+    })
   } catch (error) {
-    console.error('❌ Search crops error:', error);
     return NextResponse.json({
       success: false,
-      error: 'Failed to search crops',
-      data: { crops: [] }
-    });
+      tool: 'get_user_crops',
+      error: error instanceof Error ? error.message : 'Crop fetch failed',
+    })
   }
 }
 
-/**
- * Search for equipment rental information
- */
-async function searchEquipment(parameters: ToolRequest['parameters']) {
+async function getUserProfile(params: ToolRequest['parameters'] = {}) {
+  const userId = params.user_id
+  if (!userId) {
+    return NextResponse.json({
+      success: false,
+      tool: 'get_user_profile',
+      error: 'user_id is required',
+    })
+  }
   try {
-    const { search } = await import('@/lib/meilisearch');
-    const query = parameters.query || '';
-    const limit = parameters.limit || 10;
-
-    console.log('🔍 Searching equipment:', query);
-    const results = await search('equipment', query, { limit });
-
-    const equipment = results.hits?.map((hit: any) => ({
-      name: hit.name,
-      description: hit.description,
-      type: hit.type,
-      hourly_rate: hit.hourlyRate ? `₹${hit.hourlyRate}/hr` : 'N/A',
-      daily_rate: hit.dailyRate ? `₹${hit.dailyRate}/day` : 'N/A',
-      status: hit.status,
-      availability: hit.available
-    })) || [];
-
+    const profile = await prisma.profile.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        role: true,
+        city: true,
+        state: true,
+        phone: true,
+      },
+    })
+    if (!profile) {
+      return NextResponse.json({
+        success: false,
+        tool: 'get_user_profile',
+        error: 'Profile not found',
+      })
+    }
     return NextResponse.json({
       success: true,
-      tool: 'search_equipment',
-      data: {
-        query,
-        results_count: equipment.length,
-        equipment
-      },
-      message: equipment.length > 0
-        ? `Found ${equipment.length} equipment items matching "${query}"`
-        : `No equipment found for "${query}"`
-    });
+      tool: 'get_user_profile',
+      data: profile,
+      message: `User: ${profile.fullName} (${profile.role}) in ${profile.city || 'Unknown city'}, ${profile.state || ''}`,
+    })
   } catch (error) {
-    console.error('❌ Search equipment error:', error);
     return NextResponse.json({
       success: false,
-      error: 'Failed to search equipment',
-      data: { equipment: [] }
-    });
+      tool: 'get_user_profile',
+      error: error instanceof Error ? error.message : 'Profile fetch failed',
+    })
   }
 }
 
-/**
- * Get general application context and capabilities
- */
-async function getApplicationContext(parameters: ToolRequest['parameters']) {
-  const context = parameters.page_context || '/';
-
-  let pageInfo = {
-    current_page: context,
-    description: 'FarmCon Platform',
-    available_features: []
-  };
-
-  // Provide context based on current page
-  if (context.includes('/dashboard/supplies') || context.includes('supplies')) {
-    pageInfo = {
-      current_page: 'Agricultural Supplies',
-      description: 'Browse and purchase seeds, fertilizers, pesticides, and farming tools',
-      available_features: ['search products', 'view product details', 'add to cart', 'place orders']
-    };
-  } else if (context.includes('/dashboard/crops')) {
-    pageInfo = {
-      current_page: 'Crop Management',
-      description: 'Track your crops, planting schedules, and harvest predictions',
-      available_features: ['view crops', 'add new crops', 'track growth', 'harvest planning']
-    };
-  } else if (context.includes('/dashboard/equipment')) {
-    pageInfo = {
-      current_page: 'Equipment Rental',
-      description: 'Rent tractors, harvesters, and other farming equipment',
-      available_features: ['browse equipment', 'check availability', 'book rentals', 'view rates']
-    };
-  } else if (context.includes('/dashboard/market')) {
-    pageInfo = {
-      current_page: 'Market Prices',
-      description: 'View current market prices and sell directly to consumers',
-      available_features: ['check prices', 'list products', 'direct selling', 'price trends']
-    };
-  } else if (context.includes('/dashboard/orders')) {
-    pageInfo = {
-      current_page: 'Order Management',
-      description: 'Track your orders and manage deliveries',
-      available_features: ['view orders', 'track delivery', 'order history', 'invoice download']
-    };
-  } else if (context.includes('/dashboard/weather')) {
-    pageInfo = {
-      current_page: 'Weather Information',
-      description: 'Get weather forecasts and farming recommendations',
-      available_features: ['weather forecast', 'irrigation advice', 'seasonal planning', 'alerts']
-    };
-  } else if (context.includes('/dashboard')) {
-    pageInfo = {
-      current_page: 'Dashboard',
-      description: 'Main control center for all FarmCon features',
-      available_features: ['crop management', 'supplies', 'equipment rental', 'market', 'orders', 'weather']
-    };
+function getAppContext(params: ToolRequest['parameters'] = {}) {
+  const context = params.page_context || '/'
+  const pages: Record<string, { name: string; description: string; features: string[] }> = {
+    '/dashboard': {
+      name: 'Dashboard',
+      description: 'Main control center',
+      features: ['crops', 'orders', 'weather', 'market prices'],
+    },
+    '/dashboard/supplies': {
+      name: 'Agricultural Supplies',
+      description: 'Buy seeds, fertilizers, tools',
+      features: ['search products', 'add to cart', 'place order'],
+    },
+    '/dashboard/crops': {
+      name: 'Crops',
+      description: 'Manage your crop lifecycle',
+      features: ['add crop', 'track growth', 'harvest planning'],
+    },
+    '/dashboard/equipment': {
+      name: 'Equipment rentals',
+      description: 'Rent tractors and machinery',
+      features: ['browse equipment', 'book rental'],
+    },
+    '/dashboard/orders': {
+      name: 'Orders',
+      description: 'Orders and deliveries',
+      features: ['view orders', 'track delivery', 'download invoice'],
+    },
+    '/dashboard/weather': {
+      name: 'Weather',
+      description: 'Hyperlocal weather + farming advice',
+      features: ['7-day forecast', 'irrigation advice', 'alerts'],
+    },
+    '/dashboard/market-prices': {
+      name: 'Market prices',
+      description: 'Live mandi prices',
+      features: ['check price', 'compare markets', 'trend analysis'],
+    },
   }
+
+  const matched =
+    Object.entries(pages).find(([key]) => context.startsWith(key))?.[1] || {
+      name: 'FarmCon',
+      description: 'Agricultural marketplace',
+      features: ['crops', 'orders', 'weather', 'market prices'],
+    }
 
   return NextResponse.json({
     success: true,
     tool: 'get_application_context',
     data: {
-      application: 'FarmCon - Smart Farming Platform for Indian Farmers',
-      version: '1.0.0',
-      page_info: pageInfo,
+      current_page: matched.name,
+      description: matched.description,
+      features: matched.features,
       capabilities: [
-        'Search and order agricultural supplies',
-        'Manage crop lifecycles and harvest planning',
-        'Rent farming equipment',
-        'Access real-time market prices',
-        'Track orders and deliveries',
-        'Get weather forecasts and farming advice'
-      ]
-    },
-    message: `You are currently on the ${pageInfo.current_page} page`
-  });
-}
-
-/**
- * Get market information and pricing
- */
-async function getMarketInfo(parameters: ToolRequest['parameters']) {
-  // For now, return general market information
-  // You can integrate this with your actual market data API
-  return NextResponse.json({
-    success: true,
-    tool: 'get_market_info',
-    data: {
-      message: 'Market information is available on the Market page',
-      features: [
-        'Real-time crop prices',
-        'Market trends and analysis',
-        'Direct-to-consumer selling platform',
-        'Price comparison tools'
+        'Search products, crops, equipment',
+        'Check weather for any Indian location',
+        'Fetch live mandi prices',
+        'Lookup user orders and crops',
       ],
-      note: 'Users can list their crops for sale and view current market rates'
-    }
-  });
+    },
+    message: `User is on ${matched.name}. ${matched.description}.`,
+  })
 }

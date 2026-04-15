@@ -14,7 +14,7 @@ if (typeof window !== 'undefined') {
       autocapture: true,
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') {
-          console.log('✅ PostHog initialized successfully')
+          console.log(' PostHog initialized successfully')
           console.log('PostHog instance:', posthog)
         }
       },
@@ -43,7 +43,7 @@ function PostHogPageView() {
       })
 
       if (process.env.NODE_ENV === 'development') {
-        console.log('📊 PostHog pageview:', pathname)
+        console.log(' PostHog pageview:', pathname)
       }
     }
   }, [pathname, searchParams])

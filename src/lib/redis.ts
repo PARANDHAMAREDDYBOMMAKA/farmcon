@@ -262,6 +262,31 @@ export class Cache {
     }
   }
 
+  async sadd(key: string, member: string, ttlSeconds?: number): Promise<boolean> {
+    if (!this.redis) return false
+    try {
+      await this.redis.sadd(key, member)
+      if (ttlSeconds && ttlSeconds > 0) {
+        await this.redis.expire(key, ttlSeconds)
+      }
+      return true
+    } catch (error) {
+      console.warn('Cache sadd error:', error)
+      return false
+    }
+  }
+
+  async smembers(key: string): Promise<string[]> {
+    if (!this.redis) return []
+    try {
+      const result = await this.redis.smembers(key)
+      return (result as string[]) || []
+    } catch (error) {
+      console.warn('Cache smembers error:', error)
+      return []
+    }
+  }
+
   getStats(): CacheStats {
     const total = this.stats.hits + this.stats.misses
     return {

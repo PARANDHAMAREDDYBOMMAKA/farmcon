@@ -8,44 +8,47 @@ export function createSupabaseServerClient(request?: NextRequest) {
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
   if (request) {
-    
     return createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
-        get(name: string) {
-          const cookieValue = request.cookies.get(name)?.value
-          return cookieValue
+        getAll() {
+          return request.cookies.getAll().map(({ name, value }) => ({ name, value }))
         },
-        set() {
-          
-        },
-        remove() {
-          
-        },
-      },
-    })
-  } else {
-    
-    const cookieStore = cookies()
-    return createServerClient(supabaseUrl, supabaseAnonKey, {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value
-        },
-        set(name: string, value: string, options: any) {
-          cookieStore.set({ name, value, ...options })
-        },
-        remove(name: string, options: any) {
-          cookieStore.set({ name, value: '', ...options })
-        },
+        setAll() {},
       },
     })
   }
+
+  const cookieStore = cookies() as any
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        const store = typeof cookieStore?.then === 'function' ? undefined : cookieStore
+        if (!store) return []
+        return store.getAll().map(({ name, value }: { name: string; value: string }) => ({
+          name,
+          value,
+        }))
+      },
+      setAll(cookiesToSet) {
+        try {
+          const store = typeof cookieStore?.then === 'function' ? undefined : cookieStore
+          if (!store) return
+          cookiesToSet.forEach(({ name, value, options }) =>
+            store.set({ name, value, ...options }),
+          )
+        } catch {}
+      },
+    },
+  })
 }
 
 export async function getAuthenticatedSupabaseClient(request: NextRequest) {
   const supabase = createSupabaseServerClient(request)
 
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
   if (error || !user) {
     return { supabase: null, user: null, error: error || new Error('No authenticated user') }
@@ -66,7 +69,7 @@ export function createSupabaseAdminClient() {
   return createClient(supabaseUrl, supabaseServiceRoleKey, {
     auth: {
       autoRefreshToken: false,
-      persistSession: false
-    }
+      persistSession: false,
+    },
   })
 }

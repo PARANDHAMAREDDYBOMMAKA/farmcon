@@ -140,7 +140,7 @@ export async function GET(request: NextRequest) {
 
     const current = data.current
 
-    console.log('🔍 Open-Meteo API data for', locationName, ':', {
+    console.log(' Open-Meteo API data for', locationName, ':', {
       temperature: current.temperature_2m,
       humidity: current.relative_humidity_2m,
       windSpeed: current.wind_speed_10m,
@@ -274,25 +274,25 @@ function getPlantingConditions(data: { temp: number; humidity: number; windSpeed
 
   if (temp >= 15 && temp <= 25) {
     score += 3
-    conditions.push('✓ Ideal temperature for planting')
+    conditions.push(' Ideal temperature for planting')
   } else if (temp > 30) {
-    conditions.push('⚠ High temperature - consider evening planting')
+    conditions.push(' High temperature - consider evening planting')
   } else if (temp < 10) {
-    conditions.push('❌ Too cold for most crops')
+    conditions.push(' Too cold for most crops')
   }
 
   if (humidity >= 40 && humidity <= 70) {
     score += 2
-    conditions.push('✓ Good humidity levels')
+    conditions.push(' Good humidity levels')
   } else if (humidity > 80) {
-    conditions.push('⚠ High humidity - fungal risk')
+    conditions.push(' High humidity - fungal risk')
   }
 
   if (windSpeed < 5) {
     score += 1
-    conditions.push('✓ Low wind - good for planting')
+    conditions.push(' Low wind - good for planting')
   } else {
-    conditions.push('⚠ Windy conditions - protect seedlings')
+    conditions.push(' Windy conditions - protect seedlings')
   }
 
   return {
@@ -373,14 +373,14 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
       type: 'heat-warning',
       severity: 'high',
       message: 'Extreme heat warning - protect crops and livestock',
-      icon: '🌡️'
+      icon: ''
     })
   } else if (temp < 0) {
     alerts.push({
       type: 'frost-warning',
       severity: 'high',
       message: 'Frost warning - protect sensitive crops',
-      icon: '❄️'
+      icon: ''
     })
   }
 
@@ -389,7 +389,7 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
       type: 'heavy-rain',
       severity: 'medium',
       message: 'Heavy rainfall - check drainage systems',
-      icon: '🌧️'
+      icon: ''
     })
   }
 
@@ -398,7 +398,7 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
       type: 'strong-wind',
       severity: 'medium',
       message: 'Strong winds - secure equipment and structures',
-      icon: '💨'
+      icon: ''
     })
   }
 
@@ -407,7 +407,7 @@ function generateFarmingAlerts(data: { temp: number; humidity: number; windSpeed
       type: 'disease-risk',
       severity: 'medium',
       message: 'High disease risk - monitor crops closely',
-      icon: '🦠'
+      icon: ''
     })
   }
 

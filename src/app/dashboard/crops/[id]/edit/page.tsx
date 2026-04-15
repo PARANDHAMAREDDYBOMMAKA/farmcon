@@ -127,7 +127,7 @@ export default function EditCropPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading crop details...</p>
         </div>
       </div>
@@ -143,7 +143,7 @@ export default function EditCropPage() {
           <p className="mt-2 text-slate-700">{error}</p>
           <Link
             href="/dashboard/crops"
-            className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700"
+            className="mt-6 inline-flex items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-emerald-600 hover:bg-emerald-700"
           >
             Back to Crops
           </Link>
@@ -157,16 +157,16 @@ export default function EditCropPage() {
       {}
       <div className="mb-6">
         <nav className="flex items-center space-x-2 text-sm text-slate-700 mb-4">
-          <Link href="/dashboard" className="hover:text-green-600">Dashboard</Link>
+          <Link href="/dashboard" className="hover:text-emerald-600">Dashboard</Link>
           <span>/</span>
-          <Link href="/dashboard/crops" className="hover:text-green-600">Crops</Link>
+          <Link href="/dashboard/crops" className="hover:text-emerald-600">Crops</Link>
           <span>/</span>
-          <Link href={`/dashboard/crops/${params.id}`} className="hover:text-green-600">{formData.name || 'Crop'}</Link>
+          <Link href={`/dashboard/crops/${params.id}`} className="hover:text-emerald-600">{formData.name || 'Crop'}</Link>
           <span>/</span>
           <span className="text-slate-700">Edit</span>
         </nav>
 
-        <h1 className="text-3xl font-bold text-slate-700">✏️ Edit Crop</h1>
+        <h1 className="text-3xl font-bold text-slate-700"> Edit Crop</h1>
         <p className="text-slate-700 mt-2">Update your crop information and track its progress</p>
       </div>
 
@@ -179,7 +179,7 @@ export default function EditCropPage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">📋 Basic Information</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4"> Basic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-slate-600 mb-2">
@@ -192,7 +192,7 @@ export default function EditCropPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., Rice, Wheat, Tomato"
               />
             </div>
@@ -207,7 +207,7 @@ export default function EditCropPage() {
                 name="variety"
                 value={formData.variety}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., Basmati, Heirloom"
               />
             </div>
@@ -222,7 +222,7 @@ export default function EditCropPage() {
                 value={formData.status}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               >
                 <option value="planted">Planted</option>
                 <option value="growing">Growing</option>
@@ -244,7 +244,7 @@ export default function EditCropPage() {
                 onChange={handleChange}
                 step="0.1"
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="0.5"
               />
             </div>
@@ -259,7 +259,7 @@ export default function EditCropPage() {
                 value={formData.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="Describe your crop, farming methods, or any special notes..."
               />
             </div>
@@ -271,10 +271,10 @@ export default function EditCropPage() {
                 name="organicCertified"
                 checked={formData.organicCertified}
                 onChange={handleChange}
-                className="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded"
+                className="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-slate-200 rounded"
               />
               <label htmlFor="organicCertified" className="ml-2 block text-sm text-slate-700">
-                🌿 Organic Certified
+                 Organic Certified
               </label>
             </div>
           </div>
@@ -282,7 +282,7 @@ export default function EditCropPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">📅 Timeline</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4"> Timeline</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label htmlFor="plantedDate" className="block text-sm font-medium text-slate-600 mb-2">
@@ -294,7 +294,7 @@ export default function EditCropPage() {
                 name="plantedDate"
                 value={formData.plantedDate}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
 
@@ -308,7 +308,7 @@ export default function EditCropPage() {
                 name="expectedHarvestDate"
                 value={formData.expectedHarvestDate}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
 
@@ -322,7 +322,7 @@ export default function EditCropPage() {
                 name="actualHarvestDate"
                 value={formData.actualHarvestDate}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
           </div>
@@ -330,7 +330,7 @@ export default function EditCropPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">📷 Crop Images</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4"> Crop Images</h2>
           <ImageUpload
             images={formData.images}
             onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
@@ -340,7 +340,7 @@ export default function EditCropPage() {
 
         {}
         <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold text-slate-700 mb-4">💰 Yield & Pricing</h2>
+          <h2 className="text-xl font-semibold text-slate-700 mb-4"> Yield & Pricing</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div>
               <label htmlFor="unit" className="block text-sm font-medium text-slate-600 mb-2">
@@ -352,7 +352,7 @@ export default function EditCropPage() {
                 value={formData.unit}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               >
                 <option value="kg">Kilogram (kg)</option>
                 <option value="quintal">Quintal</option>
@@ -374,7 +374,7 @@ export default function EditCropPage() {
                 onChange={handleChange}
                 step="0.1"
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="100"
               />
             </div>
@@ -391,7 +391,7 @@ export default function EditCropPage() {
                 onChange={handleChange}
                 step="0.1"
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="95"
               />
             </div>
@@ -408,7 +408,7 @@ export default function EditCropPage() {
                 onChange={handleChange}
                 step="0.01"
                 min="0"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="w-full px-3 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="25.00"
               />
             </div>
@@ -416,12 +416,12 @@ export default function EditCropPage() {
 
           {}
           {formData.estimatedYield && formData.pricePerUnit && (
-            <div className="mt-4 p-4 bg-green-50 rounded-lg">
-              <h3 className="text-sm font-medium text-green-800 mb-2">💡 Estimated Revenue</h3>
-              <p className="text-lg font-bold text-green-600">
+            <div className="mt-4 p-4 bg-emerald-50 rounded-lg">
+              <h3 className="text-sm font-medium text-emerald-800 mb-2"> Estimated Revenue</h3>
+              <p className="text-lg font-bold text-emerald-600">
                 ₹{(parseFloat(formData.estimatedYield) * parseFloat(formData.pricePerUnit)).toLocaleString()}
               </p>
-              <p className="text-sm text-green-700">
+              <p className="text-sm text-emerald-700">
                 {formData.estimatedYield} {formData.unit} × ₹{formData.pricePerUnit} per {formData.unit}
               </p>
             </div>
@@ -432,14 +432,14 @@ export default function EditCropPage() {
         <div className="flex flex-col sm:flex-row gap-4 justify-end">
           <Link
             href={`/dashboard/crops/${params.id}`}
-            className="px-6 py-3 border border-gray-300 text-slate-600 rounded-md hover:bg-emerald-50/30 text-center"
+            className="px-6 py-3 border border-slate-200 text-slate-600 rounded-md hover:bg-emerald-50/30 text-center"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={isSaving}
-            className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed flex items-center justify-center"
+            className="px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed flex items-center justify-center"
           >
             {isSaving ? (
               <>
@@ -447,7 +447,7 @@ export default function EditCropPage() {
                 Updating...
               </>
             ) : (
-              '💾 Update Crop'
+              ' Update Crop'
             )}
           </button>
         </div>

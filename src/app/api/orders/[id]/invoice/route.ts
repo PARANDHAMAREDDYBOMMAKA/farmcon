@@ -520,7 +520,7 @@ function generateInvoiceHTML(order: any, forPDF: boolean = false) {
             <div class="header">
                 <div class="header-content">
                     <div class="company-info">
-                        <h1>🌾 FarmCon</h1>
+                        <h1> FarmCon</h1>
                         <p>Smart Farming Platform - Farm Fresh Direct</p>
                     </div>
                     <div class="invoice-badge">
@@ -567,21 +567,21 @@ function generateInvoiceHTML(order: any, forPDF: boolean = false) {
                     <div class="party-box">
                         <div class="party-title">Bill To</div>
                         <div class="party-name">${order.customer.fullName}</div>
-                        <div class="party-detail">📧 ${order.customer.email}</div>
-                        ${order.customer.phone ? `<div class="party-detail">📞 ${order.customer.phone}</div>` : ''}
+                        <div class="party-detail"> ${order.customer.email}</div>
+                        ${order.customer.phone ? `<div class="party-detail"> ${order.customer.phone}</div>` : ''}
                         ${order.customer.address ? `
-                            <div class="party-detail" style="margin-top: 12px;">📍 ${order.customer.address}</div>
+                            <div class="party-detail" style="margin-top: 12px;"> ${order.customer.address}</div>
                             <div class="party-detail">${order.customer.city}${order.customer.state ? `, ${order.customer.state}` : ''} ${order.customer.pincode || ''}</div>
                         ` : ''}
                     </div>
                     <div class="party-box">
                         <div class="party-title">Sold By</div>
                         <div class="party-name">${order.seller.businessName || order.seller.fullName}</div>
-                        <div class="party-detail">📧 ${order.seller.email}</div>
-                        ${order.seller.phone ? `<div class="party-detail">📞 ${order.seller.phone}</div>` : ''}
+                        <div class="party-detail"> ${order.seller.email}</div>
+                        ${order.seller.phone ? `<div class="party-detail"> ${order.seller.phone}</div>` : ''}
                         ${order.seller.gstNumber ? `<div class="party-detail" style="margin-top: 8px;"><strong>GST:</strong> ${order.seller.gstNumber}</div>` : ''}
                         ${order.seller.address ? `
-                            <div class="party-detail" style="margin-top: 12px;">📍 ${order.seller.address}</div>
+                            <div class="party-detail" style="margin-top: 12px;"> ${order.seller.address}</div>
                             <div class="party-detail">${order.seller.city}${order.seller.state ? `, ${order.seller.state}` : ''} ${order.seller.pincode || ''}</div>
                         ` : ''}
                     </div>
@@ -624,7 +624,7 @@ function generateInvoiceHTML(order: any, forPDF: boolean = false) {
 
                 <!-- Notes -->
                 <div class="notes-section">
-                    <div class="notes-title">📝 Important Notes</div>
+                    <div class="notes-title"> Important Notes</div>
                     <div class="notes-content">
                         • This is a computer-generated invoice and does not require a physical signature.<br>
                         • All amounts are in Indian Rupees (₹).<br>
@@ -636,7 +636,7 @@ function generateInvoiceHTML(order: any, forPDF: boolean = false) {
 
             <!-- Footer -->
             <div class="footer-section">
-                <div class="footer-title">Thank You for Your Business! 🙏</div>
+                <div class="footer-title">Thank You for Your Business! </div>
                 <p class="footer-text">
                     We appreciate your trust in FarmCon. Your order helps support local farmers<br>
                     and promotes sustainable agriculture across India.
@@ -648,10 +648,10 @@ function generateInvoiceHTML(order: any, forPDF: boolean = false) {
                 ${!forPDF ? `
                 <div class="action-buttons no-print">
                     <button class="btn btn-primary" onclick="window.print()">
-                        🖨️ Print Invoice
+                         Print Invoice
                     </button>
                     <button class="btn btn-secondary" onclick="downloadPDF()">
-                        📄 Download PDF
+                         Download PDF
                     </button>
                 </div>
                 <script>

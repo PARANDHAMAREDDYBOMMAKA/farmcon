@@ -167,7 +167,7 @@ export default function AddEquipmentPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading...</p>
         </div>
       </div>
@@ -204,7 +204,7 @@ export default function AddEquipmentPage() {
                   required
                   value={formData.name}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="e.g., John Deere 5050D"
                 />
               </div>
@@ -219,7 +219,7 @@ export default function AddEquipmentPage() {
                   required
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
                   {categories.map((category) => (
                     <option key={category} value={category}>
@@ -239,7 +239,7 @@ export default function AddEquipmentPage() {
                   name="brand"
                   value={formData.brand}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="e.g., John Deere, Mahindra"
                 />
               </div>
@@ -254,7 +254,7 @@ export default function AddEquipmentPage() {
                   name="model"
                   value={formData.model}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="e.g., 5050D, 575 DI"
                 />
               </div>
@@ -271,7 +271,7 @@ export default function AddEquipmentPage() {
                   max={new Date().getFullYear()}
                   value={formData.year_manufactured}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="2020"
                 />
               </div>
@@ -285,7 +285,7 @@ export default function AddEquipmentPage() {
                   name="status"
                   value={formData.status}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
                   <option value="available">Available</option>
                   <option value="rented">Currently Rented</option>
@@ -312,7 +312,7 @@ export default function AddEquipmentPage() {
                   step="0.01"
                   value={formData.hourly_rate}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="500.00"
                 />
                 <p className="mt-1 text-sm text-slate-700">Leave empty if not available for hourly rental</p>
@@ -330,7 +330,7 @@ export default function AddEquipmentPage() {
                   step="0.01"
                   value={formData.daily_rate}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="2000.00"
                 />
                 <p className="mt-1 text-sm text-slate-700">Leave empty if not available for daily rental</p>
@@ -352,7 +352,7 @@ export default function AddEquipmentPage() {
               name="location"
               value={formData.location}
               onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+              className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="City, State or specific address"
             />
           </div>
@@ -371,7 +371,7 @@ export default function AddEquipmentPage() {
                   name="power"
                   value={formData.specifications.power}
                   onChange={handleSpecificationChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="50 HP"
                 />
               </div>
@@ -385,7 +385,7 @@ export default function AddEquipmentPage() {
                   name="fuel_type"
                   value={formData.specifications.fuel_type}
                   onChange={handleSpecificationChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
                   <option value="">Select fuel type</option>
                   {fuelTypes.map((fuel) => (
@@ -405,7 +405,7 @@ export default function AddEquipmentPage() {
                   name="condition"
                   value={formData.specifications.condition}
                   onChange={handleSpecificationChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 >
                   {conditionOptions.map((condition) => (
                     <option key={condition} value={condition}>
@@ -425,7 +425,7 @@ export default function AddEquipmentPage() {
                   name="capacity"
                   value={formData.specifications.capacity}
                   onChange={handleSpecificationChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                   placeholder="e.g., 1000L, 5 acres/hour"
                 />
               </div>
@@ -440,7 +440,7 @@ export default function AddEquipmentPage() {
                   name="maintenance_date"
                   value={formData.specifications.maintenance_date}
                   onChange={handleSpecificationChange}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 />
               </div>
             </div>
@@ -457,7 +457,7 @@ export default function AddEquipmentPage() {
               rows={4}
               value={formData.description}
               onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+              className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="Describe your equipment, its condition, any special features, rental terms, etc."
             />
           </div>
@@ -467,14 +467,14 @@ export default function AddEquipmentPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
+              className="px-4 py-2 border border-slate-200 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving || (!formData.hourly_rate && !formData.daily_rate)}
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
             >
               {saving ? 'Listing Equipment...' : 'List Equipment'}
             </button>

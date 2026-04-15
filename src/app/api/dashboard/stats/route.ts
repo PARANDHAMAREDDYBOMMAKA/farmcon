@@ -227,19 +227,19 @@ async function loadSupplierStats(supplierId: string) {
     const monthlyRevenue = monthlyOrders.reduce((sum, order) => {
       const supplierItemsValue = order.items.reduce((itemSum, item) => {
         const itemPrice = item.product?.price ? Number(item.product.price) : 0
-        return itemSum + (itemPrice * item.quantity)
+        return itemSum + itemPrice * Number(item.quantity ?? 0)
       }, 0)
       return sum + supplierItemsValue
     }, 0)
 
     const pendingOrders = orders.filter(order =>
-      order.status === 'PENDING'
+      order.status === 'pending'
     ).length
 
     const totalRevenue = orders.reduce((sum, order) => {
       const supplierItemsValue = order.items.reduce((itemSum, item) => {
         const itemPrice = item.product?.price ? Number(item.product.price) : 0
-        return itemSum + (itemPrice * item.quantity)
+        return itemSum + itemPrice * Number(item.quantity ?? 0)
       }, 0)
       return sum + supplierItemsValue
     }, 0)

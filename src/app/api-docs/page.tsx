@@ -10,8 +10,8 @@ export default function ApiDocsPage() {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto py-8">
         <div className="mb-6">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">FarmCon API Documentation</h1>
-          <p className="text-gray-600">
+          <h1 className="text-4xl font-bold text-emerald-950 mb-2">FarmCon API Documentation</h1>
+          <p className="text-slate-600">
             Comprehensive API documentation for the FarmCon marketplace platform
           </p>
         </div>

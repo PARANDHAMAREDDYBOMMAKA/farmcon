@@ -23,20 +23,20 @@ export async function POST(request: NextRequest) {
     let retrievedContext = ''
     if (latestUserMessage && process.env.MEILISEARCH_HOST && process.env.MEILISEARCH_API_KEY) {
       try {
-        console.log('🔍 Retrieving context for query:', latestUserMessage)
-        console.log('📍 Page context:', context)
+        console.log(' Retrieving context for query:', latestUserMessage)
+        console.log(' Page context:', context)
         retrievedContext = await getRelevantContext(latestUserMessage, context)
         if (retrievedContext) {
-          console.log('✅ Context retrieved successfully')
+          console.log(' Context retrieved successfully')
         } else {
-          console.log('⚠️ No relevant context found in Meilisearch')
+          console.log(' No relevant context found in Meilisearch')
         }
       } catch (error) {
-        console.error('❌ Context retrieval error:', error)
+        console.error(' Context retrieval error:', error)
         
       }
     } else {
-      console.log('⚠️ Meilisearch not configured or no user message')
+      console.log(' Meilisearch not configured or no user message')
     }
 
     const systemMessage = getSystemMessage(context, retrievedContext)
@@ -89,30 +89,30 @@ async function getRelevantContext(userQuery: string, context?: string): Promise<
 
     if (context?.includes('/dashboard/supplies') || context?.includes('supplies') || context?.includes('product')) {
       indexName = 'products'
-      console.log('🔍 Searching in products index')
+      console.log(' Searching in products index')
     } else if (context?.includes('/dashboard/crops') || context?.includes('crops') || context?.includes('crop')) {
       indexName = 'crops'
-      console.log('🔍 Searching in crops index')
+      console.log(' Searching in crops index')
     } else if (context?.includes('/dashboard/equipment') || context?.includes('equipment') || context?.includes('rental')) {
       indexName = 'equipment'
-      console.log('🔍 Searching in equipment index')
+      console.log(' Searching in equipment index')
     } else {
       
-      console.log('🔍 Searching in default products index')
+      console.log(' Searching in default products index')
     }
 
-    console.log(`🔎 Executing search: "${userQuery}" in ${indexName} index`)
+    console.log(` Executing search: "${userQuery}" in ${indexName} index`)
     let searchResults = await search(indexName, userQuery, { limit: 10 })
-    console.log(`📊 Search results: ${searchResults.hits?.length || 0} hits found`)
+    console.log(` Search results: ${searchResults.hits?.length || 0} hits found`)
 
     if (!searchResults.hits || searchResults.hits.length === 0) {
-      console.log('⚠️ No results with full query, trying to fetch all documents...')
+      console.log(' No results with full query, trying to fetch all documents...')
       searchResults = await search(indexName, '', { limit: 10 })
-      console.log(`📊 All documents fetch: ${searchResults.hits?.length || 0} hits found`)
+      console.log(` All documents fetch: ${searchResults.hits?.length || 0} hits found`)
     }
 
     if (!searchResults.hits || searchResults.hits.length === 0) {
-      console.log('⚠️ No documents found in index at all')
+      console.log(' No documents found in index at all')
       return ''
     }
 
@@ -139,10 +139,10 @@ async function getRelevantContext(userQuery: string, context?: string): Promise<
 
     contextText += '\n\nUse the above data to provide accurate and specific answers to the user\'s question. Reference specific items, prices, and details from the data when answering.'
 
-    console.log('✅ Context formatted successfully')
+    console.log(' Context formatted successfully')
     return contextText
   } catch (error) {
-    console.error('❌ Error retrieving context from Meilisearch:', error)
+    console.error(' Error retrieving context from Meilisearch:', error)
     if (error instanceof Error) {
       console.error('Error details:', error.message)
       console.error('Error stack:', error.stack)
@@ -165,7 +165,7 @@ Be concise, friendly, and use farming emojis when appropriate. Keep responses un
   let contextMessage = ''
 
   if (context) {
-    console.log('🎯 Processing context:', context)
+    console.log(' Processing context:', context)
 
     if (context.includes('/dashboard/supplies') || context.includes('supplies')) {
       contextMessage = '\n\nYou are currently on the Agricultural Supplies page. Help users find seeds, fertilizers, pesticides, and farming tools. When answering questions about products, refer to the specific items available in the database.'
@@ -185,14 +185,14 @@ Be concise, friendly, and use farming emojis when appropriate. Keep responses un
       contextMessage = '\n\nYou are on the FarmCon landing page. Introduce the platform features: crop management, market prices, agricultural supplies, equipment rental, and direct sales. Encourage users to sign up.'
     }
 
-    console.log('✅ Context message set:', contextMessage ? 'Yes' : 'No')
+    console.log(' Context message set:', contextMessage ? 'Yes' : 'No')
   }
 
   let systemMessage = baseMessage + contextMessage
 
   if (retrievedContext) {
     systemMessage += retrievedContext
-    console.log('✅ Added database context to system message')
+    console.log(' Added database context to system message')
   }
 
   return systemMessage

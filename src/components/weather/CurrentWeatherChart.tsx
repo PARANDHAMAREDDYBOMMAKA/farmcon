@@ -205,7 +205,7 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
       </div>
 
       {}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-200">
         <div className="text-center p-3 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
           <p className="text-xs text-slate-700 font-medium">Temperature</p>
           <p className="text-2xl font-bold text-orange-600">{data.temperature}°C</p>
@@ -220,9 +220,9 @@ export default function CurrentWeatherChart({ data }: CurrentWeatherChartProps) 
           </p>
         </div>
 
-        <div className="text-center p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
+        <div className="text-center p-3 bg-gradient-to-br from-emerald-50 to-emerald-50 rounded-lg">
           <p className="text-xs text-slate-700 font-medium">Wind Speed</p>
-          <p className="text-2xl font-bold text-green-600">{data.windSpeed}</p>
+          <p className="text-2xl font-bold text-emerald-600">{data.windSpeed}</p>
           <p className="text-xs text-slate-700">km/h</p>
         </div>
 

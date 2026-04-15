@@ -55,28 +55,49 @@ const sanitizeContext = (context?: LogContext): LogContext | undefined => {
   return sanitized
 }
 
-export const logger = {
-  debug: (message: string, context?: LogContext): void => {
-    if (shouldLog('debug')) {
-      console.debug(formatMessage('debug', message, sanitizeContext(context)))
-    }
-  },
+type Logger = {
+  debug: (message: string, context?: LogContext) => void
+  info: (message: string, context?: LogContext) => void
+  warn: (message: string, context?: LogContext) => void
+  error: (message: string, context?: LogContext) => void
+  child: (ctx: LogContext) => Logger
+}
 
-  info: (message: string, context?: LogContext): void => {
-    if (shouldLog('info')) {
-      console.info(formatMessage('info', message, sanitizeContext(context)))
-    }
-  },
+function createLogger(baseContext?: LogContext): Logger {
+  const merge = (ctx?: LogContext) =>
+    baseContext ? { ...baseContext, ...(ctx || {}) } : ctx
 
-  warn: (message: string, context?: LogContext): void => {
-    if (shouldLog('warn')) {
-      console.warn(formatMessage('warn', message, sanitizeContext(context)))
-    }
-  },
+  return {
+    debug: (message, context) => {
+      if (shouldLog('debug')) {
+        console.debug(formatMessage('debug', message, sanitizeContext(merge(context))))
+      }
+    },
+    info: (message, context) => {
+      if (shouldLog('info')) {
+        console.info(formatMessage('info', message, sanitizeContext(merge(context))))
+      }
+    },
+    warn: (message, context) => {
+      if (shouldLog('warn')) {
+        console.warn(formatMessage('warn', message, sanitizeContext(merge(context))))
+      }
+    },
+    error: (message, context) => {
+      if (shouldLog('error')) {
+        console.error(formatMessage('error', message, sanitizeContext(merge(context))))
+      }
+    },
+    child: (ctx) => createLogger(merge(ctx)),
+  }
+}
 
-  error: (message: string, context?: LogContext): void => {
-    if (shouldLog('error')) {
-      console.error(formatMessage('error', message, sanitizeContext(context)))
-    }
-  },
+export const logger: Logger = createLogger()
+
+export function generateRequestId(): string {
+  return `req_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`
+}
+
+export function getRequestId(headers: Headers): string {
+  return headers.get('x-request-id') || generateRequestId()
 }

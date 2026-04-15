@@ -158,7 +158,7 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
       case 'order':
         return <Package {...iconProps} className="w-5 h-5 text-blue-600" />
       case 'payment':
-        return <CreditCard {...iconProps} className="w-5 h-5 text-green-600" />
+        return <CreditCard {...iconProps} className="w-5 h-5 text-emerald-600" />
       case 'delivery':
         return <Truck {...iconProps} className="w-5 h-5 text-orange-600" />
       case 'review':
@@ -192,7 +192,7 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
       {}
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="relative p-2 text-slate-700 hover:text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-xl transition-all duration-200"
+        className="relative p-2 text-slate-700 hover:text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-xl transition-all duration-200"
       >
         <Bell className="w-6 h-6" />
         {unreadCount > 0 && (
@@ -204,11 +204,11 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
 
       {}
       {showDropdown && (
-        <div className="fixed sm:absolute right-4 sm:right-0 mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl ring-1 ring-black ring-opacity-5 z-50 border border-gray-100">
-          <div className="p-4 sm:p-5 border-b border-gray-100 bg-gradient-to-r from-green-50 to-emerald-50 rounded-t-2xl">
+        <div className="fixed sm:absolute right-4 sm:right-0 mt-2 w-80 sm:w-96 max-w-[calc(100vw-2rem)] bg-white rounded-2xl shadow-2xl ring-1 ring-black ring-opacity-5 z-50 border border-slate-100">
+          <div className="p-4 sm:p-5 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-emerald-50 rounded-t-2xl">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Bell className="w-5 h-5 text-green-600" />
+                <Bell className="w-5 h-5 text-emerald-600" />
                 <h3 className="text-base sm:text-lg font-bold text-slate-700">Notifications</h3>
                 {unreadCount > 0 && (
                   <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
@@ -219,7 +219,7 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-xs sm:text-sm text-green-600 hover:text-green-700 font-medium hover:underline"
+                  className="text-xs sm:text-sm text-emerald-600 hover:text-emerald-700 font-medium hover:underline"
                 >
                   Mark all read
                 </button>
@@ -230,7 +230,7 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
           <div className="max-h-96 overflow-y-auto">
             {loading ? (
               <div className="p-4 text-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-green-600 mx-auto"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-emerald-600 mx-auto"></div>
                 <p className="mt-2 text-sm text-slate-700">Loading...</p>
               </div>
             ) : notifications.length === 0 ? (
@@ -251,12 +251,12 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
                         Unread ({notifications.filter(n => !n.is_read).length})
                       </h4>
                     </div>
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-slate-50">
                       {notifications.filter(n => !n.is_read).map((notification) => (
                         <div
                           key={notification.id}
                           onClick={() => handleNotificationClick(notification)}
-                          className="p-3 sm:p-4 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 cursor-pointer transition-all duration-200 bg-blue-50/50 border-l-2 border-blue-500"
+                          className="p-3 sm:p-4 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-50 cursor-pointer transition-all duration-200 bg-blue-50/50 border-l-2 border-blue-500"
                         >
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm">
@@ -287,17 +287,17 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
                 {}
                 {notifications.filter(n => n.is_read).length > 0 && (
                   <div>
-                    <div className="px-4 py-2 bg-emerald-50/30 border-b border-gray-200">
+                    <div className="px-4 py-2 bg-emerald-50/30 border-b border-slate-200">
                       <h4 className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                         Earlier ({notifications.filter(n => n.is_read).length})
                       </h4>
                     </div>
-                    <div className="divide-y divide-gray-50">
+                    <div className="divide-y divide-slate-50">
                       {notifications.filter(n => n.is_read).map((notification) => (
                         <div
                           key={notification.id}
                           onClick={() => handleNotificationClick(notification)}
-                          className="p-3 sm:p-4 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 cursor-pointer transition-all duration-200"
+                          className="p-3 sm:p-4 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-50 cursor-pointer transition-all duration-200"
                         >
                           <div className="flex items-start space-x-3">
                             <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-slate-100">
@@ -326,15 +326,15 @@ const NotificationBell = forwardRef<NotificationBellRef>((_props, ref) => {
           </div>
 
           {notifications.length > 0 && (
-            <div className="p-3 sm:p-4 border-t border-gray-100 bg-emerald-50/30 rounded-b-2xl">
+            <div className="p-3 sm:p-4 border-t border-slate-100 bg-emerald-50/30 rounded-b-2xl">
               <button
                 onClick={() => {
                   window.location.href = '/dashboard/notifications'
                   setShowDropdown(false)
                 }}
-                className="w-full text-center text-xs sm:text-sm font-semibold text-green-600 hover:text-green-700 py-2 rounded-lg hover:bg-white transition-all duration-200"
+                className="w-full text-center text-xs sm:text-sm font-semibold text-emerald-600 hover:text-emerald-700 py-2 rounded-lg hover:bg-white transition-all duration-200"
               >
-                View all notifications →
+                View all notifications 
               </button>
             </div>
           )}

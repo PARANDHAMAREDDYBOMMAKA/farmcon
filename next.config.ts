@@ -2,14 +2,14 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 import withPWA from "@ducanh2912/next-pwa";
 
-const nextConfig: NextConfig = {
+const nextConfig: any = {
   eslint: {
     ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
-  
+
   poweredByHeader: false,
   compress: true,
 
@@ -23,14 +23,8 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
 
-  experimental: {
-    serverMinification: true,
-    serverSourceMaps: false,
-  },
-
-  webpack: (config, { isServer }) => {
+  webpack: (config: any, { isServer }: { isServer: boolean }) => {
     if (isServer) {
-      
       config.externals = [
         ...config.externals,
         'engine.io-client',
@@ -42,20 +36,19 @@ const nextConfig: NextConfig = {
     }
     return config
   },
-};
+}
 
-const configWithPWA = withPWA({
+const configWithPWA = (withPWA as any)({
   dest: "public",
   disable: process.env.NODE_ENV === "development",
   register: true,
-  skipWaiting: true,
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
   reloadOnOnline: true,
-  swcMinify: true,
   workboxOptions: {
     disableDevLogs: true,
-  },
+    skipWaiting: true,
+  } as any,
   runtimeCaching: [
     {
       urlPattern: /^https:\/\/fonts\.(?:gstatic|googleapis)\.com\/.*/i,

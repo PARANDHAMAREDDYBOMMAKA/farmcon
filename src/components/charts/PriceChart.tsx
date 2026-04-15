@@ -124,7 +124,7 @@ export default function PriceChart({ data, commodity, type = 'line', showVolume 
             const dataIndex = context[0].dataIndex
             const trend = data[dataIndex]?.trend
             if (trend) {
-              const trendIcon = trend === 'up' ? '📈' : trend === 'down' ? '📉' : '➡️'
+              const trendIcon = trend === 'up' ? '' : trend === 'down' ? '' : ''
               return [`Trend: ${trendIcon} ${trend}`]
             }
             return []

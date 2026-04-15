@@ -41,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="min-h-[400px] flex items-center justify-center p-6">
+        <div className="min-h-100 flex items-center justify-center p-6">
           <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <AlertTriangle className="w-8 h-8 text-red-600" />
@@ -51,7 +51,7 @@ export class ErrorBoundary extends Component<Props, State> {
               Something went wrong
             </h2>
 
-            <p className="text-gray-600 mb-6">
+            <p className="text-slate-600 mb-6">
               We encountered an unexpected error. Please try again or return to the dashboard.
             </p>
 
@@ -66,7 +66,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={this.handleRetry}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors"
               >
                 <RefreshCw className="w-4 h-4" />
                 Try Again
@@ -74,7 +74,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-gray-200 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 transition-colors"
               >
                 <Home className="w-4 h-4" />
                 Go to Dashboard

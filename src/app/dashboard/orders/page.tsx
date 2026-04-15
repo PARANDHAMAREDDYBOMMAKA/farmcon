@@ -214,7 +214,7 @@ function OrdersPageInternal() {
       case 'shipped':
         return 'text-indigo-600 bg-indigo-100'
       case 'delivered':
-        return 'text-green-600 bg-green-100'
+        return 'text-emerald-600 bg-emerald-100'
       case 'cancelled':
         return 'text-red-600 bg-red-100'
       default:
@@ -259,7 +259,7 @@ function OrdersPageInternal() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading orders...</p>
         </div>
       </div>
@@ -269,7 +269,7 @@ function OrdersPageInternal() {
   return (
     <div className="space-y-3 sm:space-y-4 md:space-y-6 px-2 sm:px-0">
       {}
-      <div className="relative bg-gradient-to-br from-green-500 via-emerald-600 to-teal-600 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 md:p-8 text-white overflow-hidden shadow-xl">
+      <div className="relative bg-gradient-to-br from-emerald-500 via-emerald-600 to-teal-600 rounded-xl sm:rounded-2xl lg:rounded-3xl p-4 sm:p-6 md:p-8 text-white overflow-hidden shadow-xl">
         {}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 right-0 w-24 h-24 sm:w-48 sm:h-48 md:w-64 md:h-64 bg-white rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
@@ -311,7 +311,7 @@ function OrdersPageInternal() {
       </div>
 
       {}
-      <div className="bg-white/80 backdrop-blur-xl rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-1 sm:p-1.5 md:p-2 sticky top-0 z-10">
+      <div className="bg-white/80 backdrop-blur-xl rounded-lg sm:rounded-xl lg:rounded-2xl shadow-lg border border-slate-100 p-1 sm:p-1.5 md:p-2 sticky top-0 z-10">
         <div className="overflow-x-auto scrollbar-hide -mx-0.5 px-0.5 pb-0.5">
           <nav className="flex gap-1 sm:gap-1.5 md:gap-2 min-w-max">
             {['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'].map((status) => (
@@ -320,7 +320,7 @@ function OrdersPageInternal() {
                 onClick={() => setFilter(status)}
                 className={`flex-shrink-0 px-2.5 sm:px-3 md:px-4 py-1.5 sm:py-2 md:py-2.5 rounded-md sm:rounded-lg md:rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 whitespace-nowrap touch-manipulation ${
                   filter === status
-                    ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md sm:shadow-lg'
+                    ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white shadow-md sm:shadow-lg'
                     : 'text-slate-700 bg-emerald-50/30 hover:bg-slate-100 active:bg-emerald-100'
                 }`}
               >
@@ -350,7 +350,7 @@ function OrdersPageInternal() {
       </div>
 
       {/* Search and Sort Controls */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-xl lg:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-5 md:p-6">
+      <div className="bg-white/80 backdrop-blur-xl rounded-xl lg:rounded-2xl shadow-lg border border-slate-100 p-4 sm:p-5 md:p-6">
         <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
           {/* Search Bar */}
           <div className="flex-1">
@@ -361,12 +361,12 @@ function OrdersPageInternal() {
                 placeholder="Search by order ID, seller, customer, or items..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+                className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-slate-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-700 hover:text-green-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-700 hover:text-emerald-600"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -379,14 +379,14 @@ function OrdersPageInternal() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as 'date' | 'amount')}
-              className="flex-1 lg:flex-initial px-3 sm:px-4 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-gray-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white transition-all"
+              className="flex-1 lg:flex-initial px-3 sm:px-4 py-2.5 sm:py-3 md:py-3.5 text-sm sm:text-base border border-slate-200 rounded-lg sm:rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white transition-all"
             >
               <option value="date">Sort by Date</option>
               <option value="amount">Sort by Amount</option>
             </select>
             <button
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-              className="flex items-center justify-center gap-2 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-slate-700 rounded-lg sm:rounded-xl font-medium text-sm sm:text-base transition-all shadow-sm hover:shadow"
+              className="flex items-center justify-center gap-2 px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 md:py-3.5 bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-200 text-slate-700 rounded-lg sm:rounded-xl font-medium text-sm sm:text-base transition-all shadow-sm hover:shadow"
             >
               <ArrowUpDown className="w-4 h-4 sm:w-5 sm:h-5" />
               <span className="hidden sm:inline">{sortOrder === 'asc' ? 'Ascending' : 'Descending'}</span>
@@ -396,12 +396,12 @@ function OrdersPageInternal() {
 
         {/* Order Statistics */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-4 sm:mt-5">
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-green-100 overflow-hidden">
+          <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-emerald-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
-              <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-green-600 flex-shrink-0" />
+              <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-emerald-600 flex-shrink-0" />
               <p className="text-xs sm:text-sm font-medium text-slate-700 truncate">Total Orders</p>
             </div>
-            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-green-600 truncate">{orders.length}</p>
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-emerald-600 truncate">{orders.length}</p>
           </div>
           <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-lg sm:rounded-xl p-3 sm:p-4 border border-blue-100 overflow-hidden">
             <div className="flex items-center gap-1.5 sm:gap-2 mb-1">
@@ -434,16 +434,16 @@ function OrdersPageInternal() {
       </div>
 
       {filteredOrders.length === 0 ? (
-        <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-12 md:p-16 overflow-hidden">
+        <div className="relative bg-white/80 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl border border-slate-100 p-8 sm:p-12 md:p-16 overflow-hidden">
           {}
           <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-green-500 rounded-full -translate-y-24 sm:-translate-y-32 translate-x-24 sm:translate-x-32"></div>
+            <div className="absolute top-0 right-0 w-48 h-48 sm:w-64 sm:h-64 bg-emerald-500 rounded-full -translate-y-24 sm:-translate-y-32 translate-x-24 sm:translate-x-32"></div>
             <div className="absolute bottom-0 left-0 w-32 h-32 sm:w-48 sm:h-48 bg-emerald-500 rounded-full translate-y-16 sm:translate-y-24 -translate-x-16 sm:-translate-x-24"></div>
           </div>
 
           <div className="relative text-center">
-            <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full mb-4 sm:mb-6">
-              <Package className="w-10 h-10 sm:w-14 sm:h-14 text-green-600" />
+            <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-emerald-100 to-emerald-100 rounded-full mb-4 sm:mb-6">
+              <Package className="w-10 h-10 sm:w-14 sm:h-14 text-emerald-600" />
             </div>
             <h3 className="text-xl sm:text-2xl font-bold text-slate-700 mb-2 sm:mb-3">No orders found</h3>
             <p className="text-sm sm:text-base text-slate-700 mb-6 sm:mb-8 max-w-md mx-auto px-4">
@@ -463,7 +463,7 @@ function OrdersPageInternal() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-gray-500 to-gray-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-slate-500 to-slate-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mb-4"
               >
                 <X className="w-5 h-5" />
                 <span>Clear Search</span>
@@ -472,7 +472,7 @@ function OrdersPageInternal() {
             {user?.role === 'consumer' && filter === 'all' && (
               <Link
                 href="/dashboard/supplies"
-                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 <ShoppingCart className="w-5 h-5" />
                 <span>Start Shopping</span>
@@ -481,7 +481,7 @@ function OrdersPageInternal() {
             {user?.role === 'farmer' && filter === 'all' && (
               <Link
                 href="/dashboard/crops/add"
-                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 <Sprout className="w-5 h-5" />
                 <span>List Your Crops</span>
@@ -490,7 +490,7 @@ function OrdersPageInternal() {
             {user?.role === 'supplier' && filter === 'all' && (
               <Link
                 href="/dashboard/products/add"
-                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm sm:text-base font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
               >
                 <Plus className="w-5 h-5" />
                 <span>Add Products</span>
@@ -507,13 +507,13 @@ function OrdersPageInternal() {
             const progress = order.status === 'cancelled' ? 0 : ((currentStepIndex + 1) / statusSteps.length) * 100
 
             return (
-            <div key={order.id} className="group relative bg-white/80 backdrop-blur-xl rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl shadow-md sm:shadow-lg hover:shadow-xl sm:hover:shadow-2xl transition-all duration-300 border border-gray-100 overflow-hidden">
+            <div key={order.id} className="group relative bg-white/80 backdrop-blur-xl rounded-lg sm:rounded-xl md:rounded-2xl lg:rounded-3xl shadow-md sm:shadow-lg hover:shadow-xl sm:hover:shadow-2xl transition-all duration-300 border border-slate-100 overflow-hidden">
               {}
               <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-slate-100">
                 <div
                   className={`h-full transition-all duration-500 ${
                     order.status === 'cancelled' ? 'bg-red-500' :
-                    order.status === 'delivered' ? 'bg-green-500' :
+                    order.status === 'delivered' ? 'bg-emerald-500' :
                     'bg-gradient-to-r from-blue-500 to-cyan-500'
                   }`}
                   style={{ width: `${progress}%` }}
@@ -521,10 +521,10 @@ function OrdersPageInternal() {
               </div>
 
               {}
-              <div className="px-3 sm:px-4 md:px-5 lg:px-6 py-3 sm:py-3.5 md:py-4 lg:py-5 border-b border-gray-100">
+              <div className="px-3 sm:px-4 md:px-5 lg:px-6 py-3 sm:py-3.5 md:py-4 lg:py-5 border-b border-slate-100">
                 {}
                 <div className="flex items-start gap-2 sm:gap-2.5 md:gap-3 mb-3">
-                  <div className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white shadow-md">
+                  <div className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg sm:rounded-xl flex items-center justify-center text-white shadow-md">
                     <span className="text-sm sm:text-base md:text-lg font-bold">#{order.id.slice(-2)}</span>
                   </div>
                   <div className="flex-1 min-w-0">
@@ -557,7 +557,7 @@ function OrdersPageInternal() {
                     <span className="sm:hidden">{order.status.slice(0, 4)}</span>
                   </span>
                   <div className="text-right flex-shrink-0">
-                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent whitespace-nowrap">
+                    <p className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-600 bg-clip-text text-transparent whitespace-nowrap">
                       ₹{order.total_amount.toLocaleString()}
                     </p>
                     <p className="text-xs sm:text-sm text-slate-700">{order.items?.length || 0} {order.items?.length === 1 ? 'item' : 'items'}</p>
@@ -568,7 +568,7 @@ function OrdersPageInternal() {
               {}
               <div className="px-3 sm:px-4 md:px-5 lg:px-6 py-3 sm:py-3.5 md:py-4 lg:py-5">
                 {}
-                <div className="flex flex-col gap-2 sm:gap-2.5 mb-3 sm:mb-4 p-2.5 sm:p-3 md:p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg sm:rounded-xl">
+                <div className="flex flex-col gap-2 sm:gap-2.5 mb-3 sm:mb-4 p-2.5 sm:p-3 md:p-4 bg-gradient-to-r from-slate-50 to-slate-50 rounded-lg sm:rounded-xl">
                   <div className="flex items-start gap-2">
                     {user?.role === 'consumer' ? <Store className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-slate-700" /> : <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0 mt-0.5 text-slate-700" />}
                     <p className="text-xs sm:text-sm font-medium text-slate-700 break-words min-w-0 flex-1">
@@ -584,7 +584,7 @@ function OrdersPageInternal() {
                   <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-2.5 py-1 sm:py-1.5 bg-white rounded-md sm:rounded-lg shadow-sm self-start">
                     <CreditCard className="w-3 h-3 sm:w-3.5 sm:h-3.5 flex-shrink-0" />
                     <span className={`text-xs font-semibold whitespace-nowrap capitalize ${
-                      order.payment_status === 'paid' ? 'text-green-600' : 'text-orange-600'
+                      order.payment_status === 'paid' ? 'text-emerald-600' : 'text-orange-600'
                     }`}>
                       {order.payment_status}
                     </span>
@@ -594,7 +594,7 @@ function OrdersPageInternal() {
                 {}
                 <div className="space-y-2 sm:space-y-2.5 mb-3 sm:mb-4 md:mb-5">
                   {order.items?.map((item: any) => (
-                    <div key={item.id} className="group flex items-center gap-2 sm:gap-2.5 md:gap-3 p-2 sm:p-2.5 md:p-3 rounded-md sm:rounded-lg md:rounded-xl bg-emerald-50/30/50 hover:bg-gradient-to-r hover:from-green-50 hover:to-emerald-50 transition-all duration-300 border border-gray-100 touch-manipulation">
+                    <div key={item.id} className="group flex items-center gap-2 sm:gap-2.5 md:gap-3 p-2 sm:p-2.5 md:p-3 rounded-md sm:rounded-lg md:rounded-xl bg-emerald-50/30/50 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-emerald-50 transition-all duration-300 border border-slate-100 touch-manipulation">
                       <div className="flex-shrink-0">
                         {item.product?.images && item.product.images.length > 0 ? (
                           <img
@@ -603,8 +603,8 @@ function OrdersPageInternal() {
                             className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 rounded-md sm:rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform duration-300"
                           />
                         ) : (
-                          <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
-                            {item.product ? <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-600" /> : <Wheat className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-green-600" />}
+                          <div className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 bg-gradient-to-br from-emerald-100 to-emerald-100 rounded-md sm:rounded-lg flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-300">
+                            {item.product ? <Package className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-emerald-600" /> : <Wheat className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-emerald-600" />}
                           </div>
                         )}
                       </div>
@@ -615,7 +615,7 @@ function OrdersPageInternal() {
                         <p className="text-xs sm:text-sm text-slate-700">
                           <span className="font-semibold">{item.quantity}</span> ×
                           <span className="font-semibold"> ₹{item.unit_price.toLocaleString()}</span> =
-                          <span className="font-bold text-green-600"> ₹{item.total_price.toLocaleString()}</span>
+                          <span className="font-bold text-emerald-600"> ₹{item.total_price.toLocaleString()}</span>
                         </p>
                       </div>
                     </div>
@@ -624,11 +624,11 @@ function OrdersPageInternal() {
 
                 {}
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'pending' && (
-                  <div className="pt-3 sm:pt-3.5 md:pt-4 border-t border-gray-200">
+                  <div className="pt-3 sm:pt-3.5 md:pt-4 border-t border-slate-200">
                     <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:gap-3">
                       <button
                         onClick={() => updateOrderStatus(order.id, 'confirmed')}
-                        className="flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105 touch-manipulation"
+                        className="flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105 touch-manipulation"
                       >
                         <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                         <span>Accept</span>
@@ -645,7 +645,7 @@ function OrdersPageInternal() {
                 )}
 
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'confirmed' && (
-                  <div className="pt-3 sm:pt-4 border-t border-gray-200">
+                  <div className="pt-3 sm:pt-4 border-t border-slate-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'processing')}
                       className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-blue-500 to-cyan-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
@@ -657,7 +657,7 @@ function OrdersPageInternal() {
                 )}
 
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'processing' && (
-                  <div className="pt-3 sm:pt-4 border-t border-gray-200">
+                  <div className="pt-3 sm:pt-4 border-t border-slate-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'shipped')}
                       className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
@@ -669,10 +669,10 @@ function OrdersPageInternal() {
                 )}
 
                 {(user?.role === 'farmer' || user?.role === 'supplier') && order.seller_id === user.id && order.status === 'shipped' && (
-                  <div className="pt-3 sm:pt-4 border-t border-gray-200">
+                  <div className="pt-3 sm:pt-4 border-t border-slate-200">
                     <button
                       onClick={() => updateOrderStatus(order.id, 'delivered')}
-                      className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
+                      className="w-full flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105"
                     >
                       <Package className="w-4 h-4" />
                       <span>Mark as Delivered</span>
@@ -681,12 +681,12 @@ function OrdersPageInternal() {
                 )}
 
                 {}
-                <div className="pt-3 sm:pt-3.5 md:pt-4 border-t border-gray-200 flex flex-col sm:flex-row gap-2 sm:gap-2.5 md:gap-3">
+                <div className="pt-3 sm:pt-3.5 md:pt-4 border-t border-slate-200 flex flex-col sm:flex-row gap-2 sm:gap-2.5 md:gap-3">
                   {}
                   {user?.id === order.customer_id && order.status !== 'pending' && order.status !== 'cancelled' && (
                     <Link
                       href={`/dashboard/orders/${order.id}/track`}
-                      className="flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105 touch-manipulation flex-1 sm:flex-initial"
+                      className="flex items-center justify-center gap-1 sm:gap-1.5 md:gap-2 px-3 sm:px-4 md:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-md sm:rounded-lg md:rounded-xl hover:shadow-lg transition-all duration-300 active:scale-95 sm:hover:scale-105 touch-manipulation flex-1 sm:flex-initial"
                     >
                       <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                       <span>Track Order</span>
@@ -722,7 +722,7 @@ export default function () {
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-2 text-sm text-slate-700">Loading...</p>
         </div>
       </div>

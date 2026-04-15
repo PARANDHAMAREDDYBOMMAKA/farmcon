@@ -1,36 +1,49 @@
 'use client'
 
-import { useEffect, useState, Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { Loader2, Mail, MailCheck, Sprout } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { AuthShell } from '@/components/auth/AuthShell'
+import { Button } from '@/components/ui/button'
+import { Alert } from '@/components/ui/alert'
+
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-950 via-emerald-900 to-teal-950">
+      <div className="text-center">
+        <div className="relative w-14 h-14 mx-auto">
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-700" />
+          <div className="absolute inset-0 rounded-full border-4 border-emerald-300 border-t-transparent animate-spin" />
+          <Sprout className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 text-emerald-300" />
+        </div>
+        <p className="mt-3 text-sm font-semibold text-emerald-200">Loading…</p>
+      </div>
+    </div>
+  )
+}
 
 function VerifyEmailInternal() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
+  const [tone, setTone] = useState<'success' | 'error'>('success')
   const router = useRouter()
   const searchParams = useSearchParams()
 
   useEffect(() => {
     const emailParam = searchParams.get('email')
-    if (emailParam) {
-      setEmail(decodeURIComponent(emailParam))
-    }
+    if (emailParam) setEmail(decodeURIComponent(emailParam))
 
-    const handleEmailConfirmation = async () => {
-      const { data, error } = await supabase.auth.getSession()
-      if (data.session) {
-        router.push('/dashboard')
-      }
+    const check = async () => {
+      const { data } = await supabase.auth.getSession()
+      if (data.session) router.push('/dashboard')
     }
-
-    handleEmailConfirmation()
+    check()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        router.push('/dashboard')
-      }
+      if (event === 'SIGNED_IN' && session) router.push('/dashboard')
     })
 
     return () => subscription.unsubscribe()
@@ -38,114 +51,82 @@ function VerifyEmailInternal() {
 
   const resendEmail = async () => {
     if (!email) return
-    
     setLoading(true)
     setMessage('')
-
     try {
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email
-      })
-
+      const { error } = await supabase.auth.resend({ type: 'signup', email })
       if (error) {
+        setTone('error')
         setMessage(error.message)
       } else {
-        setMessage('Verification email sent! Please check your inbox.')
+        setTone('success')
+        setMessage('Verification email sent. Check your inbox.')
       }
-    } catch (err) {
-      setMessage('Failed to resend verification email. Please try again.')
+    } catch {
+      setTone('error')
+      setMessage('Failed to resend. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <Link href="/" className="text-3xl font-bold text-green-600">
-            FarmCon
-          </Link>
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
-            Verify your email
-          </h2>
-          <p className="mt-2 text-sm text-gray-900">
-            We sent a verification link to your email address
+    <AuthShell
+      title="Verify your email"
+      subtitle={email ? <>We sent a verification link to <strong className="text-emerald-300">{email}</strong></> : 'We sent a verification link to your inbox.'}
+      compact
+    >
+      <div className="flex flex-col items-center text-center gap-6 py-2">
+        <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+          <MailCheck className="w-9 h-9 text-emerald-600" />
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-base text-emerald-900 font-semibold">
+            Click the link in the email to verify and start using FarmCon.
+          </p>
+          <p className="text-xs font-medium text-slate-500">
+            The link expires in 24 hours.
           </p>
         </div>
 
-        <div className="bg-white shadow rounded-lg px-6 py-8">
-          <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-6">
-              <span className="text-2xl">📧</span>
-            </div>
-            
-            {email && (
-              <p className="text-sm text-gray-900 mb-6">
-                Check your email at <strong>{email}</strong> for a verification link.
-              </p>
-            )}
+        {message && <Alert tone={tone}>{message}</Alert>}
 
-            <div className="space-y-4">
-              <p className="text-sm text-gray-900">
-                Click the link in the email to verify your account and start using FarmCon.
-              </p>
-              
-              <p className="text-xs text-gray-900">
-                The verification link will expire in 24 hours for security reasons.
-              </p>
-            </div>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          className="w-full"
+          onClick={resendEmail}
+          disabled={loading || !email}
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Sending…</span>
+            </>
+          ) : (
+            <>
+              <Mail className="w-4 h-4" />
+              <span>Resend verification email</span>
+            </>
+          )}
+        </Button>
 
-            {message && (
-              <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                <p className="text-sm text-blue-700">{message}</p>
-              </div>
-            )}
-
-            <div className="mt-6 space-y-3">
-              <button
-                onClick={resendEmail}
-                disabled={loading || !email}
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Sending...' : 'Resend verification email'}
-              </button>
-              
-              <div className="text-center">
-                <Link
-                  href="/auth/signin"
-                  className="text-sm text-green-600 hover:text-green-500"
-                >
-                  Already verified? Sign in
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="text-center">
-          <p className="text-xs text-gray-900">
-            Having trouble?{' '}
-            <Link href="/support" className="text-green-600 hover:text-green-500">
-              Contact support
-            </Link>
-          </p>
-        </div>
+        <Link
+          href="/auth/signin"
+          className="text-sm font-semibold text-emerald-700 hover:text-emerald-900"
+        >
+          Already verified? Sign in 
+        </Link>
       </div>
-    </div>
+    </AuthShell>
   )
 }
-export default function () {
+
+export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mx-auto"></div>
-          <p className="mt-2 text-sm text-gray-900">Loading...</p>
-        </div>
-      </div>
-    }>
+    <Suspense fallback={<LoadingScreen />}>
       <VerifyEmailInternal />
     </Suspense>
   )

@@ -200,14 +200,14 @@ export default function DriverDashboard() {
 
   if (!driver) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-xl shadow-lg p-8 max-w-md w-full">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6 text-center">
+          <h1 className="text-3xl font-bold text-emerald-950 mb-6 text-center">
             Driver Login
           </h1>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-emerald-900 mb-2">
                 Phone Number
               </label>
               <input
@@ -215,13 +215,13 @@ export default function DriverDashboard() {
                 value={driverPhone}
                 onChange={(e) => setDriverPhone(e.target.value)}
                 placeholder="Enter your phone number"
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
               />
             </div>
             <button
               onClick={loginDriver}
               disabled={loading}
-              className="w-full bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:bg-gray-400"
+              className="w-full bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:bg-slate-400"
             >
               {loading ? 'Logging in...' : 'Login'}
             </button>
@@ -232,15 +232,15 @@ export default function DriverDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-slate-50 p-4">
       <div className="max-w-4xl mx-auto">
         {}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{driver.fullName}</h1>
-              <p className="text-gray-900">{driver.vehicleType} - {driver.vehicleNumber}</p>
-              <p className="text-sm text-gray-900">{driver.phone}</p>
+              <h1 className="text-2xl font-bold text-emerald-950">{driver.fullName}</h1>
+              <p className="text-emerald-950">{driver.vehicleType} - {driver.vehicleNumber}</p>
+              <p className="text-sm text-emerald-950">{driver.phone}</p>
             </div>
             <button
               onClick={() => {
@@ -248,7 +248,7 @@ export default function DriverDashboard() {
                 localStorage.removeItem('driverId')
                 stopLocationTracking()
               }}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-emerald-900 hover:bg-slate-50"
             >
               Logout
             </button>
@@ -257,14 +257,14 @@ export default function DriverDashboard() {
 
         {}
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Location Tracking</h2>
+          <h2 className="text-xl font-semibold text-emerald-950 mb-4">Location Tracking</h2>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-gray-900">
+              <p className="text-emerald-950">
                 {locationTracking ? 'Location tracking is active' : 'Start tracking to update delivery locations'}
               </p>
               {driver.lastLocationUpdate && (
-                <p className="text-sm text-gray-900 mt-1">
+                <p className="text-sm text-emerald-950 mt-1">
                   Last update: {new Date(driver.lastLocationUpdate).toLocaleString()}
                 </p>
               )}
@@ -274,7 +274,7 @@ export default function DriverDashboard() {
               className={`px-6 py-3 rounded-lg font-medium transition-colors ${
                 locationTracking
                   ? 'bg-red-600 text-white hover:bg-red-700'
-                  : 'bg-green-600 text-white hover:bg-green-700'
+                  : 'bg-emerald-600 text-white hover:bg-emerald-700'
               }`}
             >
               {locationTracking ? 'Stop Tracking' : 'Start Tracking'}
@@ -284,30 +284,30 @@ export default function DriverDashboard() {
 
         {}
         <div className="bg-white rounded-xl shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          <h2 className="text-xl font-semibold text-emerald-950 mb-4">
             Active Deliveries ({deliveries.length})
           </h2>
 
           {deliveries.length === 0 ? (
-            <p className="text-gray-900 text-center py-8">No active deliveries</p>
+            <p className="text-emerald-950 text-center py-8">No active deliveries</p>
           ) : (
             <div className="space-y-4">
               {deliveries.map((delivery) => (
-                <div key={delivery.id} className="border border-gray-200 rounded-lg p-4">
+                <div key={delivery.id} className="border border-slate-200 rounded-lg p-4">
                   <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h3 className="font-semibold text-gray-900">
+                      <h3 className="font-semibold text-emerald-950">
                         Order #{delivery.order.id.slice(-8)}
                       </h3>
                       {delivery.trackingNumber && (
-                        <p className="text-sm text-gray-900">
+                        <p className="text-sm text-emerald-950">
                           Tracking: {delivery.trackingNumber}
                         </p>
                       )}
-                      <p className="text-sm text-gray-900 mt-1">
+                      <p className="text-sm text-emerald-950 mt-1">
                         Customer: {delivery.order.customer.fullName}
                       </p>
-                      <p className="text-sm text-gray-900">
+                      <p className="text-sm text-emerald-950">
                         Phone: {delivery.order.customer.phone}
                       </p>
                     </div>
@@ -316,11 +316,11 @@ export default function DriverDashboard() {
                         delivery.status === 'assigned' ? 'bg-blue-100 text-blue-800' :
                         delivery.status === 'picked_up' ? 'bg-yellow-100 text-yellow-800' :
                         delivery.status === 'in_transit' ? 'bg-purple-100 text-purple-800' :
-                        'bg-green-100 text-green-800'
+                        'bg-emerald-100 text-emerald-800'
                       }`}>
                         {delivery.status.replace('_', ' ').toUpperCase()}
                       </span>
-                      <p className="text-sm font-semibold text-gray-900 mt-2">
+                      <p className="text-sm font-semibold text-emerald-950 mt-2">
                         ₹{delivery.order.totalAmount}
                       </p>
                     </div>
@@ -328,17 +328,17 @@ export default function DriverDashboard() {
 
                   <div className="space-y-2 mb-3">
                     <div className="flex items-start">
-                      <span className="text-lg mr-2">📦</span>
+                      <span className="text-lg mr-2"></span>
                       <div>
-                        <p className="text-xs text-gray-900">Pickup</p>
-                        <p className="text-sm text-gray-700">{delivery.pickupAddress || 'Not specified'}</p>
+                        <p className="text-xs text-emerald-950">Pickup</p>
+                        <p className="text-sm text-emerald-900">{delivery.pickupAddress || 'Not specified'}</p>
                       </div>
                     </div>
                     <div className="flex items-start">
-                      <span className="text-lg mr-2">📍</span>
+                      <span className="text-lg mr-2"></span>
                       <div>
-                        <p className="text-xs text-gray-900">Delivery</p>
-                        <p className="text-sm text-gray-700">{delivery.deliveryAddress || 'Not specified'}</p>
+                        <p className="text-xs text-emerald-950">Delivery</p>
+                        <p className="text-sm text-emerald-900">{delivery.deliveryAddress || 'Not specified'}</p>
                       </div>
                     </div>
                   </div>
@@ -371,7 +371,7 @@ export default function DriverDashboard() {
                     {delivery.status === 'out_for_delivery' && (
                       <button
                         onClick={() => updateDeliveryStatus(delivery.id, 'delivered')}
-                        className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700"
+                        className="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700"
                       >
                         Mark as Delivered
                       </button>

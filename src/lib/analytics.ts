@@ -10,18 +10,19 @@ export const analytics = {
       })
     }
   },
+  
 
   track: (eventName: string, properties?: Record<string, any>) => {
     if (typeof window !== 'undefined') {
       posthog.capture(eventName, properties)
-      console.log('📊 Event tracked:', eventName, properties)
+      console.log(' Event tracked:', eventName, properties)
     }
   },
 
   identify: (userId: string, properties?: Record<string, any>) => {
     if (typeof window !== 'undefined') {
       posthog.identify(userId, properties)
-      console.log('👤 User identified:', userId)
+      console.log(' User identified:', userId)
     }
   },
 

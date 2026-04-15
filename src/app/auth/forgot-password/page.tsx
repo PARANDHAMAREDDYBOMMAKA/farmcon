@@ -2,15 +2,18 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { ArrowLeft, ArrowRight, KeyRound, Loader2, Mail } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { AuthShell } from '@/components/auth/AuthShell'
+import { Button } from '@/components/ui/button'
+import { Input, Label } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,97 +22,79 @@ export default function ForgotPasswordPage() {
     setMessage('')
 
     try {
-      
       const currentOrigin = typeof window !== 'undefined' ? window.location.origin : ''
-
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${currentOrigin}/auth/reset-password`
+      const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${currentOrigin}/auth/reset-password`,
       })
 
-      if (error) {
-        setError(error.message)
-      } else {
-        setMessage('Password reset link has been sent to your email address.')
-      }
-    } catch (err) {
-      console.error('Password reset error:', err)
-      setError('An unexpected error occurred')
+      if (authError) setError(authError.message)
+      else setMessage('Check your inbox — we’ve sent a password reset link.')
+    } catch {
+      setError('Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <AuthShell
+      title="Reset your password"
+      subtitle="We’ll email you a secure link to set a new one."
+      compact
+    >
+      <form className="space-y-5" onSubmit={handleSubmit}>
+        {error && <Alert tone="error">{error}</Alert>}
+        {message && <Alert tone="success">{message}</Alert>}
+
+        <div className="flex items-center gap-3 rounded-2xl bg-emerald-50 p-4 ring-1 ring-emerald-100">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center flex-shrink-0">
+            <KeyRound className="w-5 h-5" />
+          </div>
+          <div className="text-sm text-emerald-800 font-medium">
+            Enter the email you used to sign up. The link expires in 15 minutes.
+          </div>
+        </div>
+
+        <div>
+          <Label htmlFor="email" required>
+            <Mail className="w-3.5 h-3.5 text-emerald-600" />
+            Email address
+          </Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+          />
+        </div>
+
+        <Button type="submit" size="lg" className="w-full" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span>Sending link…</span>
+            </>
+          ) : (
+            <>
+              <span>Send reset link</span>
+              <ArrowRight className="w-5 h-5" />
+            </>
+          )}
+        </Button>
+
         <div className="text-center">
-          <Link href="/" className="text-3xl font-bold text-green-600">
-            FarmCon
+          <Link
+            href="/auth/signin"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-emerald-700 hover:text-emerald-900"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to sign in
           </Link>
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Reset your password
-          </h2>
-          <p className="mt-2 text-sm text-gray-900">
-            Enter your email address and we'll send you a password reset link.
-          </p>
         </div>
-      </div>
-
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
-                {error}
-              </div>
-            )}
-
-            {message && (
-              <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md">
-                {message}
-              </div>
-            )}
-
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                  placeholder="Enter your email address"
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
-              >
-                {loading ? 'Sending...' : 'Send Reset Link'}
-              </button>
-            </div>
-
-            <div className="text-center">
-              <Link
-                href="/auth/signin"
-                className="text-sm text-green-600 hover:text-green-500"
-              >
-                ← Back to sign in
-              </Link>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
+      </form>
+    </AuthShell>
   )
 }

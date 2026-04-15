@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     const whereClause: any = {
-      role: 'SUPPLIER'
+      role: 'supplier',
     }
 
     if (city) {
@@ -64,10 +64,10 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    const suppliersWithStats = suppliers.map(supplier => ({
+    const suppliersWithStats = suppliers.map((supplier: any) => ({
       ...supplier,
-      totalProducts: supplier.products.length,
-      activeProducts: supplier.products.filter(p => p.isActive).length
+      totalProducts: supplier.products?.length || 0,
+      activeProducts: (supplier.products || []).filter((p: any) => p.isActive).length,
     }))
 
     await cache.set(cacheKey, suppliersWithStats, 600)
@@ -117,8 +117,8 @@ export async function POST(request: NextRequest) {
         address,
         pincode,
         gstNumber,
-        role: 'SUPPLIER'
-      }
+        role: 'supplier',
+      },
     })
 
     await cache.invalidatePattern('farmcon:suppliers:*')

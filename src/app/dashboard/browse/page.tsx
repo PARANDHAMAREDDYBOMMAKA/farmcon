@@ -83,7 +83,7 @@ export default function BrowseCropsPage() {
         throw new Error(error.error || 'Failed to add to cart')
       }
       
-      toast.success('Added to cart successfully! 🛒')
+      toast.success('Added to cart successfully! ')
 
     } catch (error) {
       console.error('Error adding to cart:', error)
@@ -130,7 +130,7 @@ export default function BrowseCropsPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading fresh crops...</p>
         </div>
       </div>
@@ -148,9 +148,9 @@ export default function BrowseCropsPage() {
           <div className="mt-4 sm:mt-0">
             <Link
               href="/dashboard/cart"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-emerald-50/30"
+              className="inline-flex items-center px-4 py-2 border border-slate-200 rounded-md shadow-sm text-sm font-medium text-slate-700 bg-white hover:bg-emerald-50/30"
             >
-              🛒 View Cart
+               View Cart
             </Link>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function BrowseCropsPage() {
             placeholder="Search crops, variety, farmer..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-slate-700"
+            className="w-full px-4 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-700"
           />
         </div>
         
@@ -172,7 +172,7 @@ export default function BrowseCropsPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 text-slate-700"
+            className="w-full px-4 py-2 border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-700"
           >
             <option value="created_at">Latest First</option>
             <option value="price_low">Price: Low to High</option>
@@ -187,7 +187,7 @@ export default function BrowseCropsPage() {
             id="organic-filter"
             checked={filterOrganic}
             onChange={(e) => setFilterOrganic(e.target.checked)}
-            className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+            className="h-4 w-4 text-emerald-600 border-slate-200 rounded focus:ring-emerald-500"
           />
           <label htmlFor="organic-filter" className="ml-2 text-sm text-slate-700 font-medium">
             Organic Only
@@ -212,14 +212,14 @@ export default function BrowseCropsPage() {
                 />
               ) : (
                 <div className="h-48 w-full bg-emerald-100/50 flex items-center justify-center">
-                  <span className="text-4xl">🌾</span>
+                  <span className="text-4xl"></span>
                 </div>
               )}
               
               {}
               <div className="absolute top-2 left-2 flex flex-col gap-1">
                 {listing.crop.organicCertified && (
-                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                  <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">
                     Organic
                   </span>
                 )}
@@ -288,13 +288,13 @@ export default function BrowseCropsPage() {
                 <button
                   onClick={() => addToCart(listing.id)}
                   disabled={cartLoading === listing.id}
-                  className="flex-1 bg-green-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 disabled:opacity-50"
+                  className="flex-1 bg-emerald-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-emerald-700 disabled:opacity-50"
                 >
                   {cartLoading === listing.id ? 'Adding...' : 'Add to Cart'}
                 </button>
                 <Link
                   href={`/dashboard/browse/${listing.id}`}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-slate-700 hover:bg-emerald-50/30"
+                  className="px-3 py-2 border border-slate-200 rounded-md text-sm font-medium text-slate-700 hover:bg-emerald-50/30"
                 >
                   View
                 </Link>
@@ -302,7 +302,7 @@ export default function BrowseCropsPage() {
 
               {listing.pickupLocation && (
                 <p className="text-xs text-slate-700 mt-2">
-                  📍 Pickup: {listing.pickupLocation}
+                   Pickup: {listing.pickupLocation}
                 </p>
               )}
             </div>
@@ -312,7 +312,7 @@ export default function BrowseCropsPage() {
 
       {filteredListings.length === 0 && (
         <div className="text-center py-12">
-          <span className="text-6xl">🌾</span>
+          <span className="text-6xl"></span>
           <h3 className="mt-4 text-lg font-medium text-slate-700">No crops found</h3>
           <p className="mt-2 text-slate-700">
             Try adjusting your search or filters. Check back later for fresh listings!

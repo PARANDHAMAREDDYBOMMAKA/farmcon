@@ -127,7 +127,7 @@ export default function AddCropPage() {
     return (
       <div className="p-6">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto"></div>
           <p className="mt-4 text-slate-700">Loading...</p>
         </div>
       </div>
@@ -161,7 +161,7 @@ export default function AddCropPage() {
                 required
                 value={formData.name}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., Tomatoes, Rice, Wheat"
               />
             </div>
@@ -176,7 +176,7 @@ export default function AddCropPage() {
                 name="variety"
                 value={formData.variety}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="e.g., Cherry, Basmati"
               />
             </div>
@@ -192,7 +192,7 @@ export default function AddCropPage() {
                 required
                 value={formData.planted_date}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
 
@@ -206,7 +206,7 @@ export default function AddCropPage() {
                 name="expected_harvest_date"
                 value={formData.expected_harvest_date}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
 
@@ -222,7 +222,7 @@ export default function AddCropPage() {
                 step="0.1"
                 value={formData.area}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="0.5"
               />
             </div>
@@ -239,7 +239,7 @@ export default function AddCropPage() {
                 step="0.1"
                 value={formData.estimated_yield}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
                 placeholder="100"
               />
             </div>
@@ -253,7 +253,7 @@ export default function AddCropPage() {
                 name="unit"
                 value={formData.unit}
                 onChange={handleInputChange}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               >
                 <option value="kg">Kilograms (kg)</option>
                 <option value="quintal">Quintal</option>
@@ -271,7 +271,7 @@ export default function AddCropPage() {
                   name="organic_certified"
                   checked={formData.organic_certified}
                   onChange={handleInputChange}
-                  className="h-4 w-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+                  className="h-4 w-4 text-emerald-600 border-slate-200 rounded focus:ring-emerald-500"
                 />
                 <label htmlFor="organic_certified" className="ml-2 block text-sm text-slate-600">
                   Organic Certified
@@ -290,7 +290,7 @@ export default function AddCropPage() {
               rows={4}
               value={formData.description}
               onChange={handleInputChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+              className="mt-1 block w-full px-3 py-2 border border-slate-200 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500"
               placeholder="Additional details about this crop..."
             />
           </div>
@@ -307,14 +307,14 @@ export default function AddCropPage() {
             <button
               type="button"
               onClick={() => router.back()}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
+              className="px-4 py-2 border border-slate-200 rounded-md shadow-sm text-sm font-medium text-slate-600 hover:bg-emerald-50/30"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={saving}
-              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 disabled:opacity-50"
             >
               {saving ? 'Adding Crop...' : 'Add Crop'}
             </button>

@@ -49,6 +49,37 @@ export async function POST(request: NextRequest) {
         break
       }
 
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted': {
+        const sub = event.data.object as any
+        const userId = sub.metadata?.userId
+        const planId = sub.metadata?.planId
+        const priceId = sub.items?.data?.[0]?.price?.id
+        console.log('subscription event', {
+          type: event.type,
+          subId: sub.id,
+          userId,
+          planId,
+          priceId,
+          status: sub.status,
+        })
+        break
+      }
+
+      case 'invoice.paid':
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as any
+        console.log('invoice event', {
+          type: event.type,
+          invoiceId: invoice.id,
+          customer: invoice.customer,
+          amountPaid: invoice.amount_paid,
+          status: invoice.status,
+        })
+        break
+      }
+
       default:
         console.log(`Unhandled event type: ${event.type}`)
     }

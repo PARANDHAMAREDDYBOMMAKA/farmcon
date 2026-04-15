@@ -1,17 +1,17 @@
-import { MeiliSearch } from 'meilisearch'
+import { Meilisearch } from 'meilisearch'
 
-let client: MeiliSearch | null = null
+let client: Meilisearch | null = null
 
-function getClient(): MeiliSearch {
+function getClient(): Meilisearch {
   if (!client) {
     const host = process.env.MEILISEARCH_HOST
     const apiKey = process.env.MEILISEARCH_API_KEY
 
     if (!host || !apiKey) {
-      throw new Error('MeiliSearch is not configured. Set MEILISEARCH_HOST and MEILISEARCH_API_KEY environment variables.')
+      throw new Error('Meilisearch is not configured. Set MEILISEARCH_HOST and MEILISEARCH_API_KEY environment variables.')
     }
 
-    client = new MeiliSearch({ host, apiKey })
+    client = new Meilisearch({ host, apiKey })
   }
   return client
 }
@@ -70,9 +70,9 @@ export async function initializeIndexes() {
       filterableAttributes: ['city', 'state', 'role'],
     })
 
-    console.log('✅ MeiliSearch indexes initialized')
+    console.log(' Meilisearch indexes initialized')
   } catch (error) {
-    console.error('❌ Error initializing MeiliSearch indexes:', error)
+    console.error(' Error initializing Meilisearch indexes:', error)
   }
 }
 

@@ -3,7 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { ArrowLeft, ArrowRight, Loader2, Lock, Mail, Shield, Sparkles } from 'lucide-react'
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { AuthShell } from '@/components/auth/AuthShell'
+import { Button } from '@/components/ui/button'
+import { Input, Label, FieldHint } from '@/components/ui/input'
+import { Alert } from '@/components/ui/alert'
+import { cn } from '@/lib/cn'
 
 function EmailOTPForm() {
   const [step, setStep] = useState<'email' | 'otp'>('email')
@@ -15,263 +21,214 @@ function EmailOTPForm() {
   const router = useRouter()
   const { executeRecaptcha } = useGoogleReCaptcha()
 
-  const handleSendOTP = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const sendOtp = async (e?: React.FormEvent) => {
+    e?.preventDefault()
     setLoading(true)
     setError('')
     setSuccess('')
 
     if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      setError('Please enter a valid email address')
+      setError('Please enter a valid email address.')
       setLoading(false)
       return
     }
 
     try {
-      if (!executeRecaptcha) {
-        setError('reCAPTCHA not ready. Please try again.')
-        setLoading(false)
-        return
+      let recaptchaToken = 'skip'
+      if (executeRecaptcha) {
+        try {
+          recaptchaToken = await executeRecaptcha('send_otp')
+        } catch {
+          recaptchaToken = 'skip'
+        }
       }
 
-      const recaptchaToken = await executeRecaptcha('send_otp')
-
-      const response = await fetch('/api/auth/send-otp', {
+      const res = await fetch('/api/auth/send-otp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, recaptchaToken }),
       })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Failed to send OTP')
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to send OTP')
-      }
-
-      setSuccess('OTP sent successfully! Check your email.')
+      setSuccess('Code sent. Check your inbox.')
       setStep('otp')
     } catch (err: any) {
-      console.error('Error sending OTP:', err)
-      setError(err.message || 'Failed to send OTP. Please try again.')
+      setError(err?.message || 'Failed to send OTP. Try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleVerifyOTP = async (e: React.FormEvent) => {
+  const verifyOtp = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
     setSuccess('')
 
     if (otp.length !== 6) {
-      setError('Please enter a valid 6-digit OTP')
+      setError('Please enter the 6-digit code.')
       setLoading(false)
       return
     }
 
     try {
-      const response = await fetch('/api/auth/verify-otp', {
+      const res = await fetch('/api/auth/verify-otp', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp }),
       })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Invalid OTP')
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to verify OTP')
-      }
-
-      setSuccess('Email verified successfully! Redirecting...')
-      setTimeout(() => {
-        router.push('/dashboard')
-      }, 1500)
+      setSuccess('Verified! Redirecting…')
+      setTimeout(() => router.push('/dashboard'), 1200)
     } catch (err: any) {
-      console.error('Error verifying OTP:', err)
-      setError(err.message || 'Invalid OTP. Please try again.')
+      setError(err?.message || 'Invalid OTP. Please try again.')
     } finally {
       setLoading(false)
     }
   }
 
-  const handleResendOTP = async () => {
-    setOtp('')
-    setError('')
-    setSuccess('')
-    setStep('email')
-  }
-
   return (
-    <div className="min-h-screen flex">
-      {}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-400 to-green-600 relative">
-        <div className="flex flex-col justify-center px-12 text-white">
-          <h2 className="text-4xl font-bold mb-6">Secure Email Verification</h2>
-          <p className="text-xl mb-8 opacity-90">
-            Verify your email with a one-time password. Safe, secure, and simple.
-          </p>
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-              <span>No password required</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-              <span>Secure OTP verification</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-2 h-2 bg-white rounded-full mr-3"></div>
-              <span>Protected by Google reCAPTCHA</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {}
-      <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <Link href="/" className="text-3xl font-bold text-green-600">
-              FarmCon
+    <AuthShell
+      title={step === 'email' ? 'Sign in with a code' : 'Enter your code'}
+      subtitle={
+        step === 'email' ? (
+          <>
+            Prefer a password?{' '}
+            <Link href="/auth/signin" className="font-bold text-emerald-300 hover:text-white">
+              Sign in with password
             </Link>
-            <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
-              {step === 'email' ? 'Sign in with Email OTP' : 'Verify OTP'}
-            </h2>
-            <p className="mt-2 text-sm text-gray-900">
-              {step === 'email' ? (
-                <>
-                  Prefer password?{' '}
-                  <Link href="/auth/signin" className="font-medium text-green-600 hover:text-green-500">
-                    Sign in with password
-                  </Link>
-                </>
-              ) : (
-                `We sent a 6-digit code to ${email}`
-              )}
-            </p>
+          </>
+        ) : (
+          <>We sent a 6-digit code to <strong className="text-emerald-300">{email}</strong></>
+        )
+      }
+      heroTitle={
+        <>
+          Passwordless,{' '}
+          <span className="bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">
+            frictionless.
+          </span>
+        </>
+      }
+      heroSubtitle="Log in with a one-time code — no password to forget, no password to leak."
+      heroBullets={[
+        { icon: <Mail className="w-5 h-5 text-white" />, text: 'Code delivered instantly' },
+        { icon: <Shield className="w-5 h-5 text-white" />, text: 'Protected by reCAPTCHA' },
+        { icon: <Sparkles className="w-5 h-5 text-white" />, text: 'No passwords. Ever.' },
+      ]}
+      compact
+    >
+      {step === 'email' ? (
+        <form onSubmit={sendOtp} className="space-y-5">
+          {error && <Alert tone="error">{error}</Alert>}
+          {success && <Alert tone="success">{success}</Alert>}
+
+          <div>
+            <Label htmlFor="email" required>
+              <Mail className="w-3.5 h-3.5 text-emerald-600" />
+              Email address
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
+            <FieldHint>We’ll send you a 6-digit code via email.</FieldHint>
           </div>
 
-          {step === 'email' ? (
-            <form className="mt-8 space-y-6" onSubmit={handleSendOTP}>
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
-                  {error}
-                </div>
-              )}
-              {success && (
-                <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md">
-                  {success}
-                </div>
-              )}
+          <Button type="submit" size="lg" className="w-full" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Sending code…</span>
+              </>
+            ) : (
+              <>
+                <span>Send verification code</span>
+                <ArrowRight className="w-5 h-5" />
+              </>
+            )}
+          </Button>
 
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
-                  placeholder="you@example.com"
-                />
-                <p className="mt-1 text-xs text-gray-900">
-                  Enter your email to receive a verification code
-                </p>
-              </div>
+          <p className="text-center text-xs text-slate-500">
+            Protected by reCAPTCHA.{' '}
+            <a href="https://policies.google.com/privacy" className="text-emerald-700 hover:underline font-semibold">
+              Privacy
+            </a>
+            {' · '}
+            <a href="https://policies.google.com/terms" className="text-emerald-700 hover:underline font-semibold">
+              Terms
+            </a>
+          </p>
+        </form>
+      ) : (
+        <form onSubmit={verifyOtp} className="space-y-5">
+          {error && <Alert tone="error">{error}</Alert>}
+          {success && <Alert tone="success">{success}</Alert>}
 
-              <button
-                type="submit"
-                disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Sending OTP...' : 'Send Verification Code'}
-              </button>
+          <div>
+            <Label htmlFor="otp" required>
+              <Lock className="w-3.5 h-3.5 text-emerald-600" />
+              Verification code
+            </Label>
+            <Input
+              id="otp"
+              type="text"
+              inputMode="numeric"
+              maxLength={6}
+              required
+              value={otp}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+              placeholder="••••••"
+              className={cn('text-center text-3xl font-extrabold tracking-[0.5em] py-4')}
+              autoFocus
+            />
+            <FieldHint>Enter the 6-digit code from your email.</FieldHint>
+          </div>
 
-              <p className="text-xs text-center text-gray-900">
-                This site is protected by reCAPTCHA and the Google{' '}
-                <a href="https://policies.google.com/privacy" className="text-green-600 hover:underline">
-                  Privacy Policy
-                </a>{' '}
-                and{' '}
-                <a href="https://policies.google.com/terms" className="text-green-600 hover:underline">
-                  Terms of Service
-                </a>{' '}
-                apply.
-              </p>
-            </form>
-          ) : (
-            <form className="mt-8 space-y-6" onSubmit={handleVerifyOTP}>
-              {error && (
-                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md">
-                  {error}
-                </div>
-              )}
-              {success && (
-                <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-md">
-                  {success}
-                </div>
-              )}
+          <Button type="submit" size="lg" className="w-full" disabled={loading || otp.length !== 6}>
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                <span>Verifying…</span>
+              </>
+            ) : (
+              <span>Verify & sign in</span>
+            )}
+          </Button>
 
-              <div>
-                <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
-                  Verification Code
-                </label>
-                <input
-                  id="otp"
-                  name="otp"
-                  type="text"
-                  maxLength={6}
-                  required
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-center text-2xl tracking-widest"
-                  placeholder="000000"
-                  autoFocus
-                />
-                <p className="mt-1 text-xs text-gray-900 text-center">
-                  Enter the 6-digit code sent to your email
-                </p>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Verifying...' : 'Verify & Sign In'}
-              </button>
-
-              <div className="flex justify-between text-sm">
-                <button
-                  type="button"
-                  onClick={handleResendOTP}
-                  className="text-green-600 hover:text-green-500"
-                >
-                  ← Change email
-                </button>
-                <button
-                  type="button"
-                  onClick={handleSendOTP}
-                  disabled={loading}
-                  className="text-green-600 hover:text-green-500 disabled:opacity-50"
-                >
-                  Resend code
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </div>
-    </div>
+          <div className="flex items-center justify-between text-sm">
+            <button
+              type="button"
+              onClick={() => {
+                setStep('email')
+                setOtp('')
+                setError('')
+                setSuccess('')
+              }}
+              className="inline-flex items-center gap-1.5 font-semibold text-emerald-700 hover:text-emerald-900"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Change email
+            </button>
+            <button
+              type="button"
+              onClick={sendOtp}
+              disabled={loading}
+              className="font-semibold text-emerald-700 hover:text-emerald-900 disabled:opacity-50"
+            >
+              Resend code
+            </button>
+          </div>
+        </form>
+      )}
+    </AuthShell>
   )
 }
 
@@ -279,11 +236,7 @@ export default function EmailOTPPage() {
   return (
     <GoogleReCaptchaProvider
       reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ''}
-      scriptProps={{
-        async: true,
-        defer: true,
-        appendTo: 'head',
-      }}
+      scriptProps={{ async: true, defer: true, appendTo: 'head' }}
     >
       <EmailOTPForm />
     </GoogleReCaptchaProvider>

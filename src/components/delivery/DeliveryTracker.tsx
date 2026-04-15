@@ -100,7 +100,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         description: 'Your order has been successfully placed',
         status: 'completed',
         timestamp: order.created_at,
-        icon: '🛍️'
+        icon: ''
       },
       {
         id: 'payment_confirmed',
@@ -108,7 +108,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         description: `Payment via ${order.payment_method} confirmed`,
         status: 'completed',
         timestamp: order.created_at,
-        icon: '💳'
+        icon: ''
       },
       {
         id: 'order_confirmed',
@@ -116,7 +116,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         description: 'Seller confirmed your order',
         status: order.status === 'pending' ? 'current' : 'completed',
         timestamp: order.status !== 'pending' ? format(addDays(orderDate, 0), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
-        icon: '✅',
+        icon: '',
         estimatedTime: order.status === 'pending' ? 'Within 2 hours' : undefined
       },
       {
@@ -127,7 +127,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                ['processing', 'shipped', 'delivered'].includes(order.status) ? 'completed' : 'pending',
         timestamp: ['processing', 'shipped', 'delivered'].includes(order.status) ?
                   format(addDays(orderDate, 1), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
-        icon: '📦',
+        icon: '',
         estimatedTime: order.status === 'confirmed' ? 'Within 24 hours' : undefined
       },
       {
@@ -138,7 +138,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                ['shipped', 'delivered'].includes(order.status) ? 'completed' : 'pending',
         timestamp: ['shipped', 'delivered'].includes(order.status) ?
                   format(addDays(orderDate, 2), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
-        icon: '🚛',
+        icon: '',
         estimatedTime: order.status === 'processing' ? 'Within 12 hours' : undefined
       },
       {
@@ -149,7 +149,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                order.status === 'delivered' ? 'completed' : 'pending',
         timestamp: order.status === 'delivered' ?
                   format(addDays(orderDate, 3), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
-        icon: '🚚',
+        icon: '',
         estimatedTime: order.status === 'shipped' ? '2-3 days' : undefined
       },
       {
@@ -159,7 +159,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         status: order.status === 'delivered' ? 'completed' : 'pending',
         timestamp: order.status === 'delivered' ?
                   format(addDays(orderDate, 4), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
-        icon: '📍',
+        icon: '',
         estimatedTime: order.status === 'shipped' ? 'Today by 8 PM' : undefined
       },
       {
@@ -169,7 +169,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
         status: order.status === 'delivered' ? 'completed' : 'pending',
         timestamp: order.status === 'delivered' ?
                   format(addDays(orderDate, 4), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") : undefined,
-        icon: '🎉'
+        icon: ''
       }
     ]
 
@@ -220,24 +220,24 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
   return (
     <div className="bg-white rounded-xl shadow-lg overflow-hidden">
       {}
-      <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-6">
+      <div className="bg-gradient-to-r from-emerald-500 to-blue-600 text-white p-6">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Order #{order.id.slice(-8)}</h2>
-            <p className="text-green-100">Total: ₹{order.total_amount}</p>
+            <p className="text-emerald-100">Total: ₹{order.total_amount}</p>
             {deliveryData?.trackingNumber && (
-              <p className="text-sm text-green-100 mt-1">
+              <p className="text-sm text-emerald-100 mt-1">
                 Tracking: {deliveryData.trackingNumber}
               </p>
             )}
           </div>
           <div className="text-right">
-            <div className="text-sm text-green-100">Estimated Delivery</div>
+            <div className="text-sm text-emerald-100">Estimated Delivery</div>
             <div className="text-xl font-semibold">
               {estimatedDelivery ? format(estimatedDelivery, 'MMM dd, yyyy') : 'Calculating...'}
             </div>
             {deliveryData?.driver && (
-              <p className="text-sm text-green-100 mt-1">
+              <p className="text-sm text-emerald-100 mt-1">
                 Driver: {deliveryData.driver.fullName}
               </p>
             )}
@@ -246,11 +246,11 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
 
         {}
         <div className="mt-4">
-          <div className="flex items-center justify-between text-sm text-green-100 mb-2">
+          <div className="flex items-center justify-between text-sm text-emerald-100 mb-2">
             <span>Order Progress</span>
             <span>{Math.round(getProgressPercentage())}% Complete</span>
           </div>
-          <div className="w-full bg-green-200/30 rounded-full h-2">
+          <div className="w-full bg-emerald-200/30 rounded-full h-2">
             <div
               className="bg-white rounded-full h-2 transition-all duration-500 ease-out"
               style={{ width: `${getProgressPercentage()}%` }}
@@ -283,7 +283,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
       {order.status === 'shipped' && currentLocation && (
         <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4">
           <div className="flex items-center">
-            <div className="animate-pulse text-2xl mr-3">📍</div>
+            <div className="animate-pulse text-2xl mr-3"></div>
             <div>
               <h3 className="text-lg font-semibold text-yellow-900">Live Location</h3>
               <p className="text-yellow-700">{currentLocation}</p>
@@ -304,16 +304,16 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
               <div className="flex flex-col items-center">
                 <div className={`
                   w-10 h-10 rounded-full flex items-center justify-center text-xl border-2 transition-all duration-300
-                  ${milestone.status === 'completed' ? 'bg-green-500 border-green-500 text-white' :
+                  ${milestone.status === 'completed' ? 'bg-emerald-500 border-emerald-500 text-white' :
                     milestone.status === 'current' ? 'bg-blue-500 border-blue-500 text-white animate-pulse' :
-                    'bg-slate-100 border-gray-300 text-slate-700'}
+                    'bg-slate-100 border-slate-200 text-slate-700'}
                 `}>
-                  {milestone.status === 'completed' ? '✓' : milestone.icon}
+                  {milestone.status === 'completed' ? '' : milestone.icon}
                 </div>
                 {index < milestones.length - 1 && (
                   <div className={`
                     w-0.5 h-12 mt-2 transition-all duration-300
-                    ${milestone.status === 'completed' ? 'bg-green-300' : 'bg-gray-200'}
+                    ${milestone.status === 'completed' ? 'bg-emerald-300' : 'bg-slate-200'}
                   `} />
                 )}
               </div>
@@ -343,7 +343,7 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
                 </p>
                 {milestone.estimatedTime && milestone.status === 'current' && (
                   <div className="mt-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    ⏱️ {milestone.estimatedTime}
+                     {milestone.estimatedTime}
                   </div>
                 )}
               </div>
@@ -355,15 +355,15 @@ export default function DeliveryTracker({ order, onStatusUpdate }: DeliveryTrack
       {}
       <div className="bg-emerald-50/30 px-6 py-4 border-t">
         <div className="flex flex-wrap gap-3">
-          <button className="flex-1 bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition-colors">
-            📞 Contact Delivery Partner
+          <button className="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors">
+             Contact Delivery Partner
           </button>
           <button className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors">
-            📍 Track on Map
+             Track on Map
           </button>
           {order.status === 'delivered' && (
             <button className="flex-1 bg-yellow-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-yellow-700 transition-colors">
-              ⭐ Rate & Review
+               Rate & Review
             </button>
           )}
         </div>
